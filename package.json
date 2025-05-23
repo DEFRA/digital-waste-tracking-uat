@@ -2,7 +2,7 @@
   "name": "digital-waste-tracking-uat",
   "version": "0.0.0",
   "type": "module",
-  "description": "",
+  "description": "User Acceptance Testing suite for Defra's Digital Waste Tracking service using Jest and API testing framework",
   "engines": {
     "node": ">=22.13.1"
   },
@@ -14,21 +14,24 @@
     "components": "test/components"
   },
   "scripts": {
-    "clean": "rm -rf allure-results && rm -rf allure-report",
+    "postinstall": "npm run setup:husky",
+    "setup:husky": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module",
     "format": "prettier --write 'test/**/*.js' '**/*.{js,md,json,config.js}'",
     "format:check": "prettier --check 'test/**/*.js' '**/*.{js,md,json,config.js}'",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
     "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest && npm run report",
     "test:single": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --testNamePattern",
     "test:debug": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --inspect-brk' jest --runInBand --no-cache",
     "test:watch": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --watch test/specs/lewis.js",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --coverage test/specs/lewis.js",
-    "clean:test:report": "npm run clean ; npm run test ; npm run report",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "postinstall": "npm run setup:husky",
-    "setup:husky": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module",
-    "report": "allure generate allure-results --single-file --clean",
+    "test:ci": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --ci --coverage --watchAll=false",
+    "test:verbose": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --verbose --no-cache",
+    "clean:test:report": "npm run report:clean ; npm run test ; npm run report:generate ; npm run report:open",
+    "report:generate": "allure generate allure-results --single-file --clean",
+    "report:clean": "rm -rf allure-results && rm -rf allure-report",
+    "report:open": "open ./allure-report/index.html",
     "report:publish": "npm run report; ./bin/publish-tests.sh"
   },
   "dependencies": {
