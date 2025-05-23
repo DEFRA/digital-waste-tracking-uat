@@ -74,6 +74,22 @@ export class BaseAPI {
   }
 
   /**
+   * Make a PATCH request
+   * @param {string} endpoint - API endpoint
+   * @param {Object} data - Request body data
+   * @param {Object} [headers={}] - Additional headers
+   * @returns {Promise<Response>}
+   */
+  async patch(endpoint, data, headers = {}) {
+    const { statusCode, body } = await request(`${this.baseUrl}${endpoint}`, {
+      method: 'PATCH',
+      headers: { ...this.defaultHeaders, ...headers },
+      body: JSON.stringify(data)
+    })
+    return { statusCode, body }
+  }
+
+  /**
    * Make a DELETE request
    * @param {string} endpoint - API endpoint
    * @param {Object} [headers={}] - Additional headers
