@@ -8,21 +8,17 @@ import { WasteMovementExternalAPI } from './wasteMovementApi.js'
  */
 
 /**
- * Factory class for creating and managing API instances
+ * Factory class for creating API instances
  */
 export class ApiFactory {
-  /** @type {ApiInstances} */
-  static instances = {}
-
   /**
-   * Initialize all API instances
+   * Create fresh API instances
    * @returns {ApiInstances}
    */
-  static initialize() {
-    this.instances = {
+  static create() {
+    return {
       example: new ExampleAPI(),
       wasteMovementExternalAPI: new WasteMovementExternalAPI()
     }
-    return this.instances
   }
 }

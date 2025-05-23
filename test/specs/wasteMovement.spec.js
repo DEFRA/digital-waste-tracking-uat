@@ -41,7 +41,7 @@ describe('Waste Movement API', () => {
     it('should successfully create a new waste movement', async () => {
       const sampleMovementData = generateSampleMovementData()
       const response =
-        await global.apis.wasteMovementExternalAPI.createMovement(
+        await globalThis.apis.wasteMovementExternalAPI.createMovement(
           sampleMovementData
         )
 
@@ -58,7 +58,9 @@ describe('Waste Movement API', () => {
       delete invalidData.waste.quantity
 
       const response =
-        await global.apis.wasteMovementExternalAPI.createMovement(invalidData)
+        await globalThis.apis.wasteMovementExternalAPI.createMovement(
+          invalidData
+        )
 
       expect(response.statusCode).toBe(400)
       expect(response.data).toHaveProperty('message')
@@ -72,7 +74,7 @@ describe('Waste Movement API', () => {
       // Create a movement for this test
       const sampleMovementData = generateSampleMovementData()
       const response =
-        await global.apis.wasteMovementExternalAPI.createMovement(
+        await globalThis.apis.wasteMovementExternalAPI.createMovement(
           sampleMovementData
         )
       expect(response.statusCode).toBe(200)
@@ -87,7 +89,7 @@ describe('Waste Movement API', () => {
       updateData.receiverReference = `UPDATED-${Date.now()}`
 
       const response =
-        await global.apis.wasteMovementExternalAPI.updateMovement(
+        await globalThis.apis.wasteMovementExternalAPI.updateMovement(
           testMovementId,
           updateData
         )
@@ -104,7 +106,7 @@ describe('Waste Movement API', () => {
       const sampleMovementData = generateSampleMovementData()
 
       const response =
-        await global.apis.wasteMovementExternalAPI.updateMovement(
+        await globalThis.apis.wasteMovementExternalAPI.updateMovement(
           nonExistentId,
           sampleMovementData
         )
@@ -120,7 +122,7 @@ describe('Waste Movement API', () => {
       // Create a movement for this test
       const sampleMovementData = generateSampleMovementData()
       const response =
-        await global.apis.wasteMovementExternalAPI.createMovement(
+        await globalThis.apis.wasteMovementExternalAPI.createMovement(
           sampleMovementData
         )
       expect(response.statusCode).toBe(200)
@@ -143,7 +145,7 @@ describe('Waste Movement API', () => {
       }
 
       const response =
-        await global.apis.wasteMovementExternalAPI.addHazardousDetails(
+        await globalThis.apis.wasteMovementExternalAPI.addHazardousDetails(
           testMovementId,
           hazardousData
         )
@@ -162,7 +164,7 @@ describe('Waste Movement API', () => {
       // Create a movement for this test
       const sampleMovementData = generateSampleMovementData()
       const response =
-        await global.apis.wasteMovementExternalAPI.createMovement(
+        await globalThis.apis.wasteMovementExternalAPI.createMovement(
           sampleMovementData
         )
       expect(response.statusCode).toBe(200)
@@ -179,7 +181,7 @@ describe('Waste Movement API', () => {
       }
 
       const response =
-        await global.apis.wasteMovementExternalAPI.addPopsDetails(
+        await globalThis.apis.wasteMovementExternalAPI.addPopsDetails(
           testMovementId,
           popsData
         )
