@@ -1,5 +1,5 @@
 export default {
-  testEnvironment: 'allure-jest/node',
+  testEnvironment: '<rootDir>/test/setup/test-environment.js',
   transform: {},
   moduleNameMapper: {
     '^~/(.*)$': '<rootDir>/$1',
@@ -16,5 +16,8 @@ export default {
   coverageReporters: ['text', 'lcov', 'clover'],
   verbose: true,
   transformIgnorePatterns: [],
-  setupFilesAfterEnv: ['<rootDir>/test/setup/setup.js']
+  maxWorkers: '50%', // Use 50% of available CPU cores for parallel execution
+  testTimeout: 30000, // 30 seconds timeout for each test
+  maxConcurrency: 5, // Limit concurrent tests to prevent API rate limiting
+  workerIdleMemoryLimit: '512MB' // Restart workers after they use too much memory
 }

@@ -1,8 +1,10 @@
 import { ExampleAPI } from './example-api.js'
+import { WasteMovementExternalAPI } from './wasteMovementApi.js'
 
 /**
  * @typedef {Object} ApiInstances
  * @property {ExampleAPI} example - Example API instance
+ * @property {WasteMovementExternalAPI} wasteMovementExternalAPI - Waste Movement External API instance
  */
 
 /**
@@ -18,7 +20,8 @@ export class ApiFactory {
    */
   static initialize() {
     this.instances = {
-      example: new ExampleAPI()
+      example: new ExampleAPI(),
+      wasteMovementExternalAPI: new WasteMovementExternalAPI()
     }
     return this.instances
   }
