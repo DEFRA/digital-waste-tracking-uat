@@ -1,5 +1,4 @@
 export default {
-  // testEnvironment: '<rootDir>/test/setup/jestTestEnvironment.js',
   testEnvironment: 'allure-jest/node',
   setupFilesAfterEnv: ['<rootDir>/test/setup/jestSetupFilesAfterEnv.js'],
   transform: {},
