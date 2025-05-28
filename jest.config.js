@@ -1,6 +1,6 @@
 export default {
   testEnvironment: 'allure-jest/node',
-  setupFilesAfterEnv: ['<rootDir>/test/setup/jestSetupFilesAfterEnv.js'],
+  setupFilesAfterEnv: ['<rootDir>/test/setup/jestSetupAfterEnv.js'],
   transform: {},
   moduleNameMapper: {
     '^~/(.*)$': '<rootDir>/$1',

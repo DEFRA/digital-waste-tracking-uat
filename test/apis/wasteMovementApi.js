@@ -2,7 +2,9 @@ import { BaseAPI } from './base-api.js'
 
 export class WasteMovementExternalAPI extends BaseAPI {
   constructor() {
-    super('https://waste-movement-external-api.dev.cdp-int.defra.cloud')
+    super(
+      `https://waste-movement-external-api.${global.env}.cdp-int.defra.cloud`
+    )
   }
 
   async createMovement(movementData) {
