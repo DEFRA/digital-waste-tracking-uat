@@ -11,6 +11,8 @@ const agent = new Agent({
 })
 setGlobalDispatcher(agent)
 
+global.env = process.env.ENVIRONMENT ? process.env.ENVIRONMENT : 'test'
+
 beforeEach(() => {
   globalThis.apis = ApiFactory.create() // Fresh instance per test
 })
