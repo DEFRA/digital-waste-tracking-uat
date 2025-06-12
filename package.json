@@ -28,7 +28,8 @@
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --coverage test/specs/lewis.js",
     "test:ci": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --ci --coverage --watchAll=false",
     "test:verbose": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --verbose --no-cache",
-    "clean:test:report": "npm run report:clean ; npm run test ; npm run report:generate ; npm run report:open",
+    "clean:test:report": "export ENVIRONMENT=test && npm run report:clean ; npm run test ; npm run report:generate ; npm run report:open",
+    "clean:testDev:report": "export ENVIRONMENT=dev && npm run report:clean ; npm run test ; npm run report:generate ; npm run report:open",
     "report:generate": "allure generate allure-results --single-file --clean",
     "report:clean": "rm -rf allure-results && rm -rf allure-report",
     "report:open": "open ./allure-report/index.html",
@@ -41,6 +42,7 @@
     "undici": "7.10.0"
   },
   "devDependencies": {
+    "@types/jest": "29.5.14",
     "allure-jest": "2.15.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "9.1.0",

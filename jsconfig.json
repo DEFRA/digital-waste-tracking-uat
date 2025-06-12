@@ -2,6 +2,13 @@
   "compilerOptions": {
     "target": "es2020",
     "baseUrl": "./",
+    "moduleResolution": "node",
+    "checkJs": true,
+    "allowJs": true,
+    "strict": false,
+    "noImplicitAny": false,
+    "skipLibCheck": true,
+    "types": ["jest"],
     "paths": {
       "~/*": ["./*"],
       "page-objects/*": ["./test/page-objects/*"],
