@@ -8,7 +8,10 @@ export class WasteMovementExternalAPI extends BaseAPI {
   }
 
   async receiveMovement(movementData) {
-    const { statusCode, body } = await this.post('/movements/receive', movementData)
+    const { statusCode, body } = await this.post(
+      '/movements/receive',
+      movementData
+    )
     const responseData = await body.json()
 
     return {

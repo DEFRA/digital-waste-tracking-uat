@@ -5,17 +5,19 @@ describe('Waste Movement API', () => {
     receivingSiteId: '12345678-1234-1234-1234-123456789012',
     receiverReference: `REF${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     specialHandlingRequirements: 'None',
-    waste: [{
-      ewcCode: '020101',
-      description: 'Mixed waste',
-      form: 'Mixed',
-      containers: 'Bulk',
-      quantity: {
-        value: 1.5,
-        unit: 'Tonnes',
-        isEstimate: false
+    waste: [
+      {
+        ewcCode: '020101',
+        description: 'Mixed waste',
+        form: 'Mixed',
+        containers: 'Bulk',
+        quantity: {
+          value: 1.5,
+          unit: 'Tonnes',
+          isEstimate: false
+        }
       }
-    }],
+    ],
     carrier: {
       registrationNumber: `REG${Date.now()}`,
       organisationName: 'Test Carrier Ltd',
@@ -43,19 +45,27 @@ describe('Waste Movement API', () => {
   describe('Receive Movement', () => {
     it('should successfully receive a new waste movement', async () => {
       const sampleMovementData = generateSampleMovementData()
-      const response = await globalThis.apis.wasteMovementExternalAPI.receiveMovement(sampleMovementData)
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          sampleMovementData
+        )
 
       expect(response.statusCode).toBe(200)
       expect(response.data).toHaveProperty('globalMovementId')
       expect(typeof response.data.globalMovementId).toBe('string')
-      process.stdout.write('Created movement with ID: ' + response.data.globalMovementId + '\n')
+      process.stdout.write(
+        'Created movement with ID: ' + response.data.globalMovementId + '\n'
+      )
     })
 
     it('should fail when required fields are missing', async () => {
       const invalidData = generateSampleMovementData()
       delete invalidData.waste[0].quantity
 
-      const response = await globalThis.apis.wasteMovementExternalAPI.receiveMovement(invalidData)
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          invalidData
+        )
 
       expect(response.statusCode).toBe(400)
       expect(response.data).toHaveProperty('message')
@@ -63,25 +73,24 @@ describe('Waste Movement API', () => {
   })
 
   describe('Receive Movement with ID', () => {
-    const testWasteTrackingId = '12345678-1234-1234-1234-123456789012'
-
     it('should successfully receive a movement with existing ID', async () => {
-
       const sampleMovementData = generateSampleMovementData()
       // console.log(JSON.stringify(sampleMovementData, null, 2));
 
-      const receiveMovementResponse = await globalThis.apis.wasteMovementExternalAPI.receiveMovement(sampleMovementData)
+      const receiveMovementResponse =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          sampleMovementData
+        )
 
       expect(receiveMovementResponse.statusCode).toBe(200)
 
       sampleMovementData.waste[0].quantity.value = 1.6
 
-      const receiveMovementWithIdResponse = await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
-        receiveMovementResponse.data.globalMovementId,
-        sampleMovementData
-      )
-
-      console.log(receiveMovementWithIdResponse)
+      const receiveMovementWithIdResponse =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
+          receiveMovementResponse.data.globalMovementId,
+          sampleMovementData
+        )
 
       expect(receiveMovementWithIdResponse.statusCode).toBe(200)
     })
@@ -90,17 +99,17 @@ describe('Waste Movement API', () => {
       const nonExistentId = '24AAA000'
       const sampleMovementData = generateSampleMovementData()
 
-      const response = await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
-        nonExistentId,
-        sampleMovementData
-      )
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
+          nonExistentId,
+          sampleMovementData
+        )
 
       expect(response.statusCode).toBe(404)
     })
   })
 
   describe('Hazardous Details', () => {
-
     const hazardousData = {
       isHazardousWaste: true,
       components: [
@@ -113,19 +122,20 @@ describe('Waste Movement API', () => {
     }
 
     it('should successfully add hazardous details to a movement', async () => {
-
       const sampleMovementData = generateSampleMovementData()
 
-      const receiveMovementResponse = await globalThis.apis.wasteMovementExternalAPI.receiveMovement(sampleMovementData)
+      const receiveMovementResponse =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          sampleMovementData
+        )
 
       expect(receiveMovementResponse.statusCode).toBe(200)
 
-      console.log(receiveMovementResponse.data.globalMovementId)
-
-      const addHazardousDetailsResponse = await globalThis.apis.wasteMovementExternalAPI.addHazardousDetails(
-        receiveMovementResponse.data.globalMovementId,
-        hazardousData
-      )
+      const addHazardousDetailsResponse =
+        await globalThis.apis.wasteMovementExternalAPI.addHazardousDetails(
+          receiveMovementResponse.data.globalMovementId,
+          hazardousData
+        )
 
       expect(addHazardousDetailsResponse.statusCode).toBe(200)
     })
@@ -133,10 +143,11 @@ describe('Waste Movement API', () => {
     it('should fail when movement ID does not exist', async () => {
       const nonExistentId = '24AAA000'
 
-      const addHazardousDetailsResponse = await globalThis.apis.wasteMovementExternalAPI.addHazardousDetails(
-        nonExistentId,
-        hazardousData
-      )
+      const addHazardousDetailsResponse =
+        await globalThis.apis.wasteMovementExternalAPI.addHazardousDetails(
+          nonExistentId,
+          hazardousData
+        )
 
       expect(addHazardousDetailsResponse.statusCode).toBe(404)
     })
