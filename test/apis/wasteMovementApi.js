@@ -7,19 +7,9 @@ export class WasteMovementExternalAPI extends BaseAPI {
     )
   }
 
-  async createMovement(movementData) {
-    const { statusCode, body } = await this.post('/movements', movementData)
-    const responseData = await body.json()
-
-    return {
-      statusCode,
-      data: responseData
-    }
-  }
-
-  async updateMovement(movementId, movementData) {
-    const { statusCode, body } = await this.patch(
-      `/movements/${movementId}`,
+  async receiveMovement(movementData) {
+    const { statusCode, body } = await this.post(
+      '/movements/receive',
       movementData
     )
     const responseData = await body.json()
@@ -30,9 +20,22 @@ export class WasteMovementExternalAPI extends BaseAPI {
     }
   }
 
-  async addHazardousDetails(movementId, hazardousData) {
+  async receiveMovementWithId(wasteTrackingId, movementData) {
     const { statusCode, body } = await this.put(
-      `/movements/${movementId}/hazardous`,
+      `/movements/${wasteTrackingId}/receive`,
+      movementData
+    )
+    const responseData = await body.json()
+
+    return {
+      statusCode,
+      data: responseData
+    }
+  }
+
+  async addHazardousDetails(wasteTrackingId, hazardousData) {
+    const { statusCode, body } = await this.put(
+      `/movements/${wasteTrackingId}/receive/hazardous`,
       hazardousData
     )
     const responseData = await body.json()
@@ -43,10 +46,22 @@ export class WasteMovementExternalAPI extends BaseAPI {
     }
   }
 
-  async addPopsDetails(movementId, popsData) {
+  async addPopsDetails(wasteTrackingId, popsData) {
     const { statusCode, body } = await this.put(
-      `/movements/${movementId}/pops`,
+      `/movements/${wasteTrackingId}/pops`,
       popsData
+    )
+    const responseData = await body.json()
+
+    return {
+      statusCode,
+      data: responseData
+    }
+  }
+
+  async addPeprDetails(wasteTrackingId) {
+    const { statusCode, body } = await this.put(
+      `/movements/${wasteTrackingId}/pepr`
     )
     const responseData = await body.json()
 

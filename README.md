@@ -1,6 +1,6 @@
 digital-waste-tracking-uat
 
-The template to create a service that runs WDIO tests against an environment.
+The template to create a service that runs Jest tests against an environment.
 
 - [Local](#local)
   - [Requirements](#requirements)
@@ -38,16 +38,16 @@ npm install
 
 ### Running local tests
 
-Start application you are testing on the url specified in `baseUrl` [wdio.local.conf.js](wdio.local.conf.js)
+Start application you are testing on the url specified in your test configuration.
 
 ```bash
-npm run test:local
+npm test
 ```
 
 ### Debugging local tests
 
 ```bash
-npm run test:local:debug
+npm run test:debug
 ```
 
 ## Production
@@ -72,7 +72,7 @@ The results of the test run are made available in the portal.
 ## Running on GitHub
 
 Alternatively you can run the test suite as a GitHub workflow.
-Test runs on GitHub are not able to connect to the CDP Test environments. Instead, they run the tests agains a version of the services running in docker.
+Test runs on GitHub are not able to connect to the CDP Test environments. Instead, they run the tests against a version of the services running in docker.
 A docker compose `compose.yml` is included as a starting point, which includes the databases (mongodb, redis) and infrastructure (localstack) pre-setup.
 
 Steps:
@@ -83,14 +83,6 @@ Steps:
 4. Set up the workflow trigger in `.github/workflows/journey-tests`.
 
 By default, the provided workflow will run when triggered manually from GitHub or when triggered by another workflow.
-
-If you want to use the repository exclusively for running docker composed based test suites consider displaying the publish.yml workflow.
-
-## BrowserStack
-
-Two wdio configuration files are provided to help run the tests using BrowserStack in both a GitHub workflow (`wdio.github.browserstack.conf.js`) and from the CDP Portal (`wdio.browserstack.conf.js`).
-They can be run from npm using the `npm run test:browserstack` (for running via portal) and `npm run test:github:browserstack` (from GitHib runner).
-See the CDP Documentation for more details.
 
 ## Licence
 
