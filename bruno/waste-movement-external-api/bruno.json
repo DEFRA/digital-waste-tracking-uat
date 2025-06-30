@@ -1,0 +1,6 @@
+{
+  "version": "1",
+  "name": "waste-movement-external-api",
+  "type": "collection",
+  "ignore": ["node_modules", ".git"]
+}

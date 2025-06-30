@@ -1,0 +1,63 @@
+meta {
+  name: Receive Movement
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/movements/receive
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+    "receiverReference": "REF123456",
+    "specialHandlingRequirements": "None",
+    "waste": [
+      {
+        "ewcCode": "020101",
+        "description": "Mixed waste",
+        "form": "Mixed",
+        "containers": "Bulk",
+        "quantity": {
+          "value": 1.5,
+          "unit": "Tonnes",
+          "isEstimate": false
+        }
+      }
+    ],
+    "carrier": {
+      "registrationNumber": "REG123456",
+      "organisationName": "Test Carrier Ltd",
+      "address": "123 Test Street",
+      "emailAddress": "test@carrier.com",
+      "companiesHouseNumber": "12345678",
+      "phoneNumber": "01234567890",
+      "vehicleRegistration": "AB12 CDE",
+      "meansOfTransport": "Road"
+    },
+    "acceptance": {
+      "acceptingAll": true
+    },
+    "receiver": {
+      "authorisationType": "TBD",
+      "authorisationNumber": "AUTH123456",
+      "regulatoryPositionStatement": "None"
+    },
+    "receipt": {
+      "estimateOrActual": "Actual",
+      "dateTimeReceived": "{{timestamp}}"
+    }
+  }
+}
+
+vars:post-response {
+  globalMovementId: res.body.globalMovementId
+}
+
+script:pre-request {
+  const now = new Date().toISOString();
+  bru.setVar('timestamp', now);
+}

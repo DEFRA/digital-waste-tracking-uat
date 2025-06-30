@@ -1,0 +1,24 @@
+meta {
+  name: Add Hazardous Details
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{baseUrl}}/movements/25E4C7NN/receive/hazardous
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "isHazardousWaste": true,
+    "components": [
+      {
+        "component": "Test Component",
+        "concentration": 0.5,
+        "hazCode": "H201"
+      }
+    ]
+  }
+}
