@@ -84,7 +84,6 @@ Steps:
 
 By default, the provided workflow will run when triggered manually from GitHub or when triggered by another workflow.
 
-
 ## Licence
 
 THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE found at:
