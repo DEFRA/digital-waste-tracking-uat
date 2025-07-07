@@ -31,6 +31,5 @@ Thumbs.db
 *.png
 
 # Environment variables (if any get added)
+env.sh
 .env
-.env.local
-.env.*.local

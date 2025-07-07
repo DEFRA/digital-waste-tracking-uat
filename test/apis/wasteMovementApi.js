@@ -7,66 +7,96 @@ export class WasteMovementExternalAPI extends BaseAPI {
     )
   }
 
+  async getSwagger() {
+    const { statusCode, responseHeaders, body } = await this.get('/')
+
+    if (responseHeaders['content-type'] === 'application/json') {
+      const responseData = await body.json()
+      return {
+        statusCode,
+        responseHeaders,
+        data: responseData
+      }
+    } else {
+      return {
+        statusCode,
+        responseHeaders,
+        data: body
+      }
+    }
+  }
+
   async receiveMovement(movementData) {
-    const { statusCode, body } = await this.post(
+    const { statusCode, responseHeaders, body } = await this.post(
       '/movements/receive',
-      movementData
+      JSON.stringify(movementData),
+      { 'Content-Type': 'application/json' }
     )
     const responseData = await body.json()
 
     return {
       statusCode,
+      responseHeaders,
       data: responseData
     }
   }
 
   async receiveMovementWithId(wasteTrackingId, movementData) {
-    const { statusCode, body } = await this.put(
+    const { statusCode, responseHeaders, body } = await this.put(
       `/movements/${wasteTrackingId}/receive`,
-      movementData
+      JSON.stringify(movementData),
+      { 'Content-Type': 'application/json' }
     )
     const responseData = await body.json()
 
     return {
       statusCode,
+      responseHeaders,
       data: responseData
     }
   }
 
   async addHazardousDetails(wasteTrackingId, hazardousData) {
-    const { statusCode, body } = await this.put(
+    const { statusCode, responseHeaders, body } = await this.put(
       `/movements/${wasteTrackingId}/receive/hazardous`,
-      hazardousData
+      JSON.stringify(hazardousData),
+      { 'Content-Type': 'application/json' }
     )
     const responseData = await body.json()
 
     return {
       statusCode,
+      responseHeaders,
       data: responseData
     }
   }
 
   async addPopsDetails(wasteTrackingId, popsData) {
-    const { statusCode, body } = await this.put(
+    const { statusCode, responseHeaders, body } = await this.put(
       `/movements/${wasteTrackingId}/pops`,
-      popsData
+      JSON.stringify(popsData),
+      { 'Content-Type': 'application/json' }
     )
     const responseData = await body.json()
 
     return {
       statusCode,
+      responseHeaders,
       data: responseData
     }
   }
 
-  async addPeprDetails(wasteTrackingId) {
-    const { statusCode, body } = await this.put(
-      `/movements/${wasteTrackingId}/pepr`
+  async addPeprDetails(wasteTrackingId, peprData) {
+    const { statusCode, responseHeaders, body } = await this.put(
+      `/movements/${wasteTrackingId}/pepr`,
+      JSON.stringify(peprData),
+      { 'Content-Type': 'application/json' }
     )
     const responseData = await body.json()
 
     return {
       statusCode,
+      responseHeaders,
       data: responseData
     }
   }

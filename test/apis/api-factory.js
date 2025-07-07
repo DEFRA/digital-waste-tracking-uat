@@ -1,8 +1,10 @@
 import { WasteMovementExternalAPI } from './wasteMovementApi.js'
+import { CognitoOAuthApi } from './cognitoOAuth.js'
 
 /**
  * @typedef {Object} ApiInstances
  * @property {WasteMovementExternalAPI} wasteMovementExternalAPI - Waste Movement External API instance
+ * @property {CognitoOAuthApi} cognitoOAuthApi - Cognito OAuth instance
  */
 
 /**
@@ -15,7 +17,8 @@ export class ApiFactory {
    */
   static create() {
     return {
-      wasteMovementExternalAPI: new WasteMovementExternalAPI()
+      wasteMovementExternalAPI: new WasteMovementExternalAPI(),
+      cognitoOAuthApi: new CognitoOAuthApi()
     }
   }
 }

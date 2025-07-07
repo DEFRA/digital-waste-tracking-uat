@@ -42,6 +42,17 @@ describe('Waste Movement API', () => {
     }
   })
 
+  describe('Swagger', () => {
+    test('should be able to access the swagger html doc', async () => {
+      const swaggerResponse =
+        await globalThis.apis.wasteMovementExternalAPI.getSwagger()
+      expect(swaggerResponse.statusCode).toBe(200)
+      expect(swaggerResponse.responseHeaders['content-type']).toBe(
+        'text/html; charset=utf-8'
+      )
+    })
+  })
+
   describe('Receive Movement', () => {
     it('should successfully receive a new waste movement', async () => {
       const sampleMovementData = generateSampleMovementData()

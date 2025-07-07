@@ -36,6 +36,18 @@ Install application dependencies:
 npm install
 ```
 
+#### Environment Configuration
+
+For OAuth authentication tests, you need to set up environment variables. Use the provided `env.sh` script:
+
+```bash
+# Edit env.sh with your actual credentials
+# Then source it before running tests
+source ./env.sh
+```
+
+See `test/CONFIGURATION.md` for detailed setup instructions.
+
 ### Running local tests
 
 Start application you are testing on the url specified in your test configuration.
