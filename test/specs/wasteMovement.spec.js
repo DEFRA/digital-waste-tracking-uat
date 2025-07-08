@@ -53,6 +53,15 @@ describe('Waste Movement API', () => {
     })
   })
 
+  describe('Health Check', () => {
+    test('should return 200 and success message', async () => {
+      const healthResponse =
+        await globalThis.apis.wasteMovementExternalAPI.getHealth()
+      expect(healthResponse.statusCode).toBe(200)
+      expect(healthResponse.data).toEqual({ message: 'success' })
+    })
+  })
+
   describe('Receive Movement', () => {
     it('should successfully receive a new waste movement', async () => {
       const sampleMovementData = generateSampleMovementData()

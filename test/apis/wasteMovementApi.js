@@ -100,4 +100,15 @@ export class WasteMovementExternalAPI extends BaseAPI {
       data: responseData
     }
   }
+
+  async getHealth() {
+    const { statusCode, responseHeaders, body } = await this.get('/health')
+    const responseData = await body.json()
+
+    return {
+      statusCode,
+      responseHeaders,
+      data: responseData
+    }
+  }
 }
