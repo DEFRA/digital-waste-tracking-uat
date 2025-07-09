@@ -1,16 +1,10 @@
 import { request } from 'undici'
 
 /**
- * @typedef {Object} RequestOptions
- * @property {string} method - HTTP method
- * @property {Object} headers - Request headers
- * @property {string} [body] - Request body
- */
-
-/**
  * @typedef {Object} Response
  * @property {number} statusCode - HTTP status code
- * @property {import('undici').Body} body - Response body
+ * @property {Object} responseHeaders - Response headers
+ * @property {Object} body - Response body
  */
 
 /**
@@ -22,9 +16,7 @@ export class BaseAPI {
    */
   constructor(baseUrl) {
     this.baseUrl = baseUrl
-    this.defaultHeaders = {
-      'Content-Type': 'application/json'
-    }
+    this.defaultHeaders = {}
   }
 
   /**
@@ -34,59 +26,80 @@ export class BaseAPI {
    * @returns {Promise<Response>}
    */
   async get(endpoint, headers = {}) {
-    const { statusCode, body } = await request(`${this.baseUrl}${endpoint}`, {
+    const {
+      statusCode,
+      headers: responseHeaders,
+      body
+    } = await request(`${this.baseUrl}${endpoint}`, {
       method: 'GET',
       headers: { ...this.defaultHeaders, ...headers }
     })
-    return { statusCode, body }
+    return { statusCode, responseHeaders, body }
   }
 
   /**
    * Make a POST request
    * @param {string} endpoint - API endpoint
-   * @param {Object} data - Request body data
+   * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
    * @returns {Promise<Response>}
    */
   async post(endpoint, data, headers = {}) {
-    const { statusCode, body } = await request(`${this.baseUrl}${endpoint}`, {
+    const instanceHeaders = { ...this.defaultHeaders, ...headers }
+    const {
+      statusCode,
+      headers: responseHeaders,
+      body
+    } = await request(`${this.baseUrl}${endpoint}`, {
       method: 'POST',
-      headers: { ...this.defaultHeaders, ...headers },
-      body: JSON.stringify(data)
+      headers: instanceHeaders,
+      body: data
     })
-    return { statusCode, body }
+    return { statusCode, responseHeaders, body }
   }
 
   /**
    * Make a PUT request
    * @param {string} endpoint - API endpoint
-   * @param {Object} data - Request body data
+   * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
    * @returns {Promise<Response>}
    */
   async put(endpoint, data, headers = {}) {
-    const { statusCode, body } = await request(`${this.baseUrl}${endpoint}`, {
+    const instanceHeaders = { ...this.defaultHeaders, ...headers }
+    instanceHeaders['Content-Type'] = 'application/json'
+    const {
+      statusCode,
+      headers: responseHeaders,
+      body
+    } = await request(`${this.baseUrl}${endpoint}`, {
       method: 'PUT',
-      headers: { ...this.defaultHeaders, ...headers },
-      body: JSON.stringify(data)
+      headers: instanceHeaders,
+      body: data
     })
-    return { statusCode, body }
+    return { statusCode, responseHeaders, body }
   }
 
   /**
    * Make a PATCH request
    * @param {string} endpoint - API endpoint
-   * @param {Object} data - Request body data
+   * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
    * @returns {Promise<Response>}
    */
   async patch(endpoint, data, headers = {}) {
-    const { statusCode, body } = await request(`${this.baseUrl}${endpoint}`, {
+    const instanceHeaders = { ...this.defaultHeaders, ...headers }
+    instanceHeaders['Content-Type'] = 'application/json'
+    const {
+      statusCode,
+      headers: responseHeaders,
+      body
+    } = await request(`${this.baseUrl}${endpoint}`, {
       method: 'PATCH',
-      headers: { ...this.defaultHeaders, ...headers },
-      body: JSON.stringify(data)
+      headers: instanceHeaders,
+      body: data
     })
-    return { statusCode, body }
+    return { statusCode, responseHeaders, body }
   }
 
   /**
@@ -96,11 +109,15 @@ export class BaseAPI {
    * @returns {Promise<Response>}
    */
   async delete(endpoint, headers = {}) {
-    const { statusCode, body } = await request(`${this.baseUrl}${endpoint}`, {
+    const {
+      statusCode,
+      headers: responseHeaders,
+      body
+    } = await request(`${this.baseUrl}${endpoint}`, {
       method: 'DELETE',
       headers: { ...this.defaultHeaders, ...headers }
     })
-    return { statusCode, body }
+    return { statusCode, responseHeaders, body }
   }
 
   /**
@@ -109,5 +126,19 @@ export class BaseAPI {
    */
   setAuthToken(token) {
     this.defaultHeaders.Authorization = `Bearer ${token}`
+  }
+
+  /**
+   * Build form data for OAuth token requests
+   * @param {Object} data - Data to encode
+   * @returns {string} URL-encoded form data
+   */
+  buildFormData(data) {
+    return Object.entries(data)
+      .map(
+        ([key, value]) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+      )
+      .join('&')
   }
 }

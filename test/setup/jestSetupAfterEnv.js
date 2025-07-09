@@ -1,5 +1,6 @@
 // jest.setup.js
 import { ApiFactory } from '../apis/api-factory.js'
+import { testConfig } from '../config/test-config.js'
 import { setGlobalDispatcher, Agent } from 'undici'
 
 // If out of function will run as beforeAll:
@@ -12,7 +13,9 @@ const agent = new Agent({
 })
 setGlobalDispatcher(agent)
 
-global.env = process.env.ENVIRONMENT ? process.env.ENVIRONMENT : 'test'
+// Validate environment variables early - this will throw if any are missing
+global.testConfig = testConfig
+global.env = testConfig.environment
 
 beforeEach(() => {
   globalThis.apis = ApiFactory.create() // Fresh instance per test

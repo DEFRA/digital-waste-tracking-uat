@@ -87,6 +87,20 @@ expect(createResponse.statusCode).toBe(201)
 expect(createResponse.data).toMatchObject(newData)
 ```
 
+## Environment Configuration
+
+Some tests require environment variables to be set. Before running tests, configure your environment:
+
+```bash
+# Source the environment variables
+source ../env.sh
+
+# Then run your tests
+npm test
+```
+
+See `CONFIGURATION.md` for detailed setup instructions.
+
 ## Running Tests
 
 - `npm test` - Run all tests with reporting
