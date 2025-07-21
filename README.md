@@ -38,13 +38,18 @@ npm install
 
 #### Environment Configuration
 
-For OAuth authentication tests, you need to set up environment variables. Use the provided `env.sh` script:
+For OAuth authentication tests, you need to set up environment variables. Use the provided template:
 
 ```bash
+# Copy the template and fill in your credentials
+cp env.sh.template env.sh
+
 # Edit env.sh with your actual credentials
 # Then source it before running tests
 source ./env.sh
 ```
+
+**Note:** The `env.sh` file is gitignored to prevent committing sensitive credentials. Each developer should create their own copy from the template.
 
 See `test/CONFIGURATION.md` for detailed setup instructions.
 
