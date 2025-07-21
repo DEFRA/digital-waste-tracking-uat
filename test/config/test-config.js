@@ -18,7 +18,7 @@ export class TestConfig {
     if (missingVars.length > 0) {
       throw new Error(
         `Missing required environment variables: ${missingVars.join(', ')}. ` +
-          'These must be set in your CI environment or local .env file.'
+          'These must be set in your CI environment or you might have to source the env.sh file.'
       )
     }
   }
