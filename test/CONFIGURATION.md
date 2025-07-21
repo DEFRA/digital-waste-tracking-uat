@@ -12,6 +12,7 @@ This test suite requires certain environment variables to be set for authenticat
 ### Optional Environment Variables
 
 - `ENVIRONMENT`: The environment name (defaults to 'test')
+- `RESULTS_OUTPUT_S3_PATH`: S3 path for publishing test results (used in CI/CD)
 
 ## Setting Up Environment Variables
 
