@@ -1,7 +1,6 @@
 import { Given, When, Then } from '@cucumber/cucumber'
 import { expect } from 'chai'
 
-// Helper function to generate sample movement data (copied from Jest tests)
 const generateSampleMovementData = () => ({
   receivingSiteId: '12345678-1234-1234-1234-123456789012',
   receiverReference: `REF${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
