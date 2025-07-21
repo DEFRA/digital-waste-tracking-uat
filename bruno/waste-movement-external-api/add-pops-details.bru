@@ -1,0 +1,18 @@
+meta {
+  name: Add POPs Details
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/movements/{{globalMovementId}}/pops
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "hasPops": true,
+    "concentrationValue": 0.1
+  }
+}
