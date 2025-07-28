@@ -1,7 +1,7 @@
 meta {
   name: Receive Movement with ID
   type: http
-  seq: 2
+  seq: 3
 }
 
 put {
@@ -12,45 +12,103 @@ put {
 
 body:json {
   {
-      "receivingSiteId": "12345678-1234-1234-1234-123456789012",
-      "receiverReference": "REF123456",
-      "specialHandlingRequirements": "None",
-      "waste": [
+    "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+    "hazardousWasteConsignmentNumber": "HWCN789012",
+    "reasonForNoConsignmentNumber": "Non-Haz Waste Transfer",
+    "yourUniqueReference": "REF789012",
+    "otherReferencesForMovement": "Updated reference info for existing movement",
+    "specialHandlingRequirements": "Special handling required for updated waste movement",
+    "waste": [
+      {
+        "ewcCode": "020101",
+        "wasteDescription": "Updated mixed waste from construction and demolition",
+        "form": "Mixed",
+        "numberOfContainers": 6,
+        "typeOfContainers": "Updated bulk containers and drums",
+        "quantity": {
+          "metric": "Tonnes",
+          "amount": 2.8,
+          "isEstimate": false
+        },
+        "pops": {
+          "containsPops": true,
+          "pops": [
+            {
+              "name": "Aldrin",
+              "concentration": 0.10
+            },
+            {
+              "name": "Chlordane",
+              "concentration": 0.06
+            }
+          ]
+        },
+        "hazardous": {
+          "components": [
+            {
+              "name": "Mercury",
+              "concentration": 0.22
+            },
+            {
+              "name": "Lead",
+              "concentration": 0.30
+            }
+          ]
+        }
+      }
+    ],
+    "carrier": {
+      "registrationNumber": "REG789012",
+      "reasonForNoRegistrationNumber": "Not applicable",
+      "organisationName": "Updated Carrier Ltd",
+      "address": "789 Updated Street, Updated City, UC1 2AB",
+      "emailAddress": "updated@carrier.com",
+      "phoneNumber": "01234567890",
+      "vehicleRegistration": "XY12 ZAB",
+      "meansOfTransport": "Road",
+      "otherMeansOfTransport": "N/A"
+    },
+    "brokerOrDealer": {
+      "organisationName": "Updated Broker Ltd",
+      "address": "789 Updated Broker Street, Updated Broker City, UBC1 2DE",
+      "registrationNumber": "BROKER789012"
+    },
+    "acceptance": {
+      "acceptingAll": true,
+      "quantityNotAccepted": {
+        "metric": "Tonnes",
+        "amount": 0,
+        "isEstimate": false
+      },
+      "rejectionReason": "N/A"
+    },
+    "receiver": {
+      "authorisations": [
         {
-          "ewcCode": "020101",
-          "description": "Mixed waste",
-          "form": "Mixed",
-          "containers": "Bulk",
+          "authorisationType": "TBD",
+          "authorisationNumber": "AUTH789012"
+        }
+      ],
+      "regulatoryPositionStatement": "Updated RPS for waste handling"
+    },
+    "receipt": {
+      "dateTimeReceived": "{{timestamp}}",
+      "disposalOrRecoveryCodes": [
+        {
+          "code": "R1",
           "quantity": {
-            "value": 1.6,
-            "unit": "Tonnes",
+            "metric": "Tonnes",
+            "amount": 2.8,
             "isEstimate": false
           }
         }
-      ],
-      "carrier": {
-        "registrationNumber": "REG123456",
-        "organisationName": "Test Carrier Ltd",
-        "address": "123 Test Street",
-        "emailAddress": "test@carrier.com",
-        "companiesHouseNumber": "12345678",
-        "phoneNumber": "01234567890",
-        "vehicleRegistration": "AB12 CDE",
-        "meansOfTransport": "Road"
-      },
-      "acceptance": {
-        "acceptingAll": true
-      },
-      "receiver": {
-        "authorisationType": "TBD",
-        "authorisationNumber": "AUTH123456",
-        "regulatoryPositionStatement": "None"
-      },
-      "receipt": {
-        "estimateOrActual": "Actual",
-        "dateTimeReceived": "{{timestamp}}"
-      }
+      ]
+    }
   }
+}
+
+vars:put-response {
+  globalMovementId: res.body.globalMovementId
 }
 
 script:pre-request {
