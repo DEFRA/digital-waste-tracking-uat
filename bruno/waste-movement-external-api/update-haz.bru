@@ -1,0 +1,79 @@
+meta {
+  name: Update Hazardous
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{baseUrl}}/movements/{{globalMovementId}}/receive
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+    "hazardousWasteConsignmentNumber": "HWCN-HAZ-UPDATE",
+    "yourUniqueReference": "REF-HAZ-UPDATE",
+    "otherReferencesForMovement": "Updated basic movement with hazardous data",
+    "specialHandlingRequirements": "Special handling for hazardous components",
+    "waste": [
+      {
+        "ewcCode": "020101",
+        "wasteDescription": "Updated basic waste now containing hazardous components from industrial process",
+        "form": "Mixed",
+        "numberOfContainers": 6,
+        "typeOfContainers": "Hazardous waste containers",
+        "quantity": {
+          "metric": "Tonnes",
+          "amount": 0.9,
+          "isEstimate": false
+        },
+        "hazardous": {
+          "components": [
+            {
+              "name": "Mercury",
+              "concentration": 0.20
+            },
+            {
+              "name": "Lead",
+              "concentration": 0.35
+            },
+            {
+              "name": "Cadmium",
+              "concentration": 0.15
+            }
+          ]
+        }
+      }
+    ],
+    "carrier": {
+      "organisationName": "Hazardous Update Carrier Ltd",
+      "address": "123 Hazardous Update Street, Hazardous Update City, HUC1 2AB",
+      "emailAddress": "hazupdate@carrier.com",
+      "phoneNumber": "01234567890",
+      "meansOfTransport": "Road"
+    },
+    "acceptance": {
+      "acceptingAll": true
+    },
+    "receipt": {
+      "dateTimeReceived": "{{timestamp}}",
+      "disposalOrRecoveryCodes": [
+        {
+          "code": "R1",
+          "quantity": {
+            "metric": "Tonnes",
+            "amount": 0.9,
+            "isEstimate": false
+          }
+        }
+      ]
+    }
+  }
+}
+
+script:pre-request {
+  const now = new Date().toISOString();
+  bru.setVar('timestamp', now);
+} 
