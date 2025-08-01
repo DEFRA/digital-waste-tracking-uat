@@ -18,6 +18,12 @@ Feature: EWC Code Validation for Waste Movement Receipt Submissions
     When I submit the waste movement receipt
     Then I should be informed that the waste movement was created successfully
 
+  Scenario: Attempting to Submit a Waste Movement Receipt with Too Many EWC Codes
+    Given the waste item has more than 5 EWC codes
+    When I submit the waste movement receipt
+    Then I should be informed that the waste movement was not created
+    And I should be informed that a maximum of 5 EWC codes are allowed 
+
   Scenario: Attempting to Submit a Waste Movement Receipt with Missing EWC Code
     Given the waste item has no EWC code
     When I submit the waste movement receipt
@@ -34,4 +40,4 @@ Feature: EWC Code Validation for Waste Movement Receipt Submissions
     Given the waste item has a non-existent EWC code
     When I submit the waste movement receipt
     Then I should be informed that the waste movement was not created
-    And I should be informed that the EWC code is not found in the official list 
+    And I should be informed that the EWC code is not found in the official list
