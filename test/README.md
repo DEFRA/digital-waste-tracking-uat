@@ -2,90 +2,161 @@
 
 ## Overview
 
-This test suite uses Jest with automatic API isolation, ensuring clean and reliable tests for the Digital Waste Tracking service.
+This test suite uses Cucumber with Gherkin syntax for behavior-driven development (BDD), ensuring clean and reliable tests for the Digital Waste Tracking service.
 
-## Automatic API Isolation
+## Cucumber Test Structure
 
-APIs are automatically provided for each test with fresh instances to prevent data bleed when running in parallel.
+Tests are written using Gherkin syntax in `.feature` files and implemented using step definitions in JavaScript.
 
 ### Usage
 
 ```javascript
-import { expect } from '@jest/globals'
+const { expect } = require('chai')
 
-describe('My Test Suite', () => {
-  it('should work with automatically provided APIs', async () => {
-    // APIs are automatically available - no setup required!
-    const response = await globalThis.apis.example.getPost(1)
-    expect(response.statusCode).toBe(200)
-  })
+Given('I have a valid waste movement', async function () {
+  // Setup test data
+  this.testData = {
+    /* your test data */
+  }
+})
+
+When('I submit the waste movement', async function () {
+  // Perform the action
+  this.response = await this.apis.wasteMovementExternalAPI.receiveMovement(
+    this.testData
+  )
+})
+
+Then('the movement should be created successfully', async function () {
+  // Verify the result
+  expect(this.response.statusCode).to.equal(201)
 })
 ```
 
 ### Available APIs
 
-- `globalThis.apis.example` - JSONPlaceholder test API
-- `globalThis.apis.wasteMovementExternalAPI` - Waste Movement API
+- `this.apis.wasteMovementExternalAPI` - Waste Movement API
+- `this.apis.cognitoOAuthApi` - OAuth2 Authentication API
 
 ### Key Benefits
 
-- ✅ **Zero Setup**: No `beforeEach` or imports needed
-- ✅ **Test Isolation**: Each test gets fresh API instances automatically
-- ✅ **Parallel Safe**: No shared state between tests
-- ✅ **Clean**: Just write your tests, APIs are handled automatically
+- ✅ **BDD Approach**: Tests are written in natural language
+- ✅ **Test Isolation**: Each scenario gets fresh API instances automatically
+- ✅ **Parallel Safe**: No shared state between scenarios
+- ✅ **Readable**: Business stakeholders can understand test scenarios
 
 ## Writing Tests
 
-### Basic Structure
+### Feature Files
+
+Create `.feature` files in the `test/features/` directory:
+
+```gherkin
+Feature: Waste Movement Management
+
+  Scenario: Create a new waste movement
+    Given I have a valid waste movement
+    When I submit the waste movement
+    Then the movement should be created successfully
+    And I should receive a confirmation
+```
+
+### Step Definitions
+
+Implement step definitions in `test/step-definitions/`:
 
 ```javascript
-import { expect } from '@jest/globals'
+const { Given, When, Then } = require('@cucumber/cucumber')
+const { expect } = require('chai')
 
-describe('Feature Name', () => {
-  describe('Specific Function', () => {
-    it('should do something specific', async () => {
-      // Arrange
-      const testData = {
-        /* your test data */
-      }
+Given('I have a valid waste movement', async function () {
+  // Arrange - setup test data
+  this.testData = {
+    /* your test data */
+  }
+})
 
-      // Act
-      const result = await globalThis.apis.example.createPost(testData)
+When('I submit the waste movement', async function () {
+  // Act - perform the action
+  this.response = await this.apis.wasteMovementExternalAPI.createMovement(
+    this.testData
+  )
+})
 
-      // Assert
-      expect(result.statusCode).toBe(201)
-      expect(result.data).toMatchObject(testData)
-    })
-  })
+Then('the movement should be created successfully', async function () {
+  // Assert - verify the result
+  expect(this.response.statusCode).to.equal(201)
+  expect(this.response.data).to.include(this.testData)
 })
 ```
 
 ### Best Practices
 
-1. **Use descriptive test names** - Describe what the test verifies
-2. **Follow AAA pattern** - Arrange, Act, Assert
-3. **Test one thing** - Each test should verify one specific behavior
+1. **Use descriptive scenario names** - Describe what the scenario verifies
+2. **Follow Given-When-Then pattern** - Arrange, Act, Assert
+3. **Test one behavior** - Each scenario should verify one specific behavior
 4. **Use async/await** - All API calls are asynchronous
 5. **Check status codes** - Always verify the HTTP response status
+6. **Use tags** - Organize scenarios with tags like `@smoke`, `@regression`
 
 ### Common Patterns
 
 ```javascript
 // Testing successful API calls
-const response = await globalThis.apis.example.getPost(1)
-expect(response.statusCode).toBe(200)
-expect(response.data).toHaveProperty('id', 1)
+const response = await this.apis.wasteMovementExternalAPI.getHealth()
+expect(response.statusCode).to.equal(200)
+expect(response.data).to.deep.equal({ message: 'success' })
 
 // Testing error scenarios
-const errorResponse = await globalThis.apis.example.getPost(999999)
-expect([404, 200]).toContain(errorResponse.statusCode) // Handle API quirks
+const errorResponse =
+  await this.apis.wasteMovementExternalAPI.receiveMovement(invalidData)
+expect([404, 400]).to.include(errorResponse.statusCode)
 
 // Testing data creation
-const newData = { title: 'Test', body: 'Content', userId: 1 }
-const createResponse = await globalThis.apis.example.createPost(newData)
-expect(createResponse.statusCode).toBe(201)
-expect(createResponse.data).toMatchObject(newData)
+const newData = {
+  /* movement data */
+}
+const createResponse =
+  await this.apis.wasteMovementExternalAPI.receiveMovement(newData)
+expect(createResponse.statusCode).to.equal(200)
+expect(createResponse.data).to.have.property('globalMovementId')
 ```
+
+## API Factory
+
+The test framework uses an API factory pattern to provide fresh API instances for each test scenario. This ensures test isolation and prevents state leakage between scenarios.
+
+### Available API Instances
+
+- `this.apis.wasteMovementExternalAPI` - Waste Movement API for managing waste movements
+- `this.apis.cognitoOAuthApi` - OAuth2 Authentication API for client credentials flow
+
+### API Factory Implementation
+
+The API factory creates fresh instances before each scenario and cleans them up afterward:
+
+```javascript
+// Before each scenario
+globalThis.apis = ApiFactory.create()
+
+// After each scenario
+delete globalThis.apis
+```
+
+## Test Configuration
+
+The test suite automatically validates required environment variables and provides global access to configuration:
+
+```javascript
+// Access configuration globally
+const clientId = global.testConfig.cognitoClientId
+const clientSecret = global.testConfig.cognitoClientSecret
+const environment = global.testConfig.environment
+```
+
+### Configuration Validation
+
+The test suite validates that all required environment variables are present when tests start. If any required variables are missing, tests will fail with a clear error message.
 
 ## Environment Configuration
 
@@ -103,12 +174,11 @@ See `CONFIGURATION.md` for detailed setup instructions.
 
 ## Running Tests
 
-- `npm test` - Run all tests with reporting
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:debug` - Debug tests
-- `npm run test:coverage` - Generate coverage report
-- `npm run test:ci` - Run tests in CI mode
-- `npm run test:verbose` - Run with detailed output
+- `npm test` - Run all Cucumber tests with reporting
+- `cucumber-js --tags "@test"` - Run a specific test
+- `cucumber-js test/features/xxx.feature` - Run a specific feature file
+
+**Note:** Use `cucumber-js` directly for debugging to avoid the report generation step that runs after tests.
 
 ## Troubleshooting
 
@@ -131,6 +201,6 @@ See `CONFIGURATION.md` for detailed setup instructions.
 
 ### Getting Help
 
-1. Check Jest configuration in `jest.config.js`
-2. Review test setup in `test/setup/jestSetupFilesAfterEnv.js`
-3. Look at existing test examples in `test/specs/`
+1. Check Cucumber configuration in `cucumber.js`
+2. Review test setup in `test/support/hooks.js`
+3. Look at existing test examples in `test/features/` and `test/step-definitions/`
