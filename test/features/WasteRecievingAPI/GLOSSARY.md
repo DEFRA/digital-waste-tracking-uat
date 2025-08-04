@@ -63,7 +63,7 @@ This glossary defines the key terms and phrases used consistently across the Was
 
 - **Definition**: A data structure containing waste classification information within the waste array
 - **Usage**: "waste item with a valid EWC code"
-- **Context**: Contains EWC codes, description, form, containers, quantity data, and hazardous properties
+- **Context**: Contains EWC codes, description, form, containers, quantity data, hazardous properties, and POPs indicators
 
 ### Hazardous Properties
 
@@ -76,6 +76,24 @@ This glossary defines the key terms and phrases used consistently across the Was
 - **Definition**: A hazardous substance within the waste item that requires concentration specification
 - **Usage**: "chemical or biological component name", "chemical or biological component has a concentration value"
 - **Context**: Part of the hazardous properties data structure, requires name and concentration
+
+### Disposal or Recovery Code
+
+- **Definition**: A code indicating the intended treatment method for waste (disposal or recovery)
+- **Usage**: "disposal or recovery code", "valid disposal or recovery code"
+- **Context**: Part of the waste item data structure, requires code and associated quantity
+
+### POPs Indicator
+
+- **Definition**: A boolean indicator showing whether waste contains persistent organic pollutants
+- **Usage**: "POPs indicator", "indicates it contains persistent organic pollutants"
+- **Context**: Part of the waste item data structure, controls whether POPs component data is required
+
+### Weight Estimate Indicator
+
+- **Definition**: A boolean indicator showing whether the waste quantity is an estimate or actual measurement
+- **Usage**: "weight estimate indicator", "container weight is an estimate/not an estimate"
+- **Context**: Part of the quantity data structure within the waste item
 
 ### Multiple EWC Codes
 
@@ -138,6 +156,24 @@ This glossary defines the key terms and phrases used consistently across the Was
 - **Usage**: "the waste item indicates it contains hazardous properties", "the chemical or biological component has a concentration value"
 - **Context**: Used to set up hazardous waste test conditions and component specifications
 
+### Treatment Code Configuration
+
+- **Definition**: Modifying disposal or recovery codes and associated quantities within the waste item
+- **Usage**: "the waste item has a valid disposal or recovery code", "the waste item has no disposal or recovery codes"
+- **Context**: Used to set up waste treatment test conditions and quantity specifications
+
+### POPs Configuration
+
+- **Definition**: Modifying POPs indicators and related component data within the waste item
+- **Usage**: "the waste item indicates it contains persistent organic pollutants", "the waste item has no POPs indicator"
+- **Context**: Used to set up POPs test conditions and component specifications
+
+### Weight Estimate Configuration
+
+- **Definition**: Modifying weight estimate indicators within the waste item quantity data
+- **Usage**: "the waste item container weight indicates it is an estimate/not an estimate", "the waste item has no weight estimate indicator"
+- **Context**: Used to set up weight estimate test conditions and quantity specifications
+
 ### Inform
 
 - **Definition**: To provide feedback to the user about operation results
@@ -178,6 +214,9 @@ Feature files follow the pattern: `waste-receipt-{domain}.feature` (current nami
 - `waste-receipt-sites.feature`
 - `waste-receipt-ewc-codes.feature`
 - `waste-receipt-hazardous-concentration.feature`
+- `waste-receipt-treatment-codes.feature`
+- `waste-receipt-pops-indicator.feature`
+- `waste-receipt-weight-estimate.feature`
 
 Note: File names maintain the "waste-receipt" prefix for consistency with the existing folder structure, while the content uses "Waste Movement Receipt" terminology.
 
@@ -187,5 +226,8 @@ Features are tagged with ticket references:
 
 - `@DWT-381` - EWC Code Validation
 - `@DWT-382` - Hazardous Concentration Validation
+- `@DWT-387` - Weight Estimate Validation
+- `@DWT-389` - POPs Indicator Validation
+- `@DWT-395` - Treatment Codes Validation
 - `@DWT-480` - Authentication
 - `@DWT-481` - Site Validation
