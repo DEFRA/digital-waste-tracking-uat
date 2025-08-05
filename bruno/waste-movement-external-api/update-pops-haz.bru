@@ -1,0 +1,96 @@
+meta {
+  name: Update POPs + Hazardous
+  type: http
+  seq: 10
+}
+
+put {
+  url: {{baseUrl}}/movements/{{globalMovementId}}/receive
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+    "hazardousWasteConsignmentNumber": "HWCN-POPS-HAZ-UPDATE",
+    "yourUniqueReference": "REF-POPS-HAZ-UPDATE",
+    "otherReferencesForMovement": "Updated basic movement with POPs and hazardous data",
+    "specialHandlingRequirements": "Special handling for complex contamination with POPs and hazardous components",
+    "waste": [
+      {
+        "ewcCode": "020101",
+        "wasteDescription": "Updated basic waste now containing POPs and hazardous components from contaminated industrial site",
+        "form": "Mixed",
+        "numberOfContainers": 8,
+        "typeOfContainers": "Specialist contaminated waste containers",
+        "quantity": {
+          "metric": "Tonnes",
+          "amount": 1.3,
+          "isEstimate": true
+        },
+        "pops": {
+          "containsPops": true,
+          "pops": [
+            {
+              "name": "Aldrin",
+              "concentration": 0.14
+            },
+            {
+              "name": "Dieldrin",
+              "concentration": 0.10
+            },
+            {
+              "name": "Endrin",
+              "concentration": 0.06
+            }
+          ]
+        },
+        "hazardous": {
+          "components": [
+            {
+              "name": "Mercury",
+              "concentration": 0.25
+            },
+            {
+              "name": "Arsenic",
+              "concentration": 0.18
+            },
+            {
+              "name": "Chromium",
+              "concentration": 0.32
+            }
+          ]
+        }
+      }
+    ],
+    "carrier": {
+      "organisationName": "Complex Update Carrier Ltd",
+      "address": "123 Complex Update Street, Complex Update City, CUC1 2AB",
+      "emailAddress": "complexupdate@carrier.com",
+      "phoneNumber": "01234567890",
+      "meansOfTransport": "Road"
+    },
+    "acceptance": {
+      "acceptingAll": true
+    },
+    "receipt": {
+      "dateTimeReceived": "{{timestamp}}",
+      "disposalOrRecoveryCodes": [
+        {
+          "code": "R1",
+          "quantity": {
+            "metric": "Tonnes",
+            "amount": 1.3,
+            "isEstimate": true
+          }
+        }
+      ]
+    }
+  }
+}
+
+script:pre-request {
+  const now = new Date().toISOString();
+  bru.setVar('timestamp', now);
+} 
