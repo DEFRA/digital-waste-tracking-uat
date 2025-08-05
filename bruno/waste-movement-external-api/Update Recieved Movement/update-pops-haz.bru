@@ -1,11 +1,11 @@
 meta {
   name: Update POPs + Hazardous
   type: http
-  seq: 10
+  seq: 3
 }
 
 put {
-  url: {{baseUrl}}/movements/{{globalMovementId}}/receive
+  url: {{baseUrl}}/movements/{{wasteTrackingId}}/receive
   body: json
   auth: none
 }
@@ -19,7 +19,7 @@ body:json {
     "specialHandlingRequirements": "Special handling for complex contamination with POPs and hazardous components",
     "waste": [
       {
-        "ewcCode": "020101",
+        "ewcCodes": ["020101"],
         "wasteDescription": "Updated basic waste now containing POPs and hazardous components from contaminated industrial site",
         "form": "Mixed",
         "numberOfContainers": 8,
@@ -93,4 +93,4 @@ body:json {
 script:pre-request {
   const now = new Date().toISOString();
   bru.setVar('timestamp', now);
-} 
+}

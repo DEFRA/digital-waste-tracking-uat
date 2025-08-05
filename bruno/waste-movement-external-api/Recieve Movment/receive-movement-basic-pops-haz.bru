@@ -1,7 +1,7 @@
 meta {
   name: Receive Movement - Basic + POPs + Hazardous
   type: http
-  seq: 6
+  seq: 2
 }
 
 post {
@@ -16,7 +16,7 @@ body:json {
     "hazardousWasteConsignmentNumber": "HWCN345678",
     "waste": [
       {
-        "ewcCode": "020101",
+        "ewcCodes": ["020101"],
         "wasteDescription": "Complex waste with POPs and hazardous components from contaminated industrial site",
         "form": "Mixed",
         "numberOfContainers": 15,
@@ -88,10 +88,10 @@ body:json {
 }
 
 vars:post-response {
-  globalMovementId: res.body.globalMovementId
+  wasteTrackingId: res.body.globalMovementId
 }
 
 script:pre-request {
   const now = new Date().toISOString();
   bru.setVar('timestamp', now);
-} 
+}

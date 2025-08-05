@@ -1,11 +1,11 @@
 meta {
-  name: Update Hazardous
+  name: Receive Movement - Basic + Hazardous
   type: http
-  seq: 9
+  seq: 2
 }
 
-put {
-  url: {{baseUrl}}/movements/{{globalMovementId}}/receive
+post {
+  url: {{baseUrl}}/movements/receive
   body: json
   auth: none
 }
@@ -13,44 +13,41 @@ put {
 body:json {
   {
     "receivingSiteId": "12345678-1234-1234-1234-123456789012",
-    "hazardousWasteConsignmentNumber": "HWCN-HAZ-UPDATE",
-    "yourUniqueReference": "REF-HAZ-UPDATE",
-    "otherReferencesForMovement": "Updated basic movement with hazardous data",
-    "specialHandlingRequirements": "Special handling for hazardous components",
+    "hazardousWasteConsignmentNumber": "HWCN789012",
     "waste": [
       {
-        "ewcCode": "020101",
-        "wasteDescription": "Updated basic waste now containing hazardous components from industrial process",
+        "ewcCodes": ["020101"],
+        "wasteDescription": "Hazardous waste with heavy metal components from industrial process",
         "form": "Mixed",
-        "numberOfContainers": 6,
-        "typeOfContainers": "Hazardous waste containers",
+        "numberOfContainers": 12,
+        "typeOfContainers": "Steel drums and containers",
         "quantity": {
           "metric": "Tonnes",
-          "amount": 0.9,
+          "amount": 0.75,
           "isEstimate": false
         },
         "hazardous": {
           "components": [
             {
               "name": "Mercury",
-              "concentration": 0.20
+              "concentration": 0.25
             },
             {
               "name": "Lead",
-              "concentration": 0.35
+              "concentration": 0.45
             },
             {
               "name": "Cadmium",
-              "concentration": 0.15
+              "concentration": 0.12
             }
           ]
         }
       }
     ],
     "carrier": {
-      "organisationName": "Hazardous Update Carrier Ltd",
-      "address": "123 Hazardous Update Street, Hazardous Update City, HUC1 2AB",
-      "emailAddress": "hazupdate@carrier.com",
+      "organisationName": "Hazardous Carrier Ltd",
+      "address": "123 Hazardous Street, Hazardous City, HC1 2AB",
+      "emailAddress": "hazardous@carrier.com",
       "phoneNumber": "01234567890",
       "meansOfTransport": "Road"
     },
@@ -64,7 +61,7 @@ body:json {
           "code": "R1",
           "quantity": {
             "metric": "Tonnes",
-            "amount": 0.9,
+            "amount": 0.75,
             "isEstimate": false
           }
         }
@@ -73,7 +70,11 @@ body:json {
   }
 }
 
+vars:post-response {
+  wasteTrackingId: res.body.globalMovementId
+}
+
 script:pre-request {
   const now = new Date().toISOString();
   bru.setVar('timestamp', now);
-} 
+}

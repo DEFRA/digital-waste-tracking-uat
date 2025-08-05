@@ -20,7 +20,7 @@ body:json {
     "specialHandlingRequirements": "Special handling required for abnormal hazardous waste",
     "waste": [
       {
-        "ewcCode": "020101",
+        "ewcCodes": ["020101"],
         "wasteDescription": "Complex mixed waste from construction and demolition containing hazardous components and POPs",
         "form": "Mixed",
         "numberOfContainers": 8,
@@ -65,7 +65,7 @@ body:json {
         }
       },
       {
-        "ewcCode": "150110",
+        "ewcCodes": ["150110"],
         "wasteDescription": "Secondary waste containing plastic packaging and minor contaminants",
         "form": "Solid",
         "numberOfContainers": 5,
@@ -151,7 +151,7 @@ body:json {
 }
 
 vars:post-response {
-  globalMovementId: res.body.globalMovementId
+  wasteTrackingId: res.body.globalMovementId
 }
 
 script:pre-request {
