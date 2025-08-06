@@ -1,3 +1,4 @@
+@regression-tests
 Feature: OAuth2 Client Credentials Authentication
   As a client application
   I want to authenticate using OAuth2 client credentials
@@ -6,7 +7,6 @@ Feature: OAuth2 Client Credentials Authentication
   Background:
     Given I have access to the Gateway API
 
-  @test1 @test2
   Scenario: Successful authentication with valid credentials
     When I authenticate with valid client credentials
     Then the authentication should be successful

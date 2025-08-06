@@ -61,6 +61,8 @@ Start application you are testing on the url specified in your test configuratio
 npm test
 ```
 
+**Note:** The default `npm test` command runs only regression tests (scenarios tagged with `@regression-tests`). To run all tests, use `cucumber-js` directly.
+
 ### Available NPM Scripts
 
 ```bash
@@ -94,6 +96,12 @@ cucumber-js test/features/waste-movement.feature
 
 # Debug the full test suite
 cucumber-js
+
+# Run only regression tests
+cucumber-js --tags "@regression-tests"
+
+# Run all tests except regression tests
+cucumber-js --tags "not @regression-tests"
 ```
 
 **Note:** When debugging, run `cucumber-js` directly instead of `npm test` to avoid the report generation step that runs after the tests.

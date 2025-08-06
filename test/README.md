@@ -97,7 +97,7 @@ Then('the movement should be created successfully', async function () {
 3. **Test one behavior** - Each scenario should verify one specific behavior
 4. **Use async/await** - All API calls are asynchronous
 5. **Check status codes** - Always verify the HTTP response status
-6. **Use tags** - Organize scenarios with tags like `@smoke`, `@regression`
+6. **Use tags** - Organize scenarios with tags like `@regression-tests` and `@DWT-XXX`
 
 ### Common Patterns
 
@@ -172,9 +172,39 @@ npm test
 
 See `CONFIGURATION.md` for detailed setup instructions.
 
+## Test Tags
+
+The test suite uses tags to organize and categorize scenarios:
+
+- `@regression-tests` - Core regression test scenarios that are run by default with `npm test`
+- `@DWT-XXX` - Feature-specific tags for tracking requirements (e.g., `@DWT-480`, `@DWT-381`)
+- `@test1`, `@test2` - Legacy tags for specific test scenarios
+
+### Tag Usage Examples
+
+```bash
+# Run only regression tests (default npm test behavior)
+cucumber-js --tags "@regression-tests"
+
+# Run tests for a specific feature/ticket
+cucumber-js --tags "@DWT-XXX"
+
+# Run regression tests for a specific feature
+cucumber-js --tags "@regression-tests and @DWT-XXX"
+
+# Run all tests except regression tests
+cucumber-js --tags "not @regression-tests"
+
+# Run tests with multiple tags
+cucumber-js --tags "@regression-tests and not @DWT-XXX"
+```
+
 ## Running Tests
 
-- `npm test` - Run all Cucumber tests with reporting
+- `npm test` - Run regression tests (scenarios tagged with `@regression-tests`) with reporting
+- `cucumber-js` - Run all Cucumber tests without reporting
+- `cucumber-js --tags "@regression-tests"` - Run only regression tests
+- `cucumber-js --tags "not @regression-tests"` - Run all tests except regression tests
 - `cucumber-js --tags "@test"` - Run a specific test
 - `cucumber-js test/features/xxx.feature` - Run a specific feature file
 

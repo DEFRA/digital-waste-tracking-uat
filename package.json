@@ -21,7 +21,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
-    "test": "cucumber-js ; npm run report:generate",
+    "test": "cucumber-js --tags @regression-tests ; npm run report:generate",
     "report:generate": "allure generate allure-results --single-file --clean",
     "report:clean": "rm -rf allure-results && rm -rf allure-report",
     "report:open": "open ./allure-report/index.html",

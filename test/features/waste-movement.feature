@@ -1,3 +1,4 @@
+@regression-tests
 Feature: Waste Movement API
   As a waste management system
   I want to interact with the waste movement API
