@@ -1,11 +1,11 @@
 meta {
   name: Update Basic
   type: http
-  seq: 7
+  seq: 2
 }
 
 put {
-  url: {{baseUrl}}/movements/{{globalMovementId}}/receive
+  url: {{baseUrl}}/movements/{{wasteTrackingId}}/receive
   body: json
   auth: none
 }
@@ -18,7 +18,7 @@ body:json {
     "specialHandlingRequirements": "Standard handling requirements",
     "waste": [
       {
-        "ewcCode": "020101",
+        "ewcCodes": ["020101"],
         "wasteDescription": "Updated basic mixed construction and demolition waste",
         "form": "Mixed",
         "numberOfContainers": 4,
@@ -59,4 +59,4 @@ body:json {
 script:pre-request {
   const now = new Date().toISOString();
   bru.setVar('timestamp', now);
-} 
+}
