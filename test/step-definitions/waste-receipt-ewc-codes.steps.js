@@ -52,7 +52,7 @@ Given(
 )
 
 Given('I have a valid authentication header', function () {
-  // Authentication is handled by the API layer - no action needed
+  // not implemented yet - will be done in the future
 })
 
 Given('the waste item has a valid 6-digit EWC code', function () {
