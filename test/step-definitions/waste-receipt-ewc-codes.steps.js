@@ -65,7 +65,8 @@ Given('the waste item has multiple valid 6-digit EWC codes', function () {
     '020101',
     '020102',
     '020103',
-    '020104'
+    '020104',
+    '020201'
   ]
 })
 
