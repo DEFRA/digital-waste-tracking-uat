@@ -1,4 +1,4 @@
-@DWT-381
+@DWT-381 @regression-tests
 Feature: EWC Code Validation for Waste Movement Receipt Submissions
   As a waste receiver
   I should only be able to submit waste movement receipts with valid EWC codes
