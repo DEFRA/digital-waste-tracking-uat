@@ -1,4 +1,4 @@
-@DWT-389
+@DWT-389 @DRW-349 @regression-tests
 Feature: POPs Indicator Validation for Waste Movement Receipt Submissions
   As a weighbridge operator
   I should only be able to submit waste movement receipts with valid POPs indicators
@@ -18,8 +18,9 @@ Feature: POPs Indicator Validation for Waste Movement Receipt Submissions
     When I submit the waste movement receipt
     Then I should be informed that the waste movement was created successfully
 
-  Scenario: Attempting to Submit a Waste Movement Receipt without indicating if it contains POPs
-    Given the waste item has no POPs indicator
+  Scenario: Attempting to Submit a Waste Movement Receipt with POS without indicating if it contains POPs
+    Given the waste item indicates it does not contain persistent organic pollutants
+    But the waste item includes just the list of POPs
     When I submit the waste movement receipt
     Then I should be informed that the waste movement was not created
     And I should be informed that a POPs indicator is required 

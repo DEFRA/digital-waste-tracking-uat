@@ -56,51 +56,6 @@ export class WasteMovementExternalAPI extends BaseAPI {
     }
   }
 
-  async addHazardousDetails(wasteTrackingId, hazardousData) {
-    const { statusCode, responseHeaders, body } = await this.put(
-      `/movements/${wasteTrackingId}/receive/hazardous`,
-      JSON.stringify(hazardousData),
-      { 'Content-Type': 'application/json' }
-    )
-    const responseData = await body.json()
-
-    return {
-      statusCode,
-      responseHeaders,
-      data: responseData
-    }
-  }
-
-  async addPopsDetails(wasteTrackingId, popsData) {
-    const { statusCode, responseHeaders, body } = await this.put(
-      `/movements/${wasteTrackingId}/pops`,
-      JSON.stringify(popsData),
-      { 'Content-Type': 'application/json' }
-    )
-    const responseData = await body.json()
-
-    return {
-      statusCode,
-      responseHeaders,
-      data: responseData
-    }
-  }
-
-  async addPeprDetails(wasteTrackingId, peprData) {
-    const { statusCode, responseHeaders, body } = await this.put(
-      `/movements/${wasteTrackingId}/pepr`,
-      JSON.stringify(peprData),
-      { 'Content-Type': 'application/json' }
-    )
-    const responseData = await body.json()
-
-    return {
-      statusCode,
-      responseHeaders,
-      data: responseData
-    }
-  }
-
   async getHealth() {
     const { statusCode, responseHeaders, body } = await this.get('/health')
     const responseData = await body.json()
