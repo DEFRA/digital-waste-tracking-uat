@@ -1,4 +1,4 @@
-@DWT-389 @DRW-349 @regression-tests @this
+@DWT-389 @DRW-349 @regression-tests
 Feature: POPs Indicator Validation for Waste Movement Receipt Submissions
   As a weighbridge operator
   I should only be able to submit waste movement receipts with valid POPs indicators
