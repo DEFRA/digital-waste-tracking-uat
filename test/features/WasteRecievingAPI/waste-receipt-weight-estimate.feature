@@ -1,4 +1,4 @@
-@DWT-387 @regression-tests
+@DWT-387
 Feature: Waste Weight Estimate Validation for Waste Movement Receipt Submissions
   As a waste receiver
   I should only be able to submit waste movement receipts with valid weight estimate indicators
