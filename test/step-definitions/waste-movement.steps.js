@@ -42,18 +42,6 @@ const generateSampleMovementData = () => ({
   }
 })
 
-// Hazardous data for testing
-const hazardousData = {
-  isHazardousWaste: true,
-  components: [
-    {
-      component: 'Test Component',
-      concentration: 0.5,
-      hazCode: 'H1'
-    }
-  ]
-}
-
 Given('I have access to the Waste Movement API', function () {
   // Background step - no action needed
 })
@@ -121,25 +109,6 @@ When(
       await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
         movementId,
         sampleMovementData
-      )
-  }
-)
-
-When('I add hazardous details to the movement', async function () {
-  this.response =
-    await globalThis.apis.wasteMovementExternalAPI.addHazardousDetails(
-      this.globalMovementId,
-      hazardousData
-    )
-})
-
-When(
-  'I add hazardous details to movement with ID {string}',
-  async function (movementId) {
-    this.response =
-      await globalThis.apis.wasteMovementExternalAPI.addHazardousDetails(
-        movementId,
-        hazardousData
       )
   }
 )

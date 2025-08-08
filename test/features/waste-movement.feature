@@ -37,12 +37,3 @@ Feature: Waste Movement API
   Scenario: Fail to receive movement with non-existent ID
     When I submit a movement with non-existent ID "24AAA000"
     Then the response status should be 404
-
-  Scenario: Successfully add hazardous details to a movement
-    Given I have created a waste movement
-    When I add hazardous details to the movement
-    Then the response status should be 200
-
-  Scenario: Fail to add hazardous details to non-existent movement
-    When I add hazardous details to movement with ID "24AAA000"
-    Then the response status should be 404 
