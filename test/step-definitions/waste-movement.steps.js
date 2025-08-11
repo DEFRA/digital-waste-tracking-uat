@@ -78,43 +78,21 @@ When(
   }
 )
 
-Then('the response status should be {int}', function (expectedStatus) {
-  expect(this.response.statusCode).to.equal(expectedStatus)
-})
-
-Then('the content type should be {string}', function (expectedContentType) {
-  expect(this.response.responseHeaders['content-type']).to.equal(
-    expectedContentType
-  )
-})
-
-Then('the response should contain success message', function () {
-  expect(this.response.data).to.deep.equal({ message: 'success' })
-})
-
 Then('the response should contain a global movement ID', function () {
   expect(this.response.data).to.have.property('globalMovementId')
 })
 
-Then('the global movement ID should be a string', function () {
-  expect(typeof this.response.data.globalMovementId).to.equal('string')
-})
-
-Then('the response should contain an error message', function () {
-  expect(this.response.data).to.have.deep.nested.property(
-    'validation.errors.0.message'
-  )
-  expect(this.response.data).to.not.have.deep.nested.property(
-    'validation.errors.1.message'
+Then('I should recieve the documentation', function () {
+  expect(this.response.statusCode).to.equal(200)
+  expect(this.response.responseHeaders['content-type']).to.equal(
+    'text/html; charset=utf-8'
   )
 })
 
-Then('I should be informed that the documentation is available', function () {
+Then('I should recieve the health check response', function () {
   expect(this.response.statusCode).to.equal(200)
-})
-
-Then('I should be informed that the API is healthy', function () {
-  expect(this.response.statusCode).to.equal(200)
+  expect(this.response.data).to.have.property('message')
+  expect(this.response.data.message).to.equal('success')
 })
 
 Then(
@@ -129,6 +107,12 @@ Then(
   'I should be informed that the waste movement was not created',
   function () {
     expect(this.response.statusCode).to.equal(400)
+    expect(this.response.data).to.have.deep.nested.property(
+      'validation.errors.0.message'
+    )
+    expect(this.response.data).to.not.have.deep.nested.property(
+      'validation.errors.1.message'
+    )
   }
 )
 
