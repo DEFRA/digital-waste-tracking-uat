@@ -1,53 +1,13 @@
 import { Given, When, Then } from '@cucumber/cucumber'
 import { expect } from 'chai'
-
-const generateSampleMovementData = () => ({
-  receivingSiteId: '12345678-1234-1234-1234-123456789012',
-  receiverReference: `REF${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-  specialHandlingRequirements: 'None',
-  waste: [
-    {
-      ewcCode: '020101',
-      description: 'Mixed waste',
-      form: 'Mixed',
-      containers: 'Bulk',
-      quantity: {
-        value: 1.5,
-        unit: 'Tonnes',
-        isEstimate: false
-      }
-    }
-  ],
-  carrier: {
-    registrationNumber: `REG${Date.now()}`,
-    organisationName: 'Test Carrier Ltd',
-    address: '123 Test Street',
-    emailAddress: `test${Date.now()}@carrier.com`,
-    companiesHouseNumber: '12345678',
-    phoneNumber: '01234567890',
-    vehicleRegistration: 'AB12 CDE',
-    meansOfTransport: 'Road'
-  },
-  acceptance: {
-    acceptingAll: true
-  },
-  receiver: {
-    authorisationType: 'TBD',
-    authorisationNumber: `AUTH${Date.now()}`,
-    regulatoryPositionStatement: 'None'
-  },
-  receipt: {
-    estimateOrActual: 'Actual',
-    dateTimeReceived: new Date().toISOString()
-  }
-})
+import { generateBaseWasteReceiptData } from '../support/test-data-manager.js'
 
 Given('I have access to the Waste Movement API', function () {
   // Background step - no action needed
 })
 
 Given('I have created a waste movement', async function () {
-  const sampleMovementData = generateSampleMovementData()
+  const sampleMovementData = generateBaseWasteReceiptData()
   this.movementData = sampleMovementData
 
   const response =
@@ -71,7 +31,7 @@ When('I request the health check', async function () {
 })
 
 When('I submit a new waste movement with valid data', async function () {
-  const sampleMovementData = generateSampleMovementData()
+  const sampleMovementData = generateBaseWasteReceiptData()
   this.movementData = sampleMovementData
 
   this.response =
@@ -80,16 +40,21 @@ When('I submit a new waste movement with valid data', async function () {
     )
 })
 
-When('I submit a waste movement with missing quantity data', async function () {
-  const invalidData = generateSampleMovementData()
-  delete invalidData.waste[0].quantity
+When(
+  'I submit a waste movement with missing quantity amount data',
+  async function () {
+    const invalidData = generateBaseWasteReceiptData()
+    delete invalidData.waste[0].quantity.amount
 
-  this.response =
-    await globalThis.apis.wasteMovementExternalAPI.receiveMovement(invalidData)
-})
+    this.response =
+      await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+        invalidData
+      )
+  }
+)
 
-When('I update the movement quantity to {float}', function (newQuantity) {
-  this.movementData.waste[0].quantity.value = newQuantity
+When('I update the movement amount to {float}', function (newAmount) {
+  this.movementData.waste[0].quantity.amount = newAmount
 })
 
 When('I submit the movement with the existing ID', async function () {
@@ -103,7 +68,7 @@ When('I submit the movement with the existing ID', async function () {
 When(
   'I submit a movement with non-existent ID {string}',
   async function (movementId) {
-    const sampleMovementData = generateSampleMovementData()
+    const sampleMovementData = generateBaseWasteReceiptData()
 
     this.response =
       await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
@@ -136,5 +101,44 @@ Then('the global movement ID should be a string', function () {
 })
 
 Then('the response should contain an error message', function () {
-  expect(this.response.data).to.have.property('message')
+  expect(this.response.data).to.have.deep.nested.property(
+    'validation.errors.0.message'
+  )
+  expect(this.response.data).to.not.have.deep.nested.property(
+    'validation.errors.1.message'
+  )
+})
+
+Then('I should be informed that the documentation is available', function () {
+  expect(this.response.statusCode).to.equal(200)
+})
+
+Then('I should be informed that the API is healthy', function () {
+  expect(this.response.statusCode).to.equal(200)
+})
+
+Then(
+  'I should be informed that the waste movement was created successfully',
+  function () {
+    expect(this.response.statusCode).to.equal(200)
+    expect(this.response.data).to.have.property('globalMovementId')
+  }
+)
+
+Then(
+  'I should be informed that the waste movement was not created',
+  function () {
+    expect(this.response.statusCode).to.equal(400)
+  }
+)
+
+Then(
+  'I should be informed that the waste movement was updated successfully',
+  function () {
+    expect(this.response.statusCode).to.equal(200)
+  }
+)
+
+Then('I should be informed that the movement was not found', function () {
+  expect(this.response.statusCode).to.equal(404)
 })

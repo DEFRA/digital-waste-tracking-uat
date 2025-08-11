@@ -1,6 +1,6 @@
 import { Before, After, BeforeAll, AfterAll } from '@cucumber/cucumber'
 import { ApiFactory } from '../apis/api-factory.js'
-import { testConfig } from '../config/test-config.js'
+import { testConfig } from './test-config.js'
 import { setGlobalDispatcher, Agent } from 'undici'
 
 let agent
