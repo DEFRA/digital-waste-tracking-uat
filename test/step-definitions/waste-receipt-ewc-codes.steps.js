@@ -1,48 +1,7 @@
 import { Given, When, Then } from '@cucumber/cucumber'
 import { expect } from 'chai'
 
-const generateBaseWasteReceiptData = () => ({
-  receivingSiteId: '12345678-1234-1234-1234-123456789012',
-  yourUniqueReference: `REF${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-  specialHandlingRequirements: 'None',
-  waste: [
-    {
-      ewcCodes: ['020101'],
-      wasteDescription: 'Mixed waste from construction and demolition',
-      form: 'Mixed',
-      numberOfContainers: 3,
-      typeOfContainers: 'Skip containers',
-      quantity: {
-        metric: 'Tonnes',
-        amount: 2.5,
-        isEstimate: false
-      }
-    }
-  ],
-  carrier: {
-    organisationName: 'Test Carrier Ltd',
-    address: '123 Test Street, Test City, TC1 2AB',
-    emailAddress: `test${Date.now()}@carrier.com`,
-    phoneNumber: '01234567890',
-    meansOfTransport: 'Road'
-  },
-  acceptance: {
-    acceptingAll: true
-  },
-  receipt: {
-    dateTimeReceived: new Date().toISOString(),
-    disposalOrRecoveryCodes: [
-      {
-        code: 'R1',
-        quantity: {
-          metric: 'Tonnes',
-          amount: 2.5,
-          isEstimate: false
-        }
-      }
-    ]
-  }
-})
+import { generateBaseWasteReceiptData } from '../support/test-data-manager.js'
 
 Given(
   'I have a complete waste movement receipt with valid base data',
@@ -100,36 +59,6 @@ When('I submit the waste movement receipt', async function () {
       this.wasteReceiptData
     )
 })
-
-Then(
-  'I should be informed that the waste movement was created successfully',
-  function () {
-    // Check the response status code of http request
-    expect(this.response).to.have.property('statusCode')
-    expect(this.response.statusCode).to.equal(200)
-
-    // Check the response data of http request
-    expect(this.response.data).to.have.property('globalMovementId')
-    expect(this.response.data).to.have.property('statusCode') // status code is also in the response data
-    expect(typeof this.response.data.globalMovementId).to.equal('string')
-    expect(typeof this.response.data.statusCode).to.equal('number')
-    expect(this.response.data.globalMovementId.length).to.be.greaterThan(0)
-    expect(this.response.data.statusCode).to.equal(200)
-  }
-)
-
-Then(
-  'I should be informed that the waste movement was not created',
-  function () {
-    expect(this.response.statusCode).to.equal(400)
-
-    // Check for validation errors structure
-    expect(this.response.data).to.have.property('validation')
-    expect(this.response.data.validation).to.have.property('errors')
-    expect(this.response.data.validation.errors).to.be.an('array')
-    expect(this.response.data.validation.errors.length).to.be.greaterThan(0)
-  }
-)
 
 Then(
   'I should be informed that a maximum of 5 EWC codes are allowed',
