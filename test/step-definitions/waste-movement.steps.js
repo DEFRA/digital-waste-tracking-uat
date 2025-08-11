@@ -17,9 +17,6 @@ Given('I have created a waste movement', async function () {
 
   expect(response.statusCode).to.equal(200)
   this.globalMovementId = response.data.globalMovementId
-  process.stdout.write(
-    'Created movement with ID: ' + response.data.globalMovementId + '\n'
-  )
 })
 
 When('I request the swagger documentation', async function () {
