@@ -1,11 +1,11 @@
 meta {
-  name: Receive Movement - Complex
+  name: Update Movement - Complex
   type: http
-  seq: 1
+  seq: 6
 }
 
-post {
-  url: {{baseUrl}}/movements/receive
+put {
+  url: {{baseUrl}}/movements/{{wasteTrackingId}}/receive
   body: json
   auth: none
 }
@@ -148,10 +148,6 @@ body:json {
       ]
     }
   }
-}
-
-vars:post-response {
-  wasteTrackingId: res.body.globalMovementId
 }
 
 script:pre-request {

@@ -1,7 +1,7 @@
 meta {
-  name: Receive Movement - Basic + POPs + Hazardous
+  name: Receive Movement - Basic + POPs
   type: http
-  seq: 2
+  seq: 4
 }
 
 post {
@@ -13,17 +13,16 @@ post {
 body:json {
   {
     "receivingSiteId": "12345678-1234-1234-1234-123456789012",
-    "hazardousWasteConsignmentNumber": "HWCN345678",
     "waste": [
       {
         "ewcCodes": ["020101"],
-        "wasteDescription": "Complex waste with POPs and hazardous components from contaminated industrial site",
+        "wasteDescription": "Waste containing persistent organic pollutants from contaminated soil",
         "form": "Mixed",
-        "numberOfContainers": 15,
-        "typeOfContainers": "Specialist hazardous waste containers",
+        "numberOfContainers": 8,
+        "typeOfContainers": "IBC containers and drums",
         "quantity": {
           "metric": "Tonnes",
-          "amount": 1.2,
+          "amount": 1.8,
           "isEstimate": true
         },
         "pops": {
@@ -31,40 +30,20 @@ body:json {
           "pops": [
             {
               "name": "Aldrin",
-              "concentration": 0.18
+              "concentration": 0.15
             },
             {
-              "name": "Dieldrin",
-              "concentration": 0.22
-            },
-            {
-              "name": "Endrin",
-              "concentration": 0.05
-            }
-          ]
-        },
-        "hazardous": {
-          "components": [
-            {
-              "name": "Mercury",
-              "concentration": 0.35
-            },
-            {
-              "name": "Arsenic",
-              "concentration": 0.28
-            },
-            {
-              "name": "Chromium",
-              "concentration": 0.42
+              "name": "Chlordane",
+              "concentration": 0.08
             }
           ]
         }
       }
     ],
     "carrier": {
-      "organisationName": "Complex Carrier Ltd",
-      "address": "123 Complex Street, Complex City, CC1 2AB",
-      "emailAddress": "complex@carrier.com",
+      "organisationName": "POPs Carrier Ltd",
+      "address": "123 POPs Street, POPs City, PC1 2AB",
+      "emailAddress": "pops@carrier.com",
       "phoneNumber": "01234567890",
       "meansOfTransport": "Road"
     },
@@ -78,7 +57,7 @@ body:json {
           "code": "R1",
           "quantity": {
             "metric": "Tonnes",
-            "amount": 1.2,
+            "amount": 1.8,
             "isEstimate": true
           }
         }

@@ -1,7 +1,7 @@
 meta {
-  name: Update POPs
+  name: Update Movement - Basic + POPs
   type: http
-  seq: 3
+  seq: 4
 }
 
 put {
@@ -13,19 +13,16 @@ put {
 body:json {
   {
     "receivingSiteId": "12345678-1234-1234-1234-123456789012",
-    "yourUniqueReference": "REF-POPS-UPDATE",
-    "otherReferencesForMovement": "Updated basic movement with POPs data",
-    "specialHandlingRequirements": "Special handling for POPs contamination",
     "waste": [
       {
         "ewcCodes": ["020101"],
-        "wasteDescription": "Updated basic waste now containing POPs from soil contamination",
+        "wasteDescription": "Waste containing persistent organic pollutants from contaminated soil",
         "form": "Mixed",
-        "numberOfContainers": 4,
-        "typeOfContainers": "Soil containers and drums",
+        "numberOfContainers": 8,
+        "typeOfContainers": "IBC containers and drums",
         "quantity": {
           "metric": "Tonnes",
-          "amount": 1.5,
+          "amount": 1.8,
           "isEstimate": true
         },
         "pops": {
@@ -33,10 +30,10 @@ body:json {
           "pops": [
             {
               "name": "Aldrin",
-              "concentration": 0.12
+              "concentration": 0.15
             },
             {
-              "name": "Dieldrin",
+              "name": "Chlordane",
               "concentration": 0.08
             }
           ]
@@ -44,9 +41,9 @@ body:json {
       }
     ],
     "carrier": {
-      "organisationName": "POPs Update Carrier Ltd",
-      "address": "123 POPs Update Street, POPs Update City, PUC1 2AB",
-      "emailAddress": "popsupdate@carrier.com",
+      "organisationName": "POPs Carrier Ltd",
+      "address": "123 POPs Street, POPs City, PC1 2AB",
+      "emailAddress": "pops@carrier.com",
       "phoneNumber": "01234567890",
       "meansOfTransport": "Road"
     },
@@ -60,7 +57,7 @@ body:json {
           "code": "R1",
           "quantity": {
             "metric": "Tonnes",
-            "amount": 1.5,
+            "amount": 1.8,
             "isEstimate": true
           }
         }

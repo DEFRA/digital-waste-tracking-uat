@@ -1,7 +1,7 @@
 meta {
-  name: Update POPs + Hazardous
+  name: Update Movement - Basic + POPs + Hazardous
   type: http
-  seq: 3
+  seq: 5
 }
 
 put {
@@ -13,20 +13,17 @@ put {
 body:json {
   {
     "receivingSiteId": "12345678-1234-1234-1234-123456789012",
-    "hazardousWasteConsignmentNumber": "HWCN-POPS-HAZ-UPDATE",
-    "yourUniqueReference": "REF-POPS-HAZ-UPDATE",
-    "otherReferencesForMovement": "Updated basic movement with POPs and hazardous data",
-    "specialHandlingRequirements": "Special handling for complex contamination with POPs and hazardous components",
+    "hazardousWasteConsignmentNumber": "HWCN345678",
     "waste": [
       {
         "ewcCodes": ["020101"],
-        "wasteDescription": "Updated basic waste now containing POPs and hazardous components from contaminated industrial site",
+        "wasteDescription": "Complex waste with POPs and hazardous components from contaminated industrial site",
         "form": "Mixed",
-        "numberOfContainers": 8,
-        "typeOfContainers": "Specialist contaminated waste containers",
+        "numberOfContainers": 15,
+        "typeOfContainers": "Specialist hazardous waste containers",
         "quantity": {
           "metric": "Tonnes",
-          "amount": 1.3,
+          "amount": 1.2,
           "isEstimate": true
         },
         "pops": {
@@ -34,15 +31,15 @@ body:json {
           "pops": [
             {
               "name": "Aldrin",
-              "concentration": 0.14
+              "concentration": 0.18
             },
             {
               "name": "Dieldrin",
-              "concentration": 0.10
+              "concentration": 0.22
             },
             {
               "name": "Endrin",
-              "concentration": 0.06
+              "concentration": 0.05
             }
           ]
         },
@@ -50,24 +47,24 @@ body:json {
           "components": [
             {
               "name": "Mercury",
-              "concentration": 0.25
+              "concentration": 0.35
             },
             {
               "name": "Arsenic",
-              "concentration": 0.18
+              "concentration": 0.28
             },
             {
               "name": "Chromium",
-              "concentration": 0.32
+              "concentration": 0.42
             }
           ]
         }
       }
     ],
     "carrier": {
-      "organisationName": "Complex Update Carrier Ltd",
-      "address": "123 Complex Update Street, Complex Update City, CUC1 2AB",
-      "emailAddress": "complexupdate@carrier.com",
+      "organisationName": "Complex Carrier Ltd",
+      "address": "123 Complex Street, Complex City, CC1 2AB",
+      "emailAddress": "complex@carrier.com",
       "phoneNumber": "01234567890",
       "meansOfTransport": "Road"
     },
@@ -81,7 +78,7 @@ body:json {
           "code": "R1",
           "quantity": {
             "metric": "Tonnes",
-            "amount": 1.3,
+            "amount": 1.2,
             "isEstimate": true
           }
         }

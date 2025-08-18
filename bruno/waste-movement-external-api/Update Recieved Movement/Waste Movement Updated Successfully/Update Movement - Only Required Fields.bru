@@ -1,0 +1,36 @@
+meta {
+  name: Update Movement - Only Required Fields
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{baseUrl}}/movements/{{wasteTrackingId}}/receive
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+    "receipt": {
+      "disposalOrRecoveryCodes": [
+        {
+          "code": "R1",
+          "quantity": {
+            "metric": "Tonnes",
+            "amount": 2.5,
+            "isEstimate": false
+          }
+        }
+      ]
+    }
+  }
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}

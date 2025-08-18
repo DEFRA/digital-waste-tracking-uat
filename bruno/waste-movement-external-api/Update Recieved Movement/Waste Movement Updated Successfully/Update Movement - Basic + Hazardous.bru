@@ -1,11 +1,11 @@
 meta {
-  name: Receive Movement - Basic + Hazardous
+  name: Update Movement - Basic + Hazardous
   type: http
-  seq: 2
+  seq: 3
 }
 
-post {
-  url: {{baseUrl}}/movements/receive
+put {
+  url: {{baseUrl}}/movements/{{wasteTrackingId}}/receive
   body: json
   auth: none
 }
@@ -68,10 +68,6 @@ body:json {
       ]
     }
   }
-}
-
-vars:post-response {
-  wasteTrackingId: res.body.globalMovementId
 }
 
 script:pre-request {
