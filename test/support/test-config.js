@@ -11,7 +11,11 @@ export class TestConfig {
    * @throws {Error} If any required environment variable is missing
    */
   validateRequiredEnvVars() {
-    const requiredVars = ['COGNITO_CLIENT_ID', 'COGNITO_CLIENT_SECRET']
+    const requiredVars = [
+      'COGNITO_CLIENT_ID',
+      'COGNITO_CLIENT_SECRET',
+      'COGNITO_OAUTH_BASE_URL'
+    ]
 
     const missingVars = requiredVars.filter((varName) => !process.env[varName])
 
@@ -37,6 +41,10 @@ export class TestConfig {
    */
   get cognitoClientSecret() {
     return process.env.COGNITO_CLIENT_SECRET
+  }
+
+  get cognitoOAuthBaseUrl() {
+    return process.env.COGNITO_OAUTH_BASE_URL
   }
 
   /**

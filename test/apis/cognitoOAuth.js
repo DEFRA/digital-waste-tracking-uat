@@ -1,10 +1,9 @@
+import { testConfig } from '../support/test-config.js'
 import { BaseAPI } from './base-api.js'
 
 export class CognitoOAuthApi extends BaseAPI {
   constructor() {
-    super(
-      `https://waste-movement-external-api-c63f2.auth.eu-west-2.amazoncognito.com`
-    )
+    super(testConfig.cognitoOAuthBaseUrl)
   }
 
   async authenticate(clientId, clientSecret) {
