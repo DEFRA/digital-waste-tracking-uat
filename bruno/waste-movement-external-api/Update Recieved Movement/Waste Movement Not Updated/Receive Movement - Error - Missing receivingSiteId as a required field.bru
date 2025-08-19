@@ -5,9 +5,13 @@ meta {
 }
 
 put {
-  url: {{baseUrl}}/movements/{{wasteTrackingId}}/receive
+  url: {{baseUrl}}/movements/{{globalMovementId}}/receive
   body: json
-  auth: none
+  auth: inherit
+}
+
+headers {
+  ~Authorization: {{ManuallyObtainedAccessToken}}
 }
 
 body:json {

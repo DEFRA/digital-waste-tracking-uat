@@ -7,12 +7,16 @@ meta {
 post {
   url: {{baseUrl}}/movements/receive
   body: json
-  auth: none
+  auth: inherit
+}
+
+headers {
+  ~Authorization: {{ManuallyObtainedAccessToken}}
 }
 
 body:json {
   {
-    "receivingSiteId": "12345678-1234-1234-1234-123456789012",
+    "receivingSiteId": "{{receivingSiteId}}",
     "hazardousWasteConsignmentNumber": "HWCN123456",
     "reasonForNoConsignmentNumber": "Non-Haz Waste Transfer",
     "yourUniqueReference": "REF123456",
@@ -151,7 +155,7 @@ body:json {
 }
 
 vars:post-response {
-  wasteTrackingId: res.body.globalMovementId
+  globalMovementId: res.body.globalMovementId
 }
 
 script:pre-request {
