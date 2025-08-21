@@ -2,145 +2,163 @@
 
 ## Overview
 
-This test suite uses Cucumber with Gherkin syntax for behavior-driven development (BDD), ensuring clean and reliable tests for the Digital Waste Tracking service.
+This test suite uses Jest for unit and integration testing, ensuring clean and reliable tests for the Digital Waste Tracking service. The framework integrates with Allure for comprehensive test reporting.
 
-## Cucumber Test Structure
+## Jest Test Structure
 
-Tests are written using Gherkin syntax in `.feature` files and implemented using step definitions in JavaScript.
+Tests are written using Jest's describe/it syntax and organized by feature in the `test/specs/` directory.
 
 ### Usage
 
 ```javascript
-const { expect } = require('chai')
+import { describe, it, expect, beforeEach } from '@jest/globals'
 
-Given('I have a valid waste movement', async function () {
-  // Setup test data
-  this.testData = {
-    /* your test data */
-  }
-})
+describe('Waste Movement API', () => {
+  let wasteReceiptData
 
-When('I submit the waste movement', async function () {
-  // Perform the action
-  this.response = await this.apis.wasteMovementExternalAPI.receiveMovement(
-    this.testData
-  )
-})
+  beforeEach(() => {
+    wasteReceiptData = generateBaseWasteReceiptData()
+  })
 
-Then('the movement should be created successfully', async function () {
-  // Verify the result
-  expect(this.response.statusCode).to.equal(201)
+  it('should create a waste movement successfully', async () => {
+    const response =
+      await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+        wasteReceiptData
+      )
+
+    expect(response.statusCode).toBe(200)
+    expect(response.data).toHaveProperty('globalMovementId')
+  })
 })
 ```
 
 ### Available APIs
 
-- `this.apis.wasteMovementExternalAPI` - Waste Movement API
-- `this.apis.cognitoOAuthApi` - OAuth2 Authentication API
+- `globalThis.apis.wasteMovementExternalAPI` - Waste Movement API
+- `globalThis.apis.cognitoOAuthApi` - OAuth2 Authentication API
 
 ### Key Benefits
 
-- ✅ **BDD Approach**: Tests are written in natural language
-- ✅ **Test Isolation**: Each scenario gets fresh API instances automatically
-- ✅ **Parallel Safe**: No shared state between scenarios
-- ✅ **Readable**: Business stakeholders can understand test scenarios
+- ✅ **Modern Testing**: Uses Jest, a popular and well-maintained testing framework
+- ✅ **Test Isolation**: Each test gets fresh API instances automatically
+- ✅ **Parallel Safe**: No shared state between tests
+- ✅ **Allure Integration**: Comprehensive test reporting with allure-jest
+- ✅ **ES Modules**: Full support for modern JavaScript module syntax
 
 ## Writing Tests
 
-### Feature Files
+### Test Files
 
-Create `.feature` files in the `test/features/` directory:
-
-```gherkin
-Feature: Waste Movement Management
-
-  Scenario: Create a new waste movement
-    Given I have a valid waste movement
-    When I submit the waste movement
-    Then the movement should be created successfully
-    And I should receive a confirmation
-```
-
-### Step Definitions
-
-Implement step definitions in `test/step-definitions/`:
+Create `.test.js` files in the `test/specs/` directory:
 
 ```javascript
-const { Given, When, Then } = require('@cucumber/cucumber')
-const { expect } = require('chai')
+import { describe, it, expect, beforeEach } from '@jest/globals'
+import { generateBaseWasteReceiptData } from '../../support/test-data-manager.js'
 
-Given('I have a valid waste movement', async function () {
-  // Arrange - setup test data
-  this.testData = {
-    /* your test data */
-  }
+describe('Waste Movement Management', () => {
+  let testData
+
+  beforeEach(() => {
+    testData = generateBaseWasteReceiptData()
+  })
+
+  it('should create a new waste movement', async () => {
+    const response =
+      await globalThis.apis.wasteMovementExternalAPI.receiveMovement(testData)
+
+    expect(response.statusCode).toBe(200)
+    expect(response.data).toHaveProperty('globalMovementId')
+  })
 })
+```
 
-When('I submit the waste movement', async function () {
-  // Act - perform the action
-  this.response = await this.apis.wasteMovementExternalAPI.createMovement(
-    this.testData
-  )
-})
+### Test Structure
 
-Then('the movement should be created successfully', async function () {
-  // Assert - verify the result
-  expect(this.response.statusCode).to.equal(201)
-  expect(this.response.data).to.include(this.testData)
+Follow the Arrange-Act-Assert pattern:
+
+```javascript
+describe('Feature Name', () => {
+  let testData
+
+  beforeEach(() => {
+    // Arrange - setup test data
+    testData = generateBaseWasteReceiptData()
+  })
+
+  it('should perform the expected action', async () => {
+    // Act - perform the action
+    const response =
+      await globalThis.apis.wasteMovementExternalAPI.receiveMovement(testData)
+
+    // Assert - verify the result
+    expect(response.statusCode).toBe(200)
+    expect(response.data).toHaveProperty('globalMovementId')
+  })
 })
 ```
 
 ### Best Practices
 
-1. **Use descriptive scenario names** - Describe what the scenario verifies
-2. **Follow Given-When-Then pattern** - Arrange, Act, Assert
-3. **Test one behavior** - Each scenario should verify one specific behavior
+1. **Use descriptive test names** - Describe what the test verifies
+2. **Follow Arrange-Act-Assert pattern** - Setup, Action, Verification
+3. **Test one behavior** - Each test should verify one specific behavior
 4. **Use async/await** - All API calls are asynchronous
 5. **Check status codes** - Always verify the HTTP response status
-6. **Use tags** - Organize scenarios with tags like `@regression-tests` and `@DWT-XXX`
+6. **Use beforeEach for setup** - Initialize test data before each test
+7. **Group related tests** - Use describe blocks to organize tests logically
 
 ### Common Patterns
 
 ```javascript
 // Testing successful API calls
-const response = await this.apis.wasteMovementExternalAPI.getHealth()
-expect(response.statusCode).to.equal(200)
-expect(response.data).to.deep.equal({ message: 'success' })
+const response = await globalThis.apis.wasteMovementExternalAPI.getHealth()
+expect(response.statusCode).toBe(200)
+expect(response.data).toEqual({ message: 'success' })
 
 // Testing error scenarios
 const errorResponse =
-  await this.apis.wasteMovementExternalAPI.receiveMovement(invalidData)
-expect([404, 400]).to.include(errorResponse.statusCode)
+  await globalThis.apis.wasteMovementExternalAPI.receiveMovement(invalidData)
+expect([404, 400]).toContain(errorResponse.statusCode)
 
 // Testing data creation
-const newData = {
-  /* movement data */
-}
+const newData = generateBaseWasteReceiptData()
 const createResponse =
-  await this.apis.wasteMovementExternalAPI.receiveMovement(newData)
-expect(createResponse.statusCode).to.equal(200)
-expect(createResponse.data).to.have.property('globalMovementId')
+  await globalThis.apis.wasteMovementExternalAPI.receiveMovement(newData)
+expect(createResponse.statusCode).toBe(200)
+expect(createResponse.data).toHaveProperty('globalMovementId')
+
+// Testing with test.each for multiple scenarios
+it.each([[12.5], [500], [0]])(
+  'should accept concentration value of %f mg/kg',
+  async (concentrationValue) => {
+    // Test implementation
+  }
+)
 ```
 
 ## API Factory
 
-The test framework uses an API factory pattern to provide fresh API instances for each test scenario. This ensures test isolation and prevents state leakage between scenarios.
+The test framework uses an API factory pattern to provide fresh API instances for each test. This ensures test isolation and prevents state leakage between tests.
 
 ### Available API Instances
 
-- `this.apis.wasteMovementExternalAPI` - Waste Movement API for managing waste movements
-- `this.apis.cognitoOAuthApi` - OAuth2 Authentication API for client credentials flow
+- `globalThis.apis.wasteMovementExternalAPI` - Waste Movement API for managing waste movements
+- `globalThis.apis.cognitoOAuthApi` - OAuth2 Authentication API for client credentials flow
 
 ### API Factory Implementation
 
-The API factory creates fresh instances before each scenario and cleans them up afterward:
+The API factory creates fresh instances before each test and cleans them up afterward:
 
 ```javascript
-// Before each scenario
-globalThis.apis = ApiFactory.create()
+// Before each test
+beforeEach(() => {
+  globalThis.apis = ApiFactory.create()
+})
 
-// After each scenario
-delete globalThis.apis
+// After each test
+afterEach(() => {
+  delete globalThis.apis
+})
 ```
 
 ## Test Configuration
@@ -172,43 +190,45 @@ npm test
 
 See `CONFIGURATION.md` for detailed setup instructions.
 
-## Test Tags
+## Test Organization
 
-The test suite uses tags to organize and categorize scenarios:
+The test suite is organized by feature and functionality:
 
-- `@regression-tests` - Core regression test scenarios that are run by default with `npm test`
-- `@DWT-XXX` - Feature-specific tags for tracking requirements (e.g., `@DWT-480`, `@DWT-381`)
-- `@test1`, `@test2` - Legacy tags for specific test scenarios
+- `test/specs/Authentication/` - OAuth2 authentication tests
+- `test/specs/WasteRecievingAPI/CreateWasteMovement/` - Waste movement creation tests
+- `test/specs/WasteRecievingAPI/UpdateWasteMovement/` - Waste movement update tests
 
-### Tag Usage Examples
+### Test Categories
 
-```bash
-# Run only regression tests (default npm test behavior)
-cucumber-js --tags "@regression-tests"
+Tests are organized into logical groups:
 
-# Run tests for a specific feature/ticket
-cucumber-js --tags "@DWT-XXX"
-
-# Run regression tests for a specific feature
-cucumber-js --tags "@regression-tests and @DWT-XXX"
-
-# Run all tests except regression tests
-cucumber-js --tags "not @regression-tests"
-
-# Run tests with multiple tags
-cucumber-js --tags "@regression-tests and not @DWT-XXX"
-```
+- **Authentication Tests** - OAuth2 client credentials flow
+- **EWC Codes Validation** - European Waste Catalogue codes validation
+- **POPs Indicator Validation** - Persistent Organic Pollutants validation
+- **Treatment Codes Validation** - Disposal and recovery codes validation
+- **Hazardous Concentration Validation** - Chemical component concentration validation
+- **Weight Estimate Validation** - Waste weight estimate indicators
+- **Receiving Site ID Validation** - Site ownership and existence validation
 
 ## Running Tests
 
-- `npm test` - Run regression tests (scenarios tagged with `@regression-tests`) with reporting
-- `cucumber-js` - Run all Cucumber tests without reporting
-- `cucumber-js --tags "@regression-tests"` - Run only regression tests
-- `cucumber-js --tags "not @regression-tests"` - Run all tests except regression tests
-- `cucumber-js --tags "@test"` - Run a specific test
-- `cucumber-js test/features/xxx.feature` - Run a specific feature file
+- `npm test` - Run all tests with Allure reporting
+- `npm run test:watch` - Run tests in watch mode for development
+- `npm run test:coverage` - Run tests with coverage reporting
+- `jest` - Run Jest directly without reporting
+- `jest --testPathPattern=test/specs/Authentication/` - Run specific test directories
+- `jest --testNamePattern="should authenticate successfully"` - Run tests matching a pattern
 
-**Note:** Use `cucumber-js` directly for debugging to avoid the report generation step that runs after tests.
+**Note:** Use `jest` directly for debugging to avoid the report generation step that runs after tests.
+
+## Allure Reporting
+
+The test suite integrates with Allure for comprehensive test reporting:
+
+- `npm run report:generate` - Generate Allure report from test results
+- `npm run report:open` - Open the generated report in browser
+- `npm run report:clean` - Clean up report files
+- `npm run report:publish` - Generate and publish reports
 
 ## Troubleshooting
 
@@ -218,19 +238,23 @@ cucumber-js --tags "@regression-tests and not @DWT-XXX"
 
 - Check that all async operations use `await`
 - Ensure no infinite loops in test logic
+- Verify Jest timeout settings in `jest.config.js`
 
 **API connection errors:**
 
 - Verify network connectivity
 - Check if APIs are accessible from your environment
+- Verify environment variables are set correctly
 
 **Import errors:**
 
-- Ensure all imports use the correct module syntax
+- Ensure all imports use the correct ES module syntax
 - Check that file paths are correct
+- Verify Jest configuration supports ES modules
 
 ### Getting Help
 
-1. Check Cucumber configuration in `cucumber.js`
-2. Review test setup in `test/support/hooks.js`
-3. Look at existing test examples in `test/features/` and `test/step-definitions/`
+1. Check Jest configuration in `jest.config.js`
+2. Review test setup in `test/support/jest-setup.js`
+3. Look at existing test examples in `test/specs/`
+4. Check Jest documentation for syntax and best practices

@@ -1,11 +1,11 @@
-import { Before, After, BeforeAll, AfterAll } from '@cucumber/cucumber'
 import { ApiFactory } from '../apis/api-factory.js'
 import { testConfig } from './test-config.js'
 import { setGlobalDispatcher, Agent } from 'undici'
 
 let agent
 
-BeforeAll(async function () {
+// Global setup - runs once before all tests
+beforeAll(async () => {
   // Configure undici with connection pooling and timeout settings
   agent = new Agent({
     connections: 10,
@@ -20,14 +20,17 @@ BeforeAll(async function () {
   global.env = testConfig.environment
 })
 
-Before(function () {
-  globalThis.apis = ApiFactory.create() // Fresh instance per scenario
+// Setup before each test
+beforeEach(() => {
+  globalThis.apis = ApiFactory.create() // Fresh instance per test
 })
 
-After(function () {
-  delete globalThis.apis // Clean up after scenario
+// Cleanup after each test
+afterEach(() => {
+  delete globalThis.apis // Clean up after test
 })
 
-AfterAll(async function () {
+// Global teardown - runs once after all tests
+afterAll(async () => {
   await agent.close()
 })

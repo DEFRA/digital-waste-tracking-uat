@@ -1,6 +1,6 @@
 digital-waste-tracking-uat
 
-The template to create a service that runs Cucumber tests against an environment.
+The template to create a service that runs Jest tests against an environment.
 
 - [Local](#local)
   - [Requirements](#requirements)
@@ -61,7 +61,7 @@ Start application you are testing on the url specified in your test configuratio
 npm test
 ```
 
-**Note:** The default `npm test` command runs only regression tests (scenarios tagged with `@regression-tests`). To run all tests, use `cucumber-js` directly.
+**Note:** The default `npm test` command runs all tests with Allure reporting. To run tests without reporting, use `jest` directly.
 
 ### Available NPM Scripts
 
@@ -88,23 +88,23 @@ npm run setup:husky     # Setup Git hooks
 ### Debugging local tests
 
 ```bash
-# Debug specific Cucumber scenarios using tags
-cucumber-js --tags "@debug"
+# Debug specific tests using Jest patterns
+jest --testNamePattern="should authenticate successfully"
 
-# Debug a specific feature file
-cucumber-js test/features/waste-movement.feature
+# Debug a specific test file
+jest test/specs/Authentication/oauth2-authentication.test.js
 
 # Debug the full test suite
-cucumber-js
+jest
 
-# Run only regression tests
-cucumber-js --tags "@regression-tests"
+# Run tests in watch mode for development
+npm run test:watch
 
-# Run all tests except regression tests
-cucumber-js --tags "not @regression-tests"
+# Run tests with coverage
+npm run test:coverage
 ```
 
-**Note:** When debugging, run `cucumber-js` directly instead of `npm test` to avoid the report generation step that runs after the tests.
+**Note:** When debugging, run `jest` directly instead of `npm test` to avoid the report generation step that runs after the tests.
 
 ### Test Reporting
 
