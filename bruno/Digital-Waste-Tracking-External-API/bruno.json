@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "waste-movement-external-api",
+  "name": "Digital Waste Tracking External API",
   "type": "collection",
   "ignore": ["node_modules", ".git"]
 }

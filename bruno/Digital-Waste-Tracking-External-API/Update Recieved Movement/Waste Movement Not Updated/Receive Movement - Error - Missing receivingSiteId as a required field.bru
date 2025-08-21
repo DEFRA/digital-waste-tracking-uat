@@ -1,18 +1,21 @@
 meta {
-  name: Receive Movement - Basic Only
+  name: Receive Movement - Error - Missing receivingSiteId as a required field
   type: http
-  seq: 2
+  seq: 1
 }
 
-post {
-  url: {{baseUrl}}/movements/receive
+put {
+  url: {{baseUrl}}/movements/{{globalMovementId}}/receive
   body: json
-  auth: none
+  auth: inherit
+}
+
+headers {
+  ~Authorization: {{ManuallyObtainedAccessToken}}
 }
 
 body:json {
   {
-    "receivingSiteId": "12345678-1234-1234-1234-123456789012",
     "waste": [
       {
         "ewcCodes": ["020101"],
@@ -51,10 +54,6 @@ body:json {
       ]
     }
   }
-}
-
-vars:post-response {
-  wasteTrackingId: res.body.globalMovementId
 }
 
 script:pre-request {
