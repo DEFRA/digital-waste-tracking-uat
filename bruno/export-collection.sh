@@ -11,8 +11,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Configuration
 TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
 COLLECTION_NAME="Digital-Waste-Tracking-External-API"
-EXPORT_DIR="${SCRIPT_DIR}/${COLLECTION_NAME}"
-ZIP_FILE="${SCRIPT_DIR}/${COLLECTION_NAME}.zip"
+COLLECTION_DIR="${SCRIPT_DIR}/${COLLECTION_NAME}"
+EXPORT_DIR="${SCRIPT_DIR}/${COLLECTION_NAME}-exported"
+ZIP_FILE="${SCRIPT_DIR}/${COLLECTION_NAME}-exported.zip"
 
 # Files and directories to exclude from export (internal-only environments and system files)
 EXCLUDE_LIST=(
@@ -71,7 +72,7 @@ export_collection() {
     
     print_status "Copying collection files..."
     # Copy everything first, then remove excluded items
-    cp -r "${SCRIPT_DIR}/"* "$EXPORT_DIR/"
+    cp -r "${COLLECTION_DIR}/"* "$EXPORT_DIR/"
     
     # Remove excluded files and directories
     for item in "${EXCLUDE_LIST[@]}"; do
@@ -115,7 +116,7 @@ This folder contains an exported version of the Digital Waste Tracking External 
 For questions about this collection, refer to the included documentation or contact the Digital Waste Tracking team.
 
 **Exported on**: $(date)
-**Collection Version**: $(grep '"version"' "${SCRIPT_DIR}/bruno.json" | cut -d'"' -f4 2>/dev/null || echo "Unknown")
+**Collection Version**: $(grep '"version"' "${COLLECTION_DIR}/bruno.json" | cut -d'"' -f4 2>/dev/null || echo "Unknown")
 EOF
     
     print_success "Collection exported successfully to: $EXPORT_DIR"
@@ -200,8 +201,8 @@ main() {
     done
     
     # Check if we're in the right directory
-    if [ ! -f "${SCRIPT_DIR}/bruno.json" ]; then
-        print_error "Bruno collection not found at: ${SCRIPT_DIR}"
+    if [ ! -f "${COLLECTION_DIR}/bruno.json" ]; then
+        print_error "Bruno collection not found at: ${COLLECTION_DIR}"
         print_error "This script must be run from a directory containing a valid Bruno collection"
         exit 1
     fi
@@ -210,7 +211,7 @@ main() {
     show_excluded
     
     # Show where we're looking for the collection
-    print_status "Looking for Bruno collection in: ${SCRIPT_DIR}"
+    print_status "Looking for Bruno collection in: ${COLLECTION_DIR}"
     
     # Export the collection
     export_collection
