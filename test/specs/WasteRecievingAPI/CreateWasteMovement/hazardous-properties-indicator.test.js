@@ -9,7 +9,7 @@ describe('Hazardous Properties Indicator Validation', () => {
   })
 
   describe('Valid Hazardous Indicator', () => {
-    it('should accept waste receipt when hazardous indicator is set to true', async () => {
+    it('should accept waste receipt when hazardous indicator is set to true and no components are provided', async () => {
       wasteReceiptData.waste[0].hazardous = {
         containsHazardous: true
         // Missing components array
@@ -24,7 +24,7 @@ describe('Hazardous Properties Indicator Validation', () => {
       expect(response.data).toHaveProperty('globalMovementId')
     })
 
-    it('should accept waste receipt when hazardous indicator is set to false', async () => {
+    it('should accept waste receipt when hazardous indicator is set to false and no components are provided', async () => {
       wasteReceiptData.waste[0].hazardous = {
         containsHazardous: false
       }
@@ -57,10 +57,30 @@ describe('Hazardous Properties Indicator Validation', () => {
       expect(response.statusCode).toBe(200)
       expect(response.data).toHaveProperty('globalMovementId')
     })
+
+    it('should accept waste receipt when hazardous indicator is set to false and components are provided', async () => {
+      wasteReceiptData.waste[0].hazardous = {
+        containsHazardous: false,
+        components: [
+          {
+            name: 'Test Chemical',
+            concentration: 50
+          }
+        ]
+      }
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      expect(response.statusCode).toBe(200)
+      expect(response.data).toHaveProperty('globalMovementId')
+    })
   })
 
   describe('Missing Hazardous Indicator', () => {
-    it('should reject waste receipt when components are provided but hazardous indicator field is missing', async () => {
+    it('should reject waste receipt when hazardous indicator field is missing and components are provided', async () => {
       wasteReceiptData.waste[0].hazardous = {
         components: [
           {
