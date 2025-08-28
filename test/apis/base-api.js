@@ -3,8 +3,22 @@ import { request } from 'undici'
 /**
  * @typedef {Object} Response
  * @property {number} statusCode - HTTP status code
- * @property {Object} responseHeaders - Response headers
- * @property {Object} body - Response body
+ * @property {Object} headers - Response headers
+ * @property {import('undici/types/readable').default} body - Response body
+ */
+
+/**
+ * @typedef {Object} JsonResponse
+ * @property {number} statusCode - HTTP status code
+ * @property {Object} headers - Response headers
+ * @property {any} json - Parsed JSON response
+ */
+
+/**
+ * @typedef {Object} HtmlResponse
+ * @property {number} statusCode - HTTP status code
+ * @property {Object} headers - Response headers
+ * @property {any} html - Parsed HTML response
  */
 
 /**
@@ -26,15 +40,16 @@ export class BaseAPI {
    * @returns {Promise<Response>}
    */
   async get(endpoint, headers = {}) {
-    const {
-      statusCode,
-      headers: responseHeaders,
-      body
-    } = await request(`${this.baseUrl}${endpoint}`, {
+    const response = await request(`${this.baseUrl}${endpoint}`, {
       method: 'GET',
       headers: { ...this.defaultHeaders, ...headers }
     })
-    return { statusCode, responseHeaders, body }
+
+    return {
+      statusCode: response.statusCode,
+      headers: response.headers,
+      body: response.body
+    }
   }
 
   /**
@@ -46,16 +61,17 @@ export class BaseAPI {
    */
   async post(endpoint, data, headers = {}) {
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
-    const {
-      statusCode,
-      headers: responseHeaders,
-      body
-    } = await request(`${this.baseUrl}${endpoint}`, {
+    const response = await request(`${this.baseUrl}${endpoint}`, {
       method: 'POST',
       headers: instanceHeaders,
       body: data
     })
-    return { statusCode, responseHeaders, body }
+
+    return {
+      statusCode: response.statusCode,
+      headers: response.headers,
+      body: response.body
+    }
   }
 
   /**
@@ -68,16 +84,17 @@ export class BaseAPI {
   async put(endpoint, data, headers = {}) {
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
     instanceHeaders['Content-Type'] = 'application/json'
-    const {
-      statusCode,
-      headers: responseHeaders,
-      body
-    } = await request(`${this.baseUrl}${endpoint}`, {
+    const response = await request(`${this.baseUrl}${endpoint}`, {
       method: 'PUT',
       headers: instanceHeaders,
       body: data
     })
-    return { statusCode, responseHeaders, body }
+
+    return {
+      statusCode: response.statusCode,
+      headers: response.headers,
+      body: response.body
+    }
   }
 
   /**
@@ -90,16 +107,17 @@ export class BaseAPI {
   async patch(endpoint, data, headers = {}) {
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
     instanceHeaders['Content-Type'] = 'application/json'
-    const {
-      statusCode,
-      headers: responseHeaders,
-      body
-    } = await request(`${this.baseUrl}${endpoint}`, {
+    const response = await request(`${this.baseUrl}${endpoint}`, {
       method: 'PATCH',
       headers: instanceHeaders,
       body: data
     })
-    return { statusCode, responseHeaders, body }
+
+    return {
+      statusCode: response.statusCode,
+      headers: response.headers,
+      body: response.body
+    }
   }
 
   /**
@@ -109,15 +127,16 @@ export class BaseAPI {
    * @returns {Promise<Response>}
    */
   async delete(endpoint, headers = {}) {
-    const {
-      statusCode,
-      headers: responseHeaders,
-      body
-    } = await request(`${this.baseUrl}${endpoint}`, {
+    const response = await request(`${this.baseUrl}${endpoint}`, {
       method: 'DELETE',
       headers: { ...this.defaultHeaders, ...headers }
     })
-    return { statusCode, responseHeaders, body }
+
+    return {
+      statusCode: response.statusCode,
+      headers: response.headers,
+      body: response.body
+    }
   }
 
   /**

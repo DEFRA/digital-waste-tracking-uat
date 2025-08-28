@@ -19,7 +19,7 @@ describe.skip('Receiving Site ID Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
   })
 

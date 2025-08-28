@@ -26,7 +26,7 @@ describe('POPs Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
 
     it('should accept waste not containing POPs', async () => {
@@ -40,7 +40,7 @@ describe('POPs Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
   })
 
@@ -62,7 +62,7 @@ describe('POPs Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.data.validation.errors).toEqual([
+      expect(response.json.validation.errors).toEqual([
         {
           key: 'waste.0.pops.containsPops',
           errorType: 'NotProvided',
@@ -89,7 +89,7 @@ describe('POPs Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.data.validation.errors).toEqual([
+      expect(response.json.validation.errors).toEqual([
         {
           key: 'waste.0.pops.containsPops',
           errorType: 'NotProvided',

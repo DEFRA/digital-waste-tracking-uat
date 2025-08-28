@@ -8,9 +8,7 @@ describe('Waste Movement API', () => {
         await globalThis.apis.wasteMovementExternalAPI.getSwagger()
 
       expect(response.statusCode).toBe(200)
-      expect(response.responseHeaders['content-type']).toBe(
-        'text/html; charset=utf-8'
-      )
+      expect(response.headers['content-type']).toBe('text/html; charset=utf-8')
     })
 
     it('should return health check response', async () => {
@@ -18,8 +16,8 @@ describe('Waste Movement API', () => {
         await globalThis.apis.wasteMovementExternalAPI.getHealth()
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('message')
-      expect(response.data.message).toBe('success')
+      expect(response.json).toHaveProperty('message')
+      expect(response.json.message).toBe('success')
     })
   })
 
@@ -33,7 +31,7 @@ describe('Waste Movement API', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
 
     it('should fail to create movement due to missing required fields', async () => {
@@ -46,8 +44,8 @@ describe('Waste Movement API', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.data).toHaveProperty('validation.errors.0.message')
-      expect(response.data).not.toHaveProperty('validation.errors.1.message')
+      expect(response.json).toHaveProperty('validation.errors.0.message')
+      expect(response.json).not.toHaveProperty('validation.errors.1.message')
     })
   })
 
@@ -61,7 +59,7 @@ describe('Waste Movement API', () => {
         )
       expect(createResponse.statusCode).toBe(200)
 
-      const globalMovementId = createResponse.data.globalMovementId
+      const globalMovementId = createResponse.json.globalMovementId
 
       // Update the movement
       sampleMovementData.waste[0].quantity.amount = 3.0

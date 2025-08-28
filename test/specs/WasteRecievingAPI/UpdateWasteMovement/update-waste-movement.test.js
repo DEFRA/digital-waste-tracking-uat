@@ -17,7 +17,7 @@ describe('Waste Movement Update', () => {
         )
       expect(createResponse.statusCode).toBe(200)
 
-      const globalMovementId = createResponse.data.globalMovementId
+      const globalMovementId = createResponse.json.globalMovementId
 
       // Update the movement amount
       wasteReceiptData.waste[0].quantity.amount = 1.6

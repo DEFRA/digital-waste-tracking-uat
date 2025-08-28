@@ -21,7 +21,7 @@ describe('Hazardous Properties Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
 
     it('should accept waste receipt when hazardous indicator is set to false and no components are provided', async () => {
@@ -35,7 +35,7 @@ describe('Hazardous Properties Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
 
     it('should accept waste receipt when hazardous indicator is set to true and components are provided', async () => {
@@ -55,7 +55,7 @@ describe('Hazardous Properties Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
 
     it('should accept waste receipt when hazardous indicator is set to false and components are provided', async () => {
@@ -75,7 +75,7 @@ describe('Hazardous Properties Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
   })
 
@@ -96,8 +96,8 @@ describe('Hazardous Properties Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.data).toHaveProperty('validation.errors')
-      expect(response.data.validation.errors).toEqual([
+      expect(response.json).toHaveProperty('validation.errors')
+      expect(response.json.validation.errors).toEqual([
         {
           key: 'waste.0.hazardous.containsHazardous',
           errorType: 'NotProvided',
