@@ -6,12 +6,18 @@ let agent
 
 // Global setup - runs once before all tests
 beforeAll(async () => {
-  // Configure undici with connection pooling and timeout settings
+  // Configure undici with very aggressive connection cleanup
   agent = new Agent({
-    connections: 10,
+    connections: 1, // Minimal connections
     pipelining: 0,
-    headersTimeout: 30000,
-    bodyTimeout: 30000
+    headersTimeout: 10000, // Shorter timeouts
+    bodyTimeout: 10000,
+    keepAliveTimeout: 100, // Very short keep-alive
+    keepAliveMaxTimeout: 200,
+    // Force connection cleanup
+    connect: {
+      timeout: 5000
+    }
   })
   setGlobalDispatcher(agent)
 

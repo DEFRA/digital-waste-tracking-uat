@@ -26,7 +26,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
 
     it('should accept multiple valid treatment codes', async () => {
@@ -55,7 +55,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
   })
 
@@ -78,7 +78,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.data.validation.errors).toEqual([
+      expect(response.json.validation.errors).toEqual([
         {
           key: 'receipt.disposalOrRecoveryCodes.0.code',
           errorType: 'UnexpectedError',
@@ -102,7 +102,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.data.validation.errors).toEqual([
+      expect(response.json.validation.errors).toEqual([
         {
           key: 'receipt.disposalOrRecoveryCodes.0.quantity',
           errorType: 'NotProvided',
@@ -122,7 +122,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data.validation.warnings).toEqual([
+      expect(response.json.validation.warnings).toEqual([
         {
           key: 'receipt.disposalOrRecoveryCodes',
           errorType: 'NotProvided',

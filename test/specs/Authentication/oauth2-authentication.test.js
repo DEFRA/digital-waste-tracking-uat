@@ -9,9 +9,9 @@ describe('OAuth2 Client Credentials Authentication', () => {
       )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('access_token')
-      expect(response.data).toHaveProperty('expires_in')
-      expect(response.data).toHaveProperty('token_type')
+      expect(response.json).toHaveProperty('access_token')
+      expect(response.json).toHaveProperty('expires_in')
+      expect(response.json).toHaveProperty('token_type')
     })
   })
 
@@ -23,8 +23,8 @@ describe('OAuth2 Client Credentials Authentication', () => {
       )
 
       expect(response.statusCode).toBe(400)
-      expect(response.data).toHaveProperty('error')
-      expect(response.data.error).toBe('invalid_client')
+      expect(response.json).toHaveProperty('error')
+      expect(response.json.error).toBe('invalid_client')
     })
   })
 
@@ -36,8 +36,8 @@ describe('OAuth2 Client Credentials Authentication', () => {
       )
 
       expect(response.statusCode).toBe(400)
-      expect(response.data).toHaveProperty('error')
-      expect(response.data.error).toBe('invalid_client')
+      expect(response.json).toHaveProperty('error')
+      expect(response.json.error).toBe('invalid_client')
     })
   })
 })

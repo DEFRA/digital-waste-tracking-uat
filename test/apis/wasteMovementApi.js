@@ -7,63 +7,79 @@ export class WasteMovementExternalAPI extends BaseAPI {
     )
   }
 
+  /**
+   * @returns {Promise<import('./base-api.js').HtmlResponse>}
+   */
   async getSwagger() {
-    const { statusCode, responseHeaders, body } = await this.get('/')
+    const { statusCode, headers, body } = await this.get('/')
 
-    if (responseHeaders['content-type'] === 'application/json') {
-      const responseData = await body.json()
-      return {
-        statusCode,
-        responseHeaders,
-        data: responseData
-      }
-    } else {
-      return {
-        statusCode,
-        responseHeaders,
-        data: body
-      }
+    const html = await body.text()
+    // Consume the body to close the connection
+    await body.dump()
+
+    return {
+      statusCode,
+      headers,
+      html
     }
   }
 
+  /**
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
   async receiveMovement(movementData) {
-    const { statusCode, responseHeaders, body } = await this.post(
+    const { statusCode, headers, body } = await this.post(
       '/movements/receive',
       JSON.stringify(movementData),
       { 'Content-Type': 'application/json' }
     )
-    const responseData = await body.json()
+
+    const json = await body.json()
+    // Consume the body to close the connection
+    await body.dump()
 
     return {
       statusCode,
-      responseHeaders,
-      data: responseData
+      headers,
+      json
     }
   }
 
+  /**
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
   async receiveMovementWithId(wasteTrackingId, movementData) {
-    const { statusCode, responseHeaders, body } = await this.put(
+    const { statusCode, headers, body } = await this.put(
       `/movements/${wasteTrackingId}/receive`,
       JSON.stringify(movementData),
       { 'Content-Type': 'application/json' }
     )
-    const responseData = await body.json()
+
+    const json = await body.json()
+    // Consume the body to close the connection
+    await body.dump()
 
     return {
       statusCode,
-      responseHeaders,
-      data: responseData
+      headers,
+      json
     }
   }
 
+  /**
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
   async getHealth() {
-    const { statusCode, responseHeaders, body } = await this.get('/health')
-    const responseData = await body.json()
+    const { statusCode, headers, body } = await this.get('/health')
+
+    const json = await body.json()
+    // Consume the body to close the connection
+    await body.dump()
 
     return {
       statusCode,
-      responseHeaders,
-      data: responseData
+      headers,
+      json
     }
   }
 }

@@ -28,7 +28,7 @@ describe.skip('Hazardous Component Concentration Validation', () => {
           )
 
         expect(response.statusCode).toBe(200)
-        expect(response.data).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('globalMovementId')
       }
     )
 
@@ -49,7 +49,7 @@ describe.skip('Hazardous Component Concentration Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
 
     it('should accept blank concentration value with warning', async () => {
@@ -69,7 +69,7 @@ describe.skip('Hazardous Component Concentration Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
       // Note: This test assumes the API returns a warning about required concentration
     })
   })
@@ -87,7 +87,7 @@ describe.skip('Hazardous Component Concentration Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.data).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('globalMovementId')
     })
 
     it('should reject non-hazardous waste with concentration', async () => {

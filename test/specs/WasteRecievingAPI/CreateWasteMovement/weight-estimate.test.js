@@ -23,7 +23,7 @@ describe.skip('Waste Weight Estimate Validation', () => {
           )
 
         expect(response.statusCode).toBe(200)
-        expect(response.data).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('globalMovementId')
       }
     )
   })
