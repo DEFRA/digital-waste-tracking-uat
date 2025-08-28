@@ -12,8 +12,8 @@ describe.skip('Authentication for Waste Movement Receipt Submissions', () => {
     it('should accept waste movement receipt with valid authentication', async () => {
       // Get a valid authentication token from Cognito OAuth
       const authResponse = await globalThis.apis.cognitoOAuthApi.authenticate(
-        global.testConfig.cognitoClientId,
-        global.testConfig.cognitoClientSecret
+        globalThis.testConfig.cognitoClientId,
+        globalThis.testConfig.cognitoClientSecret
       )
 
       expect(authResponse.statusCode).toBe(200)

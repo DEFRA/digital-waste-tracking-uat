@@ -167,9 +167,9 @@ The test suite automatically validates required environment variables and provid
 
 ```javascript
 // Access configuration globally
-const clientId = global.testConfig.cognitoClientId
-const clientSecret = global.testConfig.cognitoClientSecret
-const environment = global.testConfig.environment
+const clientId = globalThis.testConfig.cognitoClientId
+const clientSecret = globalThis.testConfig.cognitoClientSecret
+const environment = globalThis.testConfig.environment
 ```
 
 ### Configuration Validation

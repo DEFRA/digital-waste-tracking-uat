@@ -4,8 +4,8 @@ describe('OAuth2 Client Credentials Authentication', () => {
   describe('Successful authentication with valid credentials', () => {
     it('should authenticate successfully with valid client credentials', async () => {
       const response = await globalThis.apis.cognitoOAuthApi.authenticate(
-        global.testConfig.cognitoClientId,
-        global.testConfig.cognitoClientSecret
+        globalThis.testConfig.cognitoClientId,
+        globalThis.testConfig.cognitoClientSecret
       )
 
       expect(response.statusCode).toBe(200)
@@ -19,7 +19,7 @@ describe('OAuth2 Client Credentials Authentication', () => {
     it('should fail authentication with invalid client ID', async () => {
       const response = await globalThis.apis.cognitoOAuthApi.authenticate(
         'err000000000000000000000r',
-        global.testConfig.cognitoClientSecret
+        globalThis.testConfig.cognitoClientSecret
       )
 
       expect(response.statusCode).toBe(400)
@@ -31,7 +31,7 @@ describe('OAuth2 Client Credentials Authentication', () => {
   describe('Failed authentication with invalid client secret', () => {
     it('should fail authentication with invalid client secret', async () => {
       const response = await globalThis.apis.cognitoOAuthApi.authenticate(
-        global.testConfig.cognitoClientId,
+        globalThis.testConfig.cognitoClientId,
         'err000000000000000000000000000000000000000000000000r'
       )
 

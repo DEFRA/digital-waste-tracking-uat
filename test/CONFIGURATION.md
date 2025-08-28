@@ -31,8 +31,9 @@ npm test
 **Note:** You'll need to edit `env.sh` and add your actual credentials:
 
 ```bash
-export COGNITO_CLIENT_ID=your_actual_client_id
-export COGNITO_CLIENT_SECRET=your_actual_client_secret
+export COGNITO_CLIENT_ID=<your_cognito_client_id>
+export COGNITO_CLIENT_SECRET=<your_cognito_client_secret>
+export COGNITO_OAUTH_BASE_URL=<your_cognito_oauth_base_url>
 export ENVIRONMENT=test
 ```
 
@@ -41,8 +42,9 @@ export ENVIRONMENT=test
 Set these environment variables in your CI/CD pipeline:
 
 ```bash
-export COGNITO_CLIENT_ID="your_actual_client_id"
-export COGNITO_CLIENT_SECRET="your_actual_client_secret"
+export COGNITO_CLIENT_ID="<your_cognito_client_id>"
+export COGNITO_CLIENT_SECRET="<your_cognito_client_secret>"
+export COGNITO_OAUTH_BASE_URL="<your_cognito_oauth_base_url>"
 export ENVIRONMENT="test"
 ```
 
@@ -52,15 +54,15 @@ The test suite will automatically validate that all required environment variabl
 
 ## Usage in Tests
 
-The configuration is available globally in tests via `global.testConfig`:
+The configuration is available globally in tests via `globalThis.testConfig`:
 
 ```javascript
 // Access client credentials
-const clientId = global.testConfig.cognitoClientId
-const clientSecret = global.testConfig.cognitoClientSecret
+const clientId = globalThis.testConfig.cognitoClientId
+const clientSecret = globalThis.testConfig.cognitoClientSecret
 
 // Access environment
-const env = global.testConfig.environment
+const env = globalThis.testConfig.environment
 ```
 
 ## Security Notes

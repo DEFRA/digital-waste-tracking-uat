@@ -12,3 +12,9 @@
  * @type {import('../apis/api-factory.js').ApiInstances}
  */
 globalThis.apis = null
+
+/**
+ * Global test configuration
+ * @type {import('../support/test-config.js').TestConfig}
+ */
+globalThis.testConfig = null

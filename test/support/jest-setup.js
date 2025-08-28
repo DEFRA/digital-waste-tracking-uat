@@ -22,8 +22,7 @@ beforeAll(async () => {
   setGlobalDispatcher(agent)
 
   // Set up global test configuration
-  global.testConfig = testConfig
-  global.env = testConfig.environment
+  globalThis.testConfig = testConfig
 })
 
 // Setup before each test
