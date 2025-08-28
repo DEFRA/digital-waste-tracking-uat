@@ -21,7 +21,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
-    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest; EXIT_CODE=$?; npm run report:generate && echo \"Test Run Exit Code: ${EXIT_CODE}\" && exit $EXIT_CODE",
+    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest; EXIT_CODE=$? && echo \"Test Run Exit Code: ${EXIT_CODE}\" && npm run report:generate && exit $EXIT_CODE",
     "test:watch": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --watch",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --coverage",
     "report:generate": "allure generate allure-results --single-file --clean",
