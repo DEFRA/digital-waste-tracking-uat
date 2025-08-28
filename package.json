@@ -21,14 +21,14 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
-    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest; EXIT_CODE=$? && echo \"Test Run Exit Code: ${EXIT_CODE}\" && npm run report:generate && exit $EXIT_CODE",
+    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest",
     "test:watch": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --watch",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --coverage",
     "report:generate": "allure generate allure-results --single-file --clean",
     "report:clean": "rm -rf allure-results && rm -rf allure-report",
     "report:open": "open ./allure-report/index.html",
-    "report:publish": "npm run report:generate; ./bin/publish-tests.sh",
-    "source:clean:test:open": ". ./env.sh ; npm run report:clean ; npm run test ; npm run report:open"
+    "report:publish": "npm run report:generate ; ./bin/publish-tests.sh",
+    "source:clean:test:report": ". ./env.sh && npm run report:clean && npm run test ; npm run report:generate && npm run report:open"
   },
   "dependencies": {
     "allure-commandline": "2.32.0",
