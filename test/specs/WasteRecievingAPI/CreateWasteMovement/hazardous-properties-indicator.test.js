@@ -21,7 +21,10 @@ describe('Hazardous Properties Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
 
     it('should accept waste receipt when hazardous indicator is set to false and no components are provided', async () => {
@@ -35,7 +38,10 @@ describe('Hazardous Properties Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
 
     it('should accept waste receipt when hazardous indicator is set to true and components are provided', async () => {
@@ -55,7 +61,10 @@ describe('Hazardous Properties Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
 
     it('should accept waste receipt when hazardous indicator is set to false and components are provided', async () => {
@@ -75,7 +84,10 @@ describe('Hazardous Properties Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
   })
 
@@ -96,15 +108,18 @@ describe('Hazardous Properties Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.json).toHaveProperty('validation.errors')
-      expect(response.json.validation.errors).toEqual([
-        {
-          key: 'waste.0.hazardous.containsHazardous',
-          errorType: 'NotProvided',
-          message:
-            'Hazardous waste is any waste that is potentially harmful to human health or the environment.'
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'waste.0.hazardous.containsHazardous',
+              errorType: 'NotProvided',
+              message:
+                'Hazardous waste is any waste that is potentially harmful to human health or the environment.'
+            }
+          ]
         }
-      ])
+      })
     })
   })
 })

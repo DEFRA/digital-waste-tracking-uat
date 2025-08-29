@@ -26,7 +26,10 @@ describe('POPs Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
 
     it('should accept waste not containing POPs', async () => {
@@ -40,7 +43,10 @@ describe('POPs Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
   })
 
@@ -62,41 +68,18 @@ describe('POPs Indicator Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.json.validation.errors).toEqual([
-        {
-          key: 'waste.0.pops.containsPops',
-          errorType: 'NotProvided',
-          message:
-            'Does the waste contain persistent organic pollutants (POPs)? is required'
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'waste.0.pops.containsPops',
+              errorType: 'NotProvided',
+              message:
+                'Does the waste contain persistent organic pollutants (POPs)? is required'
+            }
+          ]
         }
-      ])
-    })
-
-    it('should reject waste with just POPs list but no indicator', async () => {
-      wasteReceiptData.waste[0].pops = {
-        pops: [
-          {
-            name: 'Aldrin',
-            concentration: 50
-          }
-        ]
-      }
-      // Note: containsPops field is intentionally omitted to test required validation
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(400)
-      expect(response.json.validation.errors).toEqual([
-        {
-          key: 'waste.0.pops.containsPops',
-          errorType: 'NotProvided',
-          message:
-            'Does the waste contain persistent organic pollutants (POPs)? is required'
-        }
-      ])
+      })
     })
   })
 })

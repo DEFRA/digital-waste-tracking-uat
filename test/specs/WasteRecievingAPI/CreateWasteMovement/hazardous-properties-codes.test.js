@@ -18,7 +18,10 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
 
     it('should accept submission with multiple hazardous property codes', async () => {
@@ -30,7 +33,10 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
 
     it('should accept submission with duplicate hazardous property codes', async () => {
@@ -42,7 +48,10 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
   })
 
@@ -56,7 +65,10 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
 
     it('should accept submission when hazCodes field is missing', async () => {
@@ -68,7 +80,10 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
   })
 

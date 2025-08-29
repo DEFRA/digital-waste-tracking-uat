@@ -11,14 +11,16 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
 
   describe('Valid Treatment Codes', () => {
     it('should accept valid disposal or recovery treatment codes with quantity', async () => {
-      wasteReceiptData.receipt.disposalOrRecoveryCodes.push({
-        code: 'R1',
-        quantity: {
-          metric: 'Tonnes',
-          amount: 2.5,
-          isEstimate: false
+      wasteReceiptData.receipt.disposalOrRecoveryCodes = [
+        {
+          code: 'R1',
+          quantity: {
+            metric: 'Tonnes',
+            amount: 2.5,
+            isEstimate: false
+          }
         }
-      })
+      ]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -26,11 +28,14 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
 
     it('should accept multiple valid treatment codes', async () => {
-      wasteReceiptData.receipt.disposalOrRecoveryCodes.push(
+      wasteReceiptData.receipt.disposalOrRecoveryCodes = [
         {
           code: 'R1',
           quantity: {
@@ -47,7 +52,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
             isEstimate: false
           }
         }
-      )
+      ]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -55,7 +60,10 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
   })
 
@@ -78,14 +86,18 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.json.validation.errors).toEqual([
-        {
-          key: 'receipt.disposalOrRecoveryCodes.0.code',
-          errorType: 'UnexpectedError',
-          message:
-            '"receipt.disposalOrRecoveryCodes[0].code" must be one of [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15]'
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'receipt.disposalOrRecoveryCodes.0.code',
+              errorType: 'UnexpectedError',
+              message:
+                '"receipt.disposalOrRecoveryCodes[0].code" must be one of [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15]'
+            }
+          ]
         }
-      ])
+      })
     })
 
     it('should reject treatment codes without quantity', async () => {
@@ -102,13 +114,17 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.json.validation.errors).toEqual([
-        {
-          key: 'receipt.disposalOrRecoveryCodes.0.quantity',
-          errorType: 'NotProvided',
-          message: '"Quantity" is required'
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'receipt.disposalOrRecoveryCodes.0.quantity',
+              errorType: 'NotProvided',
+              message: '"Quantity" is required'
+            }
+          ]
         }
-      ])
+      })
     })
   })
 
@@ -122,14 +138,20 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json.validation.warnings).toEqual([
-        {
-          key: 'receipt.disposalOrRecoveryCodes',
-          errorType: 'NotProvided',
-          message:
-            'Disposal or Recovery codes are required for proper waste tracking and compliance'
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String),
+        validation: {
+          warnings: [
+            {
+              key: 'receipt.disposalOrRecoveryCodes',
+              errorType: 'NotProvided',
+              message:
+                'Disposal or Recovery codes are required for proper waste tracking and compliance'
+            }
+          ]
         }
-      ])
+      })
     })
   })
 })

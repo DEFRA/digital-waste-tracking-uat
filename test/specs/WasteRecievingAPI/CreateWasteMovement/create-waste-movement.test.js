@@ -16,7 +16,10 @@ describe('Waste Movement Creation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
   })
 
@@ -31,8 +34,17 @@ describe('Waste Movement Creation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.json).toHaveProperty('validation.errors.0.message')
-      expect(response.json).not.toHaveProperty('validation.errors.1.message')
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: expect.any(String),
+              errorType: expect.any(String),
+              message: expect.any(String)
+            }
+          ]
+        }
+      })
     })
   })
 })
