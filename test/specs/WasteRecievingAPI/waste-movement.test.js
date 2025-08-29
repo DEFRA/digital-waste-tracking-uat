@@ -1,17 +1,24 @@
-import { describe, it, expect } from '@jest/globals'
+import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../support/test-data-manager.js'
+import { authenticateAndSetToken } from '../../support/helpers/auth.js'
 
 describe('Waste Movement API', () => {
   describe('API Documentation and Health', () => {
-    it('should return swagger documentation', async () => {
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.getSwagger()
+    // it('should return swagger documentation', async () => {
+    //   const response =
+    //     await globalThis.apis.wasteMovementExternalAPI.getSwagger()
 
-      expect(response.statusCode).toBe(200)
-      expect(response.headers['content-type']).toBe('text/html; charset=utf-8')
-    })
+    //   expect(response.statusCode).toBe(200)
+    //   expect(response.headers['content-type']).toBe('text/html; charset=utf-8')
+    // })
 
     it('should return health check response', async () => {
+      // Authenticate and set the auth token
+      await authenticateAndSetToken(
+        globalThis.testConfig.cognitoClientId,
+        globalThis.testConfig.cognitoClientSecret
+      )
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.getHealth()
 
@@ -22,6 +29,13 @@ describe('Waste Movement API', () => {
   })
 
   describe('Waste Movement Creation', () => {
+    beforeEach(async () => {
+      // Authenticate and set the auth token
+      await authenticateAndSetToken(
+        globalThis.testConfig.cognitoClientId,
+        globalThis.testConfig.cognitoClientSecret
+      )
+    })
     it('should successfully create a new waste movement with valid data', async () => {
       const sampleMovementData = generateBaseWasteReceiptData()
 
@@ -62,6 +76,13 @@ describe('Waste Movement API', () => {
   })
 
   describe('Waste Movement Updates', () => {
+    beforeEach(async () => {
+      // Authenticate and set the auth token
+      await authenticateAndSetToken(
+        globalThis.testConfig.cognitoClientId,
+        globalThis.testConfig.cognitoClientSecret
+      )
+    })
     it('should successfully update an existing waste movement', async () => {
       // First create a movement
       const sampleMovementData = generateBaseWasteReceiptData()

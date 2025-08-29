@@ -1,11 +1,18 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
+import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 
 describe('Waste Movement Update', () => {
   let wasteReceiptData
 
-  beforeEach(() => {
+  beforeEach(async () => {
     wasteReceiptData = generateBaseWasteReceiptData()
+
+    // Authenticate and set the auth token
+    await authenticateAndSetToken(
+      globalThis.testConfig.cognitoClientId,
+      globalThis.testConfig.cognitoClientSecret
+    )
   })
 
   describe('Successful Updates', () => {

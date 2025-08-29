@@ -69,6 +69,14 @@ npm test
 # Run tests with reporting
 npm test
 
+# Run specific tests by name pattern
+npm run test-name-pattern -- "should successfully create a new waste movement with valid data"
+npm run test-name-pattern -- "Waste Movement Creation"
+npm run test-name-pattern -- "POPs"
+
+# Run specific tests with full report workflow
+npm run source:clean:test-name-pattern:report -- "should successfully create a new waste movement with valid data"
+
 # Code formatting and linting
 npm run format          # Format code with Prettier
 npm run format:check    # Check code formatting
@@ -105,6 +113,47 @@ npm run test:coverage
 ```
 
 **Note:** When debugging, run `jest` directly instead of `npm test` to avoid the report generation step that runs after the tests.
+
+### Running Specific Tests
+
+The test suite includes a powerful test selection feature that allows you to run specific tests by name pattern:
+
+#### Basic Test Selection
+
+```bash
+# Run tests by exact test name
+npm run test-name-pattern -- "should successfully create a new waste movement with valid data"
+
+# Run tests by describe block name
+npm run test-name-pattern -- "Waste Movement Creation"
+
+# Run tests by partial match
+npm run test-name-pattern -- "POPs"
+npm run test-name-pattern -- "hazardous"
+npm run test-name-pattern -- "should successfully create"
+```
+
+#### Test Selection with Full Report Workflow
+
+```bash
+# Run specific tests with complete report generation
+npm run source:clean:test-name-pattern:report -- "should successfully create a new waste movement with valid data"
+```
+
+This command:
+
+1. Sources environment variables
+2. Cleans previous test results
+3. Runs only the matching tests
+4. Generates Allure report
+5. Opens the report in your browser
+
+**Pattern Matching Examples:**
+
+- **Exact test name**: `"should authenticate successfully with valid client credentials"`
+- **Describe block**: `"Waste Movement Creation"`
+- **Partial match**: `"POPs"` (runs all tests containing "POPs")
+- **Case sensitive**: Patterns are case-sensitive and match against the full test hierarchy
 
 ### Test Reporting
 
