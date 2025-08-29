@@ -1,12 +1,19 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
+import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 
 describe('Disposal or Recovery Treatment Codes Validation', () => {
   let wasteReceiptData
 
-  beforeEach(() => {
+  beforeEach(async () => {
     wasteReceiptData = generateBaseWasteReceiptData()
     wasteReceiptData.receipt.disposalOrRecoveryCodes = []
+    
+    // Authenticate and set the auth token
+    await authenticateAndSetToken(
+      globalThis.testConfig.cognitoClientId,
+      globalThis.testConfig.cognitoClientSecret
+    )
   })
 
   describe('Valid Treatment Codes', () => {
