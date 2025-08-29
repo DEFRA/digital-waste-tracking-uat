@@ -119,6 +119,7 @@ npm run test:coverage
 The test suite includes a powerful test selection feature that allows you to run specific tests by name pattern:
 
 #### Basic Test Selection
+
 ```bash
 # Run tests by exact test name
 npm run test-name-pattern -- "should successfully create a new waste movement with valid data"
@@ -133,12 +134,14 @@ npm run test-name-pattern -- "should successfully create"
 ```
 
 #### Test Selection with Full Report Workflow
+
 ```bash
 # Run specific tests with complete report generation
 npm run source:clean:test-name-pattern:report -- "should successfully create a new waste movement with valid data"
 ```
 
 This command:
+
 1. Sources environment variables
 2. Cleans previous test results
 3. Runs only the matching tests
@@ -146,6 +149,7 @@ This command:
 5. Opens the report in your browser
 
 **Pattern Matching Examples:**
+
 - **Exact test name**: `"should authenticate successfully with valid client credentials"`
 - **Describe block**: `"Waste Movement Creation"`
 - **Partial match**: `"POPs"` (runs all tests containing "POPs")
