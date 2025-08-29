@@ -8,7 +8,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
   beforeEach(async () => {
     wasteReceiptData = generateBaseWasteReceiptData()
     wasteReceiptData.receipt.disposalOrRecoveryCodes = []
-    
+
     // Authenticate and set the auth token
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,

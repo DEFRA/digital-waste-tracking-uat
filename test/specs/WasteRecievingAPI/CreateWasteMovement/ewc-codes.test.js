@@ -7,7 +7,7 @@ describe('EWC Codes Validation', () => {
 
   beforeEach(async () => {
     wasteReceiptData = generateBaseWasteReceiptData()
-    
+
     // Authenticate and set the auth token
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,

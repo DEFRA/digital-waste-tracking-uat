@@ -3,7 +3,6 @@ import { generateBaseWasteReceiptData } from '../../support/test-data-manager.js
 import { authenticateAndSetToken } from '../../support/helpers/auth.js'
 
 describe('Waste Movement API', () => {
-
   describe('API Documentation and Health', () => {
     // it('should return swagger documentation', async () => {
     //   const response =
