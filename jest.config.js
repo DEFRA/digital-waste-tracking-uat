@@ -1,6 +1,12 @@
 export default {
   testEnvironment: 'allure-jest/node',
-  setupFilesAfterEnv: ['<rootDir>/test/support/jest-setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/test/support/jest/setup.js'],
+  reporters: [
+    'default',
+    ['github-actions', { silent: false }],
+    'summary',
+    '<rootDir>/test/support/jest/custom-reporter.js'
+  ],
   transform: {},
   moduleNameMapper: {
     '^~/(.*)$': '<rootDir>/$1',

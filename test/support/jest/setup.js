@@ -1,5 +1,5 @@
-import { ApiFactory } from '../apis/api-factory.js'
-import { testConfig } from './test-config.js'
+import { ApiFactory } from '../../apis/api-factory.js'
+import { testConfig } from '../../support/test-config.js'
 import { setGlobalDispatcher, Agent } from 'undici'
 
 let agent
