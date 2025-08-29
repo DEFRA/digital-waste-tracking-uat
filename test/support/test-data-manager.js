@@ -24,6 +24,16 @@ export const generateBaseWasteReceiptData = () => ({
         metric: 'Tonnes',
         amount: 2.5,
         isEstimate: false
+      },
+      hazardous: {
+        containsHazardous: true,
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
     }
   ],

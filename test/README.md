@@ -255,6 +255,6 @@ The test suite integrates with Allure for comprehensive test reporting:
 ### Getting Help
 
 1. Check Jest configuration in `jest.config.js`
-2. Review test setup in `test/support/jest-setup.js`
+2. Review test setup in `test/support/jest/setup.js`
 3. Look at existing test examples in `test/specs/`
 4. Check Jest documentation for syntax and best practices

@@ -18,7 +18,10 @@ describe('EWC Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
 
     it('should accept multiple valid 6-digit EWC codes (up to 5)', async () => {
@@ -36,7 +39,10 @@ describe('EWC Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
   })
 
@@ -57,13 +63,18 @@ describe('EWC Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.json.validation.errors).toEqual([
-        {
-          key: 'waste.0.ewcCodes',
-          errorType: 'UnexpectedError',
-          message: '"waste[0].ewcCodes" must contain no more than 5 EWC codes'
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'waste.0.ewcCodes',
+              errorType: 'UnexpectedError',
+              message:
+                '"waste[0].ewcCodes" must contain no more than 5 EWC codes'
+            }
+          ]
         }
-      ])
+      })
     })
 
     it('should reject missing EWC codes', async () => {
@@ -75,13 +86,17 @@ describe('EWC Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.json.validation.errors).toEqual([
-        {
-          key: 'waste.0.ewcCodes',
-          errorType: 'NotProvided',
-          message: '"waste[0].ewcCodes" is required'
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'waste.0.ewcCodes',
+              errorType: 'NotProvided',
+              message: '"waste[0].ewcCodes" is required'
+            }
+          ]
         }
-      ])
+      })
     })
 
     it('should reject invalid EWC code format (too short)', async () => {
@@ -93,13 +108,18 @@ describe('EWC Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.json.validation.errors).toEqual([
-        {
-          key: 'waste.0.ewcCodes.0',
-          errorType: 'UnexpectedError',
-          message: '"waste[0].ewcCodes[0]" must be a valid 6-digit numeric code'
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'waste.0.ewcCodes.0',
+              errorType: 'UnexpectedError',
+              message:
+                '"waste[0].ewcCodes[0]" must be a valid 6-digit numeric code'
+            }
+          ]
         }
-      ])
+      })
     })
 
     it('should reject non-existent EWC codes', async () => {
@@ -111,14 +131,18 @@ describe('EWC Codes Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.json.validation.errors).toEqual([
-        {
-          key: 'waste.0.ewcCodes.0',
-          errorType: 'UnexpectedError',
-          message:
-            '"waste[0].ewcCodes[0]" must be a valid EWC code from the official list'
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'waste.0.ewcCodes.0',
+              errorType: 'UnexpectedError',
+              message:
+                '"waste[0].ewcCodes[0]" must be a valid EWC code from the official list'
+            }
+          ]
         }
-      ])
+      })
     })
   })
 })
