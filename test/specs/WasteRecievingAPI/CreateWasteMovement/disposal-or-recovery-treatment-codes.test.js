@@ -135,7 +135,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
   })
 
   describe('Missing Treatment Codes', () => {
-    it('should accept request without disposal or recovery treatment codes', async () => {
+    it('should accept request without disposal or recovery treatment codes but with warnings', async () => {
       delete wasteReceiptData.receipt.disposalOrRecoveryCodes
 
       const response =

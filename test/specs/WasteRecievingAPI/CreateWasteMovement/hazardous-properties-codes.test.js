@@ -17,7 +17,7 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
 
   describe('Successfully Specifying Valid Hazardous Properties Codes', () => {
     it('should accept submission with single hazardous property code', async () => {
-      wasteReceiptData.wasteItems[0].hazardous.hazCodes = [5]
+      wasteReceiptData.wasteItems[0].hazardous.hazCodes = [1]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -32,7 +32,7 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
     })
 
     it('should accept submission with multiple hazardous property codes', async () => {
-      wasteReceiptData.wasteItems[0].hazardous.hazCodes = [5, 10, 12]
+      wasteReceiptData.wasteItems[0].hazardous.hazCodes = [1, 3, 5]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -47,7 +47,7 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
     })
 
     it('should accept submission with duplicate hazardous property codes', async () => {
-      wasteReceiptData.wasteItems[0].hazardous.hazCodes = [5, 5, 10]
+      wasteReceiptData.wasteItems[0].hazardous.hazCodes = [1, 1, 3, 3, 5]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -96,7 +96,7 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
 
   describe('Specifying Invalid Hazardous Property Code Format', () => {
     it('should reject submission with invalid hazardous property code format', async () => {
-      wasteReceiptData.wasteItems[0].hazardous.hazCodes = ['invalid']
+      wasteReceiptData.wasteItems[0].hazardous.hazCodes = ['HP 17']
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -133,6 +133,28 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
               key: 'wasteItems.0.hazardous.hazCodes.0',
               errorType: 'UnexpectedError',
               message: 'Hazard code must be between 1 and 15 (HP1-HP15)'
+            }
+          ]
+        }
+      })
+    })
+
+    it('should reject submission with non-array hazCodes', async () => {
+      wasteReceiptData.wasteItems[0].hazardous.hazCodes = '1,3,5'
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'wasteItems.0.hazardous.hazCodes',
+              errorType: 'UnexpectedError',
+              message: '"HazardCodes" must be an array'
             }
           ]
         }
