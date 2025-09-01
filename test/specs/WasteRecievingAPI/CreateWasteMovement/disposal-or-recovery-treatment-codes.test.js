@@ -7,7 +7,6 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
 
   beforeEach(async () => {
     wasteReceiptData = generateBaseWasteReceiptData()
-    wasteReceiptData.receipt.disposalOrRecoveryCodes = []
 
     // Authenticate and set the auth token
     await authenticateAndSetToken(
@@ -111,7 +110,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
       wasteReceiptData.receipt.disposalOrRecoveryCodes = [
         {
           code: 'R1'
-          // Missing quantity field
+          // Note: quantity field is intentionally omitted to test required validation
         }
       ]
 
@@ -136,7 +135,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
   })
 
   describe('Missing Treatment Codes', () => {
-    it('should accept request without disposal or recovery treatment codes but with warnings', async () => {
+    it('should accept request without disposal or recovery treatment codes', async () => {
       delete wasteReceiptData.receipt.disposalOrRecoveryCodes
 
       const response =

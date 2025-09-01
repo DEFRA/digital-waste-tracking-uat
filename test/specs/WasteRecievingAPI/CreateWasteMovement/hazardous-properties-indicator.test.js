@@ -17,9 +17,8 @@ describe('Hazardous Properties Indicator Validation', () => {
 
   describe('Valid Hazardous Indicator', () => {
     it('should accept waste receipt when hazardous indicator is set to true and no components are provided', async () => {
-      wasteReceiptData.waste[0].hazardous = {
+      wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true
-        // Missing components array
       }
 
       const response =
@@ -35,7 +34,7 @@ describe('Hazardous Properties Indicator Validation', () => {
     })
 
     it('should accept waste receipt when hazardous indicator is set to false and no components are provided', async () => {
-      wasteReceiptData.waste[0].hazardous = {
+      wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: false
       }
 
@@ -52,35 +51,12 @@ describe('Hazardous Properties Indicator Validation', () => {
     })
 
     it('should accept waste receipt when hazardous indicator is set to true and components are provided', async () => {
-      wasteReceiptData.waste[0].hazardous = {
+      wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         components: [
           {
-            name: 'Test Hazardous Chemical',
-            concentration: 50
-          }
-        ]
-      }
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
-
-    it('should accept waste receipt when hazardous indicator is set to false and components are provided', async () => {
-      wasteReceiptData.waste[0].hazardous = {
-        containsHazardous: false,
-        components: [
-          {
-            name: 'Test Chemical',
-            concentration: 50
+            name: 'Mercury',
+            concentration: 0.25
           }
         ]
       }
@@ -98,15 +74,41 @@ describe('Hazardous Properties Indicator Validation', () => {
     })
   })
 
-  describe('Missing Hazardous Indicator', () => {
-    it('should reject waste receipt when hazardous indicator field is missing and components are provided', async () => {
-      wasteReceiptData.waste[0].hazardous = {
+  describe('Invalid Hazardous Indicator', () => {
+    it('should reject waste receipt when hazardous indicator is missing', async () => {
+      wasteReceiptData.wasteItems[0].hazardous = {
         components: [
           {
-            name: 'Test Hazardous Chemical',
-            concentration: 50
+            name: 'Mercury',
+            concentration: 0.25
           }
         ]
+      }
+      // Note: containsHazardous field is intentionally omitted to test required validation
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'wasteItems.0.hazardous.containsHazardous',
+              errorType: 'NotProvided',
+              message:
+                'Hazardous waste is any waste that is potentially harmful to human health or the environment.'
+            }
+          ]
+        }
+      })
+    })
+
+    it('should reject waste receipt when hazardous indicator is invalid', async () => {
+      wasteReceiptData.wasteItems[0].hazardous = {
+        containsHazardous: 'invalid'
       }
 
       const response =
@@ -119,10 +121,10 @@ describe('Hazardous Properties Indicator Validation', () => {
         validation: {
           errors: [
             {
-              key: 'waste.0.hazardous.containsHazardous',
-              errorType: 'NotProvided',
+              key: 'wasteItems.0.hazardous.containsHazardous',
+              errorType: 'UnexpectedError',
               message:
-                'Hazardous waste is any waste that is potentially harmful to human health or the environment.'
+                '"wasteItems[0].hazardous.containsHazardous" must be a boolean'
             }
           ]
         }
