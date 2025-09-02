@@ -1,15 +1,19 @@
 import { ApiFactory } from '../../apis/api-factory.js'
 import { testConfig } from '../../support/test-config.js'
 import { setGlobalDispatcher, Agent } from 'undici'
+import os from 'node:os'
 
 let agent
 
 // Global setup - runs once before all tests
 beforeAll(async () => {
   // Configure undici for parallel test execution
+  const cpuCount = Math.max(os.cpus().length, 1)
+  const maxConnections = cpuCount * 10 // 10 connections per CPU core, minimum 50
+
   agent = new Agent({
-    connections: 50, // Allow many connections for parallel tests
-    pipelining: 2, // Allow pipelining for better performance
+    connections: maxConnections, // Scale with system resources
+    pipelining: cpuCount, // Allow pipelining for better performance
     headersTimeout: 30000, // Longer timeout for headers
     bodyTimeout: 30000, // Longer timeout for body
     keepAliveTimeout: 10000, // Longer keep-alive for connection reuse
