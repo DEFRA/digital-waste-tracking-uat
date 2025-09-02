@@ -13,8 +13,7 @@ beforeAll(async () => {
     headersTimeout: 30000, // Longer timeout for headers
     bodyTimeout: 30000, // Longer timeout for body
     keepAliveTimeout: 10000, // Longer keep-alive for connection reuse
-    keepAliveMaxTimeout: 30000,
-    // Reasonable connection timeout
+    keepAliveMaxTimeout: 30000, // Reasonable connection timeout
     connect: {
       timeout: 15000
     }
