@@ -12,6 +12,7 @@ export class TestConfig {
    */
   validateRequiredEnvVars() {
     const requiredVars = [
+      'ENVIRONMENT',
       'COGNITO_CLIENT_ID',
       'COGNITO_CLIENT_SECRET',
       'COGNITO_OAUTH_BASE_URL'
@@ -52,7 +53,7 @@ export class TestConfig {
    * @returns {string} The environment name
    */
   get environment() {
-    return process.env.ENVIRONMENT || 'test'
+    return process.env.ENVIRONMENT
   }
 }
 
