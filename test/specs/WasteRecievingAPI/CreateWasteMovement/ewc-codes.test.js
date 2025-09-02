@@ -17,7 +17,7 @@ describe('EWC Codes Validation', () => {
 
   describe('Valid EWC Codes', () => {
     it('should accept a valid 6-digit EWC code', async () => {
-      wasteReceiptData.waste[0].ewcCodes = ['020101'] // Paper and cardboard waste
+      wasteReceiptData.wasteItems[0].ewcCodes = ['020101'] // Paper and cardboard waste
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -32,7 +32,7 @@ describe('EWC Codes Validation', () => {
     })
 
     it('should accept multiple valid 6-digit EWC codes (up to 5)', async () => {
-      wasteReceiptData.waste[0].ewcCodes = [
+      wasteReceiptData.wasteItems[0].ewcCodes = [
         '020101',
         '020102',
         '020103',
@@ -55,7 +55,7 @@ describe('EWC Codes Validation', () => {
 
   describe('Invalid EWC Codes', () => {
     it('should reject more than 5 EWC codes', async () => {
-      wasteReceiptData.waste[0].ewcCodes = [
+      wasteReceiptData.wasteItems[0].ewcCodes = [
         '020101',
         '020102',
         '020103',
@@ -74,10 +74,10 @@ describe('EWC Codes Validation', () => {
         validation: {
           errors: [
             {
-              key: 'waste.0.ewcCodes',
+              key: 'wasteItems.0.ewcCodes',
               errorType: 'UnexpectedError',
               message:
-                '"waste[0].ewcCodes" must contain no more than 5 EWC codes'
+                '"wasteItems[0].ewcCodes" must contain no more than 5 EWC codes'
             }
           ]
         }
@@ -85,7 +85,7 @@ describe('EWC Codes Validation', () => {
     })
 
     it('should reject missing EWC codes', async () => {
-      delete wasteReceiptData.waste[0].ewcCodes
+      delete wasteReceiptData.wasteItems[0].ewcCodes
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -97,9 +97,9 @@ describe('EWC Codes Validation', () => {
         validation: {
           errors: [
             {
-              key: 'waste.0.ewcCodes',
+              key: 'wasteItems.0.ewcCodes',
               errorType: 'NotProvided',
-              message: '"waste[0].ewcCodes" is required'
+              message: '"wasteItems[0].ewcCodes" is required'
             }
           ]
         }
@@ -107,7 +107,7 @@ describe('EWC Codes Validation', () => {
     })
 
     it('should reject invalid EWC code format (too short)', async () => {
-      wasteReceiptData.waste[0].ewcCodes = ['12345'] // Too short - should be 6 digits
+      wasteReceiptData.wasteItems[0].ewcCodes = ['12345'] // Too short - should be 6 digits
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -119,10 +119,10 @@ describe('EWC Codes Validation', () => {
         validation: {
           errors: [
             {
-              key: 'waste.0.ewcCodes.0',
+              key: 'wasteItems.0.ewcCodes.0',
               errorType: 'UnexpectedError',
               message:
-                '"waste[0].ewcCodes[0]" must be a valid 6-digit numeric code'
+                '"wasteItems[0].ewcCodes[0]" must be a valid 6-digit numeric code'
             }
           ]
         }
@@ -130,7 +130,7 @@ describe('EWC Codes Validation', () => {
     })
 
     it('should reject non-existent EWC codes', async () => {
-      wasteReceiptData.waste[0].ewcCodes = ['999999'] // Non-existent EWC code
+      wasteReceiptData.wasteItems[0].ewcCodes = ['999999'] // Non-existent EWC code
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -142,10 +142,10 @@ describe('EWC Codes Validation', () => {
         validation: {
           errors: [
             {
-              key: 'waste.0.ewcCodes.0',
+              key: 'wasteItems.0.ewcCodes.0',
               errorType: 'UnexpectedError',
               message:
-                '"waste[0].ewcCodes[0]" must be a valid EWC code from the official list'
+                '"wasteItems[0].ewcCodes[0]" must be a valid EWC code from the official list'
             }
           ]
         }

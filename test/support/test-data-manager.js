@@ -6,20 +6,18 @@
  */
 
 /**
- * Generate base waste receipt data with all required fields
+ * Generate base waste receipt data with all required fields according to current API implementation
  * @returns {Object} Complete waste receipt data object
  */
 export const generateBaseWasteReceiptData = () => ({
   receivingSiteId: '12345678-1234-1234-1234-123456789012',
-  yourUniqueReference: `REF${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-  specialHandlingRequirements: 'None',
-  waste: [
+  wasteItems: [
     {
       ewcCodes: ['020101'],
       wasteDescription: 'Mixed waste from construction and demolition',
-      form: 'Mixed',
+      physicalForm: 'Mixed',
       numberOfContainers: 3,
-      typeOfContainers: 'Skip containers',
+      typeOfContainers: 'SKI',
       quantity: {
         metric: 'Tonnes',
         amount: 2.5,
@@ -34,15 +32,70 @@ export const generateBaseWasteReceiptData = () => ({
             concentration: 0.25
           }
         ]
+      },
+      pops: {
+        containsPops: false
+      }
+    }
+  ],
+  receipt: {
+    disposalOrRecoveryCodes: [
+      {
+        code: 'R1',
+        quantity: {
+          metric: 'Tonnes',
+          amount: 2.5,
+          isEstimate: false
+        }
+      }
+    ]
+  }
+})
+
+/**
+ * Generate complete waste receipt data with all fields
+ * @returns {Object} Complete waste receipt data object
+ */
+export const generateCompleteWasteReceiptData = () => ({
+  receivingSiteId: '12345678-1234-1234-1234-123456789012',
+  wasteItems: [
+    {
+      ewcCodes: ['020101'],
+      wasteDescription: 'Mixed waste from construction and demolition',
+      physicalForm: 'Mixed',
+      numberOfContainers: 3,
+      typeOfContainers: 'SKI',
+      quantity: {
+        metric: 'Tonnes',
+        amount: 2.5,
+        isEstimate: false
+      },
+      hazardous: {
+        containsHazardous: true,
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      },
+      pops: {
+        containsPops: false
       }
     }
   ],
   carrier: {
     organisationName: 'Test Carrier Ltd',
-    address: '123 Test Street, Test City, TC1 2AB',
+    address: {
+      fullAddress: '123 Test Street, Test City',
+      postCode: 'TC1 2AB'
+    },
     emailAddress: `test${Date.now()}@carrier.com`,
     phoneNumber: '01234567890',
-    meansOfTransport: 'Road'
+    meansOfTransport: 'Road',
+    registrationNumber: 'REG123456',
+    vehicleRegistration: 'AB12 CDE'
   },
   acceptance: {
     acceptingAll: true

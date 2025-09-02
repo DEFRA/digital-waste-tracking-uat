@@ -26,24 +26,35 @@ describe('Waste Movement Update', () => {
 
       const globalMovementId = createResponse.json.globalMovementId
 
-      // Update the movement amount
-      wasteReceiptData.waste[0].quantity.amount = 1.6
+      // Update the movement with different disposal codes
+      const updatedData = generateBaseWasteReceiptData()
+      updatedData.receipt.disposalOrRecoveryCodes = [
+        {
+          code: 'D1',
+          quantity: {
+            metric: 'Tonnes',
+            amount: 3.0,
+            isEstimate: false
+          }
+        }
+      ]
 
-      // Submit the updated movement with the existing ID
       const updateResponse =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
           globalMovementId,
-          wasteReceiptData
+          updatedData
         )
 
       expect(updateResponse.statusCode).toBe(200)
+      expect(updateResponse.json).toEqual({
+        message: 'Receipt movement updated successfully'
+      })
     })
   })
 
   describe('Failed Updates', () => {
     it('should fail to update movement with non-existent ID', async () => {
-      const nonExistentId = '24AAA000'
-
+      const nonExistentId = 'NONEXISTENT123'
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
           nonExistentId,

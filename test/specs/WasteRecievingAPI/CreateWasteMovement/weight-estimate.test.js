@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 
-describe.skip('Waste Weight Estimate Validation', () => {
+describe('Waste Weight Estimate Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
@@ -22,7 +22,7 @@ describe.skip('Waste Weight Estimate Validation', () => {
     ])(
       'should accept weight estimate indicator: %s (%s)',
       async (isEstimate, description) => {
-        wasteReceiptData.waste[0].quantity.isEstimate = isEstimate
+        wasteReceiptData.wasteItems[0].quantity.isEstimate = isEstimate
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -30,14 +30,17 @@ describe.skip('Waste Weight Estimate Validation', () => {
           )
 
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
       }
     )
   })
 
   describe('Invalid Weight Estimate Indicators', () => {
     it('should reject missing weight estimate indicator', async () => {
-      delete wasteReceiptData.waste[0].quantity.isEstimate
+      delete wasteReceiptData.wasteItems[0].quantity.isEstimate
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -45,11 +48,21 @@ describe.skip('Waste Weight Estimate Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      // Note: This test assumes the API returns an error about required weight estimate indicator
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'wasteItems.0.quantity.isEstimate',
+              errorType: 'NotProvided',
+              message: '"wasteItems[0].quantity.isEstimate" is required'
+            }
+          ]
+        }
+      })
     })
 
     it('should reject invalid weight estimate indicator', async () => {
-      wasteReceiptData.waste[0].quantity.isEstimate = 'invalid'
+      wasteReceiptData.wasteItems[0].quantity.isEstimate = 'invalid'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -57,7 +70,17 @@ describe.skip('Waste Weight Estimate Validation', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      // Note: This test assumes the API returns an error about weight estimate indicator must be true or false
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'wasteItems.0.quantity.isEstimate',
+              errorType: 'UnexpectedError',
+              message: '"wasteItems[0].quantity.isEstimate" must be a boolean'
+            }
+          ]
+        }
+      })
     })
   })
 })

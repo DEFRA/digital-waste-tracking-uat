@@ -16,15 +16,9 @@ describe('POPs Indicator Validation', () => {
   })
 
   describe('Valid POPs Indicators', () => {
-    it('should accept waste containing POPs with valid data', async () => {
-      wasteReceiptData.waste[0].pops = {
-        containsPops: true,
-        pops: [
-          {
-            name: 'Aldrin',
-            concentration: 50
-          }
-        ]
+    it('should accept waste containing POPs', async () => {
+      wasteReceiptData.wasteItems[0].pops = {
+        containsPops: true
       }
 
       const response =
@@ -40,7 +34,7 @@ describe('POPs Indicator Validation', () => {
     })
 
     it('should accept waste not containing POPs', async () => {
-      wasteReceiptData.waste[0].pops = {
+      wasteReceiptData.wasteItems[0].pops = {
         containsPops: false
       }
 
@@ -59,14 +53,7 @@ describe('POPs Indicator Validation', () => {
 
   describe('Invalid POPs Indicators', () => {
     it('should reject waste with missing POPs indicator', async () => {
-      wasteReceiptData.waste[0].pops = {
-        pops: [
-          {
-            name: 'Aldrin',
-            concentration: 50
-          }
-        ]
-      }
+      wasteReceiptData.wasteItems[0].pops = {}
       // Note: containsPops field is intentionally omitted to test required validation
 
       const response =
@@ -79,7 +66,7 @@ describe('POPs Indicator Validation', () => {
         validation: {
           errors: [
             {
-              key: 'waste.0.pops.containsPops',
+              key: 'wasteItems.0.pops.containsPops',
               errorType: 'NotProvided',
               message:
                 'Does the waste contain persistent organic pollutants (POPs)? is required'

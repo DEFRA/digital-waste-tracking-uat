@@ -17,39 +17,21 @@ headers {
 body:json {
   {
     "receivingSiteId": "{{receivingSiteId}}",
-    "hazardousWasteConsignmentNumber": "HWCN123456",
-    "reasonForNoConsignmentNumber": "Non-Haz Waste Transfer",
-    "yourUniqueReference": "REF123456",
-    "otherReferencesForMovement": "Additional reference info",
-    "specialHandlingRequirements": "Special handling required for abnormal hazardous waste",
-    "waste": [
+    "reasonForNoConsignmentCode": "Non-Hazardous Waste Transfer",
+    "wasteItems": [
       {
         "ewcCodes": ["020101"],
         "wasteDescription": "Complex mixed waste from construction and demolition containing hazardous components and POPs",
-        "form": "Mixed",
+        "physicalForm": "Mixed",
         "numberOfContainers": 8,
-        "typeOfContainers": "Bulk containers and drums",
+        "typeOfContainers": "SKI",
         "quantity": {
           "metric": "Tonnes",
           "amount": 3.2,
           "isEstimate": false
         },
         "pops": {
-          "containsPops": true,
-          "pops": [
-            {
-              "name": "Aldrin",
-              "concentration": 0.12
-            },
-            {
-              "name": "Chlordane",
-              "concentration": 0.08
-            },
-            {
-              "name": "Dieldrin",
-              "concentration": 0.15
-            }
-          ]
+          "containsPops": true
         },
         "hazardous": {
           "containsHazardous": true,
@@ -73,9 +55,9 @@ body:json {
       {
         "ewcCodes": ["150110"],
         "wasteDescription": "Secondary waste containing plastic packaging and minor contaminants",
-        "form": "Solid",
+        "physicalForm": "Solid",
         "numberOfContainers": 5,
-        "typeOfContainers": "Plastic bags and bins",
+        "typeOfContainers": "SKI",
         "quantity": {
           "metric": "Tonnes",
           "amount": 1.1,
@@ -97,42 +79,14 @@ body:json {
       }
     ],
     "carrier": {
-      "registrationNumber": "REG123456",
-      "reasonForNoRegistrationNumber": "Not applicable",
       "organisationName": "Test Carrier Ltd",
       "address": "123 Test Street, Test City, TC1 2AB",
       "emailAddress": "test@carrier.com",
       "phoneNumber": "01234567890",
-      "vehicleRegistration": "AB12 CDE",
-      "meansOfTransport": "Road",
-      "otherMeansOfTransport": "N/A"
-    },
-    "brokerOrDealer": {
-      "organisationName": "Test Broker Ltd",
-      "address": "456 Broker Street, Broker City, BC1 2DE",
-      "registrationNumber": "BROKER123456"
+      "meansOfTransport": "Road"
     },
     "acceptance": {
-      "acceptingAll": false,
-      "quantityNotAccepted": {
-        "metric": "Tonnes",
-        "amount": 0.4,
-        "isEstimate": false
-      },
-      "rejectionReason": "Contamination levels exceed acceptable limits for some waste streams"
-    },
-    "receiver": {
-      "authorisations": [
-        {
-          "authorisationType": "TBD",
-          "authorisationNumber": "AUTH123456"
-        },
-        {
-          "authorisationType": "TBD",
-          "authorisationNumber": "AUTH789012"
-        }
-      ],
-      "regulatoryPositionStatement": "RPS 123 - Position statement for specific waste handling activities"
+      "acceptingAll": true
     },
     "receipt": {
       "dateTimeReceived": "{{timestamp}}",

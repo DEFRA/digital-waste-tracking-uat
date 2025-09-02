@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 
-describe.skip('Authentication for Waste Movement Receipt Submissions', () => {
+describe('Authentication for Waste Movement Receipt Submissions', () => {
   let wasteReceiptData
 
   beforeEach(() => {
@@ -30,7 +30,10 @@ describe.skip('Authentication for Waste Movement Receipt Submissions', () => {
         )
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
     })
   })
 

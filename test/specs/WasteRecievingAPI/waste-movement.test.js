@@ -3,45 +3,35 @@ import { generateBaseWasteReceiptData } from '../../support/test-data-manager.js
 import { authenticateAndSetToken } from '../../support/helpers/auth.js'
 
 describe('Waste Movement API', () => {
+  let wasteReceiptData
+
+  beforeEach(async () => {
+    wasteReceiptData = generateBaseWasteReceiptData()
+
+    // Authenticate and set the auth token
+    await authenticateAndSetToken(
+      globalThis.testConfig.cognitoClientId,
+      globalThis.testConfig.cognitoClientSecret
+    )
+  })
+
   describe('API Documentation and Health', () => {
-    // it('should return swagger documentation', async () => {
-    //   const response =
-    //     await globalThis.apis.wasteMovementExternalAPI.getSwagger()
-
-    //   expect(response.statusCode).toBe(200)
-    //   expect(response.headers['content-type']).toBe('text/html; charset=utf-8')
-    // })
-
     it('should return health check response', async () => {
-      // Authenticate and set the auth token
-      await authenticateAndSetToken(
-        globalThis.testConfig.cognitoClientId,
-        globalThis.testConfig.cognitoClientSecret
-      )
-
       const response =
         await globalThis.apis.wasteMovementExternalAPI.getHealth()
 
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('message')
-      expect(response.json.message).toBe('success')
+      expect(response.json).toEqual({
+        message: 'success'
+      })
     })
   })
 
   describe('Waste Movement Creation', () => {
-    beforeEach(async () => {
-      // Authenticate and set the auth token
-      await authenticateAndSetToken(
-        globalThis.testConfig.cognitoClientId,
-        globalThis.testConfig.cognitoClientSecret
-      )
-    })
     it('should successfully create a new waste movement with valid data', async () => {
-      const sampleMovementData = generateBaseWasteReceiptData()
-
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          sampleMovementData
+          wasteReceiptData
         )
 
       expect(response.statusCode).toBe(200)
@@ -53,7 +43,7 @@ describe('Waste Movement API', () => {
 
     it('should fail to create movement due to missing required fields', async () => {
       const invalidData = generateBaseWasteReceiptData()
-      delete invalidData.waste[0].quantity.amount
+      delete invalidData.receipt.disposalOrRecoveryCodes[0].quantity.amount
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -76,43 +66,48 @@ describe('Waste Movement API', () => {
   })
 
   describe('Waste Movement Updates', () => {
-    beforeEach(async () => {
-      // Authenticate and set the auth token
-      await authenticateAndSetToken(
-        globalThis.testConfig.cognitoClientId,
-        globalThis.testConfig.cognitoClientSecret
-      )
-    })
     it('should successfully update an existing waste movement', async () => {
       // First create a movement
-      const sampleMovementData = generateBaseWasteReceiptData()
       const createResponse =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          sampleMovementData
+          wasteReceiptData
         )
+
       expect(createResponse.statusCode).toBe(200)
 
       const globalMovementId = createResponse.json.globalMovementId
 
-      // Update the movement
-      sampleMovementData.waste[0].quantity.amount = 3.0
+      // Update the movement with different disposal codes
+      const updatedData = generateBaseWasteReceiptData()
+      updatedData.receipt.disposalOrRecoveryCodes = [
+        {
+          code: 'D1',
+          quantity: {
+            metric: 'Tonnes',
+            amount: 3.0,
+            isEstimate: false
+          }
+        }
+      ]
+
       const updateResponse =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
           globalMovementId,
-          sampleMovementData
+          updatedData
         )
 
       expect(updateResponse.statusCode).toBe(200)
+      expect(updateResponse.json).toEqual({
+        message: 'Receipt movement updated successfully'
+      })
     })
 
     it('should return 404 for non-existent movement ID', async () => {
-      const sampleMovementData = generateBaseWasteReceiptData()
-      const nonExistentId = 'non-existent-id-12345'
-
+      const nonExistentId = 'NONEXISTENT123'
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
           nonExistentId,
-          sampleMovementData
+          wasteReceiptData
         )
 
       expect(response.statusCode).toBe(404)

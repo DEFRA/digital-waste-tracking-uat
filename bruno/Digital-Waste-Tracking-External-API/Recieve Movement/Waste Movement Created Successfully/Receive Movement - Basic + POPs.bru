@@ -17,30 +17,20 @@ headers {
 body:json {
   {
     "receivingSiteId": "{{receivingSiteId}}",
-    "waste": [
+    "wasteItems": [
       {
         "ewcCodes": ["020101"],
         "wasteDescription": "Waste containing persistent organic pollutants from contaminated soil",
-        "form": "Mixed",
+        "physicalForm": "Mixed",
         "numberOfContainers": 8,
-        "typeOfContainers": "IBC containers and drums",
+        "typeOfContainers": "SKI",
         "quantity": {
           "metric": "Tonnes",
           "amount": 1.8,
           "isEstimate": true
         },
         "pops": {
-          "containsPops": true,
-          "pops": [
-            {
-              "name": "Aldrin",
-              "concentration": 0.15
-            },
-            {
-              "name": "Chlordane",
-              "concentration": 0.08
-            }
-          ]
+          "containsPops": true
         }
       }
     ],

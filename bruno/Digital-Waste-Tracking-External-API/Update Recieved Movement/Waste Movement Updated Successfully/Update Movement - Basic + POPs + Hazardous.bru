@@ -17,35 +17,20 @@ headers {
 body:json {
   {
     "receivingSiteId": "{{receivingSiteId}}",
-    "hazardousWasteConsignmentNumber": "HWCN345678",
-    "waste": [
+    "wasteItems": [
       {
         "ewcCodes": ["020101"],
         "wasteDescription": "Complex waste with POPs and hazardous components from contaminated industrial site",
-        "form": "Mixed",
+        "physicalForm": "Mixed",
         "numberOfContainers": 15,
-        "typeOfContainers": "Specialist hazardous waste containers",
+        "typeOfContainers": "SKI",
         "quantity": {
           "metric": "Tonnes",
           "amount": 1.2,
           "isEstimate": true
         },
         "pops": {
-          "containsPops": true,
-          "pops": [
-            {
-              "name": "Aldrin",
-              "concentration": 0.18
-            },
-            {
-              "name": "Dieldrin",
-              "concentration": 0.22
-            },
-            {
-              "name": "Endrin",
-              "concentration": 0.05
-            }
-          ]
+          "containsPops": true
         },
         "hazardous": {
           "containsHazardous": true,
