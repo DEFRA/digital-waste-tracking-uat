@@ -8,35 +8,14 @@ export class WasteMovementExternalAPI extends BaseAPI {
   }
 
   /**
-   * @returns {Promise<import('./base-api.js').HtmlResponse>}
-   */
-  async getSwagger() {
-    const { statusCode, headers, body } = await this.get('/')
-
-    const html = await body.text()
-    // Consume the body to close the connection
-    await body.dump()
-
-    return {
-      statusCode,
-      headers,
-      html
-    }
-  }
-
-  /**
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async receiveMovement(movementData) {
-    const { statusCode, headers, body } = await this.post(
+    const { statusCode, headers, json } = await this.post(
       '/movements/receive',
       JSON.stringify(movementData),
       { 'Content-Type': 'application/json' }
     )
-
-    const json = await body.json()
-    // Consume the body to close the connection
-    await body.dump()
 
     return {
       statusCode,
@@ -49,15 +28,11 @@ export class WasteMovementExternalAPI extends BaseAPI {
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async receiveMovementWithId(wasteTrackingId, movementData) {
-    const { statusCode, headers, body } = await this.put(
+    const { statusCode, headers, json } = await this.put(
       `/movements/${wasteTrackingId}/receive`,
       JSON.stringify(movementData),
       { 'Content-Type': 'application/json' }
     )
-
-    const json = await body.json()
-    // Consume the body to close the connection
-    await body.dump()
 
     return {
       statusCode,
@@ -70,11 +45,7 @@ export class WasteMovementExternalAPI extends BaseAPI {
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async getHealth() {
-    const { statusCode, headers, body } = await this.get('/health')
-
-    const json = await body.json()
-    // Consume the body to close the connection
-    await body.dump()
+    const { statusCode, headers, json } = await this.get('/health')
 
     return {
       statusCode,

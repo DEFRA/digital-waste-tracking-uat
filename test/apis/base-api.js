@@ -5,24 +5,10 @@ import {
 } from '../support/helpers/allure-api-logger.js'
 
 /**
- * @typedef {Object} Response
- * @property {number} statusCode - HTTP status code
- * @property {Object} headers - Response headers
- * @property {import('undici/types/readable').default} body - Response body
- */
-
-/**
  * @typedef {Object} JsonResponse
  * @property {number} statusCode - HTTP status code
  * @property {Object} headers - Response headers
  * @property {any} json - Parsed JSON response
- */
-
-/**
- * @typedef {Object} HtmlResponse
- * @property {number} statusCode - HTTP status code
- * @property {Object} headers - Response headers
- * @property {any} html - Parsed HTML response
  */
 
 /**
@@ -41,7 +27,7 @@ export class BaseAPI {
    * Make a GET request
    * @param {string} endpoint - API endpoint
    * @param {Object} [headers={}] - Additional headers
-   * @returns {Promise<Response>}
+   * @returns {Promise<JsonResponse>}
    */
   async get(endpoint, headers = {}) {
     const url = `${this.baseUrl}${endpoint}`
@@ -55,19 +41,23 @@ export class BaseAPI {
       headers: requestHeaders
     })
 
+    const json = await response.body.json()
+    // Consume the body to close the connection
+    await response.body.dump()
+
     // Log response to Allure
     await logAllureResponse(
       'GET',
       endpoint,
       response.statusCode,
       response.headers,
-      response.body.text()
+      json
     )
 
     return {
       statusCode: response.statusCode,
       headers: response.headers,
-      body: response.body
+      json
     }
   }
 
@@ -76,7 +66,7 @@ export class BaseAPI {
    * @param {string} endpoint - API endpoint
    * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
-   * @returns {Promise<Response>}
+   * @returns {Promise<JsonResponse>}
    */
   async post(endpoint, data, headers = {}) {
     const url = `${this.baseUrl}${endpoint}`
@@ -91,18 +81,23 @@ export class BaseAPI {
       body: data
     })
 
+    const json = await response.body.json()
+    // Consume the body to close the connection
+    await response.body.dump()
+
     // Log response to Allure
     await logAllureResponse(
       'POST',
       endpoint,
       response.statusCode,
-      response.headers
+      response.headers,
+      json
     )
 
     return {
       statusCode: response.statusCode,
       headers: response.headers,
-      body: response.body
+      json
     }
   }
 
@@ -111,7 +106,7 @@ export class BaseAPI {
    * @param {string} endpoint - API endpoint
    * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
-   * @returns {Promise<Response>}
+   * @returns {Promise<JsonResponse>}
    */
   async put(endpoint, data, headers = {}) {
     const url = `${this.baseUrl}${endpoint}`
@@ -127,18 +122,23 @@ export class BaseAPI {
       body: data
     })
 
+    const json = await response.body.json()
+    // Consume the body to close the connection
+    await response.body.dump()
+
     // Log response to Allure
     await logAllureResponse(
       'PUT',
       endpoint,
       response.statusCode,
-      response.headers
+      response.headers,
+      json
     )
 
     return {
       statusCode: response.statusCode,
       headers: response.headers,
-      body: response.body
+      json
     }
   }
 
@@ -147,7 +147,7 @@ export class BaseAPI {
    * @param {string} endpoint - API endpoint
    * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
-   * @returns {Promise<Response>}
+   * @returns {Promise<JsonResponse>}
    */
   async patch(endpoint, data, headers = {}) {
     const url = `${this.baseUrl}${endpoint}`
@@ -163,6 +163,10 @@ export class BaseAPI {
       body: data
     })
 
+    const json = await response.body.json()
+    // Consume the body to close the connection
+    await response.body.dump()
+
     // Log response to Allure
     await logAllureResponse(
       'PATCH',
@@ -174,7 +178,7 @@ export class BaseAPI {
     return {
       statusCode: response.statusCode,
       headers: response.headers,
-      body: response.body
+      json
     }
   }
 
@@ -182,7 +186,7 @@ export class BaseAPI {
    * Make a DELETE request
    * @param {string} endpoint - API endpoint
    * @param {Object} [headers={}] - Additional headers
-   * @returns {Promise<Response>}
+   * @returns {Promise<JsonResponse>}
    */
   async delete(endpoint, headers = {}) {
     const url = `${this.baseUrl}${endpoint}`
@@ -204,10 +208,14 @@ export class BaseAPI {
       response.headers
     )
 
+    const json = await response.body.json()
+    // Consume the body to close the connection
+    await response.body.dump()
+
     return {
       statusCode: response.statusCode,
       headers: response.headers,
-      body: response.body
+      json
     }
   }
 

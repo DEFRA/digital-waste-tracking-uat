@@ -85,12 +85,9 @@ export async function logAllureResponse(
           'text/plain'
         )
         if (body) {
-          const json = await body.json()
-          // Consume the body to close the connection
-          await body.dump()
           globalThis.allure.attachment(
             'Response Body',
-            JSON.stringify(json, null, 2),
+            JSON.stringify(body, null, 2),
             'application/json'
           )
         }

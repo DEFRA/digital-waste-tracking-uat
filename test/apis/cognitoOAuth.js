@@ -26,15 +26,11 @@ export class CognitoOAuthApi extends BaseAPI {
     }
 
     // Make the token request
-    const { statusCode, headers, body } = await this.post(
+    const { statusCode, headers, json } = await this.post(
       '/oauth2/token',
       requestBody,
       requestHeaders
     )
-
-    const json = await body.json()
-    // Consume the body to close the connection
-    await body.dump()
 
     return {
       statusCode,
