@@ -3,6 +3,7 @@ import { testConfig } from '../../support/test-config.js'
 
 // Global setup - runs once before all tests
 beforeAll(async () => {
+
   globalThis.testConfig = testConfig
 })
 
