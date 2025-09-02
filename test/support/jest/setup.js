@@ -6,16 +6,16 @@ let agent
 
 // Global setup - runs once before all tests
 beforeAll(async () => {
-  // Configure undici for parallel test execution
+  // Configure undici with default settings to prevent OAuth2 AggregateError
   agent = new Agent({
-    connections: 50, // Allow many connections for parallel tests
-    pipelining: 2, // Allow pipelining for better performance
-    headersTimeout: 30000, // Longer timeout for headers
-    bodyTimeout: 30000, // Longer timeout for body
-    keepAliveTimeout: 10000, // Longer keep-alive for connection reuse
-    keepAliveMaxTimeout: 30000, // Reasonable connection timeout
+    connections: 1, // Default: single connection to prevent OAuth2 endpoint overwhelming
+    pipelining: 1, // Default: no pipelining to avoid head-of-line blocking during authentication
+    headersTimeout: 30000, // Custom: 30s timeout for API headers (default is 5min)
+    bodyTimeout: 30000, // Custom: 30s timeout for API response bodies (default is 5min)
+    keepAliveTimeout: 10000, // Custom: 10s keep-alive (default is 4s)
+    keepAliveMaxTimeout: 30000, // Custom: 30s max connection lifetime (default is 10min)
     connect: {
-      timeout: 15000
+      timeout: 15000 // Custom: 15s connection establishment timeout (default is 10s)
     }
   })
   setGlobalDispatcher(agent)
