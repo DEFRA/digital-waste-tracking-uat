@@ -1,4 +1,8 @@
 import { request } from 'undici'
+import {
+  logAllureRequest,
+  logAllureResponse
+} from '../support/helpers/allure-api-logger.js'
 
 /**
  * @typedef {Object} Response
@@ -40,10 +44,25 @@ export class BaseAPI {
    * @returns {Promise<Response>}
    */
   async get(endpoint, headers = {}) {
-    const response = await request(`${this.baseUrl}${endpoint}`, {
+    const url = `${this.baseUrl}${endpoint}`
+    const requestHeaders = { ...this.defaultHeaders, ...headers }
+
+    // Log request to Allure
+    await logAllureRequest('GET', endpoint, url, requestHeaders)
+
+    const response = await request(url, {
       method: 'GET',
-      headers: { ...this.defaultHeaders, ...headers }
+      headers: requestHeaders
     })
+
+    // Log response to Allure
+    await logAllureResponse(
+      'GET',
+      endpoint,
+      response.statusCode,
+      response.headers,
+      response.body.text()
+    )
 
     return {
       statusCode: response.statusCode,
@@ -60,12 +79,25 @@ export class BaseAPI {
    * @returns {Promise<Response>}
    */
   async post(endpoint, data, headers = {}) {
+    const url = `${this.baseUrl}${endpoint}`
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
-    const response = await request(`${this.baseUrl}${endpoint}`, {
+
+    // Log request to Allure
+    await logAllureRequest('POST', endpoint, url, instanceHeaders, data)
+
+    const response = await request(url, {
       method: 'POST',
       headers: instanceHeaders,
       body: data
     })
+
+    // Log response to Allure
+    await logAllureResponse(
+      'POST',
+      endpoint,
+      response.statusCode,
+      response.headers
+    )
 
     return {
       statusCode: response.statusCode,
@@ -82,13 +114,26 @@ export class BaseAPI {
    * @returns {Promise<Response>}
    */
   async put(endpoint, data, headers = {}) {
+    const url = `${this.baseUrl}${endpoint}`
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
     instanceHeaders['Content-Type'] = 'application/json'
-    const response = await request(`${this.baseUrl}${endpoint}`, {
+
+    // Log request to Allure
+    await logAllureRequest('PUT', endpoint, url, instanceHeaders, data)
+
+    const response = await request(url, {
       method: 'PUT',
       headers: instanceHeaders,
       body: data
     })
+
+    // Log response to Allure
+    await logAllureResponse(
+      'PUT',
+      endpoint,
+      response.statusCode,
+      response.headers
+    )
 
     return {
       statusCode: response.statusCode,
@@ -105,13 +150,26 @@ export class BaseAPI {
    * @returns {Promise<Response>}
    */
   async patch(endpoint, data, headers = {}) {
+    const url = `${this.baseUrl}${endpoint}`
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
     instanceHeaders['Content-Type'] = 'application/json'
-    const response = await request(`${this.baseUrl}${endpoint}`, {
+
+    // Log request to Allure
+    await logAllureRequest('PATCH', endpoint, url, instanceHeaders, data)
+
+    const response = await request(url, {
       method: 'PATCH',
       headers: instanceHeaders,
       body: data
     })
+
+    // Log response to Allure
+    await logAllureResponse(
+      'PATCH',
+      endpoint,
+      response.statusCode,
+      response.headers
+    )
 
     return {
       statusCode: response.statusCode,
@@ -127,10 +185,24 @@ export class BaseAPI {
    * @returns {Promise<Response>}
    */
   async delete(endpoint, headers = {}) {
-    const response = await request(`${this.baseUrl}${endpoint}`, {
+    const url = `${this.baseUrl}${endpoint}`
+    const requestHeaders = { ...this.defaultHeaders, ...headers }
+
+    // Log request to Allure
+    await logAllureRequest('DELETE', endpoint, url, requestHeaders)
+
+    const response = await request(url, {
       method: 'DELETE',
-      headers: { ...this.defaultHeaders, ...headers }
+      headers: requestHeaders
     })
+
+    // Log response to Allure
+    await logAllureResponse(
+      'DELETE',
+      endpoint,
+      response.statusCode,
+      response.headers
+    )
 
     return {
       statusCode: response.statusCode,
