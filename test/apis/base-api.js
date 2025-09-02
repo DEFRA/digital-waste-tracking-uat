@@ -42,8 +42,6 @@ export class BaseAPI {
     })
 
     const json = await response.body.json()
-    // Consume the body to close the connection
-    await response.body.dump()
 
     // Log response to Allure
     await logAllureResponse(
@@ -82,8 +80,6 @@ export class BaseAPI {
     })
 
     const json = await response.body.json()
-    // Consume the body to close the connection
-    await response.body.dump()
 
     // Log response to Allure
     await logAllureResponse(
@@ -123,8 +119,6 @@ export class BaseAPI {
     })
 
     const json = await response.body.json()
-    // Consume the body to close the connection
-    await response.body.dump()
 
     // Log response to Allure
     await logAllureResponse(
@@ -164,8 +158,6 @@ export class BaseAPI {
     })
 
     const json = await response.body.json()
-    // Consume the body to close the connection
-    await response.body.dump()
 
     // Log response to Allure
     await logAllureResponse(
@@ -209,8 +201,6 @@ export class BaseAPI {
     )
 
     const json = await response.body.json()
-    // Consume the body to close the connection
-    await response.body.dump()
 
     return {
       statusCode: response.statusCode,
