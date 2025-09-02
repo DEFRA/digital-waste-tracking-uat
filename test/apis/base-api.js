@@ -1,24 +1,14 @@
 import { request } from 'undici'
-
-/**
- * @typedef {Object} Response
- * @property {number} statusCode - HTTP status code
- * @property {Object} headers - Response headers
- * @property {import('undici/types/readable').default} body - Response body
- */
+import {
+  logAllureRequest,
+  logAllureResponse
+} from '../support/helpers/allure-api-logger.js'
 
 /**
  * @typedef {Object} JsonResponse
  * @property {number} statusCode - HTTP status code
  * @property {Object} headers - Response headers
  * @property {any} json - Parsed JSON response
- */
-
-/**
- * @typedef {Object} HtmlResponse
- * @property {number} statusCode - HTTP status code
- * @property {Object} headers - Response headers
- * @property {any} html - Parsed HTML response
  */
 
 /**
@@ -37,18 +27,37 @@ export class BaseAPI {
    * Make a GET request
    * @param {string} endpoint - API endpoint
    * @param {Object} [headers={}] - Additional headers
-   * @returns {Promise<Response>}
+   * @returns {Promise<JsonResponse>}
    */
   async get(endpoint, headers = {}) {
-    const response = await request(`${this.baseUrl}${endpoint}`, {
+    const url = `${this.baseUrl}${endpoint}`
+    const requestHeaders = { ...this.defaultHeaders, ...headers }
+
+    // Log request to Allure
+    await logAllureRequest('GET', endpoint, url, requestHeaders)
+
+    const response = await request(url, {
       method: 'GET',
-      headers: { ...this.defaultHeaders, ...headers }
+      headers: requestHeaders
     })
+
+    const json = await response.body.json()
+    // Consume the body to close the connection
+    await response.body.dump()
+
+    // Log response to Allure
+    await logAllureResponse(
+      'GET',
+      endpoint,
+      response.statusCode,
+      response.headers,
+      json
+    )
 
     return {
       statusCode: response.statusCode,
       headers: response.headers,
-      body: response.body
+      json
     }
   }
 
@@ -57,20 +66,38 @@ export class BaseAPI {
    * @param {string} endpoint - API endpoint
    * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
-   * @returns {Promise<Response>}
+   * @returns {Promise<JsonResponse>}
    */
   async post(endpoint, data, headers = {}) {
+    const url = `${this.baseUrl}${endpoint}`
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
-    const response = await request(`${this.baseUrl}${endpoint}`, {
+
+    // Log request to Allure
+    await logAllureRequest('POST', endpoint, url, instanceHeaders, data)
+
+    const response = await request(url, {
       method: 'POST',
       headers: instanceHeaders,
       body: data
     })
 
+    const json = await response.body.json()
+    // Consume the body to close the connection
+    await response.body.dump()
+
+    // Log response to Allure
+    await logAllureResponse(
+      'POST',
+      endpoint,
+      response.statusCode,
+      response.headers,
+      json
+    )
+
     return {
       statusCode: response.statusCode,
       headers: response.headers,
-      body: response.body
+      json
     }
   }
 
@@ -79,21 +106,39 @@ export class BaseAPI {
    * @param {string} endpoint - API endpoint
    * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
-   * @returns {Promise<Response>}
+   * @returns {Promise<JsonResponse>}
    */
   async put(endpoint, data, headers = {}) {
+    const url = `${this.baseUrl}${endpoint}`
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
     instanceHeaders['Content-Type'] = 'application/json'
-    const response = await request(`${this.baseUrl}${endpoint}`, {
+
+    // Log request to Allure
+    await logAllureRequest('PUT', endpoint, url, instanceHeaders, data)
+
+    const response = await request(url, {
       method: 'PUT',
       headers: instanceHeaders,
       body: data
     })
 
+    const json = await response.body.json()
+    // Consume the body to close the connection
+    await response.body.dump()
+
+    // Log response to Allure
+    await logAllureResponse(
+      'PUT',
+      endpoint,
+      response.statusCode,
+      response.headers,
+      json
+    )
+
     return {
       statusCode: response.statusCode,
       headers: response.headers,
-      body: response.body
+      json
     }
   }
 
@@ -102,21 +147,38 @@ export class BaseAPI {
    * @param {string} endpoint - API endpoint
    * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
-   * @returns {Promise<Response>}
+   * @returns {Promise<JsonResponse>}
    */
   async patch(endpoint, data, headers = {}) {
+    const url = `${this.baseUrl}${endpoint}`
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
     instanceHeaders['Content-Type'] = 'application/json'
-    const response = await request(`${this.baseUrl}${endpoint}`, {
+
+    // Log request to Allure
+    await logAllureRequest('PATCH', endpoint, url, instanceHeaders, data)
+
+    const response = await request(url, {
       method: 'PATCH',
       headers: instanceHeaders,
       body: data
     })
 
+    const json = await response.body.json()
+    // Consume the body to close the connection
+    await response.body.dump()
+
+    // Log response to Allure
+    await logAllureResponse(
+      'PATCH',
+      endpoint,
+      response.statusCode,
+      response.headers
+    )
+
     return {
       statusCode: response.statusCode,
       headers: response.headers,
-      body: response.body
+      json
     }
   }
 
@@ -124,18 +186,36 @@ export class BaseAPI {
    * Make a DELETE request
    * @param {string} endpoint - API endpoint
    * @param {Object} [headers={}] - Additional headers
-   * @returns {Promise<Response>}
+   * @returns {Promise<JsonResponse>}
    */
   async delete(endpoint, headers = {}) {
-    const response = await request(`${this.baseUrl}${endpoint}`, {
+    const url = `${this.baseUrl}${endpoint}`
+    const requestHeaders = { ...this.defaultHeaders, ...headers }
+
+    // Log request to Allure
+    await logAllureRequest('DELETE', endpoint, url, requestHeaders)
+
+    const response = await request(url, {
       method: 'DELETE',
-      headers: { ...this.defaultHeaders, ...headers }
+      headers: requestHeaders
     })
+
+    // Log response to Allure
+    await logAllureResponse(
+      'DELETE',
+      endpoint,
+      response.statusCode,
+      response.headers
+    )
+
+    const json = await response.body.json()
+    // Consume the body to close the connection
+    await response.body.dump()
 
     return {
       statusCode: response.statusCode,
       headers: response.headers,
-      body: response.body
+      json
     }
   }
 

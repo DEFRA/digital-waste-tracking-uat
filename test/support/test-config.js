@@ -55,6 +55,14 @@ export class TestConfig {
   get environment() {
     return process.env.ENVIRONMENT
   }
+
+  /**
+   * Check if additional logging is available
+   * @returns {boolean} Whether additional logging is available
+   */
+  get isAdditionalLoggingEnabled() {
+    return process.env.API_LOGGING === 'true'
+  }
 }
 
 // Create a singleton instance
