@@ -40,8 +40,10 @@ export class BaseAPI {
         uri: globalThis.testConfig.httpProxy,
         ...baseOptions
       })
+      this.usingProxy = true
     } else {
       this.agent = new Agent(baseOptions)
+      this.usingProxy = false
     }
   }
 
@@ -56,7 +58,13 @@ export class BaseAPI {
     const requestHeaders = { ...this.defaultHeaders, ...headers }
 
     // Log request to Allure
-    await logAllureRequest('GET', endpoint, url, requestHeaders)
+    await logAllureRequest(
+      'GET',
+      endpoint,
+      url,
+      requestHeaders,
+      this.usingProxy
+    )
 
     const response = await request(url, {
       method: 'GET',
@@ -94,7 +102,14 @@ export class BaseAPI {
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
 
     // Log request to Allure
-    await logAllureRequest('POST', endpoint, url, instanceHeaders, data)
+    await logAllureRequest(
+      'POST',
+      endpoint,
+      url,
+      instanceHeaders,
+      this.usingProxy,
+      data
+    )
 
     const response = await request(url, {
       method: 'POST',
@@ -134,7 +149,14 @@ export class BaseAPI {
     instanceHeaders['Content-Type'] = 'application/json'
 
     // Log request to Allure
-    await logAllureRequest('PUT', endpoint, url, instanceHeaders, data)
+    await logAllureRequest(
+      'PUT',
+      endpoint,
+      url,
+      instanceHeaders,
+      this.usingProxy,
+      data
+    )
 
     const response = await request(url, {
       method: 'PUT',
@@ -174,7 +196,14 @@ export class BaseAPI {
     instanceHeaders['Content-Type'] = 'application/json'
 
     // Log request to Allure
-    await logAllureRequest('PATCH', endpoint, url, instanceHeaders, data)
+    await logAllureRequest(
+      'PATCH',
+      endpoint,
+      url,
+      instanceHeaders,
+      this.usingProxy,
+      data
+    )
 
     const response = await request(url, {
       method: 'PATCH',
@@ -211,7 +240,13 @@ export class BaseAPI {
     const requestHeaders = { ...this.defaultHeaders, ...headers }
 
     // Log request to Allure
-    await logAllureRequest('DELETE', endpoint, url, requestHeaders)
+    await logAllureRequest(
+      'DELETE',
+      endpoint,
+      url,
+      requestHeaders,
+      this.usingProxy
+    )
 
     const response = await request(url, {
       method: 'DELETE',
