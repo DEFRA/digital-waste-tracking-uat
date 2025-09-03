@@ -2,32 +2,38 @@
 
 # Debug network connectivity to OAuth2 endpoints
 echo "=== Network Connectivity Debug ==="
-echo "Testing DNS resolution and connectivity to OAuth2 endpoints..."
 
-# Check if environment variables are set
-echo "Environment variables:"
-echo "COGNITO_OAUTH_BASE_URL: ${COGNITO_OAUTH_BASE_URL:-'NOT SET'}"
-echo "ENVIRONMENT: ${ENVIRONMENT:-'NOT SET'}"
+echo "Testing DNS resolution for: https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/"
+nslookup "https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/" || echo "DNS resolution failed"
 
-# Test DNS resolution
-if [ -n "$COGNITO_OAUTH_BASE_URL" ]; then
-  echo "Testing DNS resolution for: $COGNITO_OAUTH_BASE_URL"
-  nslookup "$COGNITO_OAUTH_BASE_URL" || echo "DNS resolution failed"
-  
-  # Test basic connectivity
-  echo "Testing basic connectivity..."
-  curl -I --connect-timeout 10 --max-time 30 "$COGNITO_OAUTH_BASE_URL" || echo "Basic connectivity failed"
-  
-  # Test OAuth2 token endpoint specifically
-  echo "Testing OAuth2 token endpoint..."
-  curl -I --connect-timeout 10 --max-time 30 "$COGNITO_OAUTH_BASE_URL/oauth2/token" || echo "OAuth2 token endpoint failed"
-else
-  echo "COGNITO_OAUTH_BASE_URL not set, cannot test connectivity"
-fi
+echo "Testing https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/..."
+curl -I --connect-timeout 10 --max-time 30 "https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/" || echo "Basic connectivity failed"
+
+echo "Testing https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/oauth2/token..."
+curl -I --connect-timeout 10 --max-time 30 "https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/oauth2/token" || echo "OAuth2 token endpoint failed"
+
+echo "Testing https://waste-movement-external-api.api.test.cdp-int.defra.cloud..."
+curl -I --connect-timeout 10 --max-time 30 "https://waste-movement-external-api.api.test.cdp-int.defra.cloud" || echo "CDP test domain failed"
+
+echo "Testing https://s3.amazonaws.com..."
+curl -I --connect-timeout 10 --max-time 30 "https://s3.amazonaws.com" || echo "AWS S3 failed"
+
+echo "Testing https://sts.amazonaws.com..."
+curl -I --connect-timeout 10 --max-time 30 "https://sts.amazonaws.com" || echo "AWS STS failed"
+
+echo "Testing https://login.microsoftonline.com..."
+curl -I --connect-timeout 10 --max-time 30 "https://login.microsoftonline.com" || echo "Microsoft login failed"
+
+echo "Testing www.gov.uk..."
+curl -I --connect-timeout 10 --max-time 30 "https://www.gov.uk" || echo "GOV.UK failed"
+
+echo "Testing https://api.browserstack.com..."
+curl -I --connect-timeout 10 --max-time 30 "https://api.browserstack.com" || echo "BrowserStack failed"
+
+echo "Testing https://api.notifications.service.gov.uk..."
+curl -I --connect-timeout 10 --max-time 30 "https://api.notifications.service.gov.uk" || echo "GOV.UK Notifications failed"
 
 echo "=== End Network Debug ==="
-
-exit 0
 
 echo "run_id: $RUN_ID"
 npm test
