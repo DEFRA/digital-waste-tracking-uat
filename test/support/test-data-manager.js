@@ -87,19 +87,15 @@ export const generateCompleteWasteReceiptData = () => ({
   ],
   carrier: {
     organisationName: 'Test Carrier Ltd',
-    address: '123 Test Street, Test City,TC1 2AB',
-    // address: {
-    //   fullAddress: '123 Test Street, Test City',
-    //   postCode: 'TC1 2AB'
-    // },
+    address: {
+      fullAddress: '123 Test Street, Test City',
+      postCode: 'TC1 2AB'
+    },
     emailAddress: `test${Date.now()}@carrier.com`,
     phoneNumber: '01234567890',
     meansOfTransport: 'Road',
     registrationNumber: 'REG123456',
     vehicleRegistration: 'AB12 CDE'
-  },
-  acceptance: {
-    acceptingAll: true
   },
   receipt: {
     dateTimeReceived: new Date().toISOString(),
