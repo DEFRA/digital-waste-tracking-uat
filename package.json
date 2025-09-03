@@ -21,7 +21,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
-    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv4first --no-network-family-autoselection' jest",
+    "test": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest",
     "test-name-pattern": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --testNamePattern",
     "test:watch": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --watch",
     "test:coverage": "NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --coverage",
