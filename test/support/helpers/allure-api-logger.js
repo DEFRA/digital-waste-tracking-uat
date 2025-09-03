@@ -10,6 +10,7 @@
  * @param {string} endpoint - API endpoint path
  * @param {string} url - Full request URL
  * @param {Object} headers - Request headers
+ * @param {boolean} usingProxy - Whether the request is using a proxy
  * @param {string|Object} [data] - Request body data
  */
 export async function logAllureRequest(
@@ -17,6 +18,7 @@ export async function logAllureRequest(
   endpoint,
   url,
   headers,
+  usingProxy,
   data = null
 ) {
   if (globalThis.testConfig.isAdditionalLoggingEnabled) {
@@ -30,7 +32,13 @@ export async function logAllureRequest(
           JSON.stringify(headers, null, 2),
           'application/json'
         )
-
+        if (usingProxy) {
+          globalThis.allure.attachment(
+            'Using Proxy URL',
+            globalThis.testConfig.httpProxy,
+            'text/plain'
+          )
+        }
         if (data) {
           try {
             // Try to parse as JSON for better formatting

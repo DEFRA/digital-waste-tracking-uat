@@ -3,7 +3,7 @@ import { BaseAPI } from './base-api.js'
 
 export class CognitoOAuthApi extends BaseAPI {
   constructor() {
-    super(testConfig.cognitoOAuthBaseUrl)
+    super(testConfig.cognitoOAuthBaseUrl, true)
   }
 
   /**
