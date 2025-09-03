@@ -16,11 +16,11 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
   })
 
   describe('Valid Treatment Codes', () => {
-    it('should accept valid disposal or recovery treatment codes with quantity', async () => {
+    it('should accept valid disposal or recovery treatment codes with weight', async () => {
       wasteReceiptData.receipt.disposalOrRecoveryCodes = [
         {
           code: 'R1',
-          quantity: {
+          weight: {
             metric: 'Tonnes',
             amount: 2.5,
             isEstimate: false
@@ -44,7 +44,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
       wasteReceiptData.receipt.disposalOrRecoveryCodes = [
         {
           code: 'R1',
-          quantity: {
+          weight: {
             metric: 'Tonnes',
             amount: 1.5,
             isEstimate: false
@@ -52,7 +52,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         },
         {
           code: 'D1',
-          quantity: {
+          weight: {
             metric: 'Tonnes',
             amount: 1.0,
             isEstimate: false
@@ -78,7 +78,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
       wasteReceiptData.receipt.disposalOrRecoveryCodes = [
         {
           code: 'INVALID',
-          quantity: {
+          weight: {
             metric: 'Tonnes',
             amount: 2.5,
             isEstimate: false
@@ -106,11 +106,11 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
       })
     })
 
-    it('should reject treatment codes without quantity', async () => {
+    it('should reject treatment codes without weight', async () => {
       wasteReceiptData.receipt.disposalOrRecoveryCodes = [
         {
           code: 'R1'
-          // Note: quantity field is intentionally omitted to test required validation
+          // Note: weight field is intentionally omitted to test required validation
         }
       ]
 
@@ -124,9 +124,9 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         validation: {
           errors: [
             {
-              key: 'receipt.disposalOrRecoveryCodes.0.quantity',
+              key: 'receipt.disposalOrRecoveryCodes.0.weight',
               errorType: 'NotProvided',
-              message: '"Quantity" is required'
+              message: '"Weight" is required'
             }
           ]
         }

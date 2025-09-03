@@ -18,7 +18,7 @@ export const generateBaseWasteReceiptData = () => ({
       physicalForm: 'Mixed',
       numberOfContainers: 3,
       typeOfContainers: 'SKI',
-      quantity: {
+      weight: {
         metric: 'Tonnes',
         amount: 2.5,
         isEstimate: false
@@ -42,7 +42,7 @@ export const generateBaseWasteReceiptData = () => ({
     disposalOrRecoveryCodes: [
       {
         code: 'R1',
-        quantity: {
+        weight: {
           metric: 'Tonnes',
           amount: 2.5,
           isEstimate: false
@@ -65,7 +65,7 @@ export const generateCompleteWasteReceiptData = () => ({
       physicalForm: 'Mixed',
       numberOfContainers: 3,
       typeOfContainers: 'SKI',
-      quantity: {
+      weight: {
         metric: 'Tonnes',
         amount: 2.5,
         isEstimate: false
@@ -106,7 +106,7 @@ export const generateCompleteWasteReceiptData = () => ({
     disposalOrRecoveryCodes: [
       {
         code: 'R1',
-        quantity: {
+        weight: {
           metric: 'Tonnes',
           amount: 2.5,
           isEstimate: false
