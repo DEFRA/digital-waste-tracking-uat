@@ -49,6 +49,14 @@ export class TestConfig {
   }
 
   /**
+   * Get the HTTP proxy URL from environment variables
+   * @returns {string} The proxy URL if set
+   */
+  get httpProxy() {
+    return process.env.HTTP_PROXY
+  }
+
+  /**
    * Get the environment name
    * @returns {string} The environment name
    */

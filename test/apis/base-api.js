@@ -1,4 +1,4 @@
-import { request } from 'undici'
+import { request, Agent, ProxyAgent } from 'undici'
 import {
   logAllureRequest,
   logAllureResponse
@@ -18,9 +18,31 @@ export class BaseAPI {
   /**
    * @param {string} baseUrl - Base URL for all API requests
    */
-  constructor(baseUrl) {
+  constructor(baseUrl, useProxyWhenAvailable = false) {
     this.baseUrl = baseUrl
     this.defaultHeaders = {}
+    this.useProxyWhenAvailable = useProxyWhenAvailable
+
+    const baseOptions = {
+      connections: 1, // Default: single connection to prevent OAuth2 endpoint overwhelming
+      pipelining: 1, // Default: no pipelining to avoid head-of-line blocking during authentication
+      headersTimeout: 30000, // Custom: 30s timeout for API headers (default is 5min)
+      bodyTimeout: 30000, // Custom: 30s timeout for API response bodies (default is 5min)
+      keepAliveTimeout: 10000, // Custom: 10s keep-alive (default is 4s)
+      keepAliveMaxTimeout: 30000, // Custom: 30s max connection lifetime (default is 10min)
+      connect: {
+        timeout: 15000 // Custom: 15s connection establishment timeout (default is 10s)
+      }
+    }
+
+    if (globalThis.testConfig?.httpProxy && this.useProxyWhenAvailable) {
+      this.agent = new ProxyAgent({
+        uri: globalThis.testConfig.httpProxy,
+        ...baseOptions
+      })
+    } else {
+      this.agent = new Agent(baseOptions)
+    }
   }
 
   /**
@@ -38,7 +60,8 @@ export class BaseAPI {
 
     const response = await request(url, {
       method: 'GET',
-      headers: requestHeaders
+      headers: requestHeaders,
+      dispatcher: this.agent
     })
 
     const json = await response.body.json()
@@ -76,7 +99,8 @@ export class BaseAPI {
     const response = await request(url, {
       method: 'POST',
       headers: instanceHeaders,
-      body: data
+      body: data,
+      dispatcher: this.agent
     })
 
     const json = await response.body.json()
@@ -115,7 +139,8 @@ export class BaseAPI {
     const response = await request(url, {
       method: 'PUT',
       headers: instanceHeaders,
-      body: data
+      body: data,
+      dispatcher: this.agent
     })
 
     const json = await response.body.json()
@@ -154,7 +179,8 @@ export class BaseAPI {
     const response = await request(url, {
       method: 'PATCH',
       headers: instanceHeaders,
-      body: data
+      body: data,
+      dispatcher: this.agent
     })
 
     const json = await response.body.json()
@@ -189,7 +215,8 @@ export class BaseAPI {
 
     const response = await request(url, {
       method: 'DELETE',
-      headers: requestHeaders
+      headers: requestHeaders,
+      dispatcher: this.agent
     })
 
     // Log response to Allure
@@ -229,5 +256,14 @@ export class BaseAPI {
           `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
       )
       .join('&')
+  }
+
+  /**
+   * Close the agent and clean up connections
+   */
+  async close() {
+    if (this.agent) {
+      await this.agent.close()
+    }
   }
 }

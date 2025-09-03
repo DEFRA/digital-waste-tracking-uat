@@ -5,6 +5,25 @@
  */
 
 /**
+ * Log proxy URL usage to Allure report
+ * @param {string} targetUrl - The target URL being accessed
+ * @param {string} proxyUrl - The proxy URL being used
+ */
+export async function logAllureProxyUsage(targetUrl, proxyUrl) {
+  if (globalThis.testConfig.isAdditionalLoggingEnabled) {
+    await globalThis.allure.step(`Proxy Request: ${targetUrl}`, async () => {
+      globalThis.allure.attachment('Target URL', targetUrl, 'text/plain')
+      globalThis.allure.attachment('Proxy URL', proxyUrl, 'text/plain')
+      globalThis.allure.attachment(
+        'Proxy Info',
+        `Request to ${targetUrl} will be routed through proxy: ${proxyUrl}`,
+        'text/plain'
+      )
+    })
+  }
+}
+
+/**
  * Log API request details to Allure report
  * @param {string} method - HTTP method (GET, POST, PUT, etc.)
  * @param {string} endpoint - API endpoint path
