@@ -6,8 +6,11 @@ echo "=== Network Connectivity Debug ==="
 echo "Testing DNS resolution for: https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/"
 nslookup "https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/" || echo "DNS resolution failed"
 
-echo "Testing https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/..."
-curl -I --connect-timeout 10 --max-time 30 "https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/" || echo "Basic connectivity failed"
+echo "Testing IPv6 https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/..."
+curl -6 -I --connect-timeout 10 --max-time 30 "https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/" || echo "Basic connectivity failed"
+
+echo "Testing IPv4 https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/..."
+curl -4 -I --connect-timeout 10 --max-time 30 "https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/" || echo "Basic connectivity failed"
 
 echo "Testing https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/oauth2/token..."
 curl -I --connect-timeout 10 --max-time 30 "https://waste-movement-external-api-6bf3a.auth.eu-west-2.amazoncognito.com/oauth2/token" || echo "OAuth2 token endpoint failed"
