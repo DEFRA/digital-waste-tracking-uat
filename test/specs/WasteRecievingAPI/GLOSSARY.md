@@ -63,7 +63,7 @@ This glossary defines the key terms and phrases used consistently across the Was
 
 - **Definition**: A data structure containing waste classification information within the waste array
 - **Usage**: "waste item with a valid EWC code"
-- **Context**: Contains EWC codes, description, form, containers, quantity data, hazardous properties, and POPs indicators
+- **Context**: Contains EWC codes, description, form, containers, weight data, hazardous properties, and POPs indicators
 
 ### Hazardous Properties
 
@@ -81,7 +81,7 @@ This glossary defines the key terms and phrases used consistently across the Was
 
 - **Definition**: A code indicating the intended treatment method for waste (disposal or recovery)
 - **Usage**: "disposal or recovery code", "valid disposal or recovery code"
-- **Context**: Part of the waste item data structure, requires code and associated quantity
+- **Context**: Part of the waste item data structure, requires code and associated weight
 
 ### POPs Indicator
 
@@ -91,9 +91,9 @@ This glossary defines the key terms and phrases used consistently across the Was
 
 ### Weight Estimate Indicator
 
-- **Definition**: A boolean indicator showing whether the waste quantity is an estimate or actual measurement
+- **Definition**: A boolean indicator showing whether the waste weight is an estimate or actual measurement
 - **Usage**: "weight estimate indicator", "container weight is an estimate/not an estimate"
-- **Context**: Part of the quantity data structure within the waste item
+- **Context**: Part of the weight data structure within the waste item
 
 ### Multiple EWC Codes
 
@@ -160,7 +160,7 @@ This glossary defines the key terms and phrases used consistently across the Was
 
 - **Definition**: Modifying disposal or recovery codes and associated quantities within the waste item
 - **Usage**: "the waste item has a valid disposal or recovery code", "the waste item has no disposal or recovery codes"
-- **Context**: Used to set up waste treatment test conditions and quantity specifications
+- **Context**: Used to set up waste treatment test conditions and weight specifications
 
 ### POPs Configuration
 
@@ -170,9 +170,9 @@ This glossary defines the key terms and phrases used consistently across the Was
 
 ### Weight Estimate Configuration
 
-- **Definition**: Modifying weight estimate indicators within the waste item quantity data
+- **Definition**: Modifying weight estimate indicators within the waste item weight data
 - **Usage**: "the waste item container weight indicates it is an estimate/not an estimate", "the waste item has no weight estimate indicator"
-- **Context**: Used to set up weight estimate test conditions and quantity specifications
+- **Context**: Used to set up weight estimate test conditions and weight specifications
 
 ### Inform
 

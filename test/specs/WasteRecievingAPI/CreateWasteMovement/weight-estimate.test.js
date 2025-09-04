@@ -22,7 +22,7 @@ describe('Waste Weight Estimate Validation', () => {
     ])(
       'should accept weight estimate indicator: %s (%s)',
       async (isEstimate, description) => {
-        wasteReceiptData.wasteItems[0].quantity.isEstimate = isEstimate
+        wasteReceiptData.wasteItems[0].weight.isEstimate = isEstimate
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -40,7 +40,7 @@ describe('Waste Weight Estimate Validation', () => {
 
   describe('Invalid Weight Estimate Indicators', () => {
     it('should reject missing weight estimate indicator', async () => {
-      delete wasteReceiptData.wasteItems[0].quantity.isEstimate
+      delete wasteReceiptData.wasteItems[0].weight.isEstimate
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -52,9 +52,9 @@ describe('Waste Weight Estimate Validation', () => {
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.quantity.isEstimate',
+              key: 'wasteItems.0.weight.isEstimate',
               errorType: 'NotProvided',
-              message: '"wasteItems[0].quantity.isEstimate" is required'
+              message: '"wasteItems[0].weight.isEstimate" is required'
             }
           ]
         }
@@ -62,7 +62,7 @@ describe('Waste Weight Estimate Validation', () => {
     })
 
     it('should reject invalid weight estimate indicator', async () => {
-      wasteReceiptData.wasteItems[0].quantity.isEstimate = 'invalid'
+      wasteReceiptData.wasteItems[0].weight.isEstimate = 'invalid'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -74,9 +74,9 @@ describe('Waste Weight Estimate Validation', () => {
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.quantity.isEstimate',
+              key: 'wasteItems.0.weight.isEstimate',
               errorType: 'UnexpectedError',
-              message: '"wasteItems[0].quantity.isEstimate" must be a boolean'
+              message: '"wasteItems[0].weight.isEstimate" must be a boolean'
             }
           ]
         }

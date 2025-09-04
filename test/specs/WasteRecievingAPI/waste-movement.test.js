@@ -43,7 +43,7 @@ describe('Waste Movement API', () => {
 
     it('should fail to create movement due to missing required fields', async () => {
       const invalidData = generateBaseWasteReceiptData()
-      delete invalidData.receipt.disposalOrRecoveryCodes[0].quantity.amount
+      delete invalidData.receipt.disposalOrRecoveryCodes[0].weight.amount
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -82,7 +82,7 @@ describe('Waste Movement API', () => {
       updatedData.receipt.disposalOrRecoveryCodes = [
         {
           code: 'D1',
-          quantity: {
+          weight: {
             metric: 'Tonnes',
             amount: 3.0,
             isEstimate: false

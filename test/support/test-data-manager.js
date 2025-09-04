@@ -18,7 +18,7 @@ export const generateBaseWasteReceiptData = () => ({
       physicalForm: 'Mixed',
       numberOfContainers: 3,
       typeOfContainers: 'SKI',
-      quantity: {
+      weight: {
         metric: 'Tonnes',
         amount: 2.5,
         isEstimate: false
@@ -42,7 +42,7 @@ export const generateBaseWasteReceiptData = () => ({
     disposalOrRecoveryCodes: [
       {
         code: 'R1',
-        quantity: {
+        weight: {
           metric: 'Tonnes',
           amount: 2.5,
           isEstimate: false
@@ -65,7 +65,7 @@ export const generateCompleteWasteReceiptData = () => ({
       physicalForm: 'Mixed',
       numberOfContainers: 3,
       typeOfContainers: 'SKI',
-      quantity: {
+      weight: {
         metric: 'Tonnes',
         amount: 2.5,
         isEstimate: false
@@ -87,26 +87,22 @@ export const generateCompleteWasteReceiptData = () => ({
   ],
   carrier: {
     organisationName: 'Test Carrier Ltd',
-    address: '123 Test Street, Test City,TC1 2AB',
-    // address: {
-    //   fullAddress: '123 Test Street, Test City',
-    //   postCode: 'TC1 2AB'
-    // },
+    address: {
+      fullAddress: '123 Test Street, Test City',
+      postCode: 'TC1 2AB'
+    },
     emailAddress: `test${Date.now()}@carrier.com`,
     phoneNumber: '01234567890',
     meansOfTransport: 'Road',
     registrationNumber: 'REG123456',
     vehicleRegistration: 'AB12 CDE'
   },
-  acceptance: {
-    acceptingAll: true
-  },
   receipt: {
     dateTimeReceived: new Date().toISOString(),
     disposalOrRecoveryCodes: [
       {
         code: 'R1',
-        quantity: {
+        weight: {
           metric: 'Tonnes',
           amount: 2.5,
           isEstimate: false

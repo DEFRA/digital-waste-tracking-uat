@@ -32,7 +32,7 @@ describe('Waste Movement Creation', () => {
   describe('Failed Creation', () => {
     it('should fail to create movement due to missing required fields', async () => {
       const invalidData = generateBaseWasteReceiptData()
-      delete invalidData.receipt.disposalOrRecoveryCodes[0].quantity.amount
+      delete invalidData.receipt.disposalOrRecoveryCodes[0].weight.amount
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(

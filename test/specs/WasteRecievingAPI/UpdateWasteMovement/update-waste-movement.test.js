@@ -31,7 +31,7 @@ describe('Waste Movement Update', () => {
       updatedData.receipt.disposalOrRecoveryCodes = [
         {
           code: 'D1',
-          quantity: {
+          weight: {
             metric: 'Tonnes',
             amount: 3.0,
             isEstimate: false
