@@ -25,7 +25,7 @@ body:json {
         "physicalForm": "Mixed",
         "numberOfContainers": 8,
         "typeOfContainers": "SKI",
-        "quantity": {
+        "weight": {
           "metric": "Tonnes",
           "amount": 3.2,
           "isEstimate": false
@@ -58,7 +58,7 @@ body:json {
         "physicalForm": "Solid",
         "numberOfContainers": 5,
         "typeOfContainers": "SKI",
-        "quantity": {
+        "weight": {
           "metric": "Tonnes",
           "amount": 1.1,
           "isEstimate": true
@@ -85,15 +85,13 @@ body:json {
       "phoneNumber": "01234567890",
       "meansOfTransport": "Road"
     },
-    "acceptance": {
-      "acceptingAll": true
-    },
+    
     "receipt": {
       "dateTimeReceived": "{{timestamp}}",
       "disposalOrRecoveryCodes": [
         {
           "code": "R1",
-          "quantity": {
+          "weight": {
             "metric": "Tonnes",
             "amount": 3.0,
             "isEstimate": false
@@ -101,7 +99,7 @@ body:json {
         },
         {
           "code": "D1",
-          "quantity": {
+          "weight": {
             "metric": "Tonnes",
             "amount": 0.3,
             "isEstimate": false
