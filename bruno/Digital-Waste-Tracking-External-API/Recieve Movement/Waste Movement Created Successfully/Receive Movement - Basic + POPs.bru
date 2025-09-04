@@ -20,7 +20,7 @@ body:json {
     "wasteItems": [
       {
         "ewcCodes": ["020101"],
-        "wasteDescription": "Waste containing persistent organic pollutants from contaminated soil",
+        "wasteDescription": "Contaminated soil containing persistent organic pollutants (POPs) from former agricultural site with pesticide residues",
         "physicalForm": "Mixed",
         "numberOfContainers": 8,
         "typeOfContainers": "SKI",
@@ -30,13 +30,30 @@ body:json {
           "isEstimate": true
         },
         "pops": {
-          "containsPops": true
+          "containsPops": true,
+          "pops": [
+            {
+              "name": "Chlordane",
+              "concentration": 45.2
+            },
+            {
+              "name": "Dieldrin", 
+              "concentration": 12.8
+            },
+            {
+              "name": "Aldrin",
+              "concentration": 8.3
+            }
+          ]
         }
       }
     ],
     "carrier": {
       "organisationName": "POPs Carrier Ltd",
-      "address": "123 POPs Street, POPs City, PC1 2AB",
+      "address": {
+        "fullAddress": "123 POPs Street, POPs City",
+        "postCode": "PC1 2AB"
+      },
       "emailAddress": "pops@carrier.com",
       "phoneNumber": "01234567890",
       "meansOfTransport": "Road"

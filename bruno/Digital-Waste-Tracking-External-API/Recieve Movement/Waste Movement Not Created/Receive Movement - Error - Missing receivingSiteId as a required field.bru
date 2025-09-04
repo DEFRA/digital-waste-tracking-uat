@@ -16,6 +16,7 @@ headers {
 
 body:json {
   {
+    "receivingSiteId": "{{receivingSiteId}}",
     "wasteItems": [
       {
         "ewcCodes": ["020101"],
@@ -32,7 +33,10 @@ body:json {
     ],
     "carrier": {
       "organisationName": "Basic Carrier Ltd",
-      "address": "123 Basic Street, Basic City, BC1 2AB",
+      "address": {
+        "fullAddress": "123 Basic Street, Basic City",
+        "postCode": "BC1 2AB"
+      },
       "emailAddress": "basic@carrier.com",
       "phoneNumber": "01234567890",
       "meansOfTransport": "Road"

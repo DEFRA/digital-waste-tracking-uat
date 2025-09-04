@@ -51,7 +51,10 @@ body:json {
     ],
     "carrier": {
       "organisationName": "Hazardous Carrier Ltd",
-      "address": "123 Hazardous Street, Hazardous City, HC1 2AB",
+      "address": {
+        "fullAddress": "123 Hazardous Street, Hazardous City",
+        "postCode": "HC1 2AB"
+      },
       "emailAddress": "hazardous@carrier.com",
       "phoneNumber": "01234567890",
       "meansOfTransport": "Road"
