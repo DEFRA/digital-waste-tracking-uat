@@ -20,7 +20,7 @@ body:json {
     "wasteItems": [
       {
         "ewcCodes": ["020101"],
-        "wasteDescription": "Complex waste with POPs and hazardous components from contaminated industrial site",
+        "wasteDescription": "Complex industrial waste containing persistent organic pollutants (POPs) and hazardous heavy metals from decommissioned electrical equipment and contaminated soil",
         "physicalForm": "Mixed",
         "numberOfContainers": 15,
         "typeOfContainers": "SKI",
@@ -30,7 +30,25 @@ body:json {
           "isEstimate": true
         },
         "pops": {
-          "containsPops": true
+          "containsPops": true,
+          "pops": [
+            {
+              "name": "Hexachlorobenzene",
+              "concentration": 23.7
+            },
+            {
+              "name": "Polychlorinated Biphenyls",
+              "concentration": 156.4
+            },
+            {
+              "name": "Dioxins",
+              "concentration": 0.8
+            },
+            {
+              "name": "Furans",
+              "concentration": 1.2
+            }
+          ]
         },
         "hazardous": {
           "containsHazardous": true,
@@ -47,6 +65,10 @@ body:json {
             {
               "name": "Chromium",
               "concentration": 0.42
+            },
+            {
+              "name": "Lead",
+              "concentration": 0.89
             }
           ]
         }
@@ -54,7 +76,10 @@ body:json {
     ],
     "carrier": {
       "organisationName": "Complex Carrier Ltd",
-      "address": "123 Complex Street, Complex City, CC1 2AB",
+      "address": {
+        "fullAddress": "123 Complex Street, Complex City",
+        "postCode": "CC1 2AB"
+      },
       "emailAddress": "complex@carrier.com",
       "phoneNumber": "01234567890",
       "meansOfTransport": "Road"
