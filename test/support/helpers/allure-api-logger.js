@@ -103,3 +103,21 @@ export async function logAllureResponse(
     )
   }
 }
+
+/**
+ * Add Allure links (issues, test management links, etc.) to test reports
+ * @param {string} url - The URL of the link
+ * @param {string} name - The name/title for the link
+ * @param {string} [type='link'] - The type of link ('issue', 'tms', 'link', 'jira', etc.)
+ */
+export async function addAllureLink(url, name, type = 'link') {
+  if (type === 'issue') {
+    await globalThis.allure.issue(globalThis.testConfig.jiraBaseUrl + url, name)
+  } else {
+    await globalThis.allure.link(
+      globalThis.testConfig.jiraBaseUrl + url,
+      name,
+      type
+    )
+  }
+}

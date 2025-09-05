@@ -49,6 +49,14 @@ export class TestConfig {
   }
 
   /**
+   * get JIRA base URL
+   * @returns {string}
+   */
+  get jiraBaseUrl() {
+    return process.env.JIRA_BASE_URL
+  }
+
+  /**
    * Get the HTTP proxy URL from environment variables
    * @returns {string} The proxy URL if set
    */
