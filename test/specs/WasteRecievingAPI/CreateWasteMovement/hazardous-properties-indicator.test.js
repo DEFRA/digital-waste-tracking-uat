@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
+import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
 describe('Hazardous Properties Indicator Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
     wasteReceiptData = generateBaseWasteReceiptData()
-
     // Authenticate and set the auth token
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,
@@ -33,26 +33,64 @@ describe('Hazardous Properties Indicator Validation', () => {
       })
     })
 
-    it('should accept waste receipt when hazardous indicator is set to false and no components are provided', async () => {
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: false
+    it(
+      'should accept waste receipt when hazardous indicator is set to false and no components are provided' +
+        ' @allure.label.tag:DWT-351',
+      async () => {
+        await addAllureLink('/DWT-351', 'DWT-351', 'jira')
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: false
+        }
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
       }
+    )
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+    it(
+      'should accept waste receipt when hazardous indicator is set to true and components are provided' +
+        ' @allure.label.tag:DWT-351',
+      async () => {
+        await addAllureLink('/DWT-351', 'DWT-351', 'jira')
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: true,
+          components: [
+            {
+              name: 'Mercury',
+              concentration: 0.25
+            }
+          ]
+        }
 
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-    it('should accept waste receipt when hazardous indicator is set to true and components are provided', async () => {
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
+      }
+    )
+  })
+
+  it(
+    'should reject waste receipt submission when hazardous indicator is set to false and components are provided' +
+      ' @allure.label.tag:DWT-351',
+    async () => {
+      await addAllureLink('/DWT-351', 'DWT-351', 'jira')
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
+        containsHazardous: false,
         components: [
           {
             name: 'Mercury',
@@ -66,13 +104,21 @@ describe('Hazardous Properties Indicator Validation', () => {
           wasteReceiptData
         )
 
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        validation: {
+          errors: [
+            {
+              key: 'wasteItems.0.hazardous',
+              errorType: 'UnexpectedError',
+              message:
+                'Chemical or Biological components cannot be provided when no hazardous properties are indicated'
+            }
+          ]
+        }
       })
-    })
-  })
+    }
+  )
 
   describe('Invalid Hazardous Indicator', () => {
     it('should reject waste receipt when hazardous indicator is missing', async () => {
