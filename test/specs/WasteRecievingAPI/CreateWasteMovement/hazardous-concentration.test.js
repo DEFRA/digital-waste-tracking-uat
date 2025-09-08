@@ -18,224 +18,257 @@ describe('Hazardous Component Concentration Validation', () => {
   })
 
   describe('Valid Concentration Values', () => {
-    it('should accept waste with valid concentration value' + ' @allure.label.tag:DWT-354', async () => {
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        components: [
-          {
-            name: 'Mercury',
-            concentration: 5.5
-          }
-        ]
+    it(
+      'should accept waste with valid concentration value' +
+        ' @allure.label.tag:DWT-354',
+      async () => {
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: true,
+          components: [
+            {
+              name: 'Mercury',
+              concentration: 5.5
+            }
+          ]
+        }
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
       }
+    )
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+    it(
+      'should accept waste with zero concentration value' +
+        ' @allure.label.tag:DWT-354',
+      async () => {
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: true,
+          components: [
+            {
+              name: 'Mercury',
+              concentration: 0
+            }
+          ]
+        }
 
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-    it('should accept waste with zero concentration value' + ' @allure.label.tag:DWT-354', async () => {
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        components: [
-          {
-            name: 'Mercury',
-            concentration: 0
-          }
-        ]
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
       }
+    )
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+    it(
+      'should accept waste with "Not Supplied" concentration value' +
+        ' @allure.label.tag:DWT-354',
+      async () => {
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: true,
+          components: [
+            {
+              name: 'Mercury',
+              concentration: 'Not Supplied'
+            }
+          ]
+        }
 
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-    it('should accept waste with "Not Supplied" concentration value' + ' @allure.label.tag:DWT-354', async () => {
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        components: [
-          {
-            name: 'Mercury',
-            concentration: 'Not Supplied'
-          }
-        ]
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
       }
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
+    )
   })
 
   describe('Invalid Concentration Values', () => {
-    it('should reject waste with missing concentration value' + ' @allure.label.tag:DWT-354', async () => {
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        components: [
-          {
-            name: 'Mercury'
-            // Missing concentration field
-          }
-        ]
-      }
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
+    it(
+      'should reject waste with missing concentration value' +
+        ' @allure.label.tag:DWT-354',
+      async () => {
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: true,
+          components: [
             {
-              key: 'wasteItems.0.hazardous.components.0.concentration',
-              errorType: 'NotProvided',
-              message:
-                'Chemical or Biological concentration is required when hazardous properties are present'
+              name: 'Mercury'
+              // Missing concentration field
             }
           ]
         }
-      })
-    })
 
-    it('should reject waste with negative concentration value' + ' @allure.label.tag:DWT-354', async () => {
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        components: [
-          {
-            name: 'Mercury',
-            concentration: -10
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.hazardous.components.0.concentration',
+                errorType: 'NotProvided',
+                message:
+                  'Chemical or Biological concentration is required when hazardous properties are present'
+              }
+            ]
           }
-        ]
+        })
       }
+    )
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
+    it(
+      'should reject waste with negative concentration value' +
+        ' @allure.label.tag:DWT-354',
+      async () => {
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: true,
+          components: [
             {
-              key: 'wasteItems.0.hazardous.components.0.concentration',
-              errorType: 'UnexpectedError',
-              message: 'Chemical or Biological concentration cannot be negative'
+              name: 'Mercury',
+              concentration: -10
             }
           ]
         }
-      })
-    })
 
-    it('should reject waste with non-numeric concentration value' + ' @allure.label.tag:DWT-354', async () => {
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        components: [
-          {
-            name: 'Mercury',
-            concentration: 'invalid'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.hazardous.components.0.concentration',
+                errorType: 'UnexpectedError',
+                message:
+                  'Chemical or Biological concentration cannot be negative'
+              }
+            ]
           }
-        ]
+        })
       }
+    )
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
+    it(
+      'should reject waste with non-numeric concentration value' +
+        ' @allure.label.tag:DWT-354',
+      async () => {
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: true,
+          components: [
             {
-              key: 'wasteItems.0.hazardous.components.0.concentration',
-              errorType: 'UnexpectedError',
-              message:
-                'Chemical or Biological concentration must be a valid number or "Not Supplied"'
+              name: 'Mercury',
+              concentration: 'invalid'
             }
           ]
         }
-      })
-    })
 
-    it('should reject waste with concentration provided for non-hazardous waste' + ' @allure.label.tag:DWT-354', async () => {
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: false,
-        components: [
-          {
-            name: 'Mercury',
-            concentration: 50
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.hazardous.components.0.concentration',
+                errorType: 'UnexpectedError',
+                message:
+                  'Chemical or Biological concentration must be a valid number or "Not Supplied"'
+              }
+            ]
           }
-        ]
+        })
       }
+    )
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
+    it(
+      'should reject waste with concentration provided for non-hazardous waste' +
+        ' @allure.label.tag:DWT-354',
+      async () => {
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: false,
+          components: [
             {
-              key: 'wasteItems.0.hazardous',
-              errorType: 'UnexpectedError',
-              message:
-                'Chemical or Biological components cannot be provided when no hazardous properties are indicated'
+              name: 'Mercury',
+              concentration: 50
             }
           ]
         }
-      })
-    })
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.hazardous',
+                errorType: 'UnexpectedError',
+                message:
+                  'Chemical or Biological components cannot be provided when no hazardous properties are indicated'
+              }
+            ]
+          }
+        })
+      }
+    )
   })
 
   describe('Concentration Warnings', () => {
-    it.skip('should accept waste with blank concentration but show warning' + ' @allure.label.tag:DWT-354', async () => {
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        components: [
-          {
-            name: 'Mercury',
-            concentration: ''
-          }
-        ]
+    it.skip(
+      'should accept waste with blank concentration but show warning' +
+        ' @allure.label.tag:DWT-354',
+      async () => {
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: true,
+          components: [
+            {
+              name: 'Mercury',
+              concentration: ''
+            }
+          ]
+        }
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
+        // TODO: Add warning about concentration field
       }
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-      // TODO: Add warning about concentration field
-    })
+    )
   })
 })
