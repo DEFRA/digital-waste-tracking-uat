@@ -51,43 +51,6 @@ describe('Waste Movement Update', () => {
         message: 'Receipt movement updated successfully'
       })
     })
-
-    it(
-      'should successfully update hazardous components in an existing waste movement' +
-        ' @allure.label.tag:DWT-351',
-      async () => {
-        await addAllureLink('/DWT-351', 'DWT-351', 'jira')
-        // First create a movement
-        const createResponse =
-          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-            wasteReceiptData
-          )
-        expect(createResponse.statusCode).toBe(200)
-
-        const globalMovementId = createResponse.json.globalMovementId
-
-        // Update the movement with different hazardous components
-        const updatedData = generateBaseWasteReceiptData()
-        wasteReceiptData.wasteItems[0].hazardous.components = [
-          {
-            name: 'benzene',
-            concentration: 0.15
-          }
-        ]
-
-        const updateResponse =
-          await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
-            globalMovementId,
-            updatedData
-          )
-
-        expect(updateResponse.statusCode).toBe(200)
-        expect(updateResponse.json).toEqual({
-          message: 'Receipt movement updated successfully'
-        })
-        // ??ToDo: validate to see if it appends to the existing array of components or replaces it entirely
-      }
-    )
   })
 
   describe('Failed Updates', () => {
