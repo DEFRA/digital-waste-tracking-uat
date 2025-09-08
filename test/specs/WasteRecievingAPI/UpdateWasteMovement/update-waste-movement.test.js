@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
-import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
 describe('Waste Movement Update', () => {
   let wasteReceiptData
