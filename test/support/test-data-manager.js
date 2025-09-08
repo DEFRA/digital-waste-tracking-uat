@@ -97,16 +97,6 @@ export const generateCompleteWasteReceiptData = () => ({
     registrationNumber: 'REG123456',
     vehicleRegistration: 'AB12 CDE'
   },
-  brokerOrDealer: {
-    organisationName: 'Test broker Ltd',
-    address: {
-      fullAddress: '123 Test Street, Test City',
-      postCode: 'TC1 2AB'
-    },
-    emailAddress: `test${Date.now()}@carrier.com`,
-    phoneNumber: '01234567890',
-    registrationNumber: 'REG123456'
-  },
   receipt: {
     dateTimeReceived: new Date().toISOString(),
     disposalOrRecoveryCodes: [

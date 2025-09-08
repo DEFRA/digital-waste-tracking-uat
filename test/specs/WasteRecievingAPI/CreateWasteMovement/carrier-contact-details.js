@@ -107,7 +107,7 @@ describe('Carrier Contact Details Validation', () => {
                 {
                   key: 'carrier.address.postCode',
                   errorType: 'UnexpectedError',
-                  message: 'Post Code must be in valid UK or Ireland format'
+                  message: 'Post Code must be in valid UK format'
                 }
               ]
             }
