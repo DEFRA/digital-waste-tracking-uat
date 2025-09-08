@@ -203,7 +203,7 @@ describe('Hazardous Component Concentration Validation', () => {
               key: 'wasteItems.0.hazardous',
               errorType: 'UnexpectedError',
               message:
-                'Chemical or Biological concentration cannot be provided when hazardous properties are not present'
+                'Chemical or Biological components cannot be provided when no hazardous properties are indicated'
             }
           ]
         }
