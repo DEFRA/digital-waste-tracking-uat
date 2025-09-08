@@ -1,6 +1,10 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
-import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
+import {
+  generateBaseWasteReceiptData,
+  generateCompleteWasteReceiptData
+} from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
+import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
 describe('Waste Movement Creation', () => {
   let wasteReceiptData
@@ -27,6 +31,25 @@ describe('Waste Movement Creation', () => {
         globalMovementId: expect.any(String)
       })
     })
+    it(
+      'should successfully create a new waste movement with valid data-complex' +
+        ' @allure.label.tag:DWT-343',
+      async () => {
+        await addAllureLink('/DWT-343', 'DWT-343', 'jira')
+        wasteReceiptData = generateCompleteWasteReceiptData()
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
+      }
+    )
   })
 
   describe('Failed Creation', () => {

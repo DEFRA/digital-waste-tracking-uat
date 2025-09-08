@@ -3,11 +3,11 @@ import { generateCompleteWasteReceiptData } from '../../../support/test-data-man
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
-describe('Carrier Contact Details Validation', () => {
+describe('Broker or dealer details Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
-    await addAllureLink('/DWT-342', 'DWT-342', 'jira')
+    await addAllureLink('/DWT-343', 'DWT-343', 'jira')
     wasteReceiptData = generateCompleteWasteReceiptData()
 
     // Authenticate and set the auth token
@@ -18,12 +18,11 @@ describe('Carrier Contact Details Validation', () => {
   })
 
   it(
-    'should allow waste movement to be created when there is only carrier organisation name provided' +
-      ' @allure.label.tag:DWT-342',
+    'should allow waste movement to be created when there is only broker or dealer organisation name provided' +
+      ' @allure.label.tag:DWT-343',
     async () => {
-      wasteReceiptData.carrier = {
-        organisationName: 'Test Carrier Ltd'
-      }
+      wasteReceiptData.brokerOrDealer.organisationName = 'Test Broker Ltd'
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
@@ -34,34 +33,25 @@ describe('Carrier Contact Details Validation', () => {
   )
 
   it(
-    'should not allow waste movement to be created when there is no carrier organisation name provided' +
-      ' @allure.label.tag:DWT-342',
+    'should allow waste movement to be created when there is no broker or dealer organisation name provided and other fields are provided' +
+      ' @allure.label.tag:DWT-343',
     async () => {
-      delete wasteReceiptData.carrier.organisationName
+      wasteReceiptData.brokerOrDealer.organisationName = undefined
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
-            {
-              key: 'carrier.organisationName',
-              errorType: 'NotProvided',
-              message: '"carrier.organisationName" is required'
-            }
-          ]
-        }
-      })
+      expect(response.statusCode).toBe(200)
+      expect(response.json).toHaveProperty('globalMovementId')
     }
   )
 
   it(
-    'should not allow waste movement to be created when there is no postcode supplied for the carrier organisation' +
-      ' @allure.label.tag:DWT-342',
+    'should not allow waste movement to be created when there is no postcode supplied for the brikerOrDealer organisation' +
+      ' @allure.label.tag:DWT-343',
     async () => {
-      delete wasteReceiptData.carrier.address.postCode
+      delete wasteReceiptData.brokerOrDealer.address.postCode
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
@@ -71,9 +61,9 @@ describe('Carrier Contact Details Validation', () => {
         validation: {
           errors: [
             {
-              key: 'carrier.address.postCode',
+              key: 'brokerOrDealer.address.postCode',
               errorType: 'NotProvided',
-              message: '"carrier.address.postCode" is required'
+              message: '"brokerOrDealer.address.postCode" is required'
             }
           ]
         }
@@ -81,16 +71,16 @@ describe('Carrier Contact Details Validation', () => {
     }
   )
 
-  describe('Validate the carrier postcode', () => {
+  describe('Validate the Broker or dealer postcode provided', () => {
     it.each([
       { postCode: 'BT47 6FA', isValid: true, expected: 'created' },
       { postCode: 'BS1 4XE', isValid: true, expected: 'created' },
       { postCode: 'xxx', isValid: false, expected: 'not created' },
       { postCode: 'BS14XE', isValid: false, expected: 'not created' } // postcode without spaces is not being allowed
     ])(
-      'should allow waste movement to be $expected when the postCode is "$postCode" @allure.label.tag:DWT-342',
+      'should allow waste movement to be $expected when the postCode is "$postCode" @allure.label.tag:DWT-343',
       async ({ postCode, isValid, expected }) => {
-        wasteReceiptData.carrier.address.postCode = postCode
+        wasteReceiptData.brokerOrDealer.address.postCode = postCode
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -105,7 +95,7 @@ describe('Carrier Contact Details Validation', () => {
             validation: {
               errors: [
                 {
-                  key: 'carrier.address.postCode',
+                  key: 'brokerOrDealer.address.postCode',
                   errorType: 'UnexpectedError',
                   message: 'Post Code must be in valid UK or Ireland format'
                 }
@@ -118,10 +108,10 @@ describe('Carrier Contact Details Validation', () => {
   })
 
   it(
-    'should not allow waste movement to be created when an invalid email is supplied for the carrier organisation' +
-      ' @allure.label.tag:DWT-342',
+    'should not allow waste movement to be created when an invalid email is supplied for the broker or dealer organisation' +
+      ' @allure.label.tag:DWT-343',
     async () => {
-      wasteReceiptData.carrier.address.emailAddress = 'invalidtest@'
+      wasteReceiptData.brokerOrDealer.address.emailAddress = 'invalidtest@'
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
@@ -131,9 +121,9 @@ describe('Carrier Contact Details Validation', () => {
         validation: {
           errors: [
             {
-              key: 'carrier.address.emailAddress',
+              key: 'brokerOrDealer.address.emailAddress',
               errorType: 'NotAllowed',
-              message: '"carrier.address.emailAddress" is not allowed'
+              message: '"brokerOrDealer.address.emailAddress" is not allowed'
             }
           ]
         }
