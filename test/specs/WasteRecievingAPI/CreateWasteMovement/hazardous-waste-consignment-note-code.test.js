@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
+import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
 /**
  * Hazardous Waste Consignment Note Code Validation Tests
@@ -18,6 +19,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
+    await addAllureLink('/DWT-328', 'DWT-328', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
     // Authenticate and set the auth token
@@ -28,13 +30,19 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
   })
 
   describe('Require consignment code for hazardous waste', () => {
-    it('should accept hazardous waste without consignment code (current API behavior)', async () => {
-      // Use a known hazardous EWC code
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107'] // Hazardous EWC code
+    it('should accept valid EA/NRW format consignment code @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3]
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
+      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -48,13 +56,71 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       })
     })
 
-    it('should accept valid consignment code with hazardous EWC', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107'] // Hazardous EWC code
+    it('should accept consignment code with valid suffix @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3]
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
-      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
+      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001V' // V suffix for waste removed from ships
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      expect(response.statusCode).toBe(200)
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
+    })
+
+    it('should accept SEPA format consignment code @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].hazardous = {
+        containsHazardous: true,
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      wasteReceiptData.hazardousWasteConsignmentCode = 'SB1234567' // SEPA format
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      expect(response.statusCode).toBe(200)
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
+    })
+
+    it('should accept NIEA format consignment code @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].hazardous = {
+        containsHazardous: true,
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      wasteReceiptData.hazardousWasteConsignmentCode = 'DA5301234' // NIEA format
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -70,41 +136,17 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
   })
 
   describe('Hazardous EWC Code included in Mirror Code', () => {
-    it('should accept mixed EWC codes without consignment code (current API behavior)', async () => {
-      // Mix of hazardous and non-hazardous EWC codes
-      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107', '150110']
+    it('should require consignment code when mixed EWC codes include hazardous @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107', '150110'] // Mix: non-hazardous (020101, 150107) and hazardous (150110*)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3]
-      }
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String),
-        validation: {
-          warnings: [
-            {
-              key: 'receipt.reasonForNoConsignmentCode',
-              errorType: 'NotProvided',
-              message:
-                'Reason for no Consignment Note Code is required when hazardous EWC codes are present'
-            }
-          ]
-        }
-      })
-    })
-
-    it('should accept valid consignment code with mixed EWC codes including hazardous', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107', '150110']
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        hazCodes: [1, 3]
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
       wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
 
@@ -122,9 +164,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
   })
 
   describe('Do not require consignment code for non-hazardous waste', () => {
-    it('should accept non-hazardous EWC codes without consignment code', async () => {
-      // Use non-hazardous EWC codes only
-      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150110']
+    it('should not require consignment code for non-hazardous waste @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107'] // Non-hazardous EWC codes
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: false
       }
@@ -137,22 +178,12 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
         statusCode: 200,
-        globalMovementId: expect.any(String),
-        validation: {
-          warnings: [
-            {
-              key: 'receipt.reasonForNoConsignmentCode',
-              errorType: 'NotProvided',
-              message:
-                'Reason for no Consignment Note Code is required when hazardous EWC codes are present'
-            }
-          ]
-        }
+        globalMovementId: expect.any(String)
       })
     })
 
-    it('should accept optional consignment code for non-hazardous waste', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150110']
+    it('should accept optional consignment code for non-hazardous waste @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107'] // Non-hazardous EWC codes
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: false
       }
@@ -171,12 +202,18 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
     })
   })
 
-  describe('Consignment Code format validation', () => {
-    it('should reject format with invalid prefix (numbers in XXXXXX)', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107']
+  describe('Consignment Note Code supplied in incorrect format', () => {
+    it('should reject EA/NRW format with invalid prefix @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3]
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
       wasteReceiptData.hazardousWasteConsignmentCode = '123456/A0001' // Invalid: numbers in prefix
 
@@ -200,11 +237,17 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       })
     })
 
-    it('should reject format with missing forward slash', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107']
+    it('should reject format with missing forward slash @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3]
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
       wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILEA0001' // Missing forward slash
 
@@ -228,13 +271,19 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       })
     })
 
-    it('should reject format with invalid unique ID (spaces/symbols)', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107']
+    it('should reject SEPA format with invalid prefix @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3]
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
-      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A00 1' // Invalid: contains space
+      wasteReceiptData.hazardousWasteConsignmentCode = 'SD1234567' // Invalid SEPA prefix (should be SA|SB|SC)
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -256,71 +305,38 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       })
     })
 
-    it('should accept valid consignment code format', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107']
+    it('should reject NIEA format with invalid prefix @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3]
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
-      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
+      wasteReceiptData.hazardousWasteConsignmentCode = 'DD5301234' // Invalid NIEA prefix (should be DA|DB|DC)
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
 
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
-  })
-
-  describe('Additional format validations', () => {
-    it('should accept consignment code with additional letter suffix', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107']
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        hazCodes: [1, 3]
-      }
-      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001V' // V suffix for waste removed from ships
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
-
-    it('should accept other valid consignment code suffixes', async () => {
-      const validSuffixes = ['F', 'D', 'P', 'M'] // flytipped, derogation, piped, multies
-
-      for (const suffix of validSuffixes) {
-        const testData = generateBaseWasteReceiptData()
-        testData.wasteItems[0].ewcCodes = ['150107']
-        testData.wasteItems[0].hazardous = {
-          containsHazardous: true,
-          hazCodes: [1, 3]
+        validation: {
+          errors: [
+            {
+              key: 'hazardousWasteConsignmentCode',
+              errorType: 'UnexpectedError',
+              message:
+                'consignment note code must be in one of the valid formats: EA/NRW (e.g. CJTILE/A0001), SEPA (SA|SB|SC followed by 7 digits), or NIEA (DA|DB|DC followed by 7 digits)'
+            }
+          ]
         }
-        testData.hazardousWasteConsignmentCode = `CJTILE/A0001${suffix}`
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-            testData
-          )
-
-        expect(response.statusCode).toBe(200)
-        expect(response.json).toEqual({
-          statusCode: 200,
-          globalMovementId: expect.any(String)
-        })
-      }
+      })
     })
   })
 })

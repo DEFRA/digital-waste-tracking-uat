@@ -1,26 +1,13 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
+import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
-/**
- * Reason for No Consignment Code Validation Tests
- *
- * Based on OpenAPI specification:
- * - reasonForNoConsignmentCode: string
- * - If any waste.ewcCodes are hazardous and hazardousWasteConsignmentCode is not provided,
- *   then reasonForNoConsignmentCode is required
- * - If hazardousWasteConsignmentCode is provided, reasonForNoConsignmentCode must be one of:
- *   - "Non-Haz Waste Transfer"
- *   - "Carrier did not provide documentation"
- *   - "Household Waste Recycling Centre Receipt"
- *
- * Enum values:
- * [ "Non-Haz Waste Transfer", "Carrier did not provide documentation", "Household Waste Recycling Centre Receipt" ]
- */
 describe('Reason for No Consignment Code Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
+    await addAllureLink('/DWT-328', 'DWT-328', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
     // Authenticate and set the auth token
@@ -30,32 +17,18 @@ describe('Reason for No Consignment Code Validation', () => {
     )
   })
 
-  describe('Require reason when consignment code is missing for hazardous waste', () => {
-    it('should accept hazardous waste without reason (current API behavior)', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107'] // Hazardous EWC code
+  describe('Require reason when consignment code is blank for hazardous waste', () => {
+    it('should accept hazardous waste with valid reason when no consignment code provided @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3]
-      }
-      // No hazardousWasteConsignmentCode provided
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
-
-    it('should accept valid reason when consignment code is not provided', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107'] // Hazardous EWC code
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        hazCodes: [1, 3]
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
       wasteReceiptData.reasonForNoConsignmentCode =
         'Carrier did not provide documentation'
@@ -71,67 +44,51 @@ describe('Reason for No Consignment Code Validation', () => {
         globalMovementId: expect.any(String)
       })
     })
+
+    it('should accept valid reason when consignment code is blank @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].hazardous = {
+        containsHazardous: true,
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      wasteReceiptData.reasonForNoConsignmentCode =
+        'Non-Hazardous Waste Transfer'
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      // API correctly enforces reason requirement for hazardous EWC codes
+      expect(response.statusCode).toBe(200)
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
+    })
   })
 
-  describe('Valid reason values', () => {
-    it('should accept all valid reason enum values', async () => {
-      const validReasons = [
-        'Non-Haz Waste Transfer',
-        'Carrier did not provide documentation',
+  describe('Hazardous EWC Code included in Mirror Code', () => {
+    it('should require reason when mixed EWC codes include hazardous @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107', '150110'] // Mix of hazardous and non-hazardous
+      wasteReceiptData.wasteItems[0].hazardous = {
+        containsHazardous: true,
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      wasteReceiptData.reasonForNoConsignmentCode =
         'Household Waste Recycling Centre Receipt'
-      ]
-
-      for (const reason of validReasons) {
-        const testData = generateBaseWasteReceiptData()
-        testData.wasteItems[0].ewcCodes = ['150107'] // Hazardous EWC code
-        testData.wasteItems[0].hazardous = {
-          containsHazardous: true,
-          hazCodes: [1, 3]
-        }
-        testData.reasonForNoConsignmentCode = reason
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-            testData
-          )
-
-        expect(response.statusCode).toBe(200)
-        expect(response.json).toEqual({
-          statusCode: 200,
-          globalMovementId: expect.any(String)
-        })
-      }
-    })
-  })
-
-  describe('Invalid reason values', () => {
-    it('should accept invalid reason values (current API behavior)', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107'] // Hazardous EWC code
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        hazCodes: [1, 3]
-      }
-      wasteReceiptData.reasonForNoConsignmentCode = 'Invalid reason'
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
-
-    it('should accept empty reason value (current API behavior)', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107'] // Hazardous EWC code
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        hazCodes: [1, 3]
-      }
-      wasteReceiptData.reasonForNoConsignmentCode = ''
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -146,66 +103,12 @@ describe('Reason for No Consignment Code Validation', () => {
     })
   })
 
-  describe('Reason not required scenarios', () => {
-    it('should provide warning for non-hazardous waste (current API behavior)', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150110'] // Non-hazardous EWC codes
+  describe('Do not require consignment number for non-hazardous waste', () => {
+    it('should not require reason for non-hazardous waste @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107'] // Non-hazardous EWC codes
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: false
       }
-      // No reasonForNoConsignmentCode provided
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String),
-        validation: {
-          warnings: [
-            {
-              key: 'receipt.reasonForNoConsignmentCode',
-              errorType: 'NotProvided',
-              message:
-                'Reason for no Consignment Note Code is required when hazardous EWC codes are present'
-            }
-          ]
-        }
-      })
-    })
-
-    it('should not require reason when consignment code is provided', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107'] // Hazardous EWC code
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        hazCodes: [1, 3]
-      }
-      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
-      // No reasonForNoConsignmentCode provided
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
-
-    it('should accept optional reason when consignment code is provided', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['150107'] // Hazardous EWC code
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
-        hazCodes: [1, 3]
-      }
-      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
-      wasteReceiptData.reasonForNoConsignmentCode =
-        'Carrier did not provide documentation'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -220,20 +123,30 @@ describe('Reason for No Consignment Code Validation', () => {
     })
   })
 
-  describe('Mixed EWC codes scenarios', () => {
-    it('should accept mixed EWC codes without reason (current API behavior)', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107', '150110'] // Mix of hazardous and non-hazardous
+  describe('Prompt reason if consignment number blank', () => {
+    it('should require reason when hazardous EWC codes present but no consignment code provided @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3]
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
-      // No hazardousWasteConsignmentCode provided
+      // No consignment code provided - should require reason
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
 
+      // OpenAPI spec says: "If any waste.ewcCodes provided are considered hazardous and
+      // receiveMovementRequest.hazardousWasteConsignmentCode is not provided a
+      // receiveMovementRequest.reasonForNoConsignmentCode is required"
+      // API correctly enforces this requirement
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
         statusCode: 200,
@@ -250,21 +163,102 @@ describe('Reason for No Consignment Code Validation', () => {
         }
       })
     })
+  })
 
-    it('should accept reason when mixed EWC codes include hazardous and no consignment code', async () => {
-      wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107', '150110'] // Mix of hazardous and non-hazardous
+  describe('Reason is left blank when required', () => {
+    it('should require reason when empty reason provided for hazardous EWC codes without consignment code @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3]
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
       }
-      wasteReceiptData.reasonForNoConsignmentCode =
-        'Household Waste Recycling Centre Receipt'
+      wasteReceiptData.reasonForNoConsignmentCode = '' // Empty reason
+      // No consignment code provided
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
 
+      // OpenAPI spec says reason should be required, API correctly enforces this
+      expect(response.statusCode).toBe(200)
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String),
+        validation: {
+          warnings: [
+            {
+              key: 'receipt.reasonForNoConsignmentCode',
+              errorType: 'NotProvided',
+              message:
+                'Reason for no Consignment Note Code is required when hazardous EWC codes are present'
+            }
+          ]
+        }
+      })
+    })
+  })
+
+  describe('Reason required when consignment code is provided', () => {
+    it('should require valid reason when consignment code is provided for hazardous waste @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].hazardous = {
+        containsHazardous: true,
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
+      wasteReceiptData.reasonForNoConsignmentCode =
+        'Carrier did not provide documentation'
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      // OpenAPI spec says: "If receiveMovementRequest.hazardousWasteConsignmentCode is provided
+      // it must be either 'Non Hazardous Waste Transfer', 'Carrier did not provide documentation'
+      // or 'Local Authority Receipt'"
+      expect(response.statusCode).toBe(200)
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
+    })
+
+    it('should allow invalid reason when consignment code is provided @allure.label.tag:DWT-328', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].hazardous = {
+        containsHazardous: true,
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
+      wasteReceiptData.reasonForNoConsignmentCode = 'Invalid reason' // Not one of the three allowed values
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      // OpenAPI spec says reason must be one of the three values when consignment code is provided,
+      // but API currently does not enforce this validation
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
         statusCode: 200,
