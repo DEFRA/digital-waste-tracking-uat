@@ -33,22 +33,32 @@ describe('Broker or dealer details Validation', () => {
   )
 
   it(
-    'should allow waste movement to be created when there is no broker or dealer organisation name provided and other fields are provided' +
+    'should not allow waste movement to be created when there is no broker or dealer organisation name provided and other fields are provided' +
       ' @allure.label.tag:DWT-343',
     async () => {
-      wasteReceiptData.brokerOrDealer.organisationName = undefined
+      delete wasteReceiptData.brokerOrDealer.organisationName
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'brokerOrDealer.organisationName',
+              errorType: 'NotProvided',
+              message: '"brokerOrDealer.organisationName" is required'
+            }
+          ]
+        }
+      })
     }
   )
 
   it(
-    'should not allow waste movement to be created when there is no postcode supplied for the brikerOrDealer organisation' +
+    'should not allow waste movement to be created when there is no postcode supplied for the brokerOrDealer organisation' +
       ' @allure.label.tag:DWT-343',
     async () => {
       delete wasteReceiptData.brokerOrDealer.address.postCode
@@ -71,38 +81,49 @@ describe('Broker or dealer details Validation', () => {
     }
   )
 
-  describe('Validate the Broker or dealer postcode provided', () => {
+  describe('Waste movement must be successfully created when a valid Broker or dealer postcode provided', () => {
     it.each([
-      { postCode: 'BT47 6FA', isValid: true, expected: 'created' },
-      { postCode: 'BS1 4XE', isValid: true, expected: 'created' },
-      { postCode: 'xxx', isValid: false, expected: 'not created' },
-      { postCode: 'BS14XE', isValid: false, expected: 'not created' } // postcode without spaces is not being allowed
+      { postCode: 'BT47 6FA', country: 'Ireland' },
+      { postCode: 'BS1 4XE', country: 'UK' }
     ])(
-      'should allow waste movement to be $expected when the postCode is "$postCode" @allure.label.tag:DWT-343',
-      async ({ postCode, isValid, expected }) => {
+      'should allow waste movement to be creeated when a valid $country postCode is provided @allure.label.tag:DWT-343',
+      async ({ postCode, country }) => {
         wasteReceiptData.brokerOrDealer.address.postCode = postCode
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
           )
 
-        if (isValid) {
-          expect(response.statusCode).toBe(200)
-          expect(response.json).toHaveProperty('globalMovementId')
-        } else {
-          expect(response.statusCode).toBe(400)
-          expect(response.json).toEqual({
-            validation: {
-              errors: [
-                {
-                  key: 'brokerOrDealer.address.postCode',
-                  errorType: 'UnexpectedError',
-                  message: 'Post Code must be in valid UK or Ireland format'
-                }
-              ]
-            }
-          })
-        }
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toHaveProperty('globalMovementId')
+      }
+    )
+  })
+  describe('Waste movement must not be created when an invalid Broker or dealer postcode provided', () => {
+    it.each([
+      { postCode: 'xxx', reason: 'is invalid' },
+      { postCode: 'BS14XE', reason: 'contains no spaces' }
+    ])(
+      'should not allow waste movement to be created when the postCode $reason @allure.label.tag:DWT-343',
+      async ({ postCode, reason }) => {
+        wasteReceiptData.brokerOrDealer.address.postCode = postCode
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'brokerOrDealer.address.postCode',
+                errorType: 'UnexpectedError',
+                message: 'Post Code must be in valid UK or Ireland format'
+              }
+            ]
+          }
+        })
       }
     )
   })
