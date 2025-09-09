@@ -83,6 +83,31 @@ export const generateCompleteWasteReceiptData = () => ({
       pops: {
         containsPops: false
       }
+    },
+    {
+      ewcCodes: ['020101'],
+      wasteDescription: 'Mixed waste from construction and demolition',
+      physicalForm: 'Mixed',
+      numberOfContainers: 3,
+      typeOfContainers: 'SKI',
+      weight: {
+        metric: 'Tonnes',
+        amount: 2.5,
+        isEstimate: false
+      },
+      hazardous: {
+        containsHazardous: true,
+        hazCodes: [1, 3],
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      },
+      pops: {
+        containsPops: false
+      }
     }
   ],
   carrier: {
