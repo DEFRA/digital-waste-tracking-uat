@@ -34,7 +34,7 @@ describe('Waste Movement Creation', () => {
     it(
       'should successfully create a new waste movement with valid data-complex' +
         ' @allure.label.tag:DWT-343' +
-        ' @allure.label.tag:DWT-336 allure.label.tag:DWT-547',
+        ' @allure.label.tag:DWT-336 allure.label.tag:DWT-547 allure.label.tag:DWT-334',
       async () => {
         await addAllureLink('/DWT-343', 'DWT-343', 'jira')
         wasteReceiptData = generateCompleteWasteReceiptData()
