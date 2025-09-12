@@ -1,11 +1,13 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
+import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
 describe('Waste Weight Estimate Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
+    await addAllureLink('/DWT-331', 'DWT-331', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
     // Authenticate and set the auth token
@@ -20,7 +22,8 @@ describe('Waste Weight Estimate Validation', () => {
       [true, 'an estimate'],
       [false, 'not an estimate']
     ])(
-      'should accept weight estimate indicator: %s (%s)',
+      'should accept weight estimate indicator: %s (%s)' +
+        ' @allure.label.tag:DWT-331',
       async (isEstimate, description) => {
         wasteReceiptData.wasteItems[0].weight.isEstimate = isEstimate
 
@@ -39,48 +42,143 @@ describe('Waste Weight Estimate Validation', () => {
   })
 
   describe('Invalid Weight Estimate Indicators', () => {
-    it('should reject missing weight estimate indicator', async () => {
-      delete wasteReceiptData.wasteItems[0].weight.isEstimate
+    it(
+      'should reject missing weight estimate indicator' +
+        ' @allure.label.tag:DWT-331',
+      async () => {
+        delete wasteReceiptData.wasteItems[0].weight.isEstimate
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
-            {
-              key: 'wasteItems.0.weight.isEstimate',
-              errorType: 'NotProvided',
-              message: '"wasteItems[0].weight.isEstimate" is required'
-            }
-          ]
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.weight.isEstimate',
+                errorType: 'NotProvided',
+                message:
+                  'isEstimate is required. Please indicate whether the quantity is an estimate (true) or actual measurement (false)'
+              }
+            ]
+          }
+        })
+      }
+    )
+
+    it(
+      'should reject invalid weight estimate indicator' +
+        ' @allure.label.tag:DWT-331',
+      async () => {
+        wasteReceiptData.wasteItems[0].weight.isEstimate = 'invalid'
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.weight.isEstimate',
+                errorType: 'UnexpectedError',
+                message:
+                  'isEstimate must be either true or false. Please indicate whether the quantity is an estimate (true) or actual measurement (false)'
+              }
+            ]
+          }
+        })
+      }
+    )
+  })
+
+  describe.skip(' weight estimate indicator validations for weight object in "disposalOrRecoveryCodes" array', () => {
+    describe('Valid Weight Estimate Indicators', () => {
+      it.each([
+        [true, 'an estimate'],
+        [false, 'not an estimate']
+      ])(
+        'should accept weight estimate indicator: %s (%s)' +
+          ' @allure.label.tag:DWT-331',
+        async (isEstimate, description) => {
+          wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes[0].weight.isEstimate =
+            isEstimate
+
+          const response =
+            await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+              wasteReceiptData
+            )
+
+          expect(response.statusCode).toBe(200)
+          expect(response.json).toEqual({
+            statusCode: 200,
+            globalMovementId: expect.any(String)
+          })
         }
-      })
+      )
     })
 
-    it('should reject invalid weight estimate indicator', async () => {
-      wasteReceiptData.wasteItems[0].weight.isEstimate = 'invalid'
+    describe('Invalid Weight Estimate Indicators', () => {
+      it(
+        'should reject missing weight estimate indicator' +
+          ' @allure.label.tag:DWT-331',
+        async () => {
+          delete wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes[0]
+            .weight.isEstimate
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+          const response =
+            await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+              wasteReceiptData
+            )
 
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
-            {
-              key: 'wasteItems.0.weight.isEstimate',
-              errorType: 'UnexpectedError',
-              message: '"wasteItems[0].weight.isEstimate" must be a boolean'
+          expect(response.statusCode).toBe(400)
+          expect(response.json).toEqual({
+            validation: {
+              errors: [
+                {
+                  key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.isEstimate',
+                  errorType: 'NotProvided',
+                  message:
+                    'isEstimate is required. Please indicate whether the quantity is an estimate (true) or actual measurement (false)'
+                }
+              ]
             }
-          ]
+          })
         }
-      })
+      )
+
+      it(
+        'should reject invalid weight estimate indicator' +
+          ' @allure.label.tag:DWT-331',
+        async () => {
+          wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes[0].weight.isEstimate =
+            'invalid'
+
+          const response =
+            await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+              wasteReceiptData
+            )
+
+          expect(response.statusCode).toBe(400)
+          expect(response.json).toEqual({
+            validation: {
+              errors: [
+                {
+                  key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.isEstimate',
+                  errorType: 'UnexpectedError',
+                  message:
+                    'isEstimate must be either true or false. Please indicate whether the quantity is an estimate (true) or actual measurement (false)'
+                }
+              ]
+            }
+          })
+        }
+      )
     })
   })
 })
