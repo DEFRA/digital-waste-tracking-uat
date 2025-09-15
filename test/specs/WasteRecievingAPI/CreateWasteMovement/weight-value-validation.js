@@ -77,7 +77,8 @@ describe('Waste Weight value Validation', () => {
       'should reject create movement submission when weight value is missing' +
         ' @allure.label.tag:DWT-332',
       async () => {
-        delete wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes[0].weight.amount
+        delete wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes[0].weight
+          .amount
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -91,7 +92,8 @@ describe('Waste Weight value Validation', () => {
               {
                 key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.amount',
                 errorType: 'NotProvided',
-                message: '"wasteItems[0].disposalOrRecoveryCodes[0].weight.amount" is required'
+                message:
+                  '"wasteItems[0].disposalOrRecoveryCodes[0].weight.amount" is required'
               }
             ]
           }
@@ -99,27 +101,32 @@ describe('Waste Weight value Validation', () => {
       }
     )
 
-    it('should reject create movement submission when weight amount is invalid'+' @allure.label.tag:DWT-332', async () => {
-      wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes[0].weight.amount = -1
+    it(
+      'should reject create movement submission when weight amount is invalid' +
+        ' @allure.label.tag:DWT-332',
+      async () => {
+        wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes[0].weight.amount =
+          -1
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
-            {
-              key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.amount',
-              errorType: 'UnexpectedError',
-              message:
-                '"wasteItems[0].disposalOrRecoveryCodes[0].weight.amount" must be greater than or equal to 0'
-            }
-          ]
-        }
-      })
-    })
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.amount',
+                errorType: 'UnexpectedError',
+                message:
+                  '"wasteItems[0].disposalOrRecoveryCodes[0].weight.amount" must be greater than or equal to 0'
+              }
+            ]
+          }
+        })
+      }
+    )
   })
 })
