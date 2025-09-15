@@ -17,6 +17,7 @@ headers {
 body:json {
   {
     "receivingSiteId": "{{receivingSiteId}}",
+    "dateTimeReceived": "{{timestamp}}",
     "hazardousWasteConsignmentCode": "CJTILE/A0001",
     "wasteItems": [
       {
@@ -47,23 +48,8 @@ body:json {
               "concentration": 0.75
             }
           ]
-        }
-      }
-    ],
-    "carrier": {
-      "organisationName": "Hazardous Carrier Ltd",
-      "address": {
-        "fullAddress": "123 Hazardous Street, Hazardous City",
-        "postCode": "HC1 2AB"
-      },
-      "emailAddress": "hazardous@carrier.com",
-      "phoneNumber": "01234567890",
-      "meansOfTransport": "Road"
-    },
-    
-    "receipt": {
-      "dateTimeReceived": "{{timestamp}}",
-      "disposalOrRecoveryCodes": [
+        },
+        "disposalOrRecoveryCodes": [
         {
           "code": "R1",
           "weight": {
@@ -73,6 +59,24 @@ body:json {
           }
         }
       ]
+      }
+    ],
+    "carrier": {
+      "organisationName": "Hazardous Carrier Ltd",
+      "address": {
+        "fullAddress": "123 Hazardous Street, Hazardous City",
+        "postcode": "HC1 2AB"
+      },
+      "emailAddress": "hazardous@carrier.com",
+      "phoneNumber": "01234567890",
+      "meansOfTransport": "Air"
+    },
+    
+    "receipt": {
+      "address": {
+        "fullAddress": "123 Hazardous Street, Hazardous City",
+        "postcode": "HC1 2AB"
+      }
     }
   }
 }

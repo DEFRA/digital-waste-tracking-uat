@@ -17,17 +17,12 @@ headers {
 body:json {
   {
     "receivingSiteId": "{{receivingSiteId}}",
+    "dateTimeReceived": "{{timestamp}}",
     "receipt": {
-      "disposalOrRecoveryCodes": [
-        {
-          "code": "R1",
-          "weight": {
-            "metric": "Tonnes",
-            "amount": 2.5,
-            "isEstimate": false
-          }
-        }
-      ]
+      "address": {
+        "fullAddress": "123 Test Street, Test City",
+        "postcode": "TC1 2AB"
+      }
     }
   }
 }

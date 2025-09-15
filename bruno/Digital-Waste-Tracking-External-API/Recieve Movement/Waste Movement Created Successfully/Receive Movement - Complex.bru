@@ -17,6 +17,7 @@ headers {
 body:json {
   {
     "receivingSiteId": "{{receivingSiteId}}",
+    "dateTimeReceived": "{{timestamp}}",
     "reasonForNoConsignmentCode": "Carrier did not provide documentation",
     "wasteItems": [
       {
@@ -50,7 +51,17 @@ body:json {
               "concentration": 150.5
             }
           ]
+        },
+        "disposalOrRecoveryCodes": [
+        {
+          "code": "R1",
+          "weight": {
+            "metric": "Tonnes",
+            "amount": 0.75,
+            "isEstimate": false
+          }
         }
+      ]
       },
       {
         "ewcCodes": ["150110"],
@@ -82,33 +93,18 @@ body:json {
       "organisationName": "Test Carrier Ltd",
       "address": {
         "fullAddress": "123 Test Street, Test City",
-        "postCode": "TC1 2AB"
+        "postcode": "TC1 2AB"
       },
       "emailAddress": "test@carrier.com",
       "phoneNumber": "01234567890",
-      "meansOfTransport": "Road"
+      "meansOfTransport": "Air"
     },
     
     "receipt": {
-      "dateTimeReceived": "{{timestamp}}",
-      "disposalOrRecoveryCodes": [
-        {
-          "code": "R1",
-          "weight": {
-            "metric": "Tonnes",
-            "amount": 3.0,
-            "isEstimate": false
-          }
-        },
-        {
-          "code": "D1",
-          "weight": {
-            "metric": "Tonnes",
-            "amount": 0.3,
-            "isEstimate": false
-          }
-        }
-      ]
+      "address": {
+        "fullAddress": "123 Test Street, Test City",
+        "postcode": "TC1 2AB"
+      }
     }
   }
 }

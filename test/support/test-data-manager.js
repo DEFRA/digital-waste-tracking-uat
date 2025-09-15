@@ -91,7 +91,7 @@ export const generateCompleteWasteReceiptData = () => ({
       pops: {
         containsPops: false
       }
-      // disposalOrRecoveryCodes: [
+      // ,disposalOrRecoveryCodes: [
       //   {
       //     code: 'R1',
       //     weight: {

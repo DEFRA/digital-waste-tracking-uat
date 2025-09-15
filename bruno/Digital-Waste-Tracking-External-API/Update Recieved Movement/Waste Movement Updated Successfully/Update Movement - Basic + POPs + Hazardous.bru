@@ -17,6 +17,7 @@ headers {
 body:json {
   {
     "receivingSiteId": "{{receivingSiteId}}",
+    "dateTimeReceived": "{{timestamp}}",
     "hazardousWasteConsignmentCode": "SB1234567",
     "wasteItems": [
       {
@@ -72,32 +73,35 @@ body:json {
               "concentration": 0.89
             }
           ]
+        },
+        "disposalOrRecoveryCodes": [
+        {
+          "code": "R1",
+          "weight": {
+            "metric": "Tonnes",
+            "amount": 0.75,
+            "isEstimate": false
+          }
         }
+      ]
       }
     ],
     "carrier": {
       "organisationName": "Complex Carrier Ltd",
       "address": {
         "fullAddress": "123 Complex Street, Complex City",
-        "postCode": "CC1 2AB"
+        "postcode": "CC1 2AB"
       },
       "emailAddress": "complex@carrier.com",
       "phoneNumber": "01234567890",
-      "meansOfTransport": "Road"
+      "meansOfTransport": "Air"
     },
     
     "receipt": {
-      "dateTimeReceived": "{{timestamp}}",
-      "disposalOrRecoveryCodes": [
-        {
-          "code": "R1",
-          "weight": {
-            "metric": "Tonnes",
-            "amount": 1.2,
-            "isEstimate": true
-          }
-        }
-      ]
+      "address": {
+        "fullAddress": "123 Test Street, Test City",
+        "postcode": "TC1 2AB"
+      }
     }
   }
 }

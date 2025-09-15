@@ -83,7 +83,7 @@ describe('Carrier Contact Details Validation', () => {
 
   describe('Validate the carrier postcode', () => {
     it.each([
-      { postCode: 'DC08 AC98', isValid: true, expected: 'created' },
+      { postCode: 'D08 AC98', isValid: true, expected: 'created' },
       { postCode: 'BS1 4XE', isValid: true, expected: 'created' },
       { postCode: 'xxx', isValid: false, expected: 'not created' },
       { postCode: 'BS14XE', isValid: false, expected: 'not created' } // postcode without spaces is not being allowed
