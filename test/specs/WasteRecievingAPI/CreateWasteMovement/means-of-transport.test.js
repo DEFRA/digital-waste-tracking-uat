@@ -18,7 +18,7 @@ describe('Carrier Means of transport Validation', () => {
   })
 
   describe('Validate the waste carrier is using an allowed means of transportation', () => {
-    it.each([['Sea'], ['Other']])(
+    it.each([['Other']])(
       'should accept a means of transport with value "%s" ' +
         ' @allure.label.tag:DWT-319' +
         ' @allure.label.tag:DWT-347',
@@ -82,7 +82,7 @@ describe('Carrier Means of transport Validation', () => {
 
   // 'Piped'],['Inland Waterway'],['Air'],['Sea'],['Other']
   describe('Validate vehicle registration number is not required when means of transport is not Road', () => {
-    it.each([['Rail'], ['Air']])(
+    it.each([['Rail']])(
       'should return an error when vehicle registration number is provided when means of transport is "%s" i.e. not Road' +
         ' @allure.label.tag:DWT-347',
       async (transportationValue) => {

@@ -17,13 +17,27 @@ describe('Number of containers for a waste item Validation', () => {
     )
   })
 
-  //   need to confirm if 0 is a valid value
   describe('Number of waste containers must be a positive integer or a 0', () => {
-    it.each([[5], [0]])(
-      'should accept a waste containers with value "%s" ' +
+    it(
+      'should accept a waste with number of containers greater than 0 ' +
         ' @allure.label.tag:DWT-337',
-      async (numberOfContainers) => {
-        wasteReceiptData.wasteItems[0].numberOfContainers = numberOfContainers
+      async () => {
+        wasteReceiptData.wasteItems[0].numberOfContainers = 5
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toHaveProperty('globalMovementId')
+        // ToDo:Assert that the record has been created successfully in the DB
+      }
+    )
+    it(
+      'should accept a waste when number of containers supplied value is0 ' +
+        ' @allure.label.tag:DWT-337',
+      async () => {
+        wasteReceiptData.wasteItems[0].numberOfContainers = 0
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
