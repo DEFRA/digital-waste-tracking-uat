@@ -83,7 +83,7 @@ describe('Broker or dealer details Validation', () => {
 
   describe('Waste movement must be successfully created when a valid Broker or dealer postcode provided', () => {
     it.each([
-      { postCode: 'BT47 6FA', country: 'Ireland' },
+      { postCode: 'D08 AC98', country: 'Ireland' },
       { postCode: 'BS1 4XE', country: 'UK' }
     ])(
       'should allow waste movement to be creeated when a valid $country postCode is provided @allure.label.tag:DWT-343',
