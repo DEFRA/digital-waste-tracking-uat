@@ -17,6 +17,7 @@ headers {
 body:json {
   {
     "receivingSiteId": "{{receivingSiteId}}",
+    "dateTimeReceived": "{{timestamp}}",
     "wasteItems": [
       {
         "ewcCodes": ["020101"],
@@ -28,32 +29,35 @@ body:json {
           "metric": "Tonnes",
           "amount": 2.5,
           "isEstimate": false
+        },
+        "disposalOrRecoveryCodes": [
+        {
+          "code": "R1",
+          "weight": {
+            "metric": "Tonnes",
+            "amount": 0.75,
+            "isEstimate": false
+          }
         }
+      ]
       }
     ],
     "carrier": {
       "organisationName": "Basic Carrier Ltd",
       "address": {
         "fullAddress": "123 Basic Street, Basic City",
-        "postCode": "BC1 2AB"
+        "postcode": "BC1 2AB"
       },
       "emailAddress": "basic@carrier.com",
       "phoneNumber": "01234567890",
-      "meansOfTransport": "Road"
+      "meansOfTransport": "Air"
     },
     
     "receipt": {
-      "dateTimeReceived": "{{timestamp}}",
-      "disposalOrRecoveryCodes": [
-        {
-          "code": "R1",
-          "weight": {
-            "metric": "Tonnes",
-            "amount": 2.5,
-            "isEstimate": false
-          }
-        }
-      ]
+      "address": {
+        "fullAddress": "123 Basic Street, Basic City",
+        "postcode": "BC1 2AB"
+      }
     }
   }
 }

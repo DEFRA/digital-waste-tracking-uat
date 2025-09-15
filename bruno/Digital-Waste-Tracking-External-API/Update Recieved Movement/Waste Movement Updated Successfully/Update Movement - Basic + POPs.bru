@@ -17,6 +17,7 @@ headers {
 body:json {
   {
     "receivingSiteId": "{{receivingSiteId}}",
+    "dateTimeReceived": "{{timestamp}}",
     "wasteItems": [
       {
         "ewcCodes": ["020101"],
@@ -45,32 +46,35 @@ body:json {
               "concentration": 8.3
             }
           ]
+        },
+        "disposalOrRecoveryCodes": [
+        {
+          "code": "R1",
+          "weight": {
+            "metric": "Tonnes",
+            "amount": 0.75,
+            "isEstimate": false
+          }
         }
+      ]
       }
     ],
     "carrier": {
       "organisationName": "POPs Carrier Ltd",
       "address": {
         "fullAddress": "123 POPs Street, POPs City",
-        "postCode": "PC1 2AB"
+        "postcode": "PC1 2AB"
       },
       "emailAddress": "pops@carrier.com",
       "phoneNumber": "01234567890",
-      "meansOfTransport": "Road"
+      "meansOfTransport": "Air"
     },
     
     "receipt": {
-      "dateTimeReceived": "{{timestamp}}",
-      "disposalOrRecoveryCodes": [
-        {
-          "code": "R1",
-          "weight": {
-            "metric": "Tonnes",
-            "amount": 1.8,
-            "isEstimate": true
-          }
-        }
-      ]
+      "address": {
+        "fullAddress": "123 Test Street, Test City",
+        "postcode": "TC1 2AB"
+      }
     }
   }
 }
