@@ -18,12 +18,12 @@ describe('Carrier Means of transport Validation', () => {
   })
 
   describe('Validate the waste carrier is using an allowed means of transportation', () => {
-    it.each([['Other']])(
-      'should accept a means of transport with value "%s" ' +
+    it(
+      'should accept a means of transport with value "Other" ' +
         ' @allure.label.tag:DWT-319' +
         ' @allure.label.tag:DWT-347',
-      async (transportationValue) => {
-        wasteReceiptData.carrier.meansOfTransport = transportationValue
+      async () => {
+        wasteReceiptData.carrier.meansOfTransport = "Other"
         delete wasteReceiptData.carrier.vehicleRegistration
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -82,11 +82,11 @@ describe('Carrier Means of transport Validation', () => {
 
   // 'Piped'],['Inland Waterway'],['Air'],['Sea'],['Other']
   describe('Validate vehicle registration number is not required when means of transport is not Road', () => {
-    it.each([['Rail']])(
-      'should return an error when vehicle registration number is provided when means of transport is "%s" i.e. not Road' +
+    it(
+      'should return an error when vehicle registration number is provided when means of transport is "Rail" i.e. not Road' +
         ' @allure.label.tag:DWT-347',
-      async (transportationValue) => {
-        wasteReceiptData.carrier.meansOfTransport = transportationValue
+      async () => {
+        wasteReceiptData.carrier.meansOfTransport = "Rail"
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
