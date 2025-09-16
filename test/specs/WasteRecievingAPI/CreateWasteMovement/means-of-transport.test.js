@@ -23,7 +23,7 @@ describe('Carrier Means of transport Validation', () => {
         ' @allure.label.tag:DWT-319' +
         ' @allure.label.tag:DWT-347',
       async () => {
-        wasteReceiptData.carrier.meansOfTransport = "Other"
+        wasteReceiptData.carrier.meansOfTransport = 'Other'
         delete wasteReceiptData.carrier.vehicleRegistration
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -86,7 +86,7 @@ describe('Carrier Means of transport Validation', () => {
       'should return an error when vehicle registration number is provided when means of transport is "Rail" i.e. not Road' +
         ' @allure.label.tag:DWT-347',
       async () => {
-        wasteReceiptData.carrier.meansOfTransport = "Rail"
+        wasteReceiptData.carrier.meansOfTransport = 'Rail'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -109,20 +109,30 @@ describe('Carrier Means of transport Validation', () => {
     )
   })
 
-  it.skip(
+  it(
     'should not allow waste movement to be created when there is no means of transport provided' +
       ' @allure.label.tag:DWT-319' +
       ' @allure.label.tag:bug:DWT-567',
     async () => {
       delete wasteReceiptData.carrier.meansOfTransport
+      delete wasteReceiptData.carrier.vehicleRegistration
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
 
       expect(response.statusCode).toBe(400)
-      // ToDo: should there be a specific error populated in the response ??
-      // expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'carrier.meansOfTransport',
+              errorType: 'NotProvided',
+              message: '"carrier.meansOfTransport" is required'
+            }
+          ]
+        }
+      })
     }
   )
 

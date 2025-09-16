@@ -71,8 +71,7 @@ describe('Waste Weight value Validation', () => {
     })
   })
 
-  // ToDo: Pending unitl the current issue w.r.t disposalOrRecoveryCodes locations is resolved
-  describe.skip('Waste Weight value Validation for weight object in "disposalOrRecoveryCodes" array', () => {
+  describe('Waste Weight value Validation for weight object in "disposalOrRecoveryCodes" array', () => {
     it(
       'should reject create movement submission when weight value is missing' +
         ' @allure.label.tag:DWT-332',

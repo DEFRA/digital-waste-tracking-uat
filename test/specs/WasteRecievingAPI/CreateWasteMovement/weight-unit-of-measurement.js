@@ -101,8 +101,7 @@ describe('Waste Weight unit of measurement Validation', () => {
     })
   })
 
-  // ToDo: Pending unitl the current issue w.r.t disposalOrRecoveryCodes locations is resolved
-  describe.skip('unit of measurement validations for weight object in "disposalOrRecoveryCodes" array', () => {
+  describe('unit of measurement validations for weight object in "disposalOrRecoveryCodes" array', () => {
     it(
       'should reject create movement submission when weight unit of measurement is missing' +
         ' @allure.label.tag:DWT-336',

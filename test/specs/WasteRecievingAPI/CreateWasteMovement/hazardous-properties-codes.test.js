@@ -42,7 +42,11 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
     })
 
     it('should accept submission with multiple hazardous property codes', async () => {
-      wasteReceiptData.wasteItems[0].hazardous.hazCodes = ['HP_1', 'HP_3', 'HP_5']
+      wasteReceiptData.wasteItems[0].hazardous.hazCodes = [
+        'HP_1',
+        'HP_3',
+        'HP_5'
+      ]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -57,7 +61,13 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
     })
 
     it('should accept submission with duplicate hazardous property codes', async () => {
-      wasteReceiptData.wasteItems[0].hazardous.hazCodes = ['HP_1', 'HP_1', 'HP_3', 'HP_3', 'HP_5']
+      wasteReceiptData.wasteItems[0].hazardous.hazCodes = [
+        'HP_1',
+        'HP_1',
+        'HP_3',
+        'HP_3',
+        'HP_5'
+      ]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -135,7 +145,8 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
             {
               key: 'wasteItems.0.hazardous.hazCodes.0',
               errorType: 'UnexpectedError',
-              message: '"wasteItems[0].hazardous.hazCodes[0]" must be one of [HP_1, HP_2, HP_3, HP_4, HP_5, HP_6, HP_7, HP_8, HP_9, HP_10, HP_11, HP_12, HP_13, HP_14, HP_15, HP_POP]'
+              message:
+                '"wasteItems[0].hazardous.hazCodes[0]" must be one of [HP_1, HP_2, HP_3, HP_4, HP_5, HP_6, HP_7, HP_8, HP_9, HP_10, HP_11, HP_12, HP_13, HP_14, HP_15, HP_POP]'
             }
           ]
         }
@@ -157,7 +168,8 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
             {
               key: 'wasteItems.0.hazardous.hazCodes.0',
               errorType: 'UnexpectedError',
-              message: '"wasteItems[0].hazardous.hazCodes[0]" must be one of [HP_1, HP_2, HP_3, HP_4, HP_5, HP_6, HP_7, HP_8, HP_9, HP_10, HP_11, HP_12, HP_13, HP_14, HP_15, HP_POP]'
+              message:
+                '"wasteItems[0].hazardous.hazCodes[0]" must be one of [HP_1, HP_2, HP_3, HP_4, HP_5, HP_6, HP_7, HP_8, HP_9, HP_10, HP_11, HP_12, HP_13, HP_14, HP_15, HP_POP]'
             }
           ]
         }

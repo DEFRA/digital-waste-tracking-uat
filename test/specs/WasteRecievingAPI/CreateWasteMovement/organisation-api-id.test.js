@@ -17,7 +17,8 @@ describe('Organisation API ID Validation', () => {
 
   describe('Valid Site IDs', () => {
     it('should accept waste movement receipt for an valid organisation API ID', async () => {
-      wasteReceiptData.organisationApiId = '12345678-1234-1234-1234-123456789012'
+      wasteReceiptData.organisationApiId =
+        '12345678-1234-1234-1234-123456789012'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(

@@ -16,7 +16,6 @@ describe('Broker or dealer details Validation', () => {
         postcode: 'TC1 2AB'
       }
     }
-    
 
     // Authenticate and set the auth token
     await authenticateAndSetToken(

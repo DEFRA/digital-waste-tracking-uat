@@ -98,14 +98,15 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
             {
               key: 'wasteItems.0.disposalOrRecoveryCodes.0.code',
               errorType: 'UnexpectedError',
-              message: '"wasteItems[0].disposalOrRecoveryCodes[0].code" must be one of [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15]'
+              message:
+                '"wasteItems[0].disposalOrRecoveryCodes[0].code" must be one of [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15]'
             }
           ]
         }
       })
     })
 
-    it.skip('should reject treatment codes without weight', async () => {
+    it('should reject treatment codes without weight', async () => {
       wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes = [
         {
           code: 'R1'
@@ -125,7 +126,8 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
             {
               key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight',
               errorType: 'NotProvided',
-              message: '"Weight" is required'
+              message:
+                '"wasteItems[0].disposalOrRecoveryCodes[0].weight" is required'
             }
           ]
         }

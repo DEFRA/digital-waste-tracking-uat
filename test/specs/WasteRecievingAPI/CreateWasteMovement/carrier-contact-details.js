@@ -10,17 +10,17 @@ describe('Carrier Contact Details Validation', () => {
     await addAllureLink('/DWT-342', 'DWT-342', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
     wasteReceiptData.carrier = {
-    organisationName: 'Test Carrier Ltd',
-    address: {
-      fullAddress: '123 Test Street, Test City',
-      postcode: 'TC1 2AB'
-    },
-    emailAddress: `test${Date.now()}@carrier.com`,
-    phoneNumber: '01234567890',
-    meansOfTransport: 'Road',
-    registrationNumber: 'REG123456',
-    vehicleRegistration: 'AB12 CDE'
-  }
+      organisationName: 'Test Carrier Ltd',
+      address: {
+        fullAddress: '123 Test Street, Test City',
+        postcode: 'TC1 2AB'
+      },
+      emailAddress: `test${Date.now()}@carrier.com`,
+      phoneNumber: '01234567890',
+      meansOfTransport: 'Road',
+      registrationNumber: 'REG123456',
+      vehicleRegistration: 'AB12 CDE'
+    }
 
     // Authenticate and set the auth token
     await authenticateAndSetToken(

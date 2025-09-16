@@ -17,7 +17,9 @@ describe('Waste physical form field validation', () => {
     )
   })
 
-  it('should accept a valid physical form value' + ' @allure.label.tag:DWT-340', async () => {
+  it(
+    'should accept a valid physical form value' + ' @allure.label.tag:DWT-340',
+    async () => {
       wasteReceiptData.wasteItems[0].physicalForm = 'Sludge'
 
       const response =
