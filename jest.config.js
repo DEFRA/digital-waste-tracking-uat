@@ -31,7 +31,7 @@ export default {
   },
   verbose: true,
   transformIgnorePatterns: [],
-  maxWorkers: '10%',
+  maxWorkers: '50%',
   testTimeout: 60000, // Longer timeout for individual tests
   forceExit: false, // Let Jest handle cleanup properly
   detectOpenHandles: false // Disable to avoid interference with undici
