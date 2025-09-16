@@ -1,13 +1,13 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
-import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
-describe('Waste physical form field validation', () => {
+describe('Receiver details validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
-    await addAllureLink('/DWT-340', 'DWT-340', 'jira')
+    await addAllureLink('/DWT-547', 'DWT-547', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
     // Authenticate and set the auth token
@@ -17,40 +17,24 @@ describe('Waste physical form field validation', () => {
     )
   })
 
-  it('should accept a valid physical form value' + ' @allure.label.tag:DWT-340', async () => {
-      wasteReceiptData.wasteItems[0].physicalForm = 'Sludge'
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    }
-  )
-
   it(
-    'should not create the waste movement when waste items physical form data is missing' +
-      ' @allure.label.tag:DWT-340',
+    'should not allow waste movement to be created when receiver details are missing' +
+      ' @allure.label.tag:DWT-547',
     async () => {
-      delete wasteReceiptData.wasteItems[0].physicalForm
+      delete wasteReceiptData.receiver
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
-
       expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.physicalForm',
+              key: 'receiver',
               errorType: 'NotProvided',
-              message: '"wasteItems[0].physicalForm" is required'
+              message: '"Receiver" is required'
             }
           ]
         }
@@ -59,25 +43,22 @@ describe('Waste physical form field validation', () => {
   )
 
   it(
-    'should not create the waste movement when an invlaid value is supplied for waste items physical form' +
-      ' @allure.label.tag:DWT-340',
+    'should not allow waste movement to be created when an invalid email is supplied for the receiver organisation' +
+      ' @allure.label.tag:DWT-547',
     async () => {
-      wasteReceiptData.wasteItems[0].physicalForm = 'Invalid'
-
+      wasteReceiptData.receiver.emailAddress = 'invalidtest@'
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
-
       expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.physicalForm',
+              key: 'receiver.emailAddress',
               errorType: 'UnexpectedError',
-              message:
-                '"wasteItems[0].physicalForm" must be one of [Gas, Liquid, Solid, Powder, Sludge, Mixed]'
+              message: '"receiver.emailAddress" must be a valid email'
             }
           ]
         }

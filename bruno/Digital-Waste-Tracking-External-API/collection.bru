@@ -37,7 +37,7 @@ docs {
   3. **Set Environment Secrets**: Configure the following secret variables in your selected environment:
      - `clientId`: Your OAuth2 client ID
      - `clientSecret`: Your OAuth2 client secret  
-     - `receivingSiteId`: Your valid receiving site ID for testing
+     - `organisationApiId`: Your valid organisation API ID for testing
   4. **Set Authentication**: Configure OAuth2 authentication (see Authentication section below)
 
   ## 🔐 Authentication
@@ -117,7 +117,7 @@ docs {
   Each environment includes secret variables that need to be configured:
   - `clientId`: Your OAuth2 client ID for authentication
   - `clientSecret`: Your OAuth2 client secret for authentication
-  - `receivingSiteId`: Your valid receiving site ID for testing waste movements
+  - `organisationApiId`: Your valid organisation API ID for testing waste movements
 
   ### Setting Up Environment Secrets
   1. **Select Environment**: Choose your target environment in Bruno
@@ -125,7 +125,7 @@ docs {
   3. **Set Values**: Enter your actual values for each secret variable
   4. **Save**: The secrets will be stored securely and used by all requests in that environment
 
-  **Note**: The `receivingSiteId` is automatically used in all request bodies, so you don't need to manually update individual requests.
+  **Note**: The `organisationApiId` is automatically used in all request bodies, so you don't need to manually update individual requests.
 
   ## 📊 Expected Response Codes
 
