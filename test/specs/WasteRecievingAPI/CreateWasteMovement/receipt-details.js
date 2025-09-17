@@ -19,7 +19,8 @@ describe('Receipt details validation', () => {
 
   it(
     'should not allow waste movement to be created when receipt details are missing' +
-      ' @allure.label.tag:DWT-547',
+      ' @allure.label.tag:DWT-547' +
+      ' @allure.label.tag:DWT-541',
     async () => {
       delete wasteReceiptData.receipt
 
@@ -62,7 +63,8 @@ describe('Receipt details validation', () => {
   describe('Waste movement must not be created when an invalid postcode is provided for receipt address', () => {
     it(
       'should not allow waste movement to be created when postcode contains invalid characters' +
-        ' @allure.label.tag:DWT-547',
+        ' @allure.label.tag:DWT-547' +
+        '@allure.label.tag:DWT-541',
       async () => {
         wasteReceiptData.receipt.address.postcode = 'xxx'
         const response =

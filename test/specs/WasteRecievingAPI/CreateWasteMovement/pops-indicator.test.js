@@ -33,22 +33,25 @@ describe('POPs Indicator Validation', () => {
       })
     })
 
-    it('should accept waste not containing POPs', async () => {
-      wasteReceiptData.wasteItems[0].pops = {
-        containsPops: false
+    it(
+      'should accept waste not containing POPs' + ' @allure.label.tag:DWT-346',
+      async () => {
+        wasteReceiptData.wasteItems[0].pops = {
+          containsPops: false
+        }
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
       }
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    })
+    )
   })
 
   describe('Invalid POPs Indicators', () => {
