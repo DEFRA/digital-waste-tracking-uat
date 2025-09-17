@@ -1,7 +1,7 @@
 meta {
   name: Receive Movement - Complex
   type: http
-  seq: 6
+  seq: 5
 }
 
 post {
@@ -21,7 +21,9 @@ body:json {
     "reasonForNoConsignmentCode": "Carrier did not provide documentation",
     "wasteItems": [
       {
-        "ewcCodes": ["200121"],
+        "ewcCodes": [
+          "200121"
+        ],
         "wasteDescription": "Complex mixed waste from construction and demolition containing hazardous components and POPs",
         "physicalForm": "Mixed",
         "numberOfContainers": 8,
@@ -36,7 +38,11 @@ body:json {
         },
         "hazardous": {
           "containsHazardous": true,
-          "hazCodes": ["HP_1", "HP_3", "HP_6"],
+          "hazCodes": [
+            "HP_1",
+            "HP_3",
+            "HP_6"
+          ],
           "components": [
             {
               "name": "Mercury",
@@ -53,18 +59,20 @@ body:json {
           ]
         },
         "disposalOrRecoveryCodes": [
-        {
-          "code": "R1",
-          "weight": {
-            "metric": "Tonnes",
-            "amount": 0.75,
-            "isEstimate": false
+          {
+            "code": "R1",
+            "weight": {
+              "metric": "Tonnes",
+              "amount": 0.75,
+              "isEstimate": false
+            }
           }
-        }
-      ]
+        ]
       },
       {
-        "ewcCodes": ["150110"],
+        "ewcCodes": [
+          "150110"
+        ],
         "wasteDescription": "Secondary waste containing plastic packaging and minor contaminants",
         "physicalForm": "Solid",
         "numberOfContainers": 5,
@@ -79,27 +87,45 @@ body:json {
         },
         "hazardous": {
           "containsHazardous": true,
-          "hazCodes": ["HP_6"],
+          "hazCodes": [
+            "HP_6"
+          ],
           "components": [
             {
               "name": "Arsenic",
               "concentration": 75
             }
           ]
-        }
+        },
+        "disposalOrRecoveryCodes": [
+          {
+            "code": "R1",
+            "weight": {
+              "metric": "Tonnes",
+              "amount": 0.75,
+              "isEstimate": false
+            }
+          }
+        ]
       }
     ],
     "carrier": {
-      "organisationName": "Test Carrier Ltd",
+      "organisationName": "Carrier Ltd",
+      "registrationNumber": "REG123456",
       "address": {
-        "fullAddress": "123 Test Street, Test City",
-        "postcode": "TC1 2AB"
+        "fullAddress": "321 Test Street, Test City",
+        "postcode": "TC2 2CD"
       },
       "emailAddress": "test@carrier.com",
       "phoneNumber": "01234567890",
-      "meansOfTransport": "Air"
+      "meansOfTransport": "Road",
+      "vehicleRegistration": "AB12 CDE"
     },
-    
+    "receiver": {
+      "organisationName": "Receiver Ltd",
+      "emailAddress": "receiver@test.com",
+      "phoneNumber": "01234567890"
+    },
     "receipt": {
       "address": {
         "fullAddress": "123 Test Street, Test City",

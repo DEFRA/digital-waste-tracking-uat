@@ -18,6 +18,58 @@ body:json {
   {
     "organisationApiId": "{{organisationApiId}}",
     "dateTimeReceived": "{{timestamp}}",
+    "hazardousWasteConsignmentCode": "CJTILE/A0001",
+    "wasteItems": [
+      {
+        "ewcCodes": ["200121"],
+        "wasteDescription": "Hazardous waste with heavy metal components from industrial process",
+        "physicalForm": "Mixed",
+        "numberOfContainers": 12,
+        "typeOfContainers": "SKI",
+        "weight": {
+          "metric": "Tonnes",
+          "amount": 0.75,
+          "isEstimate": false
+        },
+        "hazardous": {
+          "containsHazardous": true,
+          "hazCodes": ["HP_1", "HP_3", "HP_5"],
+          "components": [
+            {
+              "name": "Mercury",
+              "concentration": 12.5
+            },
+            {
+              "name": "Lead",
+              "concentration": 500
+            },
+            {
+              "name": "Cadmium",
+              "concentration": 0.75
+            }
+          ]
+        },
+        "disposalOrRecoveryCodes": [
+        {
+          "code": "R1",
+          "weight": {
+            "metric": "Tonnes",
+            "amount": 0.75,
+            "isEstimate": false
+          }
+        }
+      ]
+      }
+    ],
+    "carrier": {
+      "organisationName": "Carrier Ltd",
+      "registrationNumber": "REG123456",
+      "meansOfTransport": "Rail"
+    },
+    "receiver": {
+      "organisationName": "Receiver Ltd",
+      "emailAddress": "receiver@test.com"
+    },
     "receipt": {
       "address": {
         "fullAddress": "123 Test Street, Test City",

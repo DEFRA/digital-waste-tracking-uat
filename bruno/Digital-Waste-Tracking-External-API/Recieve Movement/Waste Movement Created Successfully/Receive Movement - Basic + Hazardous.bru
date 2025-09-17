@@ -1,7 +1,7 @@
 meta {
   name: Receive Movement - Basic + Hazardous
   type: http
-  seq: 3
+  seq: 2
 }
 
 post {
@@ -62,26 +62,18 @@ body:json {
       }
     ],
     "carrier": {
-      "organisationName": "Hazardous Carrier Ltd",
-      "address": {
-        "fullAddress": "123 Hazardous Street, Hazardous City",
-        "postcode": "HC1 2AB"
-      },
-      "emailAddress": "hazardous@carrier.com",
-      "phoneNumber": "01234567890",
-      "meansOfTransport": "Air",
-      "vehicleRegistration": "AB12 CDE",
-      "registrationNumber": "REG123456"
+      "organisationName": "Carrier Ltd",
+      "registrationNumber": "REG123456",
+      "meansOfTransport": "Rail"
     },
     "receiver": {
-      "organisationName": "Test Receiver Ltd",
-      "emailAddress": "receiver@test.com",
-      "phoneNumber": "01234567890"
+      "organisationName": "Receiver Ltd",
+      "emailAddress": "receiver@test.com"
     },
     "receipt": {
       "address": {
-        "fullAddress": "123 Hazardous Street, Hazardous City",
-        "postcode": "HC1 2AB"
+        "fullAddress": "123 Test Street, Test City",
+        "postcode": "TC1 2AB"
       }
     }
   }
