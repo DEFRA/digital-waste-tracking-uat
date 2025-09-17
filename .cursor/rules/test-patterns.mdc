@@ -1,0 +1,12 @@
+---
+description: Test implementation pattern rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# Test Implementation Patterns
+
+- **No Parameterized Tests**: Avoid using `it.each` for multiple test runs with different data
+- **No For Loops**: Avoid using for loops in test code
+- **No Getters/Setters**: Do not use getters and setters in the test data manager
+- **Exact Error Verification**: For error case tests, verify the exact return body structure

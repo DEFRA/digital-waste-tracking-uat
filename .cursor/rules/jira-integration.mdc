@@ -1,0 +1,17 @@
+---
+description: JIRA integration and test tagging rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# JIRA Integration & Allure Reporting
+
+- **JIRA Tags**: Use `@allure.label.tag:DWT-XXX` for JIRA ticket references
+- **Multiple Tags**: Multiple tags can be on the same line (e.g., `@allure.label.tag:DWT-343 @allure.label.tag:DWT-336`)
+- **Prompt for Tickets**: User should be prompted for ticket number when creating tests
+- **Allure Links**: Use `addAllureLink()` for linking to external resources
+- **Link Format**: `addAllureLink('/DWT-XXX', 'DWT-XXX', 'jira')`
+- **Allure Import**: Always import `addAllureLink` from `~/test/support/helpers/allure-api-logger.js`
+- **Descriptive Names**: Include business context in test descriptions
+- **Allure Reports**: Use `npm run report:generate` to generate Allure reports
+- **Report Cleanup**: Use `npm run report:clean` before running tests

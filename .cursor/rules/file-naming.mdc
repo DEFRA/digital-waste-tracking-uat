@@ -1,0 +1,13 @@
+---
+description: File naming and organization rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# File Naming & Organization
+
+- **Consistent Naming**: Use kebab-case for all test files (e.g., `create-waste-movement.test.js`, `organisation-api-id.test.js`)
+- **No CamelCase**: Avoid camelCase in test file names (e.g., `organisationApiId.test.js` should be `organisation-api-id.test.js`)
+- **Descriptive Names**: Test file names should clearly indicate the feature being tested
+- **Group by Feature**: Organize tests by business domain, not technical implementation
+- **Test Categories**: Use consistent describe block naming for test organization

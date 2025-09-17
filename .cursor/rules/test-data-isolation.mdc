@@ -1,0 +1,12 @@
+---
+description: Test data isolation and generation rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js", "**/test-data-manager.js"]
+alwaysApply: true
+---
+
+# Test Data Isolation
+
+- **Centralized Test Data**: Always use `generateBaseWasteReceiptData()` from the test data manager
+- **Data Isolation**: Each test should generate fresh test data in beforeEach
+- **No Hardcoded Test Data**: Avoid inline test data creation in test files
+- **Realistic Test Data**: Use realistic but clearly test-oriented data

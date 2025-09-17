@@ -1,0 +1,12 @@
+---
+description: Test assertion rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# Test Assertions
+
+- **Status Code Verification**: Always verify HTTP response status codes
+- **Property Validation**: Use `toHaveProperty()` for checking response structure
+- **Exact Matching**: Use `toEqual()` for exact response body verification in error cases
+- **Async/Await**: Use async/await for all API calls

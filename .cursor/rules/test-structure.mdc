@@ -1,0 +1,11 @@
+---
+description: Test structure and organization rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# Test Structure & Organization
+
+- **3-Level Nesting Maximum**: Use exactly 3 levels of nesting total, including the 'it' level in describe-it hierarchies
+- **Match Existing Style**: Follow the style conventions used elsewhere in the repository
+- **Descriptive Names**: Use clear, descriptive test names that explain the expected behavior

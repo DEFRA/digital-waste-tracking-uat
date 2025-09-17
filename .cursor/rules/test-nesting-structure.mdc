@@ -1,0 +1,99 @@
+---
+description: Test nesting structure and organization rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# Test Nesting Structure
+
+## Four-Level Hierarchy: API > Feature > Behavior > Expectation
+
+Tests must follow a consistent four-level nesting structure that mirrors the business domain:
+
+### Level 1: API (Folder Structure)
+- **Purpose**: Groups all tests for a specific API endpoint or service
+- **Implementation**: Folder level (e.g., `WasteRecievingAPI/`, `Authentication/`)
+- **Naming**: Use API/service name (e.g., `WasteRecievingAPI`, `Authentication`)
+- **Scope**: Covers all operations for that API
+
+### Level 2: Feature (File Structure)
+- **Purpose**: Groups tests by business feature or operation within the API
+- **Implementation**: File level (e.g., `CreateWasteMovement/`, `UpdateWasteMovement/`)
+- **Naming**: Use feature/operation name (e.g., `CreateWasteMovement`, `UpdateWasteMovement`)
+- **Scope**: Covers all behaviors for that specific feature
+
+### Level 3: Behavior (Code Structure - describe blocks)
+- **Purpose**: Groups tests by specific behavior or scenario within the feature
+- **Implementation**: Code level - top-level describe in test files
+- **Naming**: Use behavior/scenario name (e.g., `Valid EWC Codes`, `Invalid Organisation API IDs`, `Valid Concentration Values`)
+- **Scope**: Covers all expectations for that behavior
+
+### Level 4: Expectation (Code Structure - it statements)
+- **Purpose**: Individual test cases that verify specific expectations
+- **Implementation**: Code level - it statements within describe blocks
+- **Naming**: Use expectation description (e.g., `should accept waste with valid concentration value`)
+- **Scope**: Single, focused test case
+
+## File Organization Structure
+
+```
+test/specs/
+├── {API_NAME}/                    # Level 1: API (Folder Structure)
+│   ├── {OPERATION}/               # Level 2: Feature (File Structure)
+│   │   ├── {BEHAVIOR}.test.js     # Level 3: Behavior (Code Structure - describe)
+│   │   └── {BEHAVIOR}.test.js     # Level 4: Expectation (Code Structure - it)
+│   └── {OPERATION}/
+└── {API_NAME}/
+    └── {OPERATION}/
+```
+
+## Example Structure
+
+### Folder/File Structure (Levels 1-2)
+```
+test/specs/
+├── WasteRecievingAPI/                    # Level 1: API (Folder)
+│   └── CreateWasteMovement/              # Level 2: Feature (Folder)
+│       ├── ewc-codes.test.js            # Level 3: Behavior (File)
+│       └── hazardous-concentration.test.js
+└── Authentication/                       # Level 1: API (Folder)
+    └── oauth2-authentication.test.js    # Level 2: Feature (File)
+```
+
+### Code Structure (Levels 3-4)
+```javascript
+// File: ewc-codes.test.js
+describe('EWC Codes Validation', () => {                      // Level 3: Behavior (describe)
+  describe('Valid EWC Codes', () => {                          // Level 3: Behavior (describe)
+    it('should accept a valid 6-digit EWC code', () => {       // Level 4: Expectation (it)
+      // Test implementation
+    })
+  })
+  
+  describe('Invalid EWC Codes', () => {                        // Level 3: Behavior (describe)
+    it('should reject more than 5 EWC codes', () => {          // Level 4: Expectation (it)
+      // Test implementation
+    })
+  })
+})
+```
+
+## Naming Conventions
+
+- **API Level**: Use business domain names (e.g., `Waste Movement Creation`, `Authentication`)
+- **Feature Level**: Use action/outcome names (e.g., `Successful Creation`, `Failed Creation`, `Valid Values`)
+- **Behavior Level**: Use scenario names (e.g., `Valid Site IDs`, `Invalid EWC Codes`, `Missing Fields`)
+- **Expectation Level**: Use `should` statements describing the expected outcome
+
+## File Naming
+
+- **Test Files**: Use kebab-case with behavior name (e.g., `ewc-codes.test.js`, `hazardous-concentration.test.js`)
+- **Directories**: Use kebab-case for API and operation names (e.g., `WasteRecievingAPI/CreateWasteMovement/`)
+
+## Benefits
+
+- **Clear Organization**: Easy to navigate and understand test structure
+- **Business Alignment**: Mirrors the actual business domain and user workflows
+- **Maintainability**: Logical grouping makes tests easier to maintain and extend
+- **Readability**: Clear hierarchy makes test intent obvious
+- **Scalability**: Structure supports growth as new features are added

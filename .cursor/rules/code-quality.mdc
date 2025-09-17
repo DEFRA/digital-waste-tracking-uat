@@ -1,0 +1,12 @@
+---
+description: Code quality and formatting rules
+globs: ["**/*.js", "**/*.mjs", "**/*.json", "**/*.md"]
+alwaysApply: true
+---
+
+# Code Quality & Formatting
+
+- **Enforce Code Formatting**: Always run `npm run format` before committing code
+- **Lint Before Commit**: Use `npm run lint` to catch code quality issues early
+- **No Console Statements**: Avoid `console.log` statements in production code
+- **Consistent Code Style**: Follow the established Prettier configuration
