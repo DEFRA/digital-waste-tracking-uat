@@ -14,21 +14,6 @@ export default {
     '^components/(.*)$': '<rootDir>/test/components/$1'
   },
   testMatch: ['**/test/specs/**/*.js'],
-  collectCoverageFrom: [
-    'test/**/*.js',
-    '!test/**/*.test.js',
-    '!test/setup/**/*.js'
-  ],
-  coverageDirectory: 'coverage',
-  coverageReporters: ['text', 'lcov', 'clover', 'html'],
-  coverageThreshold: {
-    global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70
-    }
-  },
   verbose: true,
   transformIgnorePatterns: [],
   maxWorkers: '50%',

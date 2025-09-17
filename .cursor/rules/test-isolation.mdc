@@ -1,0 +1,13 @@
+---
+description: Test isolation and parallel execution rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# Test Isolation & Parallel Execution
+
+- **Test Isolation**: Each test should be independent and runnable in isolation
+- **Parallel Execution**: Tests should be safe for parallel execution
+- **No Shared State**: Avoid global state that could affect other tests
+- **Fresh Data**: Each test should generate fresh test data in beforeEach
+- **Resource Cleanup**: Let Jest handle cleanup automatically

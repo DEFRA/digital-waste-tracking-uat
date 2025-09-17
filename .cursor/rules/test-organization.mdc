@@ -1,0 +1,11 @@
+---
+description: File organization rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# File Organization
+
+- **Test Location**: Place tests in `test/specs/` directory organized by feature
+- **Test Files**: Use `.test.js` extension for test files
+- **Support Files**: Keep test utilities in `test/support/` directory

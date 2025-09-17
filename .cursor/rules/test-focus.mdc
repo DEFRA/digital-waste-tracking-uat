@@ -1,0 +1,11 @@
+---
+description: Test focus and philosophy rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# Test Focus & Philosophy
+
+- **UAT-Focused**: Write functional/behavioral tests that verify user acceptance criteria, not extensive unit-test-style coverage
+- **Fewer Tests**: Prefer fewer, comprehensive tests over many small unit tests
+- **Behavioral Testing**: Focus on end-to-end user scenarios and business workflows

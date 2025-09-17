@@ -1,0 +1,12 @@
+---
+description: API usage and configuration access rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js", "**/apis/**/*.js"]
+alwaysApply: true
+---
+
+# API Usage & Configuration
+
+- **API Instance Usage**: Always use `globalThis.apis` for API calls
+- **Environment Variables**: Use `globalThis.testConfig` for accessing configuration
+- **No Hardcoded Credentials**: Never hardcode authentication credentials in test files
+- **Consistent Auth Setup**: Always use `authenticateAndSetToken()` helper in `beforeEach`

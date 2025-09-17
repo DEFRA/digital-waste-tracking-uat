@@ -1,0 +1,11 @@
+---
+description: Test data management rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js", "**/test-data-manager.js"]
+alwaysApply: true
+---
+
+# Test Data Management
+
+- **Centralized Data**: Use the test data manager for consistent test data generation
+- **Base Data Functions**: Use `generateBaseWasteReceiptData()` and similar functions for test setup
+- **No Hardcoded Secrets**: Use placeholder values for environment variables in documentation and config files

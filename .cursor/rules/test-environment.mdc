@@ -1,0 +1,11 @@
+---
+description: Environment and execution rules
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js", "**/*.md", "**/*.sh"]
+alwaysApply: true
+---
+
+# Environment & Execution
+
+- **Source Environment**: Always source the environment file (`env.sh`) before running commands or tests
+- **Jest Configuration**: Prefix Jest commands with `NODE_OPTIONS='--experimental-vm-modules --no-warnings'` for ES modules support
+- **Read Documentation**: Read all .md files before suggesting or making changes

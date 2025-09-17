@@ -1,0 +1,38 @@
+---
+description: Test development rules index for Digital Waste Tracking UAT
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# Test Development Rules
+
+This is the main index for test development rules. Individual rule categories are defined in separate files:
+
+## Core Test Rules
+- **test-focus.mdc** - Test focus and philosophy
+- **test-structure.mdc** - Test structure and organization  
+- **test-patterns.mdc** - Test implementation patterns
+- **test-isolation.mdc** - Test isolation and parallel execution
+
+## Data & Environment
+- **test-data.mdc** - Test data management
+- **test-data-isolation.mdc** - Test data isolation and generation
+- **test-environment.mdc** - Environment and execution
+
+## Assertions & API
+- **test-assertions.mdc** - Test assertions
+- **assertion-priority.mdc** - Assertion priority and error handling
+- **api-usage.mdc** - API usage and configuration access
+
+## Organization & Quality
+- **test-organization.mdc** - File organization
+- **file-naming.mdc** - File naming and organization
+- **module-imports.mdc** - Module import and path alias rules
+- **code-quality.mdc** - Code quality and formatting
+
+## Integration & Documentation
+- **jira-integration.mdc** - JIRA integration, Allure reporting, and test tagging
+- **jsdoc-typing.mdc** - JSDoc typing documentation standards
+- **no-typescript.mdc** - TypeScript usage restrictions
+
+Each rule file contains specific guidelines for its category and will be automatically applied to relevant files based on their glob patterns.
