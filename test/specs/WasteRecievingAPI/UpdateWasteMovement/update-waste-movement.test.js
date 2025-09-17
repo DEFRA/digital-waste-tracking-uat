@@ -28,7 +28,7 @@ describe('Waste Movement Update', () => {
 
       // Update the movement with different disposal codes
       const updatedData = generateBaseWasteReceiptData()
-      updatedData.receipt.disposalOrRecoveryCodes = [
+      updatedData.wasteItems[0].disposalOrRecoveryCodes = [
         {
           code: 'D1',
           weight: {

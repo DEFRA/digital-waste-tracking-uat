@@ -245,7 +245,7 @@ describe('Hazardous Component Concentration Validation', () => {
   describe('Concentration Warnings', () => {
     it.skip(
       'should accept waste with blank concentration but show warning' +
-        ' @allure.label.tag:DWT-354',
+        ' @allure.label.tag:',
       async () => {
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,

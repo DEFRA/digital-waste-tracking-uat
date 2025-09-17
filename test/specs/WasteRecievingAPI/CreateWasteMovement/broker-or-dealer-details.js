@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
-import { generateCompleteWasteReceiptData } from '../../../support/test-data-manager.js'
+import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
@@ -8,7 +8,14 @@ describe('Broker or dealer details Validation', () => {
 
   beforeEach(async () => {
     await addAllureLink('/DWT-343', 'DWT-343', 'jira')
-    wasteReceiptData = generateCompleteWasteReceiptData()
+    wasteReceiptData = generateBaseWasteReceiptData()
+    wasteReceiptData.brokerOrDealer = {
+      organisationName: 'Test Broker Ltd',
+      address: {
+        fullAddress: '123 Test Street, Test City',
+        postcode: 'TC1 2AB'
+      }
+    }
 
     // Authenticate and set the auth token
     await authenticateAndSetToken(
@@ -61,7 +68,7 @@ describe('Broker or dealer details Validation', () => {
     'should not allow waste movement to be created when there is no postcode supplied for the brokerOrDealer organisation' +
       ' @allure.label.tag:DWT-343',
     async () => {
-      delete wasteReceiptData.brokerOrDealer.address.postCode
+      delete wasteReceiptData.brokerOrDealer.address.postcode
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
@@ -71,9 +78,9 @@ describe('Broker or dealer details Validation', () => {
         validation: {
           errors: [
             {
-              key: 'brokerOrDealer.address.postCode',
+              key: 'brokerOrDealer.address.postcode',
               errorType: 'NotProvided',
-              message: '"brokerOrDealer.address.postCode" is required'
+              message: '"brokerOrDealer.address.postcode" is required'
             }
           ]
         }
@@ -83,12 +90,12 @@ describe('Broker or dealer details Validation', () => {
 
   describe('Waste movement must be successfully created when a valid Broker or dealer postcode provided', () => {
     it.each([
-      { postCode: 'D08 AC98', country: 'Ireland' },
-      { postCode: 'BS1 4XE', country: 'UK' }
+      { postcode: 'D08 AC98', country: 'Ireland' },
+      { postcode: 'BS1 4XE', country: 'UK' }
     ])(
-      'should allow waste movement to be creeated when a valid $country postCode is provided @allure.label.tag:DWT-343',
-      async ({ postCode, country }) => {
-        wasteReceiptData.brokerOrDealer.address.postCode = postCode
+      'should allow waste movement to be creeated when a valid $country postcode is provided @allure.label.tag:DWT-343',
+      async ({ postcode, country }) => {
+        wasteReceiptData.brokerOrDealer.address.postcode = postcode
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -101,12 +108,12 @@ describe('Broker or dealer details Validation', () => {
   })
   describe('Waste movement must not be created when an invalid Broker or dealer postcode provided', () => {
     it.each([
-      { postCode: 'xxx', reason: 'is invalid' },
-      { postCode: 'BS14XE', reason: 'contains no spaces' }
+      { postcode: 'xxx', reason: 'is invalid' },
+      { postcode: 'BS14XE', reason: 'contains no spaces' }
     ])(
-      'should not allow waste movement to be created when the postCode $reason @allure.label.tag:DWT-343',
-      async ({ postCode, reason }) => {
-        wasteReceiptData.brokerOrDealer.address.postCode = postCode
+      'should not allow waste movement to be created when the postcode $reason @allure.label.tag:DWT-343',
+      async ({ postcode, reason }) => {
+        wasteReceiptData.brokerOrDealer.address.postcode = postcode
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -117,9 +124,9 @@ describe('Broker or dealer details Validation', () => {
           validation: {
             errors: [
               {
-                key: 'brokerOrDealer.address.postCode',
+                key: 'brokerOrDealer.address.postcode',
                 errorType: 'UnexpectedError',
-                message: 'Post Code must be in valid UK or Ireland format'
+                message: 'Postcode must be in valid UK or Ireland format'
               }
             ]
           }

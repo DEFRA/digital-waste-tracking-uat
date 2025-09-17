@@ -1,8 +1,5 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
-import {
-  generateBaseWasteReceiptData,
-  generateCompleteWasteReceiptData
-} from '../../../support/test-data-manager.js'
+import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
@@ -37,7 +34,7 @@ describe('Waste Movement Creation', () => {
         ' @allure.label.tag:DWT-336 allure.label.tag:DWT-547 allure.label.tag:DWT-334',
       async () => {
         await addAllureLink('/DWT-343', 'DWT-343', 'jira')
-        wasteReceiptData = generateCompleteWasteReceiptData()
+        wasteReceiptData = generateBaseWasteReceiptData()
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -56,7 +53,7 @@ describe('Waste Movement Creation', () => {
   describe('Failed Creation', () => {
     it('should fail to create movement due to missing required fields', async () => {
       const invalidData = generateBaseWasteReceiptData()
-      delete invalidData.receipt.disposalOrRecoveryCodes[0].weight.amount
+      delete invalidData.organisationApiId
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(

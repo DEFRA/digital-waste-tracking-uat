@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
-import { generateCompleteWasteReceiptData } from '../../../support/test-data-manager.js'
+import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
@@ -8,7 +8,7 @@ describe('Number of containers for a waste item Validation', () => {
 
   beforeEach(async () => {
     await addAllureLink('/DWT-337', 'DWT-337', 'jira')
-    wasteReceiptData = generateCompleteWasteReceiptData()
+    wasteReceiptData = generateBaseWasteReceiptData()
 
     // Authenticate and set the auth token
     await authenticateAndSetToken(

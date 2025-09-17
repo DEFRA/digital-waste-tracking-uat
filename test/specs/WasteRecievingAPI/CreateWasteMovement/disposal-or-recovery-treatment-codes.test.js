@@ -17,7 +17,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
 
   describe('Valid Treatment Codes', () => {
     it('should accept valid disposal or recovery treatment codes with weight', async () => {
-      wasteReceiptData.receipt.disposalOrRecoveryCodes = [
+      wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes = [
         {
           code: 'R1',
           weight: {
@@ -41,7 +41,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
     })
 
     it('should accept multiple valid treatment codes', async () => {
-      wasteReceiptData.receipt.disposalOrRecoveryCodes = [
+      wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes = [
         {
           code: 'R1',
           weight: {
@@ -75,7 +75,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
 
   describe('Invalid Treatment Codes', () => {
     it('should reject unrecognized disposal or recovery treatment codes', async () => {
-      wasteReceiptData.receipt.disposalOrRecoveryCodes = [
+      wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes = [
         {
           code: 'INVALID',
           weight: {
@@ -96,18 +96,18 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         validation: {
           errors: [
             {
-              key: 'receipt.disposalOrRecoveryCodes.0.code',
+              key: 'wasteItems.0.disposalOrRecoveryCodes.0.code',
               errorType: 'UnexpectedError',
               message:
-                '"receipt.disposalOrRecoveryCodes[0].code" must be one of [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15]'
+                '"wasteItems[0].disposalOrRecoveryCodes[0].code" must be one of [R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R11, R12, R13, D1, D2, D3, D4, D5, D6, D7, D8, D9, D10, D11, D12, D13, D14, D15]'
             }
           ]
         }
       })
     })
 
-    it.skip('should reject treatment codes without weight', async () => {
-      wasteReceiptData.receipt.disposalOrRecoveryCodes = [
+    it('should reject treatment codes without weight', async () => {
+      wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes = [
         {
           code: 'R1'
           // Note: weight field is intentionally omitted to test required validation
@@ -124,9 +124,10 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         validation: {
           errors: [
             {
-              key: 'receipt.disposalOrRecoveryCodes.0.weight',
+              key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight',
               errorType: 'NotProvided',
-              message: '"Weight" is required'
+              message:
+                '"wasteItems[0].disposalOrRecoveryCodes[0].weight" is required'
             }
           ]
         }
@@ -136,7 +137,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
 
   describe('Missing Treatment Codes', () => {
     it('should accept request without disposal or recovery treatment codes but with warnings', async () => {
-      delete wasteReceiptData.receipt.disposalOrRecoveryCodes
+      delete wasteReceiptData.wasteItems[0].disposalOrRecoveryCodes
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -150,7 +151,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         validation: {
           warnings: [
             {
-              key: 'receipt.disposalOrRecoveryCodes',
+              key: 'wasteItems[0].disposalOrRecoveryCodes',
               errorType: 'NotProvided',
               message:
                 'Disposal or Recovery codes are required for proper waste tracking and compliance'

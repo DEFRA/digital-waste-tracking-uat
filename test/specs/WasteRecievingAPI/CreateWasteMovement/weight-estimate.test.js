@@ -97,7 +97,7 @@ describe('Waste Weight Estimate Validation', () => {
     )
   })
 
-  describe.skip(' weight estimate indicator validations for weight object in "disposalOrRecoveryCodes" array', () => {
+  describe(' weight estimate indicator validations for weight object in "disposalOrRecoveryCodes" array', () => {
     describe('Valid Weight Estimate Indicators', () => {
       it.each([
         [true, 'an estimate'],

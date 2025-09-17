@@ -1,7 +1,7 @@
 meta {
   name: Receive Movement - Basic + POPs
   type: http
-  seq: 4
+  seq: 3
 }
 
 post {
@@ -16,11 +16,13 @@ headers {
 
 body:json {
   {
-    "receivingSiteId": "{{receivingSiteId}}",
+    "organisationApiId": "{{organisationApiId}}",
     "dateTimeReceived": "{{timestamp}}",
     "wasteItems": [
       {
-        "ewcCodes": ["020101"],
+        "ewcCodes": [
+          "020101"
+        ],
         "wasteDescription": "Contaminated soil containing persistent organic pollutants (POPs) from former agricultural site with pesticide residues",
         "physicalForm": "Mixed",
         "numberOfContainers": 8,
@@ -32,13 +34,13 @@ body:json {
         },
         "pops": {
           "containsPops": true,
-          "pops": [
+          "components": [
             {
               "name": "Chlordane",
               "concentration": 45.2
             },
             {
-              "name": "Dieldrin", 
+              "name": "Dieldrin",
               "concentration": 12.8
             },
             {
@@ -48,28 +50,26 @@ body:json {
           ]
         },
         "disposalOrRecoveryCodes": [
-        {
-          "code": "R1",
-          "weight": {
-            "metric": "Tonnes",
-            "amount": 0.75,
-            "isEstimate": false
+          {
+            "code": "R1",
+            "weight": {
+              "metric": "Tonnes",
+              "amount": 0.75,
+              "isEstimate": false
+            }
           }
-        }
-      ]
+        ]
       }
     ],
     "carrier": {
-      "organisationName": "POPs Carrier Ltd",
-      "address": {
-        "fullAddress": "123 POPs Street, POPs City",
-        "postcode": "PC1 2AB"
-      },
-      "emailAddress": "pops@carrier.com",
-      "phoneNumber": "01234567890",
-      "meansOfTransport": "Air"
+      "organisationName": "Carrier Ltd",
+      "registrationNumber": "REG123456",
+      "meansOfTransport": "Rail"
     },
-    
+    "receiver": {
+      "organisationName": "Receiver Ltd",
+      "emailAddress": "receiver@test.com"
+    },
     "receipt": {
       "address": {
         "fullAddress": "123 Test Street, Test City",

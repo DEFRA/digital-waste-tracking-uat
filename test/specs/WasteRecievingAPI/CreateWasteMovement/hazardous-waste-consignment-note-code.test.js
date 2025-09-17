@@ -34,7 +34,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3],
+        hazCodes: ['HP_1', 'HP_3'],
         components: [
           {
             name: 'Mercury',
@@ -60,7 +60,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3],
+        hazCodes: ['HP_1', 'HP_3'],
         components: [
           {
             name: 'Mercury',
@@ -86,7 +86,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3],
+        hazCodes: ['HP_1', 'HP_3'],
         components: [
           {
             name: 'Mercury',
@@ -112,7 +112,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3],
+        hazCodes: ['HP_1', 'HP_3'],
         components: [
           {
             name: 'Mercury',
@@ -140,7 +140,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107', '150110'] // Mix: non-hazardous (020101, 150107) and hazardous (150110*)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3],
+        hazCodes: ['HP_1', 'HP_3'],
         components: [
           {
             name: 'Mercury',
@@ -207,7 +207,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3],
+        hazCodes: ['HP_1', 'HP_3'],
         components: [
           {
             name: 'Mercury',
@@ -241,7 +241,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3],
+        hazCodes: ['HP_1', 'HP_3'],
         components: [
           {
             name: 'Mercury',
@@ -275,7 +275,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3],
+        hazCodes: ['HP_1', 'HP_3'],
         components: [
           {
             name: 'Mercury',
@@ -309,7 +309,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        hazCodes: [1, 3],
+        hazCodes: ['HP_1', 'HP_3'],
         components: [
           {
             name: 'Mercury',
