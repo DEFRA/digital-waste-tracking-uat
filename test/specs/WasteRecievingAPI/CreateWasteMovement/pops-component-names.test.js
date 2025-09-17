@@ -27,161 +27,166 @@ describe('POPs Component Names Validation', () => {
     )
   })
 
-  it(
-    'should accept waste containing an allowed POPs component name "Hexabromobiphenyl"' +
-      ' @allure.label.tag:DWT-346',
-    async () => {
-      wasteReceiptData.wasteItems[0].pops.components[0].name =
-        'Hexabromobiphenyl'
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+  describe('Valid POPs Component Names', () => {
+    it(
+      'should accept waste containing an allowed POPs component name "Hexabromobiphenyl"' +
+        ' @allure.label.tag:DWT-346',
+      async () => {
+        wasteReceiptData.wasteItems[0].pops.components[0].name =
+          'Hexabromobiphenyl'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    }
-  )
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
+      }
+    )
 
-  it(
-    'should accept waste containing multiple POPs component' +
-      ' @allure.label.tag:DWT-346',
-    async () => {
-      wasteReceiptData.wasteItems[0].pops.components.push({
-        name: 'Chlordane',
-        concentration: 2.0
-      })
+    it(
+      'should accept waste containing multiple POPs component' +
+        ' @allure.label.tag:DWT-346',
+      async () => {
+        wasteReceiptData.wasteItems[0].pops.components.push({
+          name: 'Chlordane',
+          concentration: 2.0
+        })
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    }
-  )
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
+      }
+    )
 
-  it(
-    'should accept waste containing when the POP component name is an empty string' +
-      ' @allure.label.tag:DWT-346',
-    async () => {
-      wasteReceiptData.wasteItems[0].pops.components[0].name = ''
+    it(
+      'should accept waste containing when the POP component name is an empty string' +
+        ' @allure.label.tag:DWT-346',
+      async () => {
+        wasteReceiptData.wasteItems[0].pops.components[0].name = ''
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    }
-  )
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
+      }
+    )
 
-  it(
-    'should accept waste containing when carrier cannot supply the POP component name' +
-      ' @allure.label.tag:DWT-346',
-    async () => {
-      wasteReceiptData.wasteItems[0].pops.components[0].name =
-        'Carrier did not provide detail'
+    it(
+      'should accept waste containing when carrier cannot supply the POP component name' +
+        ' @allure.label.tag:DWT-346',
+      async () => {
+        wasteReceiptData.wasteItems[0].pops.components[0].name =
+          'Carrier did not provide detail'
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
-      })
-    }
-  )
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
+      }
+    )
+  })
 
-  it(
-    'should reject waste submission containing POPs components when it is not required' +
-      ' @allure.label.tag:DWT-346',
-    async () => {
-      wasteReceiptData.wasteItems[0].pops.containsPops = false
+  describe('Invalid POPs Component Names', () => {
+    it(
+      'should reject waste submission containing POPs components when it is not required' +
+        ' @allure.label.tag:DWT-346',
+      async () => {
+        wasteReceiptData.wasteItems[0].pops.containsPops = false
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
-            {
-              key: 'wasteItems.0.pops',
-              errorType: 'UnexpectedError',
-              message: 'A POP name cannot be provided when POPs are not present'
-            }
-          ]
-        }
-      })
-    }
-  )
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.pops',
+                errorType: 'UnexpectedError',
+                message:
+                  'A POP name cannot be provided when POPs are not present'
+              }
+            ]
+          }
+        })
+      }
+    )
 
-  it(
-    'should reject waste submission containing POPs components when given a value that is not from allowed list' +
-      ' @allure.label.tag:DWT-346',
-    async () => {
-      wasteReceiptData.wasteItems[0].pops.components[0].name = 'ChlordaneXYZ'
+    it(
+      'should reject waste submission containing POPs components when given a value that is not from allowed list' +
+        ' @allure.label.tag:DWT-346',
+      async () => {
+        wasteReceiptData.wasteItems[0].pops.components[0].name = 'ChlordaneXYZ'
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
-            {
-              key: 'wasteItems.0.pops.components.0.name',
-              errorType: 'UnexpectedError',
-              message: 'POP name is not valid'
-            }
-          ]
-        }
-      })
-    }
-  )
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.pops.components.0.name',
+                errorType: 'UnexpectedError',
+                message: 'POP name is not valid'
+              }
+            ]
+          }
+        })
+      }
+    )
 
-  it(
-    'should reject waste submission containing POPs components name is omitted i.e. is null' +
-      ' @allure.label.tag:DWT-346',
-    async () => {
-      delete wasteReceiptData.wasteItems[0].pops.components[0].name
+    it(
+      'should reject waste submission containing POPs components name is omitted i.e. is null' +
+        ' @allure.label.tag:DWT-346',
+      async () => {
+        delete wasteReceiptData.wasteItems[0].pops.components[0].name
 
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
 
-      expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
-            {
-              key: 'wasteItems.0.pops.components.0.name',
-              errorType: 'NotProvided',
-              message: 'POP name is required'
-            }
-          ]
-        }
-      })
-    }
-  )
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.pops.components.0.name',
+                errorType: 'NotProvided',
+                message: 'POP name is required'
+              }
+            ]
+          }
+        })
+      }
+    )
+  })
 })
