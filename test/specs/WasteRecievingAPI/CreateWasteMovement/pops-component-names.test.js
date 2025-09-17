@@ -10,6 +10,16 @@ describe('POPs Component Names Validation', () => {
     await addAllureLink('/DWT-346', 'DWT-346', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
+    wasteReceiptData.wasteItems[0].pops = {
+      containsPops: true,
+      components: [
+        {
+          name: 'PFOS',
+          concentration: 2.5
+        }
+      ]
+    }
+
     // Authenticate and set the auth token
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,
@@ -21,16 +31,8 @@ describe('POPs Component Names Validation', () => {
     'should accept waste containing an allowed POPs component name "Hexabromobiphenyl"' +
       ' @allure.label.tag:DWT-346',
     async () => {
-      wasteReceiptData.wasteItems[0].pops = {
-        containsPops: true,
-        components: [
-          {
-            name: 'Hexabromobiphenyl',
-            concentration: 2.5
-          }
-        ]
-      }
-
+      wasteReceiptData.wasteItems[0].pops.components[0].name =
+        'Hexabromobiphenyl'
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
@@ -48,19 +50,10 @@ describe('POPs Component Names Validation', () => {
     'should accept waste containing multiple POPs component' +
       ' @allure.label.tag:DWT-346',
     async () => {
-      wasteReceiptData.wasteItems[0].pops = {
-        containsPops: true,
-        components: [
-          {
-            name: 'Hexabromobiphenyl',
-            concentration: 2.5
-          },
-          {
-            name: 'Chlordane',
-            concentration: 2.0
-          }
-        ]
-      }
+      wasteReceiptData.wasteItems[0].pops.components.push({
+        name: 'Chlordane',
+        concentration: 2.0
+      })
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -79,19 +72,7 @@ describe('POPs Component Names Validation', () => {
     'should accept waste containing when the POP component name is an empty string' +
       ' @allure.label.tag:DWT-346',
     async () => {
-      wasteReceiptData.wasteItems[0].pops = {
-        containsPops: true,
-        components: [
-          {
-            name: '',
-            concentration: 2.5
-          },
-          {
-            name: 'Chlordane',
-            concentration: 2.0
-          }
-        ]
-      }
+      wasteReceiptData.wasteItems[0].pops.components[0].name = ''
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -107,22 +88,11 @@ describe('POPs Component Names Validation', () => {
   )
 
   it(
-    'should accept waste containing when carrier cannot supply one of the POP component name' +
+    'should accept waste containing when carrier cannot supply the POP component name' +
       ' @allure.label.tag:DWT-346',
     async () => {
-      wasteReceiptData.wasteItems[0].pops = {
-        containsPops: true,
-        components: [
-          {
-            name: 'Carrier did not provide detail',
-            concentration: 2.5
-          },
-          {
-            name: 'Chlordane',
-            concentration: 2.0
-          }
-        ]
-      }
+      wasteReceiptData.wasteItems[0].pops.components[0].name =
+        'Carrier did not provide detail'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -141,15 +111,7 @@ describe('POPs Component Names Validation', () => {
     'should reject waste submission containing POPs components when it is not required' +
       ' @allure.label.tag:DWT-346',
     async () => {
-      wasteReceiptData.wasteItems[0].pops = {
-        containsPops: false,
-        components: [
-          {
-            name: 'Chlordane',
-            concentration: 2.0
-          }
-        ]
-      }
+      wasteReceiptData.wasteItems[0].pops.containsPops = false
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -175,15 +137,7 @@ describe('POPs Component Names Validation', () => {
     'should reject waste submission containing POPs components when given a value that is not from allowed list' +
       ' @allure.label.tag:DWT-346',
     async () => {
-      wasteReceiptData.wasteItems[0].pops = {
-        containsPops: true,
-        components: [
-          {
-            name: 'ChlordaneXYZ',
-            concentration: 2.0
-          }
-        ]
-      }
+      wasteReceiptData.wasteItems[0].pops.components[0].name = 'ChlordaneXYZ'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -198,6 +152,32 @@ describe('POPs Component Names Validation', () => {
               key: 'wasteItems.0.pops.components.0.name',
               errorType: 'UnexpectedError',
               message: 'POP name is not valid'
+            }
+          ]
+        }
+      })
+    }
+  )
+
+  it(
+    'should reject waste submission containing POPs components name is omitted i.e. is null' +
+      ' @allure.label.tag:DWT-346',
+    async () => {
+      delete wasteReceiptData.wasteItems[0].pops.components[0].name
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'wasteItems.0.pops.components.0.name',
+              errorType: 'NotProvided',
+              message: 'POP name is required'
             }
           ]
         }
