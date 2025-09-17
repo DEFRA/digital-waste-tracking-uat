@@ -11,6 +11,7 @@ This is the main index for test development rules. Individual rule categories ar
 ## Core Test Rules
 - **test-focus.mdc** - Test focus and philosophy
 - **test-structure.mdc** - Test structure and organization  
+- **test-nesting-structure.mdc** - Four-level test nesting hierarchy (API > Feature > Behavior > Expectation)
 - **test-patterns.mdc** - Test implementation patterns
 - **test-isolation.mdc** - Test isolation and parallel execution
 
