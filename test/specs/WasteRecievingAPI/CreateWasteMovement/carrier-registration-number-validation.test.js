@@ -50,7 +50,8 @@ describe('Carrier Registration Number Validation', () => {
               {
                 key: 'carrier',
                 errorType: 'UnexpectedError',
-                message: 'Either carrier registration number or reason for no registration number is required'
+                message:
+                  'Either carrier registration number or reason for no registration number is required'
               }
             ]
           }
@@ -74,7 +75,8 @@ describe('Carrier Registration Number Validation', () => {
               {
                 key: 'carrier',
                 errorType: 'UnexpectedError',
-                message: 'Either carrier registration number or reason for no registration number is required'
+                message:
+                  'Either carrier registration number or reason for no registration number is required'
               }
             ]
           }
@@ -98,7 +100,8 @@ describe('Carrier Registration Number Validation', () => {
               {
                 key: 'carrier',
                 errorType: 'UnexpectedError',
-                message: 'Either carrier registration number or reason for no registration number is required'
+                message:
+                  'Either carrier registration number or reason for no registration number is required'
               }
             ]
           }
