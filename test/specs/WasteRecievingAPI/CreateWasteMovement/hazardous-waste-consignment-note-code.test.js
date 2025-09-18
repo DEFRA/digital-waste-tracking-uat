@@ -35,6 +35,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
             name: 'Mercury',
@@ -61,6 +62,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
             name: 'Mercury',
@@ -87,6 +89,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
             name: 'Mercury',
@@ -113,6 +116,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
             name: 'Mercury',
@@ -141,6 +145,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
             name: 'Mercury',
@@ -167,7 +172,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
     it('should not require consignment code for non-hazardous waste @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107'] // Non-hazardous EWC codes
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: false
+        containsHazardous: false,
+        sourceOfComponents: 'NOT_PROVIDED'
       }
 
       const response =
@@ -185,7 +191,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
     it('should accept optional consignment code for non-hazardous waste @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107'] // Non-hazardous EWC codes
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: false
+        containsHazardous: false,
+        sourceOfComponents: 'NOT_PROVIDED'
       }
       wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
 
@@ -208,6 +215,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
             name: 'Mercury',
@@ -242,6 +250,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
             name: 'Mercury',
@@ -276,6 +285,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
             name: 'Mercury',
@@ -310,6 +320,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
             name: 'Mercury',
