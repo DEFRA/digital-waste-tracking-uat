@@ -23,7 +23,8 @@ describe('Carrier Registration Reason Validation', () => {
         ' @allure.label.tag:DWT-326',
       async () => {
         wasteReceiptData.carrier.registrationNumber = null
-        wasteReceiptData.carrier.reasonForNoRegistrationNumber = 'Carrier not registered'
+        wasteReceiptData.carrier.reasonForNoRegistrationNumber =
+          'Carrier not registered'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -52,7 +53,8 @@ describe('Carrier Registration Reason Validation', () => {
               {
                 key: 'carrier',
                 errorType: 'UnexpectedError',
-                message: 'Either carrier registration number or reason for no registration number is required'
+                message:
+                  'Either carrier registration number or reason for no registration number is required'
               }
             ]
           }
@@ -77,7 +79,8 @@ describe('Carrier Registration Reason Validation', () => {
               {
                 key: 'carrier',
                 errorType: 'UnexpectedError',
-                message: 'Either carrier registration number or reason for no registration number is required'
+                message:
+                  'Either carrier registration number or reason for no registration number is required'
               }
             ]
           }
