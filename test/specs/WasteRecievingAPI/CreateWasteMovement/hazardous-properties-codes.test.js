@@ -10,6 +10,7 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
     wasteReceiptData.wasteItems[0].hazardous = {
       containsHazardous: true,
       hazCodes: ['HP_1', 'HP_3', 'HP_5'],
+      sourceOfComponents: 'CARRIER_PROVIDED',
       components: [
         {
           name: 'Mercury',
