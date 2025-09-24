@@ -73,44 +73,17 @@ describe('Hazardous Component Concentration Validation', () => {
         })
       }
     )
-
-    it.skip(
-      'should accept waste with "Not Supplied" concentration value' +
-        ' @allure.label.tag:DWT-354',
-      async () => {
-        wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: true,
-          sourceOfComponents: 'CARRIER_PROVIDED',
-          components: [
-            {
-              name: 'Mercury',
-              concentration: 'Not Supplied'
-            }
-          ]
-        }
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-            wasteReceiptData
-          )
-
-        expect(response.statusCode).toBe(200)
-        expect(response.json).toEqual({
-          statusCode: 200,
-          globalMovementId: expect.any(String)
-        })
-      }
-    )
   })
 
   describe('Invalid Concentration Values', () => {
-    it.skip(
-      'should reject waste with missing concentration value' +
-        ' @allure.label.tag:DWT-354',
+    it(
+      'should reject waste with missing concentration value if source of components is NOT_PROVIDED' +
+        ' @allure.label.tag:DWT-354' +
+        ' @allure.label.tag:DWT-624',
       async () => {
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,
-          sourceOfComponents: 'CARRIER_PROVIDED',
+          sourceOfComponents: 'NOT_PROVIDED',
           components: [
             {
               name: 'Mercury'
@@ -129,10 +102,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.hazardous.components.0.concentration',
-                errorType: 'NotProvided',
+                key: 'wasteItems.0.hazardous.components',
+                errorType: 'UnexpectedError',
                 message:
-                  'Chemical or Biological concentration is required when hazardous properties are present'
+                  '"wasteItems[0].hazardous.components" must either be an empty array or not provided if sourceOfComponents is NOT_PROVIDED'
               }
             ]
           }
@@ -212,7 +185,7 @@ describe('Hazardous Component Concentration Validation', () => {
       }
     )
 
-    it.skip(
+    it(
       'should reject waste with concentration provided for non-hazardous waste' +
         ' @allure.label.tag:DWT-354',
       async () => {
@@ -237,10 +210,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.hazardous',
+                key: 'wasteItems.0.hazardous.components',
                 errorType: 'UnexpectedError',
                 message:
-                  'Chemical or Biological components cannot be provided when no hazardous properties are indicated'
+                  '"wasteItems[0].hazardous.components" must either be an empty array or not provided if sourceOfComponents is NOT_PROVIDED'
               }
             ]
           }
@@ -250,17 +223,17 @@ describe('Hazardous Component Concentration Validation', () => {
   })
 
   describe('Concentration Warnings', () => {
-    it.skip(
-      'should accept waste with blank concentration but show warning' +
-        ' @allure.label.tag:',
+    it(
+      'should accept waste with no concentration value but show warning if source of components is CARRIER_PROVIDED or OWN_TESTING or GUIDANCE or GUIDANCE' +
+        ' @allure.label.tag:DWT-624',
       async () => {
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,
           sourceOfComponents: 'CARRIER_PROVIDED',
           components: [
             {
-              name: 'Mercury',
-              concentration: ''
+              name: 'Mercury'
+              // concentration: ''
             }
           ]
         }
@@ -273,9 +246,18 @@ describe('Hazardous Component Concentration Validation', () => {
         expect(response.statusCode).toBe(200)
         expect(response.json).toEqual({
           statusCode: 200,
-          globalMovementId: expect.any(String)
+          globalMovementId: expect.any(String),
+          validation: {
+            warnings: [
+              {
+                key: 'wasteItems.hazardous.components',
+                errorType: 'NotProvided',
+                message:
+                  'Hazardous components must be provided with both name and concentration if source of components is one of: CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
+              }
+            ]
+          }
         })
-        // TODO: Add warning about concentration field
       }
     )
   })

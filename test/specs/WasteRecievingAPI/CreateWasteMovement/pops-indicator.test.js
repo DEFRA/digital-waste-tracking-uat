@@ -18,7 +18,8 @@ describe('POPs Indicator Validation', () => {
   describe('Valid POPs Indicators', () => {
     it('should accept waste containing POPs', async () => {
       wasteReceiptData.wasteItems[0].pops = {
-        containsPops: true
+        containsPops: true,
+        sourceOfComponents: 'NOT_PROVIDED'
       }
 
       const response =

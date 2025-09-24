@@ -16,10 +16,10 @@ describe('Hazardous Properties Indicator Validation', () => {
   })
 
   describe('Valid Hazardous Indicator', () => {
-    it.skip('should accept waste receipt when hazardous indicator is set to true and no components are provided', async () => {
+    it('should accept a waste receipt with warning when hazardous indicator is set to true, source of components is NOT_PROVIDED and no components are provided', async () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        sourceOfComponents: 'CARRIER_PROVIDED'
+        sourceOfComponents: 'NOT_PROVIDED'
       }
 
       const response =
@@ -87,9 +87,10 @@ describe('Hazardous Properties Indicator Validation', () => {
     )
   })
 
-  it.skip(
-    'should reject waste receipt submission when hazardous indicator is set to false and components are provided' +
-      ' @allure.label.tag:DWT-351',
+  it(
+    'should reject waste receipt submission when hazardous indicator is set to false, source of components is NOT_PROVIDED and components are provided' +
+      ' @allure.label.tag:DWT-351' +
+      ' @allure.label.tag:DWT-624',
     async () => {
       await addAllureLink('/DWT-351', 'DWT-351', 'jira')
       wasteReceiptData.wasteItems[0].hazardous = {
@@ -113,10 +114,10 @@ describe('Hazardous Properties Indicator Validation', () => {
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.hazardous',
+              key: 'wasteItems.0.hazardous.components',
               errorType: 'UnexpectedError',
               message:
-                'Chemical or Biological components cannot be provided when no hazardous properties are indicated'
+                '"wasteItems[0].hazardous.components" must either be an empty array or not provided if sourceOfComponents is NOT_PROVIDED'
             }
           ]
         }
@@ -157,7 +158,7 @@ describe('Hazardous Properties Indicator Validation', () => {
       })
     })
 
-    it.skip('should reject waste receipt when hazardous indicator is invalid', async () => {
+    it('should reject waste receipt when hazardous indicator is invalid', async () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: 'invalid'
       }
@@ -176,6 +177,18 @@ describe('Hazardous Properties Indicator Validation', () => {
               errorType: 'UnexpectedError',
               message:
                 '"wasteItems[0].hazardous.containsHazardous" must be a boolean'
+            },
+            {
+              key: 'wasteItems.0.hazardous.sourceOfComponents',
+              errorType: 'NotProvided',
+              message:
+                'Chemical or Biological component name and Source of Components must be specified when hazardous properties are present'
+            },
+            {
+              key: 'wasteItems.0.hazardous.components',
+              errorType: 'NotProvided',
+              message:
+                'Components is required when Source of Components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
             }
           ]
         }
