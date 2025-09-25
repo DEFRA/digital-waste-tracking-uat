@@ -34,10 +34,18 @@ body:json {
           "isEstimate": false
         },
         "pops": {
-          "containsPops": true
+          "containsPops": true,
+          "sourceOfComponents": "CARRIER_PROVIDED",
+          "components": [
+            {
+              "name": "Aldrin",
+              "concentration": 2.5
+            }
+          ]
         },
         "hazardous": {
           "containsHazardous": true,
+          "sourceOfComponents": "CARRIER_PROVIDED",
           "hazCodes": [
             "HP_1",
             "HP_3",
@@ -83,10 +91,12 @@ body:json {
           "isEstimate": true
         },
         "pops": {
-          "containsPops": false
+          "containsPops": false,
+          "sourceOfComponents": "NOT_PROVIDED"
         },
         "hazardous": {
           "containsHazardous": true,
+          "sourceOfComponents": "CARRIER_PROVIDED",
           "hazCodes": [
             "HP_6"
           ],
@@ -125,8 +135,14 @@ body:json {
       "organisationName": "Receiver Ltd",
       "emailAddress": "receiver@test.com",
       "phoneNumber": "01234567890",
-      "authorisationNumbers": ["PPC/A/9999999", "PPC/A/SEPA9999-9999"],
-      "regulatoryPositionStatements": [123, 456]
+      "authorisationNumbers": [
+        "PPC/A/9999999",
+        "PPC/A/SEPA9999-9999"
+      ],
+      "regulatoryPositionStatements": [
+        123,
+        456
+      ]
     },
     "receipt": {
       "address": {
