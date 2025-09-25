@@ -44,7 +44,8 @@ export const generateBaseWasteReceiptData = () => ({
     vehicleRegistration: 'AB12 CDE'
   },
   receiver: {
-    organisationName: 'Test Receiver Ltd'
+    organisationName: 'Test Receiver Ltd',
+    authorisationNumbers: ['PPC/A/9999999']
   },
   receipt: {
     address: {
