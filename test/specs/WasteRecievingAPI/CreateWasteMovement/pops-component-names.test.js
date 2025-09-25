@@ -105,7 +105,8 @@ describe('POPs Component Names Validation', () => {
     )
     it(
       'should reject waste submission containing POPs components when it is not required' +
-        ' @allure.label.tag:DWT-346',
+        ' @allure.label.tag:DWT-346' +
+        ' @allure.label.tag:DWT-353',
       async () => {
         wasteReceiptData.wasteItems[0].pops.containsPops = false
 

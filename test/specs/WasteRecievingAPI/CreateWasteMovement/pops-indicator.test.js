@@ -35,7 +35,9 @@ describe('POPs Indicator Validation', () => {
     })
 
     it(
-      'should accept waste not containing POPs' + ' @allure.label.tag:DWT-346',
+      'should accept waste not containing POPs' +
+        ' @allure.label.tag:DWT-346' +
+        ' @allure.label.tag:DWT-353',
       async () => {
         wasteReceiptData.wasteItems[0].pops = {
           containsPops: false
