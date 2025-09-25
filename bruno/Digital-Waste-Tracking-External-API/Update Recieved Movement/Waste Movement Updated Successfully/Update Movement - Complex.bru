@@ -18,6 +18,116 @@ body:json {
   {
     "organisationApiId": "{{organisationApiId}}",
     "dateTimeReceived": "{{timestamp}}",
+    "reasonForNoConsignmentCode": "Carrier did not provide documentation",
+    "wasteItems": [
+      {
+        "ewcCodes": [
+          "200121"
+        ],
+        "wasteDescription": "Complex mixed waste from construction and demolition containing hazardous components and POPs",
+        "physicalForm": "Mixed",
+        "numberOfContainers": 8,
+        "typeOfContainers": "SKI",
+        "weight": {
+          "metric": "Tonnes",
+          "amount": 3.2,
+          "isEstimate": false
+        },
+        "pops": {
+          "containsPops": true
+        },
+        "hazardous": {
+          "containsHazardous": true,
+          "hazCodes": [
+            "HP_1",
+            "HP_3",
+            "HP_6"
+          ],
+          "components": [
+            {
+              "name": "Mercury",
+              "concentration": 25
+            },
+            {
+              "name": "Lead",
+              "concentration": 0.35
+            },
+            {
+              "name": "Cadmium",
+              "concentration": 150.5
+            }
+          ]
+        },
+        "disposalOrRecoveryCodes": [
+          {
+            "code": "R1",
+            "weight": {
+              "metric": "Tonnes",
+              "amount": 0.75,
+              "isEstimate": false
+            }
+          }
+        ]
+      },
+      {
+        "ewcCodes": [
+          "150110"
+        ],
+        "wasteDescription": "Secondary waste containing plastic packaging and minor contaminants",
+        "physicalForm": "Solid",
+        "numberOfContainers": 5,
+        "typeOfContainers": "SKI",
+        "weight": {
+          "metric": "Tonnes",
+          "amount": 1.1,
+          "isEstimate": true
+        },
+        "pops": {
+          "containsPops": false
+        },
+        "hazardous": {
+          "containsHazardous": true,
+          "hazCodes": [
+            "HP_6"
+          ],
+          "components": [
+            {
+              "name": "Arsenic",
+              "concentration": 75
+            }
+          ]
+        },
+        "disposalOrRecoveryCodes": [
+          {
+            "code": "R1",
+            "weight": {
+              "metric": "Tonnes",
+              "amount": 0.75,
+              "isEstimate": false
+            }
+          }
+        ]
+      }
+    ],
+    "carrier": {
+      "organisationName": "Carrier Ltd",
+      "registrationNumber": "REG123456",
+      "address": {
+        "fullAddress": "321 Test Street, Test City",
+        "postcode": "TC2 2CD"
+      },
+      "emailAddress": "test@carrier.com",
+      "phoneNumber": "01234567890",
+      "meansOfTransport": "Road",
+      "vehicleRegistration": "AB12 CDE"
+    },
+    "receiver": {
+      "organisationName": "Receiver Ltd",
+      "emailAddress": "receiver@test.com",
+      "phoneNumber": "01234567890",
+      "authorisationNumbers": ["PPC/A/9999999", "PPC/A/SEPA9999-9999"],
+      "regulatoryPositionStatements": [123, 456]
+    },
     "receipt": {
       "address": {
         "fullAddress": "123 Test Street, Test City",
