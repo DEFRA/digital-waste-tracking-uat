@@ -24,45 +24,61 @@ body:json {
         "ewcCodes": [
           "200121"
         ],
-        "wasteDescription": "Complex mixed waste from construction and demolition containing hazardous components and POPs",
+        "wasteDescription": "Industrial waste containing persistent organic pollutants (POPs) and hazardous heavy metals from decommissioned electrical equipment and contaminated soil",
         "physicalForm": "Mixed",
-        "numberOfContainers": 8,
+        "numberOfContainers": 15,
         "typeOfContainers": "SKI",
         "weight": {
           "metric": "Tonnes",
-          "amount": 3.2,
-          "isEstimate": false
+          "amount": 1.2,
+          "isEstimate": true
         },
         "pops": {
           "containsPops": true,
           "sourceOfComponents": "CARRIER_PROVIDED",
           "components": [
             {
-              "name": "Aldrin",
-              "concentration": 2.5
+              "name": "Chlordane",
+              "concentration": 250
+            },
+            {
+              "name": "Toxaphene",
+              "concentration": 156.4
+            },
+            {
+              "name": "Dicofol",
+              "concentration": 0.8
+            },
+            {
+              "name": "DDT",
+              "concentration": 1.2
             }
           ]
         },
         "hazardous": {
           "containsHazardous": true,
-          "sourceOfComponents": "CARRIER_PROVIDED",
           "hazCodes": [
             "HP_1",
             "HP_3",
             "HP_6"
           ],
+          "sourceOfComponents": "CARRIER_PROVIDED",
           "components": [
             {
               "name": "Mercury",
-              "concentration": 25
-            },
-            {
-              "name": "Lead",
               "concentration": 0.35
             },
             {
-              "name": "Cadmium",
-              "concentration": 150.5
+              "name": "Arsenic",
+              "concentration": 300
+            },
+            {
+              "name": "Chromium",
+              "concentration": 0.42
+            },
+            {
+              "name": "Lead",
+              "concentration": 0.89
             }
           ]
         },
@@ -96,10 +112,10 @@ body:json {
         },
         "hazardous": {
           "containsHazardous": true,
-          "sourceOfComponents": "CARRIER_PROVIDED",
           "hazCodes": [
             "HP_6"
           ],
+          "sourceOfComponents": "CARRIER_PROVIDED",
           "components": [
             {
               "name": "Arsenic",
@@ -135,14 +151,8 @@ body:json {
       "organisationName": "Receiver Ltd",
       "emailAddress": "receiver@test.com",
       "phoneNumber": "01234567890",
-      "authorisationNumbers": [
-        "PPC/A/9999999",
-        "PPC/A/SEPA9999-9999"
-      ],
-      "regulatoryPositionStatements": [
-        123,
-        456
-      ]
+      "authorisationNumbers": ["PPC/A/9999999", "PPC/A/SEPA9999-9999"],
+      "regulatoryPositionStatements": [123, 456]
     },
     "receipt": {
       "address": {
