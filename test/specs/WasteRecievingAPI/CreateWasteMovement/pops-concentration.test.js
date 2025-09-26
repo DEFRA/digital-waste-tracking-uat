@@ -68,7 +68,7 @@ describe('POPs Component Concentration Validation', () => {
 
   describe('Invalid Concentration Values', () => {
     it(
-      'should reject waste with missing concentration value if source of components is NOT_PROVIDED' +
+      'should reject waste with POPS components supplied ifsource of components is NOT_PROVIDED' +
         ' @allure.label.tag:DWT-353' +
         ' @allure.label.tag:DWT-624',
       async () => {
@@ -96,7 +96,7 @@ describe('POPs Component Concentration Validation', () => {
                 key: 'wasteItems.0.pops',
                 errorType: 'UnexpectedError',
                 message:
-                  'POP components must not be provided when the source of components is NOT_PROVIDED'
+                  'POPs components must not be provided when the source of components is NOT_PROVIDED'
               }
             ]
           }
@@ -159,7 +159,7 @@ describe('POPs Component Concentration Validation', () => {
     )
 
     it(
-      'should reject waste with concentration provided for non-hazardous waste' +
+      'should reject waste with concentration provided for items that are not POPs waste' +
         ' @allure.label.tag:DWT-353',
       async () => {
         wasteReceiptData.wasteItems[0].pops.containsPops = false
@@ -176,7 +176,7 @@ describe('POPs Component Concentration Validation', () => {
                 key: 'wasteItems.0.pops',
                 errorType: 'UnexpectedError',
                 message:
-                  'POP components must not be provided when POPs are not present'
+                  'POPs components must not be provided when POPs components are not present'
               }
             ]
           }
@@ -187,7 +187,7 @@ describe('POPs Component Concentration Validation', () => {
 
   describe('Concentration Warnings', () => {
     it(
-      'should accept waste with no concentration value but show warning if source of components is CARRIER_PROVIDED or OWN_TESTING or GUIDANCE or GUIDANCE' +
+      'should accept waste with no concentration value but show warning if source of components is CARRIER_PROVIDED or OWN_TESTING or GUIDANCE' +
         ' @allure.label.tag:DWT-624',
       async () => {
         wasteReceiptData.wasteItems[0].pops = {
@@ -216,7 +216,7 @@ describe('POPs Component Concentration Validation', () => {
                 key: 'wasteItems[0].pops.components',
                 errorType: 'NotProvided',
                 message:
-                  'POP concentration is recommended when source of components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
+                  'POPs concentration is recommended when source of components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
               }
             ]
           }

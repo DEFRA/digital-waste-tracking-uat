@@ -74,8 +74,7 @@ describe('POPs Indicator Validation', () => {
             {
               key: 'wasteItems.0.pops.containsPops',
               errorType: 'NotProvided',
-              message:
-                'Does the waste contain persistent organic pollutants (POPs)? is required'
+              message: '"wasteItems[0].pops.containsPops" is required'
             }
           ]
         }

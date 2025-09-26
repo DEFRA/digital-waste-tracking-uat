@@ -123,7 +123,7 @@ describe('POPs Component Names Validation', () => {
                 key: 'wasteItems.0.pops',
                 errorType: 'UnexpectedError',
                 message:
-                  'POP components must not be provided when POPs are not present'
+                  'POPs components must not be provided when POPs components are not present'
               }
             ]
           }

@@ -77,7 +77,7 @@ describe('Hazardous Component Concentration Validation', () => {
 
   describe('Invalid Concentration Values', () => {
     it(
-      'should reject waste with missing concentration value if source of components is NOT_PROVIDED' +
+      'should reject waste with components supplied if source of components is NOT_PROVIDED' +
         ' @allure.label.tag:DWT-354' +
         ' @allure.label.tag:DWT-624',
       async () => {
@@ -102,10 +102,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.hazardous.components',
+                key: 'wasteItems.0.hazardous',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].hazardous.components" must either be an empty array or not provided if sourceOfComponents is NOT_PROVIDED'
+                  'Hazardous components must not be provided when the source of components is NOT_PROVIDED'
               }
             ]
           }
@@ -141,7 +141,7 @@ describe('Hazardous Component Concentration Validation', () => {
                 key: 'wasteItems.0.hazardous.components.0.concentration',
                 errorType: 'UnexpectedError',
                 message:
-                  'Chemical or Biological concentration cannot be negative'
+                  '"wasteItems[0].hazardous.components[0].concentration" concentration cannot be negative'
               }
             ]
           }
@@ -177,7 +177,7 @@ describe('Hazardous Component Concentration Validation', () => {
                 key: 'wasteItems.0.hazardous.components.0.concentration',
                 errorType: 'UnexpectedError',
                 message:
-                  'Chemical or Biological concentration must be a valid number or "Not Supplied"'
+                  '"wasteItems[0].hazardous.components[0].concentration" must be a valid number'
               }
             ]
           }
@@ -210,10 +210,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.hazardous.components',
+                key: 'wasteItems.0.hazardous',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].hazardous.components" must either be an empty array or not provided if sourceOfComponents is NOT_PROVIDED'
+                  'Hazardous components must not be provided when Hazardous components are not present'
               }
             ]
           }
@@ -224,7 +224,7 @@ describe('Hazardous Component Concentration Validation', () => {
 
   describe('Concentration Warnings', () => {
     it(
-      'should accept waste with no concentration value but show warning if source of components is CARRIER_PROVIDED or OWN_TESTING or GUIDANCE or GUIDANCE' +
+      'should accept waste with no concentration value but show warning if source of components is CARRIER_PROVIDED or OWN_TESTING or GUIDANCE' +
         ' @allure.label.tag:DWT-624',
       async () => {
         wasteReceiptData.wasteItems[0].hazardous = {
@@ -250,10 +250,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             warnings: [
               {
-                key: 'wasteItems.hazardous.components',
+                key: 'wasteItems[0].hazardous.components',
                 errorType: 'NotProvided',
                 message:
-                  'Hazardous components must be provided with both name and concentration if source of components is one of: CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
+                  'Hazardous concentration is recommended when source of components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
               }
             ]
           }

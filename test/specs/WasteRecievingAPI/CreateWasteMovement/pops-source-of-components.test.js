@@ -86,7 +86,7 @@ describe('POPs Source Of Components Validation', () => {
                 key: 'wasteItems.0.pops.sourceOfComponents',
                 errorType: 'NotProvided',
                 message:
-                  'Source of POP components is required when POPs are present'
+                  '"wasteItems[0].pops.sourceOfComponents" is required when components are present'
               }
             ]
           }

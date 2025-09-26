@@ -114,10 +114,10 @@ describe('Hazardous Properties Indicator Validation', () => {
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.hazardous.components',
+              key: 'wasteItems.0.hazardous',
               errorType: 'UnexpectedError',
               message:
-                '"wasteItems[0].hazardous.components" must either be an empty array or not provided if sourceOfComponents is NOT_PROVIDED'
+                'Hazardous components must not be provided when Hazardous components are not present'
             }
           ]
         }
@@ -177,18 +177,6 @@ describe('Hazardous Properties Indicator Validation', () => {
               errorType: 'UnexpectedError',
               message:
                 '"wasteItems[0].hazardous.containsHazardous" must be a boolean'
-            },
-            {
-              key: 'wasteItems.0.hazardous.sourceOfComponents',
-              errorType: 'NotProvided',
-              message:
-                'Chemical or Biological component name and Source of Components must be specified when hazardous properties are present'
-            },
-            {
-              key: 'wasteItems.0.hazardous.components',
-              errorType: 'NotProvided',
-              message:
-                'Components is required when Source of Components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
             }
           ]
         }
