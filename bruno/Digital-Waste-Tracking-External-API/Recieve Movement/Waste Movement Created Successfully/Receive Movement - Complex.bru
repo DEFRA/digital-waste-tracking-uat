@@ -24,17 +24,36 @@ body:json {
         "ewcCodes": [
           "200121"
         ],
-        "wasteDescription": "Complex mixed waste from construction and demolition containing hazardous components and POPs",
+        "wasteDescription": "Industrial waste containing persistent organic pollutants (POPs) and hazardous heavy metals from decommissioned electrical equipment and contaminated soil",
         "physicalForm": "Mixed",
-        "numberOfContainers": 8,
+        "numberOfContainers": 15,
         "typeOfContainers": "SKI",
         "weight": {
           "metric": "Tonnes",
-          "amount": 3.2,
-          "isEstimate": false
+          "amount": 1.2,
+          "isEstimate": true
         },
         "pops": {
-          "containsPops": true
+          "containsPops": true,
+          "sourceOfComponents": "CARRIER_PROVIDED",
+          "components": [
+            {
+              "name": "Chlordane",
+              "concentration": 250
+            },
+            {
+              "name": "Toxaphene",
+              "concentration": 156.4
+            },
+            {
+              "name": "Dicofol",
+              "concentration": 0.8
+            },
+            {
+              "name": "DDT",
+              "concentration": 1.2
+            }
+          ]
         },
         "hazardous": {
           "containsHazardous": true,
@@ -47,15 +66,19 @@ body:json {
           "components": [
             {
               "name": "Mercury",
-              "concentration": 25
-            },
-            {
-              "name": "Lead",
               "concentration": 0.35
             },
             {
-              "name": "Cadmium",
-              "concentration": 150.5
+              "name": "Arsenic",
+              "concentration": 300
+            },
+            {
+              "name": "Chromium",
+              "concentration": 0.42
+            },
+            {
+              "name": "Lead",
+              "concentration": 0.89
             }
           ]
         },
@@ -84,7 +107,8 @@ body:json {
           "isEstimate": true
         },
         "pops": {
-          "containsPops": false
+          "containsPops": false,
+          "sourceOfComponents": "NOT_PROVIDED"
         },
         "hazardous": {
           "containsHazardous": true,

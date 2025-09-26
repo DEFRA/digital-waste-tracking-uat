@@ -3,11 +3,11 @@ import { generateBaseWasteReceiptData } from '../../../support/test-data-manager
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
-describe('Hazardous Component Concentration Validation', () => {
+describe('POPs Component Concentration Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
-    await addAllureLink('/DWT-354', 'DWT-354', 'jira')
+    await addAllureLink('/DWT-353', 'DWT-353', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
     // Authenticate and set the auth token
@@ -15,24 +15,24 @@ describe('Hazardous Component Concentration Validation', () => {
       globalThis.testConfig.cognitoClientId,
       globalThis.testConfig.cognitoClientSecret
     )
+
+    wasteReceiptData.wasteItems[0].pops = {
+      containsPops: true,
+      sourceOfComponents: 'CARRIER_PROVIDED',
+      components: [
+        {
+          name: 'Aldrin',
+          concentration: 5.5
+        }
+      ]
+    }
   })
 
   describe('Valid Concentration Values', () => {
     it(
-      'should accept waste with valid concentration value' +
-        ' @allure.label.tag:DWT-354',
+      'should accept waste with valid pops concentration value' +
+        ' @allure.label.tag:DWT-353',
       async () => {
-        wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: true,
-          sourceOfComponents: 'CARRIER_PROVIDED',
-          components: [
-            {
-              name: 'Mercury',
-              concentration: 5.5
-            }
-          ]
-        }
-
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -47,19 +47,10 @@ describe('Hazardous Component Concentration Validation', () => {
     )
 
     it(
-      'should accept waste with zero concentration value' +
-        ' @allure.label.tag:DWT-354',
+      'should accept waste with pops containing zero concentration value' +
+        ' @allure.label.tag:DWT-353',
       async () => {
-        wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: true,
-          sourceOfComponents: 'CARRIER_PROVIDED',
-          components: [
-            {
-              name: 'Mercury',
-              concentration: 0
-            }
-          ]
-        }
+        wasteReceiptData.wasteItems[0].pops.components[0].concentration = 0
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -77,16 +68,16 @@ describe('Hazardous Component Concentration Validation', () => {
 
   describe('Invalid Concentration Values', () => {
     it(
-      'should reject waste with components supplied if source of components is NOT_PROVIDED' +
-        ' @allure.label.tag:DWT-354' +
+      'should reject waste with POPS components supplied ifsource of components is NOT_PROVIDED' +
+        ' @allure.label.tag:DWT-353' +
         ' @allure.label.tag:DWT-624',
       async () => {
-        wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: true,
+        wasteReceiptData.wasteItems[0].pops = {
+          containsPops: true,
           sourceOfComponents: 'NOT_PROVIDED',
           components: [
             {
-              name: 'Mercury'
+              name: 'Aldrin'
               // Missing concentration field
             }
           ]
@@ -102,10 +93,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.hazardous',
+                key: 'wasteItems.0.pops',
                 errorType: 'UnexpectedError',
                 message:
-                  'Hazardous components must not be provided when the source of components is NOT_PROVIDED'
+                  'POPs components must not be provided when the source of components is NOT_PROVIDED'
               }
             ]
           }
@@ -114,19 +105,10 @@ describe('Hazardous Component Concentration Validation', () => {
     )
 
     it(
-      'should reject waste with negative concentration value' +
-        ' @allure.label.tag:DWT-354',
+      'should reject waste with pops containing negative concentration value' +
+        ' @allure.label.tag:DWT-353',
       async () => {
-        wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: true,
-          sourceOfComponents: 'CARRIER_PROVIDED',
-          components: [
-            {
-              name: 'Mercury',
-              concentration: -10
-            }
-          ]
-        }
+        wasteReceiptData.wasteItems[0].pops.components[0].concentration = -10
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -138,10 +120,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.hazardous.components.0.concentration',
+                key: 'wasteItems.0.pops.components.0.concentration',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].hazardous.components[0].concentration" concentration cannot be negative'
+                  '"wasteItems[0].pops.components[0].concentration" concentration cannot be negative'
               }
             ]
           }
@@ -150,19 +132,10 @@ describe('Hazardous Component Concentration Validation', () => {
     )
 
     it(
-      'should reject waste with non-numeric concentration value' +
-        ' @allure.label.tag:DWT-354',
+      'should reject waste with pops containing non-numeric concentration value' +
+        ' @allure.label.tag:DWT-353',
       async () => {
-        wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: true,
-          sourceOfComponents: 'CARRIER_PROVIDED',
-          components: [
-            {
-              name: 'Mercury',
-              concentration: 'invalid'
-            }
-          ]
-        }
+        wasteReceiptData.wasteItems[0].pops.components[0].concentration = 'abc'
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -174,10 +147,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.hazardous.components.0.concentration',
+                key: 'wasteItems.0.pops.components.0.concentration',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].hazardous.components[0].concentration" must be a valid number'
+                  '"wasteItems[0].pops.components[0].concentration" must be a valid number'
               }
             ]
           }
@@ -186,20 +159,10 @@ describe('Hazardous Component Concentration Validation', () => {
     )
 
     it(
-      'should reject waste with concentration provided for non-hazardous waste' +
-        ' @allure.label.tag:DWT-354',
+      'should reject waste with concentration provided for items that are not POPs waste' +
+        ' @allure.label.tag:DWT-353',
       async () => {
-        wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: false,
-          sourceOfComponents: 'NOT_PROVIDED',
-          components: [
-            {
-              name: 'Mercury',
-              concentration: 50
-            }
-          ]
-        }
-
+        wasteReceiptData.wasteItems[0].pops.containsPops = false
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -210,10 +173,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.hazardous',
+                key: 'wasteItems.0.pops',
                 errorType: 'UnexpectedError',
                 message:
-                  'Hazardous components must not be provided when Hazardous components are not present'
+                  'POPs components must not be provided when POPs components are not present'
               }
             ]
           }
@@ -227,12 +190,12 @@ describe('Hazardous Component Concentration Validation', () => {
       'should accept waste with no concentration value but show warning if source of components is CARRIER_PROVIDED or OWN_TESTING or GUIDANCE' +
         ' @allure.label.tag:DWT-624',
       async () => {
-        wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: true,
+        wasteReceiptData.wasteItems[0].pops = {
+          containsPops: true,
           sourceOfComponents: 'CARRIER_PROVIDED',
           components: [
             {
-              name: 'Mercury'
+              name: 'Aldrin'
               // concentration: ''
             }
           ]
@@ -250,10 +213,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             warnings: [
               {
-                key: 'wasteItems[0].hazardous.components',
+                key: 'wasteItems[0].pops.components',
                 errorType: 'NotProvided',
                 message:
-                  'Hazardous concentration is recommended when source of components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
+                  'POPs concentration is recommended when source of components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
               }
             ]
           }

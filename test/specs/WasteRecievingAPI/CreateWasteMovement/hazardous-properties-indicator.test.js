@@ -16,10 +16,10 @@ describe('Hazardous Properties Indicator Validation', () => {
   })
 
   describe('Valid Hazardous Indicator', () => {
-    it.skip('should accept waste receipt when hazardous indicator is set to true and no components are provided', async () => {
+    it('should accept a waste receipt with warning when hazardous indicator is set to true, source of components is NOT_PROVIDED and no components are provided', async () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        sourceOfComponents: 'CARRIER_PROVIDED'
+        sourceOfComponents: 'NOT_PROVIDED'
       }
 
       const response =
@@ -87,9 +87,10 @@ describe('Hazardous Properties Indicator Validation', () => {
     )
   })
 
-  it.skip(
-    'should reject waste receipt submission when hazardous indicator is set to false and components are provided' +
-      ' @allure.label.tag:DWT-351',
+  it(
+    'should reject waste receipt submission when hazardous indicator is set to false, source of components is NOT_PROVIDED and components are provided' +
+      ' @allure.label.tag:DWT-351' +
+      ' @allure.label.tag:DWT-624',
     async () => {
       await addAllureLink('/DWT-351', 'DWT-351', 'jira')
       wasteReceiptData.wasteItems[0].hazardous = {
@@ -116,7 +117,7 @@ describe('Hazardous Properties Indicator Validation', () => {
               key: 'wasteItems.0.hazardous',
               errorType: 'UnexpectedError',
               message:
-                'Chemical or Biological components cannot be provided when no hazardous properties are indicated'
+                'Hazardous components must not be provided when Hazardous components are not present'
             }
           ]
         }
@@ -157,7 +158,7 @@ describe('Hazardous Properties Indicator Validation', () => {
       })
     })
 
-    it.skip('should reject waste receipt when hazardous indicator is invalid', async () => {
+    it('should reject waste receipt when hazardous indicator is invalid', async () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: 'invalid'
       }

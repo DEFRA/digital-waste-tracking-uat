@@ -18,7 +18,8 @@ describe('POPs Indicator Validation', () => {
   describe('Valid POPs Indicators', () => {
     it('should accept waste containing POPs', async () => {
       wasteReceiptData.wasteItems[0].pops = {
-        containsPops: true
+        containsPops: true,
+        sourceOfComponents: 'NOT_PROVIDED'
       }
 
       const response =
@@ -34,7 +35,9 @@ describe('POPs Indicator Validation', () => {
     })
 
     it(
-      'should accept waste not containing POPs' + ' @allure.label.tag:DWT-346',
+      'should accept waste not containing POPs' +
+        ' @allure.label.tag:DWT-346' +
+        ' @allure.label.tag:DWT-353',
       async () => {
         wasteReceiptData.wasteItems[0].pops = {
           containsPops: false
@@ -71,8 +74,7 @@ describe('POPs Indicator Validation', () => {
             {
               key: 'wasteItems.0.pops.containsPops',
               errorType: 'NotProvided',
-              message:
-                'Does the waste contain persistent organic pollutants (POPs)? is required'
+              message: '"wasteItems[0].pops.containsPops" is required'
             }
           ]
         }
