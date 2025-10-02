@@ -18,7 +18,7 @@ describe('Carrier Contact Details Validation', () => {
       emailAddress: `test${Date.now()}@carrier.com`,
       phoneNumber: '01234567890',
       meansOfTransport: 'Road',
-      registrationNumber: 'REG123456',
+      registrationNumber: 'CBDL999999',
       vehicleRegistration: 'AB12 CDE'
     }
 
@@ -37,7 +37,7 @@ describe('Carrier Contact Details Validation', () => {
         organisationName: 'Test Carrier Ltd',
         meansOfTransport: 'Road',
         vehicleRegistration: 'AB12 CDE',
-        registrationNumber: 'REG123456'
+        registrationNumber: 'CBDL999999'
       }
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(

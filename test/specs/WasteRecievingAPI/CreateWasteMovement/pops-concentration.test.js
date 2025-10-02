@@ -123,7 +123,7 @@ describe('POPs Component Concentration Validation', () => {
                 key: 'wasteItems.0.pops.components.0.concentration',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].pops.components[0].concentration" concentration cannot be negative'
+                  '"wasteItems[0].pops.components[0].concentration" must be a positive number'
               }
             ]
           }
@@ -150,7 +150,7 @@ describe('POPs Component Concentration Validation', () => {
                 key: 'wasteItems.0.pops.components.0.concentration',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].pops.components[0].concentration" must be a valid number'
+                  '"wasteItems[0].pops.components[0].concentration" must be a number'
               }
             ]
           }

@@ -22,7 +22,7 @@ describe('Carrier Registration Number Validation', () => {
       'should accept waste movement with valid carrier registration number' +
         ' @allure.label.tag:DWT-326',
       async () => {
-        wasteReceiptData.carrier.registrationNumber = 'REG123456'
+        wasteReceiptData.carrier.registrationNumber = 'CBDL999999'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -45,13 +45,12 @@ describe('Carrier Registration Number Validation', () => {
           )
         expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
-          validation: {
-            errors: [
+          "validation": {
+            "errors": [
               {
-                key: 'carrier',
-                errorType: 'UnexpectedError',
-                message:
-                  'Either carrier registration number or reason for no registration number is required'
+                "key": "carrier.reasonForNoRegistrationNumber",
+                "errorType": "NotProvided",
+                "message": '"carrier.reasonForNoRegistrationNumber" is required'
               }
             ]
           }
@@ -70,13 +69,12 @@ describe('Carrier Registration Number Validation', () => {
           )
         expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
-          validation: {
-            errors: [
+          "validation": {
+            "errors": [
               {
-                key: 'carrier',
-                errorType: 'UnexpectedError',
-                message:
-                  'Either carrier registration number or reason for no registration number is required'
+                "key": "carrier.reasonForNoRegistrationNumber",
+                "errorType": "NotProvided",
+                "message": '"carrier.reasonForNoRegistrationNumber" is required'
               }
             ]
           }
@@ -95,13 +93,12 @@ describe('Carrier Registration Number Validation', () => {
           )
         expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
-          validation: {
-            errors: [
+          "validation": {
+            "errors": [
               {
-                key: 'carrier',
-                errorType: 'UnexpectedError',
-                message:
-                  'Either carrier registration number or reason for no registration number is required'
+                "key": "carrier.registrationNumber",
+                "errorType": "NotProvided",
+                "message": '"carrier.registrationNumber" is required'
               }
             ]
           }

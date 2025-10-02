@@ -72,7 +72,7 @@ describe('Carrier Means of transport Validation', () => {
               key: 'carrier.vehicleRegistration',
               errorType: 'NotProvided',
               message:
-                'If carrier.meansOfTransport is "Road" then carrier.vehicleRegistration is required.'
+                'If carrier.meansOfTransport is "Road" then carrier.vehicleRegistration is required'
             }
           ]
         }
@@ -100,7 +100,7 @@ describe('Carrier Means of transport Validation', () => {
                 key: 'carrier.vehicleRegistration',
                 errorType: 'UnexpectedError',
                 message:
-                  'If carrier.meansOfTransport is not "Road" then carrier.vehicleRegistration is not applicable.'
+                  'If carrier.meansOfTransport is not "Road" then carrier.vehicleRegistration is not applicable'
               }
             ]
           }
