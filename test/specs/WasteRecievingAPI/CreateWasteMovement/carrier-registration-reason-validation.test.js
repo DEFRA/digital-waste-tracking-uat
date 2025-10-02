@@ -48,12 +48,13 @@ describe('Carrier Registration Reason Validation', () => {
           )
         expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
-          "validation": {
-            "errors": [
+          validation: {
+            errors: [
               {
-                "key": "carrier.reasonForNoRegistrationNumber",
-                "errorType": "UnexpectedError",
-                "message": "Either carrier.registrationNumber or carrier.reasonForNoRegistrationNumber is required"
+                key: 'carrier.reasonForNoRegistrationNumber',
+                errorType: 'UnexpectedError',
+                message:
+                  'Either carrier.registrationNumber or carrier.reasonForNoRegistrationNumber is required'
               }
             ]
           }
@@ -73,12 +74,13 @@ describe('Carrier Registration Reason Validation', () => {
           )
         expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
-          "validation": {
-            "errors": [
+          validation: {
+            errors: [
               {
-                "key": "carrier.reasonForNoRegistrationNumber",
-                "errorType": "UnexpectedError",
-                "message": "Either carrier.registrationNumber or carrier.reasonForNoRegistrationNumber is required"
+                key: 'carrier.reasonForNoRegistrationNumber',
+                errorType: 'UnexpectedError',
+                message:
+                  'Either carrier.registrationNumber or carrier.reasonForNoRegistrationNumber is required'
               }
             ]
           }

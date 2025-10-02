@@ -45,12 +45,12 @@ describe('Carrier Registration Number Validation', () => {
           )
         expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
-          "validation": {
-            "errors": [
+          validation: {
+            errors: [
               {
-                "key": "carrier.reasonForNoRegistrationNumber",
-                "errorType": "NotProvided",
-                "message": '"carrier.reasonForNoRegistrationNumber" is required'
+                key: 'carrier.reasonForNoRegistrationNumber',
+                errorType: 'NotProvided',
+                message: '"carrier.reasonForNoRegistrationNumber" is required'
               }
             ]
           }
@@ -69,12 +69,12 @@ describe('Carrier Registration Number Validation', () => {
           )
         expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
-          "validation": {
-            "errors": [
+          validation: {
+            errors: [
               {
-                "key": "carrier.reasonForNoRegistrationNumber",
-                "errorType": "NotProvided",
-                "message": '"carrier.reasonForNoRegistrationNumber" is required'
+                key: 'carrier.reasonForNoRegistrationNumber',
+                errorType: 'NotProvided',
+                message: '"carrier.reasonForNoRegistrationNumber" is required'
               }
             ]
           }
@@ -93,12 +93,12 @@ describe('Carrier Registration Number Validation', () => {
           )
         expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
-          "validation": {
-            "errors": [
+          validation: {
+            errors: [
               {
-                "key": "carrier.registrationNumber",
-                "errorType": "NotProvided",
-                "message": '"carrier.registrationNumber" is required'
+                key: 'carrier.registrationNumber',
+                errorType: 'NotProvided',
+                message: '"carrier.registrationNumber" is required'
               }
             ]
           }
