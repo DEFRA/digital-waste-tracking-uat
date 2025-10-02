@@ -45,11 +45,14 @@ describe('POPs Component Concentration Validation', () => {
         })
       }
     )
+  })
 
+  describe('Invalid Concentration Values', () => {
     it(
-      'should accept waste with pops containing zero concentration value' +
-        ' @allure.label.tag:DWT-353',
+      'should reject waste with pops containing zero concentration value' +
+        ' @allure.label.tag:DWT-630',
       async () => {
+        await addAllureLink('/DWT-630', 'DWT-630', 'jira')
         wasteReceiptData.wasteItems[0].pops.components[0].concentration = 0
 
         const response =
@@ -57,16 +60,22 @@ describe('POPs Component Concentration Validation', () => {
             wasteReceiptData
           )
 
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
-          statusCode: 200,
-          globalMovementId: expect.any(String)
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.pops.components.0.concentration',
+                errorType: 'UnexpectedError',
+                message:
+                  '"wasteItems[0].pops.components[0].concentration" must be a positive number'
+              }
+            ]
+          }
         })
       }
     )
-  })
 
-  describe('Invalid Concentration Values', () => {
     it(
       'should reject waste with POPS components supplied ifsource of components is NOT_PROVIDED' +
         ' @allure.label.tag:DWT-353' +

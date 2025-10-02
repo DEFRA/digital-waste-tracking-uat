@@ -45,11 +45,14 @@ describe('Hazardous Component Concentration Validation', () => {
         })
       }
     )
+  })
 
+  describe('Invalid Concentration Values', () => {
     it(
-      'should accept waste with zero concentration value' +
-        ' @allure.label.tag:DWT-354',
+      'should reject waste with zero concentration value' +
+        ' @allure.label.tag:DWT-630',
       async () => {
+        await addAllureLink('/DWT-630', 'DWT-630', 'jira')
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,
           sourceOfComponents: 'CARRIER_PROVIDED',
@@ -66,16 +69,22 @@ describe('Hazardous Component Concentration Validation', () => {
             wasteReceiptData
           )
 
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
-          statusCode: 200,
-          globalMovementId: expect.any(String)
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.hazardous.components.0.concentration',
+                errorType: 'UnexpectedError',
+                message:
+                  '"wasteItems[0].hazardous.components[0].concentration" must be a positive number'
+              }
+            ]
+          }
         })
       }
     )
-  })
 
-  describe('Invalid Concentration Values', () => {
     it(
       'should reject waste with components supplied if source of components is NOT_PROVIDED' +
         ' @allure.label.tag:DWT-354' +
