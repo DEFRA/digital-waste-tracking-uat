@@ -37,7 +37,7 @@ export const generateBaseWasteReceiptData = () => ({
     }
   ],
   carrier: {
-    registrationNumber: 'REG123456',
+    registrationNumber: 'CBDL999999',
     organisationName: 'Test Carrier Ltd',
     // TODO: Remove these fields from the base data as they are not required by according to the spec https://defra.github.io/waste-tracking-service/apiSpecifications/index.html#/default/post%20movements%20receive
     meansOfTransport: 'Road',

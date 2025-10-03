@@ -62,8 +62,7 @@ describe('Waste Weight value Validation', () => {
             {
               key: 'wasteItems.0.weight.amount',
               errorType: 'UnexpectedError',
-              message:
-                '"wasteItems[0].weight.amount" must be greater than or equal to 0'
+              message: '"wasteItems[0].weight.amount" must be a positive number'
             }
           ]
         }
@@ -120,7 +119,7 @@ describe('Waste Weight value Validation', () => {
                 key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.amount',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].disposalOrRecoveryCodes[0].weight.amount" must be greater than or equal to 0'
+                  '"wasteItems[0].disposalOrRecoveryCodes[0].weight.amount" must be a positive number'
               }
             ]
           }

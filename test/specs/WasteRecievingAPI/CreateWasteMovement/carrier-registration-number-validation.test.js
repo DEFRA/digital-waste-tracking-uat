@@ -8,6 +8,7 @@ describe('Carrier Registration Number Validation', () => {
 
   beforeEach(async () => {
     await addAllureLink('/DWT-326', 'DWT-326', 'jira')
+    await addAllureLink('/DWT-576', 'DWT-576', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
     // Authenticate and set the auth token
@@ -19,10 +20,36 @@ describe('Carrier Registration Number Validation', () => {
 
   describe('Valid Carrier Registration Numbers', () => {
     it(
-      'should accept waste movement with valid carrier registration number' +
-        ' @allure.label.tag:DWT-326',
+      'should accept waste movement with valid carrier registration number for England and Wales' +
+        ' @allure.label.tag:DWT-326 @allure.label.tag:DWT-576',
       async () => {
-        wasteReceiptData.carrier.registrationNumber = 'REG123456'
+        wasteReceiptData.carrier.registrationNumber = 'CBDL999999'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toHaveProperty('globalMovementId')
+      }
+    )
+    it(
+      'should accept waste movement with valid carrier registration number for Scotland' +
+        ' @allure.label.tag:DWT-326 @allure.label.tag:DWT-576',
+      async () => {
+        wasteReceiptData.carrier.registrationNumber = 'wcr/r/1234567'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toHaveProperty('globalMovementId')
+      }
+    )
+    it(
+      'should accept waste movement with valid carrier registration number for Northern Ireland' +
+        ' @allure.label.tag:DWT-326 @allure.label.tag:DWT-576',
+      async () => {
+        wasteReceiptData.carrier.registrationNumber = 'ROC UT 99999'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -48,10 +75,9 @@ describe('Carrier Registration Number Validation', () => {
           validation: {
             errors: [
               {
-                key: 'carrier',
-                errorType: 'UnexpectedError',
-                message:
-                  'Either carrier registration number or reason for no registration number is required'
+                key: 'carrier.reasonForNoRegistrationNumber',
+                errorType: 'NotProvided',
+                message: '"carrier.reasonForNoRegistrationNumber" is required'
               }
             ]
           }
@@ -73,10 +99,9 @@ describe('Carrier Registration Number Validation', () => {
           validation: {
             errors: [
               {
-                key: 'carrier',
-                errorType: 'UnexpectedError',
-                message:
-                  'Either carrier registration number or reason for no registration number is required'
+                key: 'carrier.reasonForNoRegistrationNumber',
+                errorType: 'NotProvided',
+                message: '"carrier.reasonForNoRegistrationNumber" is required'
               }
             ]
           }
@@ -98,10 +123,34 @@ describe('Carrier Registration Number Validation', () => {
           validation: {
             errors: [
               {
-                key: 'carrier',
+                key: 'carrier.registrationNumber',
+                errorType: 'NotProvided',
+                message: '"carrier.registrationNumber" is required'
+              }
+            ]
+          }
+        })
+      }
+    )
+
+    it(
+      'should reject waste movement when registration number format is invalid' +
+        ' @allure.label.tag:DWT-576',
+      async () => {
+        wasteReceiptData.carrier.registrationNumber = 'CBDL99'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'carrier.registrationNumber',
                 errorType: 'UnexpectedError',
                 message:
-                  'Either carrier registration number or reason for no registration number is required'
+                  '"carrier.registrationNumber" must be in a valid England, SEPA, NRW or NI format'
               }
             ]
           }
