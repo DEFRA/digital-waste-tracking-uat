@@ -172,6 +172,7 @@ describe('Reason for No Consignment Code Validation', () => {
 
   describe('Reason is left blank when required', () => {
     it('should require reason when empty reason provided for hazardous EWC codes without consignment code @allure.label.tag:DWT-328', async () => {
+      await addAllureLink('/DWT-797', 'DWT-797', 'jira')
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
@@ -193,17 +194,15 @@ describe('Reason for No Consignment Code Validation', () => {
         )
 
       // OpenAPI spec says reason should be required, API correctly enforces this
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String),
         validation: {
-          warnings: [
+          errors: [
             {
-              key: 'receipt.reasonForNoConsignmentCode',
-              errorType: 'NotProvided',
+              key: 'reasonForNoConsignmentCode',
+              errorType: 'UnexpectedError',
               message:
-                'Reason for no Consignment Note Code is required when hazardous EWC codes are present'
+                '"reasonForNoConsignmentCode" is required when wasteItems[*].ewcCodes contains a hazardous code and hazardousWasteConsignmentCode is not provided'
             }
           ]
         }

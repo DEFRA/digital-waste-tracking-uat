@@ -25,6 +25,7 @@ describe('Hazardous Component Concentration Validation', () => {
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,
           sourceOfComponents: 'CARRIER_PROVIDED',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
               name: 'Mercury',
@@ -56,6 +57,7 @@ describe('Hazardous Component Concentration Validation', () => {
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,
           sourceOfComponents: 'CARRIER_PROVIDED',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
               name: 'Mercury',
@@ -93,6 +95,7 @@ describe('Hazardous Component Concentration Validation', () => {
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,
           sourceOfComponents: 'NOT_PROVIDED',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
               name: 'Mercury'
@@ -129,6 +132,7 @@ describe('Hazardous Component Concentration Validation', () => {
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,
           sourceOfComponents: 'CARRIER_PROVIDED',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
               name: 'Mercury',
@@ -165,6 +169,7 @@ describe('Hazardous Component Concentration Validation', () => {
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,
           sourceOfComponents: 'CARRIER_PROVIDED',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
               name: 'Mercury',
@@ -239,6 +244,7 @@ describe('Hazardous Component Concentration Validation', () => {
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,
           sourceOfComponents: 'CARRIER_PROVIDED',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
               name: 'Mercury'

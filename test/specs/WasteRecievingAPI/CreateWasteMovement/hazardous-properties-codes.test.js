@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
+import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
 describe('Hazardous Properties Codes (hazCodes) Validation', () => {
   let wasteReceiptData
@@ -99,7 +100,8 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
   })
 
   describe('Attempting to Submit Without Specifying Hazardous Properties Codes', () => {
-    it('should accept submission when hazCodes array is empty', async () => {
+    it('should reject submission when hazCodes array is empty', async () => {
+      await addAllureLink('/DWT-797', 'DWT-797', 'jira')
       wasteReceiptData.wasteItems[0].hazardous.hazCodes = []
 
       const response =
@@ -107,14 +109,22 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
           wasteReceiptData
         )
 
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        validation: {
+          errors: [
+            {
+              key: 'wasteItems.0.hazardous.hazCodes',
+              errorType: 'UnexpectedError',
+              message: '"HazardCodes" must contain at least 1 items'
+            }
+          ]
+        }
       })
     })
 
-    it('should accept submission when hazCodes field is missing', async () => {
+    it('should reject submission when hazCodes field is missing', async () => {
+      await addAllureLink('/DWT-797', 'DWT-797', 'jira')
       delete wasteReceiptData.wasteItems[0].hazardous.hazCodes
 
       const response =
@@ -122,10 +132,17 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
           wasteReceiptData
         )
 
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        validation: {
+          errors: [
+            {
+              key: 'wasteItems.0.hazardous.hazCodes',
+              errorType: 'NotProvided',
+              message: '"HazardCodes" is required'
+            }
+          ]
+        }
       })
     })
   })
