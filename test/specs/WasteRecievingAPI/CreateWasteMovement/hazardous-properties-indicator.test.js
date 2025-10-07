@@ -19,7 +19,8 @@ describe('Hazardous Properties Indicator Validation', () => {
     it('should accept a waste receipt with warning when hazardous indicator is set to true, source of components is NOT_PROVIDED and no components are provided', async () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
-        sourceOfComponents: 'NOT_PROVIDED'
+        sourceOfComponents: 'NOT_PROVIDED',
+        hazCodes: ['HP_6']
       }
 
       const response =
@@ -64,6 +65,7 @@ describe('Hazardous Properties Indicator Validation', () => {
         await addAllureLink('/DWT-351', 'DWT-351', 'jira')
         wasteReceiptData.wasteItems[0].hazardous = {
           containsHazardous: true,
+          hazCodes: ['HP_6'],
           sourceOfComponents: 'CARRIER_PROVIDED',
           components: [
             {

@@ -8,6 +8,7 @@ describe('Broker or Dealer Details Validation', () => {
 
   beforeEach(async () => {
     await addAllureLink('/DWT-343', 'DWT-343', 'jira')
+    await addAllureLink('/DWT-577', 'DWT-577', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
     wasteReceiptData.brokerOrDealer = {
       organisationName: 'Test Broker Ltd',
@@ -63,6 +64,19 @@ describe('Broker or Dealer Details Validation', () => {
     })
 
     describe('Valid Registration Numbers', () => {
+      it(
+        'should accept waste movement with valid broker or dealer registration number for England and Wales' +
+          ' @allure.label.tag:DWT-326 @allure.label.tag:DWT-576',
+        async () => {
+          wasteReceiptData.brokerOrDealer.registrationNumber = 'CBDL999999'
+          const response =
+            await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+              wasteReceiptData
+            )
+          expect(response.statusCode).toBe(200)
+          expect(response.json).toHaveProperty('globalMovementId')
+        }
+      )
       it('should accept waste movement with valid Scotland registration number @allure.label.tag:DWT-338', async () => {
         //  Note: Currently there is no validation on the registration number and any string is being allowed
         wasteReceiptData.brokerOrDealer.registrationNumber = 'WCR/R/1234567'
@@ -73,12 +87,25 @@ describe('Broker or Dealer Details Validation', () => {
         expect(response.statusCode).toBe(200)
         expect(response.json).toHaveProperty('globalMovementId')
       })
+      it(
+        'should accept waste movement with valid broker or dealer registration number for Northern Ireland' +
+          ' @allure.label.tag:DWT-326 @allure.label.tag:DWT-576',
+        async () => {
+          wasteReceiptData.brokerOrDealer.registrationNumber = 'ROC LT 9999'
+          const response =
+            await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+              wasteReceiptData
+            )
+          expect(response.statusCode).toBe(200)
+          expect(response.json).toHaveProperty('globalMovementId')
+        }
+      )
     })
   })
 
   describe('Invalid Broker or Dealer Details', () => {
     describe('Missing Organisation Name', () => {
-      it('should reject waste movement when organisation name is missing but other fields are provided @allure.label.tag:DWT-343', async () => {
+      it('should reject waste movement when organisation name is missing but other fields are provided @allure.label.tag:DWT-577', async () => {
         delete wasteReceiptData.brokerOrDealer.organisationName
 
         const response =
@@ -93,6 +120,29 @@ describe('Broker or Dealer Details Validation', () => {
                 key: 'brokerOrDealer.organisationName',
                 errorType: 'NotProvided',
                 message: '"brokerOrDealer.organisationName" is required'
+              }
+            ]
+          }
+        })
+      })
+    })
+
+    describe('Registration Number in incorrect format', () => {
+      it('should reject waste movement when registration number is in incorrect format for broker or dealer @allure.label.tag:DWT-577', async () => {
+        wasteReceiptData.brokerOrDealer.registrationNumber = 'RO C LT 999'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'brokerOrDealer.registrationNumber',
+                errorType: 'UnexpectedError',
+                message:
+                  '"brokerOrDealer.registrationNumber" must be in a valid England, SEPA, NRW or NI format'
               }
             ]
           }
