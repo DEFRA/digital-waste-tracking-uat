@@ -101,7 +101,7 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
 
   describe('Attempting to Submit Without Specifying Hazardous Properties Codes', () => {
     it('should reject submission when hazCodes array is empty', async () => {
-      await addAllureLink('/DWT-797', 'DWT-797', 'jira')
+      await addAllureLink('/DWT-631', 'DWT-631', 'jira')
       wasteReceiptData.wasteItems[0].hazardous.hazCodes = []
 
       const response =
@@ -124,7 +124,7 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
     })
 
     it('should reject submission when hazCodes field is missing', async () => {
-      await addAllureLink('/DWT-797', 'DWT-797', 'jira')
+      await addAllureLink('/DWT-631', 'DWT-631', 'jira')
       delete wasteReceiptData.wasteItems[0].hazardous.hazCodes
 
       const response =
@@ -215,5 +215,61 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
         }
       })
     })
+  })
+
+  describe('Specifying Hazardous Property Codes when waste is non hazardous', () => {
+    it(
+      'should reject submission when hazCodes is provided for non hazardous waste' +
+        ' @allure.label.tag:DWT-631',
+      async () => {
+        await addAllureLink('/DWT-631', 'DWT-631', 'jira')
+        wasteReceiptData.wasteItems[0].hazardous.containsHazardous = false
+        wasteReceiptData.wasteItems[0].hazardous.hazCodes = ['HP_15']
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.hazardous',
+                errorType: 'UnexpectedError',
+                message:
+                  'Hazardous components must not be provided when Hazardous components are not present'
+              }
+            ]
+          }
+        })
+      }
+    )
+  })
+
+  describe('Hazardous Property Codes are not required when waste is non hazardous', () => {
+    it(
+      'should accept submission when hazCodes is provided for non hazardous waste' +
+        ' @allure.label.tag:DWT-631',
+      async () => {
+        await addAllureLink('/DWT-631', 'DWT-631', 'jira')
+        wasteReceiptData.wasteItems[0].hazardous = {
+          containsHazardous: false,
+          sourceOfComponents: 'NOT_PROVIDED'
+        }
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          statusCode: 200,
+          globalMovementId: expect.any(String)
+        })
+      }
+    )
   })
 })
