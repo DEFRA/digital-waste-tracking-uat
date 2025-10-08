@@ -118,5 +118,30 @@ describe('Site Waste Authorisation Validation', () => {
         })
       }
     )
+    it(
+      'should reject waste movement when authorisation number is not in the correct format' +
+        ' @allure.label.tag:DWT-578',
+      async () => {
+        await addAllureLink('/DWT-578', 'DWT-578', 'jira')
+        wasteReceiptData.receiver.authorisationNumbers = ['WEF1234567']
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'receiver.authorisationNumbers.0',
+                errorType: 'UnexpectedError',
+                message:
+                  'Site authorisation number must be in a valid UK format'
+              }
+            ]
+          }
+        })
+      }
+    )
   })
 })
