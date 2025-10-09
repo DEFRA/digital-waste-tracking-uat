@@ -45,6 +45,21 @@ export class WasteMovementExternalAPI extends BaseAPI {
   /**
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
+  async retrieveReferenceData(referenceData) {
+    const { statusCode, headers, json } = await this.get(
+      `/reference-data/${referenceData}`
+    )
+
+    return {
+      statusCode,
+      headers,
+      json
+    }
+  }
+
+  /**
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
   async getHealth() {
     const { statusCode, headers, json } = await this.get('/health')
 
