@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
-describe('Broker or Dealer Details Validation', () => {
+describe('Retrieve EWC Codes', () => {
   beforeEach(async () => {
     await addAllureLink('/DWT-717', 'DWT-717', 'jira')
     // Authenticate and set the auth token
