@@ -151,10 +151,10 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
         validation: {
           warnings: [
             {
-              key: 'wasteItems[0].disposalOrRecoveryCodes',
+              key: 'wasteItems.0.disposalOrRecoveryCodes',
               errorType: 'NotProvided',
               message:
-                'Disposal or Recovery codes are required for proper waste tracking and compliance'
+                'wasteItems[0].disposalOrRecoveryCodes is required for proper waste tracking and compliance'
             }
           ]
         }

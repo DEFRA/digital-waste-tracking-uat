@@ -162,7 +162,7 @@ describe('Reason for No Consignment Code Validation', () => {
               key: 'receipt.reasonForNoConsignmentCode',
               errorType: 'NotProvided',
               message:
-                'Reason for no Consignment Note Code is required when hazardous EWC codes are present'
+                'receipt.reasonForNoConsignmentCode is required when hazardous EWC codes are present'
             }
           ]
         }
