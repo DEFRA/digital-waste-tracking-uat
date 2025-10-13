@@ -38,10 +38,6 @@ describe('Retrieve Hazardous Property Codes', () => {
             'hazardous-property-codes'
           )
         expect(response.statusCode).toBe(200)
-        expect(response.json.length).toBe(16)
-        expect(response.json).toContainEqual({
-          code: 'HP_1'
-        })
         const codes = response.json.map((item) => item.code)
         expect(codes).toEqual(expectedCodes)
       })
