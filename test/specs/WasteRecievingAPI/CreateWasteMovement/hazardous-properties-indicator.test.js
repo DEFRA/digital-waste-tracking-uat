@@ -152,8 +152,7 @@ describe('Hazardous Properties Indicator Validation', () => {
             {
               key: 'wasteItems.0.hazardous.containsHazardous',
               errorType: 'NotProvided',
-              message:
-                'Hazardous waste is any waste that is potentially harmful to human health or the environment.'
+              message: '"wasteItems[0].hazardous.containsHazardous" is required'
             }
           ]
         }

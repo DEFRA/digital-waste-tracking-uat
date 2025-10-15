@@ -136,7 +136,7 @@ describe('Site Waste Authorisation Validation', () => {
                 key: 'receiver.authorisationNumbers.0',
                 errorType: 'UnexpectedError',
                 message:
-                  'Site authorisation number must be in a valid UK format'
+                  '"receiver.authorisationNumbers[0]" must be in a valid UK format'
               }
             ]
           }

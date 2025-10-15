@@ -150,7 +150,8 @@ describe('POPs Component Names Validation', () => {
               {
                 key: 'wasteItems.0.pops.components.0.name',
                 errorType: 'UnexpectedError',
-                message: '"wasteItems[0].pops.components[0].name" is not valid'
+                message:
+                  '"wasteItems[0].pops.components[0].name" contains an invalid value'
               }
             ]
           }
@@ -178,7 +179,8 @@ describe('POPs Component Names Validation', () => {
               {
                 key: 'wasteItems.0.pops.components.0.name',
                 errorType: 'NotProvided',
-                message: '"wasteItems[0].pops.components[0].name" is required'
+                message:
+                  '"wasteItems[0].pops.components[0].name" is required when POPs components are present'
               }
             ]
           }
@@ -208,7 +210,8 @@ describe('POPs Component Names Validation', () => {
               {
                 key: 'wasteItems.0.pops.components.1.name',
                 errorType: 'UnexpectedError',
-                message: '"wasteItems[0].pops.components[1].name" is not valid'
+                message:
+                  '"wasteItems[0].pops.components[1].name" contains an invalid value'
               }
             ]
           }

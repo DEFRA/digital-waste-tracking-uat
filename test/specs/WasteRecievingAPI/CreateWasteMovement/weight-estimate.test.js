@@ -60,8 +60,7 @@ describe('Waste Weight Estimate Validation', () => {
               {
                 key: 'wasteItems.0.weight.isEstimate',
                 errorType: 'NotProvided',
-                message:
-                  'isEstimate is required. Please indicate whether the quantity is an estimate (true) or actual measurement (false)'
+                message: '"wasteItems[0].weight.isEstimate" is required'
               }
             ]
           }
@@ -87,8 +86,7 @@ describe('Waste Weight Estimate Validation', () => {
               {
                 key: 'wasteItems.0.weight.isEstimate',
                 errorType: 'UnexpectedError',
-                message:
-                  'isEstimate must be either true or false. Please indicate whether the quantity is an estimate (true) or actual measurement (false)'
+                message: '"wasteItems[0].weight.isEstimate" must be a boolean'
               }
             ]
           }
@@ -144,7 +142,7 @@ describe('Waste Weight Estimate Validation', () => {
                   key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.isEstimate',
                   errorType: 'NotProvided',
                   message:
-                    'isEstimate is required. Please indicate whether the quantity is an estimate (true) or actual measurement (false)'
+                    '"wasteItems[0].disposalOrRecoveryCodes[0].weight.isEstimate" is required'
                 }
               ]
             }
@@ -172,7 +170,7 @@ describe('Waste Weight Estimate Validation', () => {
                   key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.isEstimate',
                   errorType: 'UnexpectedError',
                   message:
-                    'isEstimate must be either true or false. Please indicate whether the quantity is an estimate (true) or actual measurement (false)'
+                    '"wasteItems[0].disposalOrRecoveryCodes[0].weight.isEstimate" must be a boolean'
                 }
               ]
             }

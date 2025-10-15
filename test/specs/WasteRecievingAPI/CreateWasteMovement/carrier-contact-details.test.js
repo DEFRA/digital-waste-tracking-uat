@@ -96,40 +96,70 @@ describe('Carrier Contact Details Validation', () => {
     }
   )
 
-  describe('Validate the carrier postcode', () => {
-    it.each([
-      { postcode: 'D08 AC98', isValid: true, expected: 'created' },
-      { postcode: 'BS1 4XE', isValid: true, expected: 'created' },
-      { postcode: 'xxx', isValid: false, expected: 'not created' },
-      { postcode: 'BS14XE', isValid: false, expected: 'not created' } // postcode without spaces is not being allowed
-    ])(
-      'should allow waste movement to be $expected when the postcode is "$postcode" @allure.label.tag:DWT-342',
-      async ({ postcode, isValid, expected }) => {
-        wasteReceiptData.carrier.address.postcode = postcode
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-            wasteReceiptData
-          )
+  describe('Valid Carrier Postcodes', () => {
+    it('should allow waste movement to be created when the postcode is "D08 AC98" @allure.label.tag:DWT-342', async () => {
+      wasteReceiptData.carrier.address.postcode = 'D08 AC98'
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+      expect(response.statusCode).toBe(200)
+      expect(response.json).toHaveProperty('globalMovementId')
+    })
 
-        if (isValid) {
-          expect(response.statusCode).toBe(200)
-          expect(response.json).toHaveProperty('globalMovementId')
-        } else {
-          expect(response.statusCode).toBe(400)
-          expect(response.json).toEqual({
-            validation: {
-              errors: [
-                {
-                  key: 'carrier.address.postcode',
-                  errorType: 'UnexpectedError',
-                  message: 'Postcode must be in valid UK or Ireland format'
-                }
-              ]
+    it('should allow waste movement to be created when the postcode is "BS1 4XE" @allure.label.tag:DWT-342', async () => {
+      wasteReceiptData.carrier.address.postcode = 'BS1 4XE'
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+      expect(response.statusCode).toBe(200)
+      expect(response.json).toHaveProperty('globalMovementId')
+    })
+  })
+
+  describe('Invalid Carrier Postcodes', () => {
+    it('should not allow waste movement to be created when the postcode is "xxx" @allure.label.tag:DWT-342', async () => {
+      wasteReceiptData.carrier.address.postcode = 'xxx'
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'carrier.address.postcode',
+              errorType: 'UnexpectedError',
+              message:
+                '"carrier.address.postcode" must be in valid UK or Ireland format'
             }
-          })
+          ]
         }
-      }
-    )
+      })
+    })
+
+    it('should not allow waste movement to be created when the postcode is "BS14XE" (without spaces) @allure.label.tag:DWT-342', async () => {
+      wasteReceiptData.carrier.address.postcode = 'BS14XE'
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'carrier.address.postcode',
+              errorType: 'UnexpectedError',
+              message:
+                '"carrier.address.postcode" must be in valid UK or Ireland format'
+            }
+          ]
+        }
+      })
+    })
   })
 
   it(
