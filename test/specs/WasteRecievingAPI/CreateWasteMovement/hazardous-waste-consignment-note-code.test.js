@@ -238,7 +238,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
               key: 'hazardousWasteConsignmentCode',
               errorType: 'UnexpectedError',
               message:
-                'consignment note code must be in one of the valid formats: EA/NRW (e.g. CJTILE/A0001), SEPA (SA|SB|SC followed by 7 digits), or NIEA (DA|DB|DC followed by 7 digits)'
+                '"hazardousWasteConsignmentCode" must be in one of the valid formats: EA/NRW (e.g. CJTILE/A0001), SEPA (SA|SB|SC followed by 7 digits), or NIEA (DA|DB|DC followed by 7 digits)'
             }
           ]
         }
@@ -273,7 +273,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
               key: 'hazardousWasteConsignmentCode',
               errorType: 'UnexpectedError',
               message:
-                'consignment note code must be in one of the valid formats: EA/NRW (e.g. CJTILE/A0001), SEPA (SA|SB|SC followed by 7 digits), or NIEA (DA|DB|DC followed by 7 digits)'
+                '"hazardousWasteConsignmentCode" must be in one of the valid formats: EA/NRW (e.g. CJTILE/A0001), SEPA (SA|SB|SC followed by 7 digits), or NIEA (DA|DB|DC followed by 7 digits)'
             }
           ]
         }
@@ -308,7 +308,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
               key: 'hazardousWasteConsignmentCode',
               errorType: 'UnexpectedError',
               message:
-                'consignment note code must be in one of the valid formats: EA/NRW (e.g. CJTILE/A0001), SEPA (SA|SB|SC followed by 7 digits), or NIEA (DA|DB|DC followed by 7 digits)'
+                '"hazardousWasteConsignmentCode" must be in one of the valid formats: EA/NRW (e.g. CJTILE/A0001), SEPA (SA|SB|SC followed by 7 digits), or NIEA (DA|DB|DC followed by 7 digits)'
             }
           ]
         }
@@ -343,7 +343,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
               key: 'hazardousWasteConsignmentCode',
               errorType: 'UnexpectedError',
               message:
-                'consignment note code must be in one of the valid formats: EA/NRW (e.g. CJTILE/A0001), SEPA (SA|SB|SC followed by 7 digits), or NIEA (DA|DB|DC followed by 7 digits)'
+                '"hazardousWasteConsignmentCode" must be in one of the valid formats: EA/NRW (e.g. CJTILE/A0001), SEPA (SA|SB|SC followed by 7 digits), or NIEA (DA|DB|DC followed by 7 digits)'
             }
           ]
         }

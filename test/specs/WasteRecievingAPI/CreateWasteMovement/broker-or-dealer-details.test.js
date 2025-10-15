@@ -187,7 +187,8 @@ describe('Broker or Dealer Details Validation', () => {
               {
                 key: 'brokerOrDealer.address.postcode',
                 errorType: 'UnexpectedError',
-                message: 'Postcode must be in valid UK or Ireland format'
+                message:
+                  '"brokerOrDealer.address.postcode" must be in valid UK or Ireland format'
               }
             ]
           }
@@ -208,7 +209,8 @@ describe('Broker or Dealer Details Validation', () => {
               {
                 key: 'brokerOrDealer.address.postcode',
                 errorType: 'UnexpectedError',
-                message: 'Postcode must be in valid UK or Ireland format'
+                message:
+                  '"brokerOrDealer.address.postcode" must be in valid UK or Ireland format'
               }
             ]
           }
