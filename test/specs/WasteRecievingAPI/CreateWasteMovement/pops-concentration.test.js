@@ -222,10 +222,10 @@ describe('POPs Component Concentration Validation', () => {
           validation: {
             warnings: [
               {
-                key: 'wasteItems[0].pops.components',
+                key: 'wasteItems.0.pops.components.0.concentration',
                 errorType: 'NotProvided',
                 message:
-                  'POPs concentration is recommended when source of components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
+                  'wasteItems[0].pops.components[0].concentration is recommended when source of components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
               }
             ]
           }

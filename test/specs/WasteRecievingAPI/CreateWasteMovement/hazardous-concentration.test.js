@@ -265,10 +265,10 @@ describe('Hazardous Component Concentration Validation', () => {
           validation: {
             warnings: [
               {
-                key: 'wasteItems[0].hazardous.components',
+                key: 'wasteItems.0.hazardous.components.0.concentration',
                 errorType: 'NotProvided',
                 message:
-                  'Hazardous concentration is recommended when source of components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
+                  'wasteItems[0].hazardous.components[0].concentration is recommended when source of components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
               }
             ]
           }
