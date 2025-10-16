@@ -16,7 +16,7 @@ describe('Hazardous Properties Indicator Validation', () => {
   })
 
   describe('Valid Hazardous Indicator', () => {
-    it('should accept a waste receipt with warning when hazardous indicator is set to true, source of components is NOT_PROVIDED and no components are provided', async () => {
+    it('should accept a waste receipt when hazardous indicator is set to true, source of components is NOT_PROVIDED and no components are provided', async () => {
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
         sourceOfComponents: 'NOT_PROVIDED',
