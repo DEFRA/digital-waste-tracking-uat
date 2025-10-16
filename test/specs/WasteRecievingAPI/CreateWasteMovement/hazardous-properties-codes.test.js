@@ -117,7 +117,7 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
               key: 'wasteItems.0.hazardous.hazCodes',
               errorType: 'UnexpectedError',
               message:
-                '"wasteItems.0.hazardous.hazCodes" must contain at least 1 items'
+                '"wasteItems[0].hazardous.hazCodes" must contain at least 1 items'
             }
           ]
         }
@@ -140,7 +140,7 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
             {
               key: 'wasteItems.0.hazardous.hazCodes',
               errorType: 'NotProvided',
-              message: '"wasteItems.0.hazardous.hazCodes" is required'
+              message: '"wasteItems[0].hazardous.hazCodes" is required'
             }
           ]
         }
