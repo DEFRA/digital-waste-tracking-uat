@@ -1,9 +1,12 @@
+/**
+ * @allure.label.tag:DWT-547
+ */
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
-describe('Receiver details validation', () => {
+describe('Receiver Details Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
@@ -17,16 +20,15 @@ describe('Receiver details validation', () => {
     )
   })
 
-  it(
-    'should not allow waste movement to be created when receiver details are missing' +
-      ' @allure.label.tag:DWT-547',
-    async () => {
+  describe('Missing Receiver Details', () => {
+    it('should reject waste movement when receiver details are missing', async () => {
       delete wasteReceiptData.receiver
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
+
       expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
         validation: {
@@ -34,23 +36,23 @@ describe('Receiver details validation', () => {
             {
               key: 'receiver',
               errorType: 'NotProvided',
-              message: '"Receiver" is required'
+              message: '"receiver" is required'
             }
           ]
         }
       })
-    }
-  )
+    })
+  })
 
-  it(
-    'should not allow waste movement to be created when an invalid email is supplied for the receiver organisation' +
-      ' @allure.label.tag:DWT-547',
-    async () => {
+  describe('Invalid Email Address', () => {
+    it('should reject waste movement when receiver email address is invalid', async () => {
       wasteReceiptData.receiver.emailAddress = 'invalidtest@'
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
+
       expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
         validation: {
@@ -63,6 +65,6 @@ describe('Receiver details validation', () => {
           ]
         }
       })
-    }
-  )
+    })
+  })
 })
