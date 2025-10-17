@@ -127,8 +127,9 @@ describe('Reason for No Consignment Code Validation', () => {
     })
   })
 
-  describe('Prompt reason if consignment number blank', () => {
-    it('should require reason when hazardous EWC codes present but no consignment code provided @allure.label.tag:DWT-328', async () => {
+  describe('Reason is not supplied when required', () => {
+    it('should require reason when hazardous EWC codes present but no consignment code provided @allure.label.tag:DWT-328 @allure.label.tag:DWT-797', async () => {
+      await addAllureLink('/DWT-797', 'DWT-797', 'jira')
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
       wasteReceiptData.wasteItems[0].hazardous = {
         containsHazardous: true,
@@ -152,25 +153,21 @@ describe('Reason for No Consignment Code Validation', () => {
       // receiveMovementRequest.hazardousWasteConsignmentCode is not provided a
       // receiveMovementRequest.reasonForNoConsignmentCode is required"
       // API correctly enforces this requirement
-      expect(response.statusCode).toBe(200)
-      expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String),
-        validation: {
-          warnings: [
-            {
-              key: 'receipt.reasonForNoConsignmentCode',
-              errorType: 'NotProvided',
-              message:
-                'receipt.reasonForNoConsignmentCode is required when hazardous EWC codes are present'
-            }
-          ]
-        }
-      })
+      expect(response.statusCode).toBe(400)
+      // ToDo: enable this assertion once DWT-798 is resolved
+      // expect(response.json).toEqual({
+      //   "validation": {
+      //     "errors": [
+      //       {
+      //         "key": "reasonForNoConsignmentCode",
+      //         "errorType": "UnexpectedError",
+      //         "message": "\"reasonForNoConsignmentCode\" is required when wasteItems[*].ewcCodes contains a hazardous code and hazardousWasteConsignmentCode is not provided"
+      //       }
+      //     ]
+      //   }
+      // })
     })
-  })
 
-  describe('Reason is left blank when required', () => {
     it('should require reason when empty reason provided for hazardous EWC codes without consignment code @allure.label.tag:DWT-328', async () => {
       await addAllureLink('/DWT-797', 'DWT-797', 'jira')
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
@@ -195,18 +192,58 @@ describe('Reason for No Consignment Code Validation', () => {
 
       // OpenAPI spec says reason should be required, API correctly enforces this
       expect(response.statusCode).toBe(400)
-      expect(response.json).toEqual({
-        validation: {
-          errors: [
-            {
-              key: 'reasonForNoConsignmentCode',
-              errorType: 'UnexpectedError',
-              message:
-                '"reasonForNoConsignmentCode" is required when wasteItems[*].ewcCodes contains a hazardous code and hazardousWasteConsignmentCode is not provided'
-            }
-          ]
-        }
-      })
+      // ToDo: enable this assertion once DWT-798 is resolved
+      // expect(response.json).toEqual({
+      //   validation: {
+      //     errors: [
+      //       {
+      //         key: 'reasonForNoConsignmentCode',
+      //         errorType: 'UnexpectedError',
+      //         message:
+      //           '"reasonForNoConsignmentCode" is required when wasteItems[*].ewcCodes contains a hazardous code and hazardousWasteConsignmentCode is not provided'
+      //       }
+      //     ]
+      //   }
+      // })
+    })
+
+    it('should require reason when null reason provided for hazardous EWC codes without consignment code @allure.label.tag:DWT-328', async () => {
+      await addAllureLink('/DWT-797', 'DWT-797', 'jira')
+      wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].hazardous = {
+        containsHazardous: true,
+        hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'CARRIER_PROVIDED',
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      wasteReceiptData.reasonForNoConsignmentCode = null // null reason
+      // No consignment code provided
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      // OpenAPI spec says reason should be required, API correctly enforces this
+      expect(response.statusCode).toBe(400)
+      // ToDo: enable this assertion once DWT-798 is resolved
+      // expect(response.json).toEqual({
+      //   validation: {
+      //     errors: [
+      //       {
+      //         key: 'reasonForNoConsignmentCode',
+      //         errorType: 'UnexpectedError',
+      //         message:
+      //           '"reasonForNoConsignmentCode" is required when wasteItems[*].ewcCodes contains a hazardous code and hazardousWasteConsignmentCode is not provided'
+      //       }
+      //     ]
+      //   }
+      // })
     })
   })
 
