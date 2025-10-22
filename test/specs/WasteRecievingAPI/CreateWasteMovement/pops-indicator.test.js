@@ -17,8 +17,8 @@ describe('POPs Indicator Validation', () => {
 
   describe('Valid POPs Indicators', () => {
     it('should accept waste containing POPs', async () => {
+      wasteReceiptData.wasteItems[0].containsPops = true
       wasteReceiptData.wasteItems[0].pops = {
-        containsPops: true,
         sourceOfComponents: 'NOT_PROVIDED'
       }
 
@@ -39,9 +39,8 @@ describe('POPs Indicator Validation', () => {
         ' @allure.label.tag:DWT-346' +
         ' @allure.label.tag:DWT-353',
       async () => {
-        wasteReceiptData.wasteItems[0].pops = {
-          containsPops: false
-        }
+        wasteReceiptData.wasteItems[0].containsPops = false
+        wasteReceiptData.wasteItems[0].pops = {}
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -61,6 +60,7 @@ describe('POPs Indicator Validation', () => {
     it('should reject waste with missing POPs indicator', async () => {
       wasteReceiptData.wasteItems[0].pops = {}
       // Note: containsPops field is intentionally omitted to test required validation
+      delete wasteReceiptData.wasteItems[0].containsPops
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(

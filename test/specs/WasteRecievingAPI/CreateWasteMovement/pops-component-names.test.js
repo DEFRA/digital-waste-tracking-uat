@@ -10,8 +10,8 @@ describe('POPs Component Names Validation', () => {
     await addAllureLink('/DWT-346', 'DWT-346', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
+    wasteReceiptData.wasteItems[0].containsPops = true
     wasteReceiptData.wasteItems[0].pops = {
-      containsPops: true,
       components: [
         {
           name: 'PFOS',
@@ -108,7 +108,7 @@ describe('POPs Component Names Validation', () => {
         ' @allure.label.tag:DWT-346' +
         ' @allure.label.tag:DWT-353',
       async () => {
-        wasteReceiptData.wasteItems[0].pops.containsPops = false
+        wasteReceiptData.wasteItems[0].containsPops = false
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -120,10 +120,10 @@ describe('POPs Component Names Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.pops',
+                key: 'wasteItems.0.pops.components',
                 errorType: 'UnexpectedError',
                 message:
-                  'POPs components must not be provided when POPs components are not present'
+                  '"wasteItems[0].pops.components" must not be provided when containsPops is false'
               }
             ]
           }
@@ -179,8 +179,7 @@ describe('POPs Component Names Validation', () => {
               {
                 key: 'wasteItems.0.pops.components.0.name',
                 errorType: 'NotProvided',
-                message:
-                  '"wasteItems[0].pops.components[0].name" is required when POPs components are present'
+                message: '"wasteItems[0].pops.components[0].name" is required'
               }
             ]
           }

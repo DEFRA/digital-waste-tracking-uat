@@ -17,8 +17,8 @@ describe('Hazardous Properties Indicator Validation', () => {
 
   describe('Valid Hazardous Indicator', () => {
     it('should accept a waste receipt when hazardous indicator is set to true, source of components is NOT_PROVIDED and no components are provided', async () => {
+      wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
         sourceOfComponents: 'NOT_PROVIDED',
         hazCodes: ['HP_6']
       }
@@ -40,8 +40,8 @@ describe('Hazardous Properties Indicator Validation', () => {
         ' @allure.label.tag:DWT-351',
       async () => {
         await addAllureLink('/DWT-351', 'DWT-351', 'jira')
+        wasteReceiptData.wasteItems[0].containsHazardous = false
         wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: false,
           sourceOfComponents: 'NOT_PROVIDED'
         }
 
@@ -63,8 +63,8 @@ describe('Hazardous Properties Indicator Validation', () => {
         ' @allure.label.tag:DWT-351',
       async () => {
         await addAllureLink('/DWT-351', 'DWT-351', 'jira')
+        wasteReceiptData.wasteItems[0].containsHazardous = true
         wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: true,
           hazCodes: ['HP_6'],
           sourceOfComponents: 'CARRIER_PROVIDED',
           components: [
@@ -95,8 +95,8 @@ describe('Hazardous Properties Indicator Validation', () => {
       ' @allure.label.tag:DWT-624',
     async () => {
       await addAllureLink('/DWT-351', 'DWT-351', 'jira')
+      wasteReceiptData.wasteItems[0].containsHazardous = false
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: false,
         sourceOfComponents: 'NOT_PROVIDED',
         components: [
           {
@@ -116,10 +116,10 @@ describe('Hazardous Properties Indicator Validation', () => {
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.hazardous',
+              key: 'wasteItems.0.hazardous.components',
               errorType: 'UnexpectedError',
               message:
-                'Hazardous components must not be provided when Hazardous components are not present'
+                '"wasteItems[0].hazardous.components" must not be provided when containsHazardous is false'
             }
           ]
         }
@@ -139,6 +139,7 @@ describe('Hazardous Properties Indicator Validation', () => {
         ]
       }
       // Note: containsHazardous field is intentionally omitted to test required validation
+      delete wasteReceiptData.wasteItems[0].containsHazardous
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -150,9 +151,9 @@ describe('Hazardous Properties Indicator Validation', () => {
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.hazardous.containsHazardous',
+              key: 'wasteItems.0.containsHazardous',
               errorType: 'NotProvided',
-              message: '"wasteItems[0].hazardous.containsHazardous" is required'
+              message: '"wasteItems[0].containsHazardous" is required'
             }
           ]
         }
@@ -160,9 +161,8 @@ describe('Hazardous Properties Indicator Validation', () => {
     })
 
     it('should reject waste receipt when hazardous indicator is invalid', async () => {
-      wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: 'invalid'
-      }
+      wasteReceiptData.wasteItems[0].containsHazardous = 'invalid'
+      wasteReceiptData.wasteItems[0].hazardous = {}
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -174,10 +174,9 @@ describe('Hazardous Properties Indicator Validation', () => {
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.hazardous.containsHazardous',
+              key: 'wasteItems.0.containsHazardous',
               errorType: 'UnexpectedError',
-              message:
-                '"wasteItems[0].hazardous.containsHazardous" must be a boolean'
+              message: '"wasteItems[0].containsHazardous" must be a boolean'
             }
           ]
         }

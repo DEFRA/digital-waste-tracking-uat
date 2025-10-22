@@ -32,8 +32,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
   describe('Require consignment code for hazardous waste', () => {
     it('should accept valid EA/NRW format consignment code @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
@@ -59,8 +59,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
 
     it('should accept consignment code with valid suffix @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
@@ -86,8 +86,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
 
     it('should accept SEPA format consignment code @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
@@ -113,8 +113,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
 
     it('should accept NIEA format consignment code @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
@@ -142,8 +142,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
   describe('Hazardous EWC Code included in Mirror Code', () => {
     it('should require consignment code when mixed EWC codes include hazardous @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107', '150110'] // Mix: non-hazardous (020101, 150107) and hazardous (150110*)
+      wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
@@ -171,8 +171,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
   describe('Do not require consignment code for non-hazardous waste', () => {
     it('should not require consignment code for non-hazardous waste @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107'] // Non-hazardous EWC codes
+      wasteReceiptData.wasteItems[0].containsHazardous = false
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: false,
         sourceOfComponents: 'NOT_PROVIDED'
       }
 
@@ -190,8 +190,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
 
     it('should accept optional consignment code for non-hazardous waste @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '150107'] // Non-hazardous EWC codes
+      wasteReceiptData.wasteItems[0].containsHazardous = false
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: false,
         sourceOfComponents: 'NOT_PROVIDED'
       }
       wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
@@ -212,8 +212,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
   describe('Consignment Note Code supplied in incorrect format', () => {
     it('should reject EA/NRW format with invalid prefix @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
@@ -247,8 +247,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
 
     it('should reject format with missing forward slash @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
@@ -282,8 +282,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
 
     it('should reject SEPA format with invalid prefix @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
@@ -317,8 +317,8 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
 
     it('should reject NIEA format with invalid prefix @allure.label.tag:DWT-328', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)
+      wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
-        containsHazardous: true,
         hazCodes: ['HP_1', 'HP_3'],
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [

@@ -16,8 +16,8 @@ describe('POPs Component Concentration Validation', () => {
       globalThis.testConfig.cognitoClientSecret
     )
 
+    wasteReceiptData.wasteItems[0].containsPops = true
     wasteReceiptData.wasteItems[0].pops = {
-      containsPops: true,
       sourceOfComponents: 'CARRIER_PROVIDED',
       components: [
         {
@@ -81,8 +81,8 @@ describe('POPs Component Concentration Validation', () => {
         ' @allure.label.tag:DWT-353' +
         ' @allure.label.tag:DWT-624',
       async () => {
+        wasteReceiptData.wasteItems[0].containsPops = true
         wasteReceiptData.wasteItems[0].pops = {
-          containsPops: true,
           sourceOfComponents: 'NOT_PROVIDED',
           components: [
             {
@@ -102,10 +102,10 @@ describe('POPs Component Concentration Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.pops',
+                key: 'wasteItems.0.pops.components',
                 errorType: 'UnexpectedError',
                 message:
-                  'POPs components must not be provided when the source of components is NOT_PROVIDED'
+                  '"wasteItems[0].pops.components" must not be provided when sourceOfComponents is NOT_PROVIDED'
               }
             ]
           }
@@ -171,7 +171,7 @@ describe('POPs Component Concentration Validation', () => {
       'should reject waste with concentration provided for items that are not POPs waste' +
         ' @allure.label.tag:DWT-353',
       async () => {
-        wasteReceiptData.wasteItems[0].pops.containsPops = false
+        wasteReceiptData.wasteItems[0].containsPops = false
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -182,10 +182,10 @@ describe('POPs Component Concentration Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.pops',
+                key: 'wasteItems.0.pops.components',
                 errorType: 'UnexpectedError',
                 message:
-                  'POPs components must not be provided when POPs components are not present'
+                  '"wasteItems[0].pops.components" must not be provided when containsPops is false'
               }
             ]
           }
@@ -199,8 +199,8 @@ describe('POPs Component Concentration Validation', () => {
       'should accept waste with no concentration value but show warning if source of components is CARRIER_PROVIDED or OWN_TESTING or GUIDANCE' +
         ' @allure.label.tag:DWT-624',
       async () => {
+        wasteReceiptData.wasteItems[0].containsPops = true
         wasteReceiptData.wasteItems[0].pops = {
-          containsPops: true,
           sourceOfComponents: 'CARRIER_PROVIDED',
           components: [
             {
