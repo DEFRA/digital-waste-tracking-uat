@@ -19,6 +19,8 @@ export const generateBaseWasteReceiptData = () => ({
       physicalForm: 'Mixed',
       numberOfContainers: 3,
       typeOfContainers: 'SKI',
+      containsHazardous: false,
+      containsPops: false,
       weight: {
         metric: 'Tonnes',
         amount: 2.5,

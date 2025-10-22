@@ -8,8 +8,8 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
 
   beforeEach(async () => {
     wasteReceiptData = generateBaseWasteReceiptData()
+    wasteReceiptData.wasteItems[0].containsHazardous = true
     wasteReceiptData.wasteItems[0].hazardous = {
-      containsHazardous: true,
       hazCodes: ['HP_1', 'HP_3', 'HP_5'],
       sourceOfComponents: 'CARRIER_PROVIDED',
       components: [
@@ -114,10 +114,10 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.hazardous.hazCodes',
+              key: 'wasteItems.0.hazardous',
               errorType: 'UnexpectedError',
               message:
-                '"wasteItems[0].hazardous.hazCodes" must contain at least 1 items'
+                '"wasteItems[0].hazardous.hazCodes" is required when containsHazardous is trues'
             }
           ]
         }
@@ -138,9 +138,10 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
         validation: {
           errors: [
             {
-              key: 'wasteItems.0.hazardous.hazCodes',
-              errorType: 'NotProvided',
-              message: '"wasteItems[0].hazardous.hazCodes" is required'
+              key: 'wasteItems.0.hazardous',
+              errorType: 'UnexpectedError',
+              message:
+                '"wasteItems[0].hazardous.hazCodes" is required when containsHazardous is trues'
             }
           ]
         }
@@ -224,7 +225,7 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
         ' @allure.label.tag:DWT-631',
       async () => {
         await addAllureLink('/DWT-631', 'DWT-631', 'jira')
-        wasteReceiptData.wasteItems[0].hazardous.containsHazardous = false
+        wasteReceiptData.wasteItems[0].containsHazardous = false
         wasteReceiptData.wasteItems[0].hazardous.hazCodes = ['HP_15']
 
         const response =
@@ -237,10 +238,10 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.hazardous',
+                key: 'wasteItems.0.hazardous.components',
                 errorType: 'UnexpectedError',
                 message:
-                  'Hazardous components must not be provided when Hazardous components are not present'
+                  '"wasteItems[0].hazardous.components" must not be provided when containsHazardous is false'
               }
             ]
           }
@@ -255,8 +256,8 @@ describe('Hazardous Properties Codes (hazCodes) Validation', () => {
         ' @allure.label.tag:DWT-631',
       async () => {
         await addAllureLink('/DWT-631', 'DWT-631', 'jira')
+        wasteReceiptData.wasteItems[0].containsHazardous = false
         wasteReceiptData.wasteItems[0].hazardous = {
-          containsHazardous: false,
           sourceOfComponents: 'NOT_PROVIDED'
         }
 

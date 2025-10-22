@@ -21,8 +21,8 @@ describe('POPs Source Of Components Validation', () => {
       'should reject waste containing POPs with source of components as an empty string' +
         ' @allure.label.tag:DWT-624',
       async () => {
+        wasteReceiptData.wasteItems[0].containsPops = true
         wasteReceiptData.wasteItems[0].pops = {
-          containsPops: true,
           sourceOfComponents: '',
           components: [
             {
@@ -63,8 +63,8 @@ describe('POPs Source Of Components Validation', () => {
       'should reject waste containing POPs with source of components is not provided' +
         ' @allure.label.tag:DWT-624',
       async () => {
+        wasteReceiptData.wasteItems[0].containsPops = true
         wasteReceiptData.wasteItems[0].pops = {
-          containsPops: true,
           components: [
             {
               name: 'PFOS',
@@ -83,10 +83,10 @@ describe('POPs Source Of Components Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.pops.sourceOfComponents',
-                errorType: 'NotProvided',
+                key: 'wasteItems.0.pops',
+                errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].pops.sourceOfComponents" is required when components are present'
+                  '"wasteItems[0].pops.sourceOfComponents" is required when containsPops is true'
               }
             ]
           }
