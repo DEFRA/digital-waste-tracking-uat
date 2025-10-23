@@ -35,6 +35,46 @@ describe('POPs Indicator Validation', () => {
       })
     })
 
+    it('should accept waste containing POPs in multiple waste items', async () => {
+      wasteReceiptData.wasteItems[0].containsPops = true
+      wasteReceiptData.wasteItems[0].pops = {
+        sourceOfComponents: 'CARRIER_PROVIDED',
+        components: [
+          {
+            name: 'Aldrin',
+            concentration: 5.5
+          }
+        ]
+      }
+
+      wasteReceiptData.wasteItems.push({ ...wasteReceiptData.wasteItems[0] })
+      wasteReceiptData.wasteItems[1].containsPops = true
+      wasteReceiptData.wasteItems[1].pops = {
+        sourceOfComponents: 'CARRIER_PROVIDED',
+        components: [
+          {
+            name: 'Chlordane',
+            concentration: 10.5
+          }
+        ]
+      }
+
+      wasteReceiptData.wasteItems.push({ ...wasteReceiptData.wasteItems[0] })
+      wasteReceiptData.wasteItems[2].containsPops = false
+      delete wasteReceiptData.wasteItems[2].pops
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      expect(response.statusCode).toBe(200)
+      expect(response.json).toEqual({
+        statusCode: 200,
+        globalMovementId: expect.any(String)
+      })
+    })
+
     it(
       'should accept waste not containing POPs' +
         ' @allure.label.tag:DWT-346' +
