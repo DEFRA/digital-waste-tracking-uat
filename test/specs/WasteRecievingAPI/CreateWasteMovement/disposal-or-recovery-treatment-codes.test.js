@@ -35,8 +35,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
 
@@ -67,8 +66,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
   })
@@ -146,8 +144,7 @@ describe('Disposal or Recovery Treatment Codes Validation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String),
+        wasteTrackingId: expect.any(String),
         validation: {
           warnings: [
             {

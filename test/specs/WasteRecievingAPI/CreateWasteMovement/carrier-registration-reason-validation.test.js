@@ -30,7 +30,7 @@ describe('Carrier Registration Reason Validation', () => {
             wasteReceiptData
           )
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
   })

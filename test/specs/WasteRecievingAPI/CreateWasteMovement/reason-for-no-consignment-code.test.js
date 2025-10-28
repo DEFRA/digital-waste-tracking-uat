@@ -41,8 +41,7 @@ describe('Reason for No Consignment Code Validation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
 
@@ -70,8 +69,7 @@ describe('Reason for No Consignment Code Validation', () => {
       // API correctly enforces reason requirement for hazardous EWC codes
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
   })
@@ -100,8 +98,7 @@ describe('Reason for No Consignment Code Validation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
   })
@@ -121,8 +118,7 @@ describe('Reason for No Consignment Code Validation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
   })
@@ -275,8 +271,7 @@ describe('Reason for No Consignment Code Validation', () => {
       // or 'Local Authority Receipt'"
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
 
@@ -305,8 +300,7 @@ describe('Reason for No Consignment Code Validation', () => {
       // but API currently does not enforce this validation
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
   })

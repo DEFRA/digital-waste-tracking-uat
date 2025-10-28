@@ -21,7 +21,7 @@ describe('POPs Component Concentration Validation', () => {
       sourceOfComponents: 'CARRIER_PROVIDED',
       components: [
         {
-          name: 'Aldrin',
+          code: 'ALD',
           concentration: 5.5
         }
       ]
@@ -40,8 +40,7 @@ describe('POPs Component Concentration Validation', () => {
 
         expect(response.statusCode).toBe(200)
         expect(response.json).toEqual({
-          statusCode: 200,
-          globalMovementId: expect.any(String)
+          wasteTrackingId: expect.any(String)
         })
       }
     )
@@ -86,7 +85,7 @@ describe('POPs Component Concentration Validation', () => {
           sourceOfComponents: 'NOT_PROVIDED',
           components: [
             {
-              name: 'Aldrin'
+              code: 'ALD'
               // Missing concentration field
             }
           ]
@@ -204,7 +203,7 @@ describe('POPs Component Concentration Validation', () => {
           sourceOfComponents: 'CARRIER_PROVIDED',
           components: [
             {
-              name: 'Aldrin'
+              code: 'ALD'
               // concentration: ''
             }
           ]
@@ -217,8 +216,7 @@ describe('POPs Component Concentration Validation', () => {
 
         expect(response.statusCode).toBe(200)
         expect(response.json).toEqual({
-          statusCode: 200,
-          globalMovementId: expect.any(String),
+          wasteTrackingId: expect.any(String),
           validation: {
             warnings: [
               {

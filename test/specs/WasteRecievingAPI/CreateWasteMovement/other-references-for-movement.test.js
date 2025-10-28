@@ -39,7 +39,7 @@ describe('Other References For Movement Validation', () => {
           wasteReceiptData
         )
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('wasteTrackingId')
     })
 
     it('should accept waste movement with single other reference pair @allure.label.tag:DWT-329', async () => {
@@ -55,7 +55,7 @@ describe('Other References For Movement Validation', () => {
           wasteReceiptData
         )
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('wasteTrackingId')
     })
 
     it('should accept waste movement with empty other references array @allure.label.tag:DWT-329', async () => {
@@ -66,7 +66,7 @@ describe('Other References For Movement Validation', () => {
           wasteReceiptData
         )
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('wasteTrackingId')
     })
 
     it('should accept waste movement without other references field @allure.label.tag:DWT-329', async () => {
@@ -78,7 +78,7 @@ describe('Other References For Movement Validation', () => {
           wasteReceiptData
         )
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('wasteTrackingId')
     })
 
     it('should reject waste movement with null other references @allure.label.tag:DWT-329', async () => {

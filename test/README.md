@@ -27,7 +27,7 @@ describe('Waste Movement API', () => {
       )
 
     expect(response.statusCode).toBe(200)
-    expect(response.data).toHaveProperty('globalMovementId')
+    expect(response.data).toHaveProperty('wasteTrackingId')
   })
 })
 ```
@@ -67,7 +67,7 @@ describe('Waste Movement Management', () => {
       await globalThis.apis.wasteMovementExternalAPI.receiveMovement(testData)
 
     expect(response.statusCode).toBe(200)
-    expect(response.data).toHaveProperty('globalMovementId')
+    expect(response.data).toHaveProperty('wasteTrackingId')
   })
 })
 ```
@@ -92,7 +92,7 @@ describe('Feature Name', () => {
 
     // Assert - verify the result
     expect(response.statusCode).toBe(200)
-    expect(response.data).toHaveProperty('globalMovementId')
+    expect(response.data).toHaveProperty('wasteTrackingId')
   })
 })
 ```
@@ -125,7 +125,7 @@ const newData = generateBaseWasteReceiptData()
 const createResponse =
   await globalThis.apis.wasteMovementExternalAPI.receiveMovement(newData)
 expect(createResponse.statusCode).toBe(200)
-expect(createResponse.data).toHaveProperty('globalMovementId')
+expect(createResponse.data).toHaveProperty('wasteTrackingId')
 
 // Testing with test.each for multiple scenarios
 it.each([[12.5], [500], [0]])(

@@ -17,8 +17,7 @@ describe('Organisation API ID Validation', () => {
 
   describe('Valid Site IDs', () => {
     it('should accept waste movement receipt for an valid organisation API ID', async () => {
-      wasteReceiptData.organisationApiId =
-        '12345678-1234-1234-1234-123456789012'
+      wasteReceiptData.apiCode = '12345678-1234-1234-1234-123456789012'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -27,15 +26,14 @@ describe('Organisation API ID Validation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
   })
 
   describe('Invalid Organisation API IDs', () => {
     it('should reject waste movement receipt with missing organisation API ID', async () => {
-      delete wasteReceiptData.organisationApiId
+      delete wasteReceiptData.apiCode
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -47,9 +45,9 @@ describe('Organisation API ID Validation', () => {
         validation: {
           errors: [
             {
-              key: 'organisationApiId',
+              key: 'apiCode',
               errorType: 'NotProvided',
-              message: '"organisationApiId" is required'
+              message: '"apiCode" is required'
             }
           ]
         }

@@ -34,8 +34,7 @@ describe('Receiving date timestamp validation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
       //   above timestamp will be converted to UTC and saved in db as 2025-06-01T03:34:30.000Z as expected
     }
