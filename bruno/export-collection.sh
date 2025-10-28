@@ -21,6 +21,8 @@ EXCLUDE_LIST=(
     "environments/1) dev-environment.bru"
     "environments/2) test-environment.bru"
     "environments/3) perf-test-environment.bru"
+    "environments/4) ext-test-environment.bru"
+    "environments/6) prod-environment.bru"
     ".git"
     "node_modules"
     "*.log"
