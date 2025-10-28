@@ -20,7 +20,7 @@ Generates a complete waste receipt data object with all required fields for the 
 
 **Returns:** Object with the following structure:
 
-- `organisationApiId`: UUID for the receiving site
+- `apiCode`: UUID for the receiving site
 - `yourUniqueReference`: Auto-generated unique reference
 - `specialHandlingRequirements`: Special handling requirements
 - `waste`: Array containing waste item data

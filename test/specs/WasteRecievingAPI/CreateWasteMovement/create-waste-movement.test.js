@@ -24,8 +24,7 @@ describe('Waste Movement Creation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
     it(
@@ -43,8 +42,7 @@ describe('Waste Movement Creation', () => {
 
         expect(response.statusCode).toBe(200)
         expect(response.json).toEqual({
-          statusCode: 200,
-          globalMovementId: expect.any(String)
+          wasteTrackingId: expect.any(String)
         })
       }
     )
@@ -53,7 +51,7 @@ describe('Waste Movement Creation', () => {
   describe('Failed Creation', () => {
     it('should fail to create movement due to missing required fields', async () => {
       const invalidData = generateBaseWasteReceiptData()
-      delete invalidData.organisationApiId
+      delete invalidData.apiCode
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(

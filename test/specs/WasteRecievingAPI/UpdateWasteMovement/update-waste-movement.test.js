@@ -24,7 +24,7 @@ describe('Waste Movement Update', () => {
         )
       expect(createResponse.statusCode).toBe(200)
 
-      const globalMovementId = createResponse.json.globalMovementId
+      const wasteTrackingId = createResponse.json.wasteTrackingId
 
       // Update the movement with different disposal codes
       const updatedData = generateBaseWasteReceiptData()
@@ -41,7 +41,7 @@ describe('Waste Movement Update', () => {
 
       const updateResponse =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
-          globalMovementId,
+          wasteTrackingId,
           updatedData
         )
 

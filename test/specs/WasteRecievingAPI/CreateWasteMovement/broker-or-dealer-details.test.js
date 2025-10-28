@@ -35,7 +35,7 @@ describe('Broker or Dealer Details Validation', () => {
             wasteReceiptData
           )
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('wasteTrackingId')
       })
     })
 
@@ -48,7 +48,7 @@ describe('Broker or Dealer Details Validation', () => {
           )
 
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('wasteTrackingId')
       })
 
       it('should accept waste movement with valid UK postcode @allure.label.tag:DWT-343', async () => {
@@ -59,7 +59,7 @@ describe('Broker or Dealer Details Validation', () => {
           )
 
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('wasteTrackingId')
       })
     })
 
@@ -74,7 +74,7 @@ describe('Broker or Dealer Details Validation', () => {
               wasteReceiptData
             )
           expect(response.statusCode).toBe(200)
-          expect(response.json).toHaveProperty('globalMovementId')
+          expect(response.json).toHaveProperty('wasteTrackingId')
         }
       )
       it('should accept waste movement with valid Scotland registration number @allure.label.tag:DWT-338', async () => {
@@ -85,7 +85,7 @@ describe('Broker or Dealer Details Validation', () => {
             wasteReceiptData
           )
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('wasteTrackingId')
       })
       it(
         'should accept waste movement with valid broker or dealer registration number for Northern Ireland' +
@@ -97,7 +97,7 @@ describe('Broker or Dealer Details Validation', () => {
               wasteReceiptData
             )
           expect(response.statusCode).toBe(200)
-          expect(response.json).toHaveProperty('globalMovementId')
+          expect(response.json).toHaveProperty('wasteTrackingId')
         }
       )
     })

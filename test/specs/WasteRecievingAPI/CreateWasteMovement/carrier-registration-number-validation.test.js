@@ -29,7 +29,7 @@ describe('Carrier Registration Number Validation', () => {
             wasteReceiptData
           )
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
     it(
@@ -42,7 +42,7 @@ describe('Carrier Registration Number Validation', () => {
             wasteReceiptData
           )
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
     it(
@@ -55,7 +55,7 @@ describe('Carrier Registration Number Validation', () => {
             wasteReceiptData
           )
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
   })

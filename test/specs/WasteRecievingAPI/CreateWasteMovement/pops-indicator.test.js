@@ -30,8 +30,7 @@ describe('POPs Indicator Validation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
 
@@ -70,8 +69,7 @@ describe('POPs Indicator Validation', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     })
 
@@ -93,8 +91,8 @@ describe('POPs Indicator Validation', () => {
         expect(response.statusCode).toBe(200)
         // ToDo : re-enable this assertion when DWT-958 is fixed
         // expect(response.json).toEqual({
-        //   statusCode: 200,
-        //   globalMovementId: expect.any(String)
+        //
+        //   wasteTrackingId: expect.any(String)
         // })
       }
     )

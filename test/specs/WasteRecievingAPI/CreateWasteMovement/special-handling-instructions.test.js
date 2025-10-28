@@ -28,8 +28,7 @@ describe('Special Handling Instructions Validation', () => {
 
         expect(response.statusCode).toBe(200)
         expect(response.json).toEqual({
-          statusCode: 200,
-          globalMovementId: expect.any(String)
+          wasteTrackingId: expect.any(String)
         })
       })
     })

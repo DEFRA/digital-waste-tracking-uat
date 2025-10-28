@@ -29,7 +29,7 @@ describe('Number of containers for a waste item Validation', () => {
           )
 
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('wasteTrackingId')
         // ToDo:Assert that the record has been created successfully in the DB
       }
     )
@@ -44,7 +44,7 @@ describe('Number of containers for a waste item Validation', () => {
           )
 
         expect(response.statusCode).toBe(200)
-        expect(response.json).toHaveProperty('globalMovementId')
+        expect(response.json).toHaveProperty('wasteTrackingId')
         // ToDo:Assert that the record has been created successfully in the DB
       }
     )

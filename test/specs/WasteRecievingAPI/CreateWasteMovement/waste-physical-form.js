@@ -28,8 +28,7 @@ describe('Waste physical form field validation', () => {
         )
 
       expect(response.json).toEqual({
-        statusCode: 200,
-        globalMovementId: expect.any(String)
+        wasteTrackingId: expect.any(String)
       })
     }
   )

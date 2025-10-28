@@ -44,7 +44,7 @@ describe('Carrier Contact Details Validation', () => {
           wasteReceiptData
         )
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('wasteTrackingId')
     }
   )
 
@@ -104,7 +104,7 @@ describe('Carrier Contact Details Validation', () => {
           wasteReceiptData
         )
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('wasteTrackingId')
     })
 
     it('should allow waste movement to be created when the postcode is "BS1 4XE" @allure.label.tag:DWT-342', async () => {
@@ -114,7 +114,7 @@ describe('Carrier Contact Details Validation', () => {
           wasteReceiptData
         )
       expect(response.statusCode).toBe(200)
-      expect(response.json).toHaveProperty('globalMovementId')
+      expect(response.json).toHaveProperty('wasteTrackingId')
     })
   })
 
