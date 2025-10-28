@@ -14,7 +14,7 @@ describe('POPs Component Names Validation', () => {
     wasteReceiptData.wasteItems[0].pops = {
       components: [
         {
-          name: 'PFOS',
+          code: 'SCCPS',
           concentration: 2.5
         }
       ]
@@ -33,8 +33,7 @@ describe('POPs Component Names Validation', () => {
         ' @allure.label.tag:DWT-346' +
         ' @allure.label.tag:DWT-624',
       async () => {
-        wasteReceiptData.wasteItems[0].pops.components[0].name =
-          'Hexabromobiphenyl'
+        wasteReceiptData.wasteItems[0].pops.components[0].code = 'HBB'
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents =
           'CARRIER_PROVIDED'
         const response =
@@ -54,7 +53,7 @@ describe('POPs Component Names Validation', () => {
         ' @allure.label.tag:DWT-346',
       async () => {
         wasteReceiptData.wasteItems[0].pops.components.push({
-          name: 'Chlordane',
+          code: 'CHL',
           concentration: 2.0
         })
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents = 'OWN_TESTING'
@@ -78,7 +77,7 @@ describe('POPs Component Names Validation', () => {
       'should reject waste submission when the POP component name is an empty string' +
         ' @allure.label.tag:DWT-623',
       async () => {
-        wasteReceiptData.wasteItems[0].pops.components[0].name = ''
+        wasteReceiptData.wasteItems[0].pops.components[0].code = ''
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents = 'GUIDANCE'
 
         const response =
@@ -91,10 +90,10 @@ describe('POPs Component Names Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.pops.components.0.name',
+                key: 'wasteItems.0.pops.components.0.code',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].pops.components[0].name" is not allowed to be empty'
+                  '"wasteItems[0].pops.components[0].code" is not allowed to be empty'
               }
             ]
           }
@@ -133,7 +132,7 @@ describe('POPs Component Names Validation', () => {
       'should reject waste submission containing POPs components when given a value that is not from allowed list' +
         ' @allure.label.tag:DWT-346',
       async () => {
-        wasteReceiptData.wasteItems[0].pops.components[0].name = 'ChlordaneXYZ'
+        wasteReceiptData.wasteItems[0].pops.components[0].code = 'ChlordaneXYZ'
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents = 'OWN_TESTING'
 
         const response =
@@ -146,10 +145,10 @@ describe('POPs Component Names Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.pops.components.0.name',
+                key: 'wasteItems.0.pops.components.0.code',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].pops.components[0].name" contains an invalid value'
+                  '"wasteItems[0].pops.components[0].code" contains an invalid POP code'
               }
             ]
           }
@@ -161,7 +160,7 @@ describe('POPs Component Names Validation', () => {
       'should reject waste submission containing POPs components name is omitted i.e. is null' +
         ' @allure.label.tag:DWT-623',
       async () => {
-        delete wasteReceiptData.wasteItems[0].pops.components[0].name
+        delete wasteReceiptData.wasteItems[0].pops.components[0].code
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents =
           'CARRIER_PROVIDED'
 
@@ -175,9 +174,9 @@ describe('POPs Component Names Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.pops.components.0.name',
+                key: 'wasteItems.0.pops.components.0.code',
                 errorType: 'NotProvided',
-                message: '"wasteItems[0].pops.components[0].name" is required'
+                message: '"wasteItems[0].pops.components[0].code" is required'
               }
             ]
           }
@@ -190,7 +189,7 @@ describe('POPs Component Names Validation', () => {
         ' @allure.label.tag:DWT-623',
       async () => {
         wasteReceiptData.wasteItems[0].pops.components.push({
-          name: 'ChlordaneXYZ',
+          code: 'ChlordaneXYZ',
           concentration: 2.0
         })
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents = 'OWN_TESTING'
@@ -205,10 +204,10 @@ describe('POPs Component Names Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.pops.components.1.name',
+                key: 'wasteItems.0.pops.components.1.code',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].pops.components[1].name" contains an invalid value'
+                  '"wasteItems[0].pops.components[1].code" contains an invalid POP code'
               }
             ]
           }

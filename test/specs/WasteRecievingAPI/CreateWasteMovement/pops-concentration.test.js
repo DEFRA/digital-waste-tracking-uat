@@ -21,7 +21,7 @@ describe('POPs Component Concentration Validation', () => {
       sourceOfComponents: 'CARRIER_PROVIDED',
       components: [
         {
-          name: 'Aldrin',
+          code: 'ALD',
           concentration: 5.5
         }
       ]
@@ -85,7 +85,7 @@ describe('POPs Component Concentration Validation', () => {
           sourceOfComponents: 'NOT_PROVIDED',
           components: [
             {
-              name: 'Aldrin'
+              code: 'ALD'
               // Missing concentration field
             }
           ]
@@ -203,7 +203,7 @@ describe('POPs Component Concentration Validation', () => {
           sourceOfComponents: 'CARRIER_PROVIDED',
           components: [
             {
-              name: 'Aldrin'
+              code: 'ALD'
               // concentration: ''
             }
           ]

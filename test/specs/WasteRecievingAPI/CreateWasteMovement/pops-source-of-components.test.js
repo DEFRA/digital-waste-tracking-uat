@@ -26,7 +26,7 @@ describe('POPs Source Of Components Validation', () => {
           sourceOfComponents: '',
           components: [
             {
-              name: 'PFOS',
+              code: 'PFOS',
               concentration: 2.5
             }
           ]
@@ -67,7 +67,7 @@ describe('POPs Source Of Components Validation', () => {
         wasteReceiptData.wasteItems[0].pops = {
           components: [
             {
-              name: 'PFOS',
+              code: 'PFOS',
               concentration: 2.5
             }
           ]

@@ -40,7 +40,7 @@ describe('POPs Indicator Validation', () => {
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
-            name: 'Aldrin',
+            code: 'ALD',
             concentration: 5.5
           }
         ]
@@ -52,7 +52,7 @@ describe('POPs Indicator Validation', () => {
         sourceOfComponents: 'CARRIER_PROVIDED',
         components: [
           {
-            name: 'Chlordane',
+            code: 'CHL',
             concentration: 10.5
           }
         ]
