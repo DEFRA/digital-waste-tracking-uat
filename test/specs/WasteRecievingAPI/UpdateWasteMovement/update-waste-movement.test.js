@@ -46,9 +46,7 @@ describe('Waste Movement Update', () => {
         )
 
       expect(updateResponse.statusCode).toBe(200)
-      expect(updateResponse.json).toEqual({
-        message: 'Receipt movement updated successfully'
-      })
+      expect(updateResponse.json).toEqual({})
     })
   })
 

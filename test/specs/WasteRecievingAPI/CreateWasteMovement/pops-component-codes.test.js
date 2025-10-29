@@ -3,11 +3,12 @@ import { generateBaseWasteReceiptData } from '../../../support/test-data-manager
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
-describe('POPs Component Names Validation', () => {
+describe('POPs Component Codes Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
     await addAllureLink('/DWT-346', 'DWT-346', 'jira')
+    await addAllureLink('/DWT-938', 'DWT-938', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
     wasteReceiptData.wasteItems[0].containsPops = true
@@ -27,9 +28,9 @@ describe('POPs Component Names Validation', () => {
     )
   })
 
-  describe('Valid POPs Component Names', () => {
+  describe('Valid POPs Component Codes', () => {
     it(
-      'should accept waste containing an allowed POPs component name "Hexabromobiphenyl"' +
+      'should accept waste containing an allowed POPs component code for "Hexabromobiphenyl" : "HBB"' +
         ' @allure.label.tag:DWT-346' +
         ' @allure.label.tag:DWT-624',
       async () => {
@@ -71,11 +72,12 @@ describe('POPs Component Names Validation', () => {
     )
   })
 
-  describe('Invalid POPs Component Names', () => {
+  describe('Invalid POPs Component Codes', () => {
     // pop component name is a mandatory field
     it(
-      'should reject waste submission when the POP component name is an empty string' +
-        ' @allure.label.tag:DWT-623',
+      'should reject waste submission when the POP component code is an empty string' +
+        ' @allure.label.tag:DWT-623' +
+        ' @allure.label.tag:DWT-938',
       async () => {
         wasteReceiptData.wasteItems[0].pops.components[0].code = ''
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents = 'GUIDANCE'
@@ -130,7 +132,8 @@ describe('POPs Component Names Validation', () => {
 
     it(
       'should reject waste submission containing POPs components when given a value that is not from allowed list' +
-        ' @allure.label.tag:DWT-346',
+        ' @allure.label.tag:DWT-346' +
+        ' @allure.label.tag:DWT-938',
       async () => {
         wasteReceiptData.wasteItems[0].pops.components[0].code = 'ChlordaneXYZ'
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents = 'OWN_TESTING'
@@ -157,8 +160,9 @@ describe('POPs Component Names Validation', () => {
     )
 
     it(
-      'should reject waste submission containing POPs components name is omitted i.e. is null' +
-        ' @allure.label.tag:DWT-623',
+      'should reject waste submission containing POPs components code is omitted i.e. is null' +
+        ' @allure.label.tag:DWT-623' +
+        ' @allure.label.tag:DWT-938',
       async () => {
         delete wasteReceiptData.wasteItems[0].pops.components[0].code
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents =
@@ -186,7 +190,8 @@ describe('POPs Component Names Validation', () => {
 
     it(
       'should reject waste containing multiple POPs component, if one of the components is not from the allowed list' +
-        ' @allure.label.tag:DWT-623',
+        ' @allure.label.tag:DWT-623' +
+        ' @allure.label.tag:DWT-938',
       async () => {
         wasteReceiptData.wasteItems[0].pops.components.push({
           code: 'ChlordaneXYZ',
