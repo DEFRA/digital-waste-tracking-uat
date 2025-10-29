@@ -27,7 +27,7 @@ describe('Site Waste Authorisation Validation', () => {
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
           )
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
@@ -46,7 +46,7 @@ describe('Site Waste Authorisation Validation', () => {
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
           )
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
@@ -63,7 +63,7 @@ describe('Site Waste Authorisation Validation', () => {
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
           )
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )

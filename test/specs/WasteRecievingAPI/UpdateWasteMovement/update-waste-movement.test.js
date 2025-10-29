@@ -22,7 +22,7 @@ describe('Waste Movement Update', () => {
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
           wasteReceiptData
         )
-      expect(createResponse.statusCode).toBe(200)
+      expect(createResponse.statusCode).toBe(201)
 
       const wasteTrackingId = createResponse.json.wasteTrackingId
 

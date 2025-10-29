@@ -28,7 +28,7 @@ describe('Hazardous Properties Indicator Validation', () => {
           wasteReceiptData
         )
 
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(201)
       expect(response.json).toEqual({
         wasteTrackingId: expect.any(String)
       })
@@ -49,7 +49,7 @@ describe('Hazardous Properties Indicator Validation', () => {
             wasteReceiptData
           )
 
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toEqual({
           wasteTrackingId: expect.any(String)
         })
@@ -78,7 +78,7 @@ describe('Hazardous Properties Indicator Validation', () => {
             wasteReceiptData
           )
 
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toEqual({
           wasteTrackingId: expect.any(String)
         })

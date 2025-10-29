@@ -30,7 +30,7 @@ describe('Carrier Means of transport Validation', () => {
             wasteReceiptData
           )
 
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toHaveProperty('wasteTrackingId')
         // ToDo:Assert that the record has been created successfully in the DB
       }
@@ -48,7 +48,7 @@ describe('Carrier Means of transport Validation', () => {
           wasteReceiptData
         )
 
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(201)
       expect(response.json).toHaveProperty('wasteTrackingId')
     }
   )

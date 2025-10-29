@@ -28,7 +28,7 @@ describe('Number of containers for a waste item Validation', () => {
             wasteReceiptData
           )
 
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toHaveProperty('wasteTrackingId')
         // ToDo:Assert that the record has been created successfully in the DB
       }
@@ -43,7 +43,7 @@ describe('Number of containers for a waste item Validation', () => {
             wasteReceiptData
           )
 
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toHaveProperty('wasteTrackingId')
         // ToDo:Assert that the record has been created successfully in the DB
       }
