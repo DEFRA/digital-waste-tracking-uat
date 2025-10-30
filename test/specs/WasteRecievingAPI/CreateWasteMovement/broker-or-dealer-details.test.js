@@ -34,7 +34,7 @@ describe('Broker or Dealer Details Validation', () => {
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
           )
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toHaveProperty('wasteTrackingId')
       })
     })
@@ -47,7 +47,7 @@ describe('Broker or Dealer Details Validation', () => {
             wasteReceiptData
           )
 
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toHaveProperty('wasteTrackingId')
       })
 
@@ -58,7 +58,7 @@ describe('Broker or Dealer Details Validation', () => {
             wasteReceiptData
           )
 
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toHaveProperty('wasteTrackingId')
       })
     })
@@ -73,7 +73,7 @@ describe('Broker or Dealer Details Validation', () => {
             await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
               wasteReceiptData
             )
-          expect(response.statusCode).toBe(200)
+          expect(response.statusCode).toBe(201)
           expect(response.json).toHaveProperty('wasteTrackingId')
         }
       )
@@ -84,7 +84,7 @@ describe('Broker or Dealer Details Validation', () => {
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
           )
-        expect(response.statusCode).toBe(200)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toHaveProperty('wasteTrackingId')
       })
       it(
@@ -96,7 +96,7 @@ describe('Broker or Dealer Details Validation', () => {
             await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
               wasteReceiptData
             )
-          expect(response.statusCode).toBe(200)
+          expect(response.statusCode).toBe(201)
           expect(response.json).toHaveProperty('wasteTrackingId')
         }
       )

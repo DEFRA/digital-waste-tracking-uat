@@ -39,7 +39,7 @@ describe('Reason for No Consignment Code Validation', () => {
           wasteReceiptData
         )
 
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(201)
       expect(response.json).toEqual({
         wasteTrackingId: expect.any(String)
       })
@@ -67,7 +67,7 @@ describe('Reason for No Consignment Code Validation', () => {
         )
 
       // API correctly enforces reason requirement for hazardous EWC codes
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(201)
       expect(response.json).toEqual({
         wasteTrackingId: expect.any(String)
       })
@@ -96,7 +96,7 @@ describe('Reason for No Consignment Code Validation', () => {
           wasteReceiptData
         )
 
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(201)
       expect(response.json).toEqual({
         wasteTrackingId: expect.any(String)
       })
@@ -116,7 +116,7 @@ describe('Reason for No Consignment Code Validation', () => {
           wasteReceiptData
         )
 
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(201)
       expect(response.json).toEqual({
         wasteTrackingId: expect.any(String)
       })
@@ -269,7 +269,7 @@ describe('Reason for No Consignment Code Validation', () => {
       // OpenAPI spec says: "If receiveMovementRequest.hazardousWasteConsignmentCode is provided
       // it must be either 'Non Hazardous Waste Transfer', 'Carrier did not provide documentation'
       // or 'Local Authority Receipt'"
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(201)
       expect(response.json).toEqual({
         wasteTrackingId: expect.any(String)
       })
@@ -298,7 +298,7 @@ describe('Reason for No Consignment Code Validation', () => {
 
       // OpenAPI spec says reason must be one of the three values when consignment code is provided,
       // but API currently does not enforce this validation
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(201)
       expect(response.json).toEqual({
         wasteTrackingId: expect.any(String)
       })
