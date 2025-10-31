@@ -12,7 +12,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
 COLLECTION_NAME="Digital-Waste-Tracking-External-API"
 COLLECTION_DIR="${SCRIPT_DIR}/${COLLECTION_NAME}"
-EXPORT_DIR="${SCRIPT_DIR}/../../waste-tracking-service/docs/bruno/digitalWasteTrackingExternalAPI"
+WASTE_TRACKING_DIR="${SCRIPT_DIR}/../../waste-tracking-service"
+EXPORT_DIR="${WASTE_TRACKING_DIR}/docs/bruno/digitalWasteTrackingExternalAPI"
 
 # Files and directories to exclude from export (internal-only environments and system files)
 EXCLUDE_LIST=(
@@ -165,6 +166,19 @@ main() {
     if [ ! -f "${COLLECTION_DIR}/bruno.json" ]; then
         print_error "Bruno collection not found at: ${COLLECTION_DIR}"
         print_error "This script must be run from a directory containing a valid Bruno collection"
+        exit 1
+    fi
+    
+    # Check if waste-tracking-service directory exists
+    if [ ! -d "$WASTE_TRACKING_DIR" ]; then
+        print_error "Required directory not found: waste-tracking-service"
+        print_error "Expected location: $WASTE_TRACKING_DIR"
+        print_error ""
+        print_error "This script requires the 'waste-tracking-service' repository to be in the same parent directory."
+        print_error "Please ensure both repositories are cloned in the same parent folder:"
+        print_error "  parent-directory/"
+        print_error "    ├── digital-waste-tracking-uat/"
+        print_error "    └── waste-tracking-service/"
         exit 1
     fi
     
