@@ -12,8 +12,8 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
 COLLECTION_NAME="Digital-Waste-Tracking-External-API"
 COLLECTION_DIR="${SCRIPT_DIR}/${COLLECTION_NAME}"
-EXPORT_DIR="${SCRIPT_DIR}/${COLLECTION_NAME}-exported"
-ZIP_FILE="${SCRIPT_DIR}/${COLLECTION_NAME}-exported.zip"
+WASTE_TRACKING_DIR="${SCRIPT_DIR}/../../waste-tracking-service"
+EXPORT_DIR="${WASTE_TRACKING_DIR}/docs/bruno/digitalWasteTrackingExternalAPI"
 
 # Files and directories to exclude from export (internal-only environments and system files)
 EXCLUDE_LIST=(
@@ -30,7 +30,6 @@ EXCLUDE_LIST=(
     ".DS_Store"
     "Thumbs.db"
     "${COLLECTION_NAME}"
-    "$(basename "${ZIP_FILE}")"
 )
 
 # Colors for output
@@ -56,8 +55,6 @@ print_warning() {
 print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
-
-
 
 # Function to export collection
 export_collection() {
@@ -124,46 +121,15 @@ EOF
     print_success "Collection exported successfully to: $EXPORT_DIR"
 }
 
-# Function to create zip file
-create_zip() {
-    if [ "$1" = "true" ]; then
-        print_status "Creating zip file..."
-        
-        # Remove previous zip if it exists
-        if [ -f "$ZIP_FILE" ]; then
-            rm -f "$ZIP_FILE"
-        fi
-        
-        # Create zip file
-        if command -v zip &> /dev/null; then
-            cd "$EXPORT_DIR"
-            zip -r "$ZIP_FILE" . -x "*.DS_Store" "Thumbs.db" "${COLLECTION_NAME}/*"
-            cd ..
-            print_success "Zip file created: $ZIP_FILE"
-            
-            # Remove the export directory since we have the zip file
-            print_status "Removing export directory (zip file contains everything needed)..."
-            rm -rf "$EXPORT_DIR"
-            print_success "Export directory removed: $EXPORT_DIR"
-        else
-            print_warning "zip command not found. Skipping zip creation."
-            print_status "You can manually zip the exported folder: $EXPORT_DIR"
-        fi
-    fi
-}
-
 # Function to show usage
 show_usage() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
     echo "Options:"
-    echo "  -z, --zip        Create a zip file of the exported collection"
     echo "  -h, --help       Show this help message"
     echo ""
     echo "Examples:"
-    echo "  $0               # Export collection to folder only"
-    echo "  $0 -z            # Export collection and create zip file"
-    echo "  $0 --zip         # Export collection and create zip file"
+    echo "  $0               # Export collection to folder"
     echo ""
     echo "Note: This script can be run from any directory and will automatically"
     echo "      find the Bruno collection files based on the script's location."
@@ -181,15 +147,9 @@ show_excluded() {
 
 # Main script
 main() {
-    local create_zip_file=false
-    
     # Parse command line arguments
     while [[ $# -gt 0 ]]; do
         case $1 in
-            -z|--zip)
-                create_zip_file=true
-                shift
-                ;;
             -h|--help)
                 show_usage
                 exit 0
@@ -209,26 +169,40 @@ main() {
         exit 1
     fi
     
+    # Check if waste-tracking-service directory exists
+    if [ ! -d "$WASTE_TRACKING_DIR" ]; then
+        print_error "Required directory not found: waste-tracking-service"
+        print_error "Expected location: $WASTE_TRACKING_DIR"
+        print_error ""
+        print_error "This script requires the 'waste-tracking-service' repository to be in the same parent directory."
+        print_error "Please ensure both repositories are cloned in the same parent folder:"
+        print_error "  parent-directory/"
+        print_error "    ├── digital-waste-tracking-uat/"
+        print_error "    └── waste-tracking-service/"
+        exit 1
+    fi
+    
     # Show what will be excluded
     show_excluded
     
     # Show where we're looking for the collection
     print_status "Looking for Bruno collection in: ${COLLECTION_DIR}"
+
+    echo "EXPORT_DIR: $EXPORT_DIR"
+
+    # delete files at EXPORT_DIR if they exist
+    if [ -d "$EXPORT_DIR" ]; then
+        rm -rf "$EXPORT_DIR"/*
+    fi
     
     # Export the collection
     export_collection
-    
-    # Create zip if requested
-    create_zip "$create_zip_file"
     
     # Final summary
     echo ""
     print_success "Export completed successfully!"
     echo ""
     print_status "Exported collection location: $EXPORT_DIR"
-    if [ "$create_zip_file" = "true" ] && [ -f "$ZIP_FILE" ]; then
-        print_status "Zip file created: $ZIP_FILE"
-    fi
     echo ""
     print_status "The exported collection is ready for external sharing."
     print_warning "Remember to verify that no sensitive information was included before sharing."
