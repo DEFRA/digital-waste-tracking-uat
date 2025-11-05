@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
+import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
 describe('Waste Movement Update', () => {
   let wasteReceiptData
@@ -48,6 +49,35 @@ describe('Waste Movement Update', () => {
       expect(updateResponse.statusCode).toBe(200)
       expect(updateResponse.json).toEqual({})
     })
+    it(
+      'should successfully update an existing waste movement with a different apiCode if it corresponds to the same orgId' +
+        ' @allure.label.tag:DWT-823',
+      async () => {
+        await addAllureLink('/DWT-823', 'DWT-823', 'jira')
+        // First create a movement
+        wasteReceiptData.apiCode = '75ff9140-8617-406e-9163-2ba4907e645b'
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(createResponse.statusCode).toBe(201)
+
+        const wasteTrackingId = createResponse.json.wasteTrackingId
+
+        // Update the movement with different disposal codes
+        const updatedData = generateBaseWasteReceiptData()
+        updatedData.apiCode = '94d744a5-e6d0-4c71-82c8-db52405cbba5'
+
+        const updateResponse =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
+            wasteTrackingId,
+            updatedData
+          )
+
+        expect(updateResponse.statusCode).toBe(200)
+        expect(updateResponse.json).toEqual({})
+      }
+    )
   })
 
   describe('Failed Updates', () => {
@@ -61,10 +91,41 @@ describe('Waste Movement Update', () => {
 
       expect(response.statusCode).toBe(404)
     })
+
+    it(
+      'should reject waste movement update with api code that does not correspond to the orgId of the waste movement' +
+        ' @allure.label.tag:DWT-823',
+      async () => {
+        await addAllureLink('/DWT-823', 'DWT-823', 'jira')
+
+        // First create a movement
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(createResponse.statusCode).toBe(201)
+
+        const wasteTrackingId = createResponse.json.wasteTrackingId
+
+        // Update the movement with different disposal codes
+        const updatedData = generateBaseWasteReceiptData()
+        updatedData.apiCode = '5a6058cc-ac78-47e1-b1b3-37b5eca15cb2'
+
+        const updateResponse =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
+            wasteTrackingId,
+            updatedData
+          )
+
+        expect(updateResponse.statusCode).toBe(400)
+        expect(updateResponse.json).toEqual({})
+      }
+    )
   })
 
   describe('Update is successful with warnings', () => {
     it('should update movement with warnings when missing disposal or recovery codes', async () => {
+      await addAllureLink('/DWT-833', 'DWT-833', 'jira')
       // First create a movement
       const createResponse =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
