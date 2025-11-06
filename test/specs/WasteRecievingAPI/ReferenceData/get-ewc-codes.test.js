@@ -20,7 +20,7 @@ describe('Retrieve EWC Codes', () => {
             'ewc-codes'
           )
         expect(response.statusCode).toBe(200)
-        expect(response.json.length).toBeGreaterThan(0) // to improve once DWT-830 is completed
+        expect(response.json.length).toEqual(842)
         expect(response.json).toContainEqual({
           code: '010304',
           isHazardous: true
