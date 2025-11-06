@@ -118,7 +118,18 @@ describe('Waste Movement Update', () => {
           )
 
         expect(updateResponse.statusCode).toBe(400)
-        expect(updateResponse.json).toEqual({})
+        expect(updateResponse.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'apiCode',
+                errorType: 'UnexpectedError',
+                message:
+                  'the API Code supplied does not relate to the same Organisation as created the original waste item record'
+              }
+            ]
+          }
+        })
       }
     )
   })
