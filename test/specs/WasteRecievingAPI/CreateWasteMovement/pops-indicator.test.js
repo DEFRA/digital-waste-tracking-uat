@@ -77,7 +77,7 @@ describe('POPs Indicator Validation', () => {
       'should accept waste not containing POPs' +
         ' @allure.label.tag:DWT-346' +
         ' @allure.label.tag:DWT-353' +
-        ' @allure.label.tag:bug:DWT-958',
+        ' @allure.label.tag:bug-resolved:DWT-958',
       async () => {
         addAllureLink('/DWT-958', 'DWT-958', 'jira')
         wasteReceiptData.wasteItems[0].containsPops = false
@@ -89,11 +89,9 @@ describe('POPs Indicator Validation', () => {
           )
 
         expect(response.statusCode).toBe(201)
-        // ToDo : re-enable this assertion when DWT-958 is fixed
-        // expect(response.json).toEqual({
-        //
-        //   wasteTrackingId: expect.any(String)
-        // })
+        expect(response.json).toEqual({
+          wasteTrackingId: expect.any(String)
+        })
       }
     )
   })
