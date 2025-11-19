@@ -85,10 +85,10 @@ describe('EWC Codes Validation', () => {                      // Level 3: Behavi
 - **Behavior Level**: Use scenario names (e.g., `Valid Site IDs`, `Invalid EWC Codes`, `Missing Fields`)
 - **Expectation Level**: Use `should` statements describing the expected outcome
 
-## File Naming
+## File Naming in Nesting Structure
 
 - **Test Files**: Use kebab-case with behavior name (e.g., `ewc-codes.test.js`, `hazardous-concentration.test.js`)
-- **Directories**: Use kebab-case for API and operation names (e.g., `WasteRecievingAPI/CreateWasteMovement/`)
+- **Directories**: Use PascalCase for API names and operations (e.g., `WasteRecievingAPI/CreateWasteMovement/`) to distinguish from file names
 
 ## Benefits
 

@@ -1,10 +1,8 @@
 import { ApiFactory } from '../../apis/api-factory.js'
 import { testConfig } from '../../support/test-config.js'
 
-// Global setup - runs once before all tests
-beforeAll(async () => {
-  globalThis.testConfig = testConfig
-})
+// Set testConfig globally at module load time (before tests are parsed). Which is needed for local authentication tests to be skipped.
+globalThis.testConfig = testConfig
 
 // Setup before each test
 beforeEach(() => {

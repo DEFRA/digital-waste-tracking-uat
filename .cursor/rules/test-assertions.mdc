@@ -1,12 +1,20 @@
 ---
-description: Test assertion rules
+description: Test assertion and error handling rules
 globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
 alwaysApply: true
 ---
 
-# Test Assertions
+# Test Assertions & Error Handling
 
-- **Status Code Verification**: Always verify HTTP response status codes
+## Assertion Priority
+
+- **Status Code First**: Always assert status code before other properties
 - **Property Validation**: Use `toHaveProperty()` for checking response structure
-- **Exact Matching**: Use `toEqual()` for exact response body verification in error cases
+- **Type Validation**: Use `expect.any(String)` for dynamic values like IDs
 - **Async/Await**: Use async/await for all API calls
+
+## Error Case Verification
+
+- **Exact Error Matching**: For error cases, use `toEqual()` with exact expected structure
+- **Error Structure**: Expect the standard validation error format with key, errorType, and message
+- **Exact Return Body**: For error case tests, verify the exact return body structure

@@ -12,10 +12,8 @@ export class TestConfig {
    */
   validateRequiredEnvVars() {
     const requiredVars = [
-      'ENVIRONMENT',
-      'COGNITO_CLIENT_ID',
-      'COGNITO_CLIENT_SECRET',
-      'COGNITO_OAUTH_BASE_URL'
+      'WASTE_MOVEMENT_EXTERNAL_API_BASE_URL',
+      'JIRA_BASE_URL'
     ]
 
     const missingVars = requiredVars.filter((varName) => !process.env[varName])
@@ -72,12 +70,25 @@ export class TestConfig {
     return process.env.ENVIRONMENT
   }
 
+  /** */
+  get wasteMovementExternalApiBaseUrl() {
+    return process.env.WASTE_MOVEMENT_EXTERNAL_API_BASE_URL
+  }
+
   /**
    * Check if additional logging is available
    * @returns {boolean} Whether additional logging is available
    */
   get isAdditionalLoggingEnabled() {
     return process.env.API_LOGGING === 'true'
+  }
+
+  /**
+   * Check if auth is disabled
+   * @returns {boolean} Whether auth is disabled
+   */
+  get isAuthDisabled() {
+    return process.env.AUTH_DISABLED === 'true'
   }
 }
 

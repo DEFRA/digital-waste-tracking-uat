@@ -1,11 +1,13 @@
 ---
-description: Test data management rules
+description: Test data management and isolation rules
 globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js", "**/test-data-manager.js"]
 alwaysApply: true
 ---
 
-# Test Data Management
+# Test Data Management & Isolation
 
-- **Centralized Data**: Use the test data manager for consistent test data generation
-- **Base Data Functions**: Use `generateBaseWasteReceiptData()` and similar functions for test setup
+- **Centralized Test Data**: Always use `generateBaseWasteReceiptData()` and similar functions from the test data manager for consistent test data generation
+- **Data Isolation**: Each test should generate fresh test data in `beforeEach` to ensure test independence
+- **No Hardcoded Test Data**: Avoid inline test data creation in test files
+- **Realistic Test Data**: Use realistic but clearly test-oriented data
 - **No Hardcoded Secrets**: Use placeholder values for environment variables in documentation and config files

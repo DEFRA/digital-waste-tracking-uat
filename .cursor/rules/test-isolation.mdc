@@ -6,8 +6,9 @@ alwaysApply: true
 
 # Test Isolation & Parallel Execution
 
-- **Test Isolation**: Each test should be independent and runnable in isolation
-- **Parallel Execution**: Tests should be safe for parallel execution
+- **Test Independence**: Each test should be independent and runnable in isolation
+- **Parallel-Safe**: Tests should be safe for parallel execution
 - **No Shared State**: Avoid global state that could affect other tests
-- **Fresh Data**: Each test should generate fresh test data in beforeEach
+- **Fresh Test Data**: Each test should generate fresh test data in `beforeEach` (see test-data.mdc for details)
 - **Resource Cleanup**: Let Jest handle cleanup automatically
+- **Fresh API Instances**: Create fresh API instances in `beforeEach()` and cleanup in `afterEach()` (see jest-setup.mdc for details)

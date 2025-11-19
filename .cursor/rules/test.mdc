@@ -14,20 +14,18 @@ This is the main index for test development rules. Individual rule categories ar
 - **test-nesting-structure.mdc** - Four-level test nesting hierarchy (API > Feature > Behavior > Expectation)
 - **test-patterns.mdc** - Test implementation patterns
 - **test-isolation.mdc** - Test isolation and parallel execution
+- **jest-setup.mdc** - Jest setup patterns and global configuration timing
 
 ## Data & Environment
-- **test-data.mdc** - Test data management
-- **test-data-isolation.mdc** - Test data isolation and generation
-- **test-environment.mdc** - Environment and execution
+- **test-data.mdc** - Test data management and isolation
+- **test-environment.mdc** - Environment and execution, environment variable management
 
 ## Assertions & API
-- **test-assertions.mdc** - Test assertions
-- **assertion-priority.mdc** - Assertion priority and error handling
-- **api-usage.mdc** - API usage and configuration access
+- **test-assertions.mdc** - Test assertions, error handling, and assertion priority
+- **api-usage.mdc** - API usage, configuration access, and authentication patterns
 
 ## Organization & Quality
-- **test-organization.mdc** - File organization
-- **file-naming.mdc** - File naming and organization
+- **test-organization.mdc** - File naming and organization
 - **module-imports.mdc** - Module import and path alias rules
 - **code-quality.mdc** - Code quality and formatting
 
