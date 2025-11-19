@@ -1,0 +1,42 @@
+---
+description: Jest setup and configuration patterns
+globs: ["**/test/support/jest/*.js", "**/*.test.js", "**/specs/**/*.js"]
+alwaysApply: true
+---
+
+# Jest Setup Patterns
+
+## Global Configuration Setup
+
+- **Module Load Timing**: Set `globalThis.testConfig` at module load time (top-level), NOT in `beforeAll()` hooks
+- **Why**: Test files are parsed before hooks run, so conditional test skipping needs access to config at parse time
+- **Pattern**:
+  ```javascript
+  // test/support/jest/setup.js
+  import { testConfig } from '../../support/test-config.js'
+  
+  // Set testConfig globally at module load time (before tests are parsed)
+  // This is needed for conditional test skipping to work
+  globalThis.testConfig = testConfig
+  ```
+
+## API Instance Management
+
+- **Fresh Instances**: Create fresh API instances in `beforeEach()` to ensure test isolation
+- **Cleanup**: Delete `globalThis.apis` in `afterEach()` to prevent state leakage
+- **Pattern**:
+  ```javascript
+  beforeEach(() => {
+    globalThis.apis = ApiFactory.create() // Fresh instance per test
+  })
+  
+  afterEach(() => {
+    delete globalThis.apis // Clean up after test
+  })
+  ```
+
+## setupFilesAfterEnv Configuration
+
+- **Use setupFilesAfterEnv**: Configure in `jest.config.js` to run setup before all tests
+- **Module-Level Code**: Code at module level in setup files runs before test files are parsed
+- **Hook-Level Code**: Hooks (`beforeAll`, `beforeEach`) run during test execution, after parsing

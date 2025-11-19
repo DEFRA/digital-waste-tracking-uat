@@ -1,11 +1,19 @@
 ---
-description: Test structure and organization rules
+description: Test code structure and describe-it nesting rules
 globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js"]
 alwaysApply: true
 ---
 
-# Test Structure & Organization
+# Test Code Structure
 
-- **3-Level Nesting Maximum**: Use exactly 3 levels of nesting total, including the 'it' level in describe-it hierarchies
+## Describe-It Nesting
+
+- **Maximum 3 Levels**: Use exactly 3 levels of nesting maximum within code (describe-describe-it hierarchy)
+- **Note**: This is separate from the 4-level organizational structure (API/Feature/Behavior/Expectation) which spans folders and files
+- **Pattern**: Outer describe (behavior) → Inner describe (sub-behavior) → it (expectation)
+
+## Style Guidelines
+
 - **Match Existing Style**: Follow the style conventions used elsewhere in the repository
 - **Descriptive Names**: Use clear, descriptive test names that explain the expected behavior
+- **Clear Intent**: Test structure should make test intent immediately obvious

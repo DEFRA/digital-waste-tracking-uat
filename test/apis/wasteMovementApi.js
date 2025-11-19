@@ -2,10 +2,7 @@ import { BaseAPI } from './base-api.js'
 
 export class WasteMovementExternalAPI extends BaseAPI {
   constructor() {
-    super(
-      `https://waste-movement-external-api.api.${globalThis.testConfig.environment}.cdp-int.defra.cloud`,
-      false
-    )
+    super(globalThis.testConfig.wasteMovementExternalApiBaseUrl, false)
   }
 
   /**

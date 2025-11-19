@@ -10,3 +10,16 @@ alwaysApply: true
 - **Environment Variables**: Use `globalThis.testConfig` for accessing configuration
 - **No Hardcoded Credentials**: Never hardcode authentication credentials in test files
 - **Consistent Auth Setup**: Always use `authenticateAndSetToken()` helper in `beforeEach`
+
+## Authentication & Test Skipping
+
+- **Local Development**: Use `AUTH_DISABLED=true` to disable authentication for local/mock API testing
+- **Conditional Test Skipping**: Use conditional describe for authentication-specific tests:
+  ```javascript
+  (globalThis.testConfig?.isAuthDisabled === true ? describe.skip : describe)('Authentication Tests', () => {
+    // Tests that require real authentication
+  })
+  ```
+- **Auth Helper Pattern**: The `authenticateAndSetToken()` helper automatically skips when `AUTH_DISABLED=true`
+- **Global Config Timing**: `globalThis.testConfig` is set at module load time in `setup.js` (not in `beforeAll`) to enable test skipping at parse time
+- **Parse-Time Access**: Test skipping conditions must access `globalThis.testConfig` at module parse time, before any hooks run
