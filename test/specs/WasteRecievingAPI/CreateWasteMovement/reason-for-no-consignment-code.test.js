@@ -31,8 +31,7 @@ describe('Reason for No Consignment Code Validation', () => {
           }
         ]
       }
-      wasteReceiptData.reasonForNoConsignmentCode =
-        'Carrier did not provide documentation'
+      wasteReceiptData.reasonForNoConsignmentCode = 'NO_DOC_WITH_WASTE'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -58,8 +57,7 @@ describe('Reason for No Consignment Code Validation', () => {
           }
         ]
       }
-      wasteReceiptData.reasonForNoConsignmentCode =
-        'Non-Hazardous Waste Transfer'
+      wasteReceiptData.reasonForNoConsignmentCode = 'NON_HAZ_WASTE_TRANSFER'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -88,8 +86,7 @@ describe('Reason for No Consignment Code Validation', () => {
           }
         ]
       }
-      wasteReceiptData.reasonForNoConsignmentCode =
-        'Household Waste Recycling Centre Receipt'
+      wasteReceiptData.reasonForNoConsignmentCode = 'HWRC_RECEIPT'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -256,8 +253,7 @@ describe('Reason for No Consignment Code Validation', () => {
         ]
       }
       wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
-      wasteReceiptData.reasonForNoConsignmentCode =
-        'Carrier did not provide documentation'
+      wasteReceiptData.reasonForNoConsignmentCode = 'NO_DOC_WITH_WASTE'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
