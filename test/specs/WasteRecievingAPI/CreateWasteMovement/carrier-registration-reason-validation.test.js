@@ -23,8 +23,7 @@ describe('Carrier Registration Reason Validation', () => {
         ' @allure.label.tag:DWT-326',
       async () => {
         wasteReceiptData.carrier.registrationNumber = null
-        wasteReceiptData.carrier.reasonForNoRegistrationNumber =
-          'Carrier not registered'
+        wasteReceiptData.carrier.reasonForNoRegistrationNumber = 'ON_SITE'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -35,7 +34,7 @@ describe('Carrier Registration Reason Validation', () => {
     )
   })
 
-  describe('Invalid Registration Reason Scenarios', () => {
+  describe('Warning must be returned wheh reasonForNoRegistrationNumber is null or blank', () => {
     it(
       'should reject waste movement with null registration number and blank reason' +
         ' @allure.label.tag:DWT-326',
@@ -46,15 +45,16 @@ describe('Carrier Registration Reason Validation', () => {
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
           )
-        expect(response.statusCode).toBe(400)
+        expect(response.statusCode).toBe(201)
         expect(response.json).toEqual({
+          wasteTrackingId: expect.any(String),
           validation: {
-            errors: [
+            warnings: [
               {
                 key: 'carrier.reasonForNoRegistrationNumber',
-                errorType: 'UnexpectedError',
+                errorType: 'NotProvided',
                 message:
-                  'Either carrier.registrationNumber or carrier.reasonForNoRegistrationNumber is required'
+                  'carrier.reasonForNoRegistrationNumber must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE'
               }
             ]
           }
@@ -72,6 +72,35 @@ describe('Carrier Registration Reason Validation', () => {
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
           )
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toEqual({
+          wasteTrackingId: expect.any(String),
+          validation: {
+            warnings: [
+              {
+                key: 'carrier.reasonForNoRegistrationNumber',
+                errorType: 'NotProvided',
+                message:
+                  'carrier.reasonForNoRegistrationNumber must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE'
+              }
+            ]
+          }
+        })
+      }
+    )
+  })
+
+  describe('Invalid Registration Reason Scenarios', () => {
+    it(
+      'should reject waste movement with null registration number and a reason that is not one of the allowed values' +
+        ' @allure.label.tag:DWT-1086',
+      async () => {
+        wasteReceiptData.carrier.registrationNumber = null
+        wasteReceiptData.carrier.reasonForNoRegistrationNumber = 'TEST'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
         expect(response.statusCode).toBe(400)
         expect(response.json).toEqual({
           validation: {
@@ -80,7 +109,7 @@ describe('Carrier Registration Reason Validation', () => {
                 key: 'carrier.reasonForNoRegistrationNumber',
                 errorType: 'UnexpectedError',
                 message:
-                  'Either carrier.registrationNumber or carrier.reasonForNoRegistrationNumber is required'
+                  '"carrier.reasonForNoRegistrationNumber" must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE'
               }
             ]
           }
