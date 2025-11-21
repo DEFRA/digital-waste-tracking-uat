@@ -64,7 +64,7 @@ describe('Hazardous Properties Indicator Validation', () => {
         wasteReceiptData.wasteItems[0].containsHazardous = true
         wasteReceiptData.wasteItems[0].hazardous = {
           hazCodes: ['HP_6'],
-          sourceOfComponents: 'CARRIER_PROVIDED',
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
           components: [
             {
               name: 'Mercury',
@@ -127,7 +127,7 @@ describe('Hazardous Properties Indicator Validation', () => {
   describe('Invalid Hazardous Indicator', () => {
     it('should reject waste receipt when hazardous indicator is missing', async () => {
       wasteReceiptData.wasteItems[0].hazardous = {
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             name: 'Mercury',
