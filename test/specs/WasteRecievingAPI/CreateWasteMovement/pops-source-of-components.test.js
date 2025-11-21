@@ -45,7 +45,7 @@ describe('POPs Source Of Components Validation', () => {
                 key: 'wasteItems.0.pops.sourceOfComponents',
                 errorType: 'UnexpectedError',
                 message:
-                  '"wasteItems[0].pops.sourceOfComponents" must be one of [CARRIER_PROVIDED, GUIDANCE, OWN_TESTING, NOT_PROVIDED]'
+                  '"wasteItems[0].pops.sourceOfComponents" must be one of [PROVIDED_WITH_WASTE, GUIDANCE, OWN_TESTING, NOT_PROVIDED]'
               },
               {
                 key: 'wasteItems.0.pops.sourceOfComponents',

@@ -37,7 +37,7 @@ describe('POPs Indicator Validation', () => {
     it('should accept waste containing POPs in multiple waste items', async () => {
       wasteReceiptData.wasteItems[0].containsPops = true
       wasteReceiptData.wasteItems[0].pops = {
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             code: 'ALD',
@@ -49,7 +49,7 @@ describe('POPs Indicator Validation', () => {
       wasteReceiptData.wasteItems.push({ ...wasteReceiptData.wasteItems[0] })
       wasteReceiptData.wasteItems[1].containsPops = true
       wasteReceiptData.wasteItems[1].pops = {
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             code: 'CHL',

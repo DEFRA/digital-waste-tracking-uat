@@ -35,7 +35,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
         hazCodes: ['HP_1', 'HP_3'],
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             name: 'Mercury',
@@ -61,7 +61,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
         hazCodes: ['HP_1', 'HP_3'],
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             name: 'Mercury',
@@ -87,7 +87,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
         hazCodes: ['HP_1', 'HP_3'],
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             name: 'Mercury',
@@ -113,7 +113,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
         hazCodes: ['HP_1', 'HP_3'],
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             name: 'Mercury',
@@ -141,7 +141,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
         hazCodes: ['HP_1', 'HP_3'],
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             name: 'Mercury',
@@ -208,7 +208,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
         hazCodes: ['HP_1', 'HP_3'],
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             name: 'Mercury',
@@ -243,7 +243,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
         hazCodes: ['HP_1', 'HP_3'],
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             name: 'Mercury',
@@ -278,7 +278,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
         hazCodes: ['HP_1', 'HP_3'],
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             name: 'Mercury',
@@ -313,7 +313,7 @@ describe('Hazardous Waste Consignment Note Code Validation', () => {
       wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
         hazCodes: ['HP_1', 'HP_3'],
-        sourceOfComponents: 'CARRIER_PROVIDED',
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
         components: [
           {
             name: 'Mercury',

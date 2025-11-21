@@ -36,7 +36,7 @@ describe('POPs Component Codes Validation', () => {
       async () => {
         wasteReceiptData.wasteItems[0].pops.components[0].code = 'HBB'
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents =
-          'CARRIER_PROVIDED'
+          'PROVIDED_WITH_WASTE'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -166,7 +166,7 @@ describe('POPs Component Codes Validation', () => {
       async () => {
         delete wasteReceiptData.wasteItems[0].pops.components[0].code
         wasteReceiptData.wasteItems[0].pops.sourceOfComponents =
-          'CARRIER_PROVIDED'
+          'PROVIDED_WITH_WASTE'
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(

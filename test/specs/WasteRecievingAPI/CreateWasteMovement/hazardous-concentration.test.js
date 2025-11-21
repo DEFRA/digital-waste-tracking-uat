@@ -24,7 +24,7 @@ describe('Hazardous Component Concentration Validation', () => {
       async () => {
         wasteReceiptData.wasteItems[0].containsHazardous = true
         wasteReceiptData.wasteItems[0].hazardous = {
-          sourceOfComponents: 'CARRIER_PROVIDED',
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
           hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
@@ -55,7 +55,7 @@ describe('Hazardous Component Concentration Validation', () => {
         await addAllureLink('/DWT-630', 'DWT-630', 'jira')
         wasteReceiptData.wasteItems[0].containsHazardous = true
         wasteReceiptData.wasteItems[0].hazardous = {
-          sourceOfComponents: 'CARRIER_PROVIDED',
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
           hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
@@ -130,7 +130,7 @@ describe('Hazardous Component Concentration Validation', () => {
       async () => {
         wasteReceiptData.wasteItems[0].containsHazardous = true
         wasteReceiptData.wasteItems[0].hazardous = {
-          sourceOfComponents: 'CARRIER_PROVIDED',
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
           hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
@@ -167,7 +167,7 @@ describe('Hazardous Component Concentration Validation', () => {
       async () => {
         wasteReceiptData.wasteItems[0].containsHazardous = true
         wasteReceiptData.wasteItems[0].hazardous = {
-          sourceOfComponents: 'CARRIER_PROVIDED',
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
           hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
@@ -237,12 +237,12 @@ describe('Hazardous Component Concentration Validation', () => {
 
   describe('Concentration Warnings', () => {
     it(
-      'should accept waste with no concentration value but show warning if source of components is CARRIER_PROVIDED or OWN_TESTING or GUIDANCE' +
+      'should accept waste with no concentration value but show warning if source of components is PROVIDED_WITH_WASTE or OWN_TESTING or GUIDANCE' +
         ' @allure.label.tag:DWT-624',
       async () => {
         wasteReceiptData.wasteItems[0].containsHazardous = true
         wasteReceiptData.wasteItems[0].hazardous = {
-          sourceOfComponents: 'CARRIER_PROVIDED',
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
           hazCodes: ['HP_1', 'HP_3', 'HP_5'],
           components: [
             {
@@ -266,7 +266,7 @@ describe('Hazardous Component Concentration Validation', () => {
                 key: 'wasteItems.0.hazardous.components.0.concentration',
                 errorType: 'NotProvided',
                 message:
-                  'wasteItems[0].hazardous.components[0].concentration is recommended when source of components is one of CARRIER_PROVIDED, GUIDANCE, OWN_TESTING'
+                  'wasteItems[0].hazardous.components[0].concentration is recommended when source of components is one of PROVIDED_WITH_WASTE, GUIDANCE, OWN_TESTING'
               }
             ]
           }
