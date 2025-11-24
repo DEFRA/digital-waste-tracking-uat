@@ -22,7 +22,7 @@ describe('Site Waste Authorisation Validation', () => {
       'should accept waste movement with single valid site waste authorisation number' +
         ' @allure.label.tag:DWT-339',
       async () => {
-        wasteReceiptData.receiver.authorisationNumbers = ['PPC/A/9999999']
+        wasteReceiptData.receiver.authorisationNumber = 'PPC/A/9999999'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -33,15 +33,38 @@ describe('Site Waste Authorisation Validation', () => {
     )
 
     it(
-      'should accept waste movement with multiple authorisation formats from different home nations' +
+      'should accept waste movement with valid authorisation format for England or Wales' +
         ' @allure.label.tag:DWT-339',
       async () => {
-        wasteReceiptData.receiver.authorisationNumbers = [
-          'XX9999XX', // Wales
-          'HP9999XX', // England
-          'PPC/A/SEPA9999-9999', // Scotland
-          'WPPC 99/99' // Northern Ireland
-        ]
+        wasteReceiptData.receiver.authorisationNumber = 'XX9999XX'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toHaveProperty('wasteTrackingId')
+      }
+    )
+
+    it(
+      'should accept waste movement with a valid authorisation format for Scotland' +
+        ' @allure.label.tag:DWT-339',
+      async () => {
+        wasteReceiptData.receiver.authorisationNumber = 'PPC/A/SEPA9999-9999'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toHaveProperty('wasteTrackingId')
+      }
+    )
+
+    it(
+      'should accept waste movement with a valid authorisation format for Northern Ireland' +
+        ' @allure.label.tag:DWT-339',
+      async () => {
+        wasteReceiptData.receiver.authorisationNumber = 'WPPC 99/99'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -56,9 +79,9 @@ describe('Site Waste Authorisation Validation', () => {
       'should accept waste movement with any string as the authorisation format' +
         ' @allure.label.tag:DWT-339',
       async () => {
-        wasteReceiptData.receiver.authorisationNumbers = [
+        wasteReceiptData.receiver.authorisationNumber =
           'Not An Authorisation Format'
-        ]
+
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -71,34 +94,10 @@ describe('Site Waste Authorisation Validation', () => {
 
   describe('Invalid Site Waste Authorisation Scenarios', () => {
     it(
-      'should reject waste movement when site waste authorisation array is empty' +
-        ' @allure.label.tag:DWT-339',
-      async () => {
-        wasteReceiptData.receiver.authorisationNumbers = []
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-            wasteReceiptData
-          )
-        expect(response.statusCode).toBe(400)
-        expect(response.json).toEqual({
-          validation: {
-            errors: [
-              {
-                key: 'receiver.authorisationNumbers',
-                errorType: 'UnexpectedError',
-                message:
-                  '"receiver.authorisationNumbers" must contain at least 1 items'
-              }
-            ]
-          }
-        })
-      }
-    )
-    it(
       'should reject waste movement when authorisation number is empty string' +
         ' @allure.label.tag:DWT-339',
       async () => {
-        wasteReceiptData.receiver.authorisationNumbers = ['']
+        wasteReceiptData.receiver.authorisationNumber = ''
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -108,10 +107,10 @@ describe('Site Waste Authorisation Validation', () => {
           validation: {
             errors: [
               {
-                key: 'receiver.authorisationNumbers.0',
+                key: 'receiver.authorisationNumber',
                 errorType: 'UnexpectedError',
                 message:
-                  '"receiver.authorisationNumbers[0]" is not allowed to be empty'
+                  '"receiver.authorisationNumber" is not allowed to be empty'
               }
             ]
           }
@@ -123,7 +122,7 @@ describe('Site Waste Authorisation Validation', () => {
         ' @allure.label.tag:DWT-578',
       async () => {
         await addAllureLink('/DWT-578', 'DWT-578', 'jira')
-        wasteReceiptData.receiver.authorisationNumbers = ['WEF1234567']
+        wasteReceiptData.receiver.authorisationNumber = 'WEF1234567'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -133,10 +132,10 @@ describe('Site Waste Authorisation Validation', () => {
           validation: {
             errors: [
               {
-                key: 'receiver.authorisationNumbers.0',
+                key: 'receiver.authorisationNumber',
                 errorType: 'UnexpectedError',
                 message:
-                  '"receiver.authorisationNumbers[0]" must be in a valid UK format'
+                  '"receiver.authorisationNumber" must be in a valid UK format'
               }
             ]
           }
