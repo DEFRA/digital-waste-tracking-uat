@@ -47,7 +47,7 @@ export const generateBaseWasteReceiptData = () => ({
   },
   receiver: {
     siteName: 'Test Receiver Ltd',
-    authorisationNumbers: ['PPC/A/9999999']
+    authorisationNumber: 'PPC/A/9999999'
   },
   receipt: {
     address: {
