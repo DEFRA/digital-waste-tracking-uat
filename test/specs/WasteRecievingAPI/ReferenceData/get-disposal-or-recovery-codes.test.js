@@ -25,6 +25,14 @@ describe('Retrieve Disposal or Recovery Codes', () => {
         expect(response.statusCode).toBe(200)
         const codes = response.json.map((item) => item.code)
         expect(codes).toEqual(expectedCodes)
+        // DWT-1292 -adding addtional assertion to verify the structure of the object
+        const rCodeObj = response.json.find((item) => item.code === 'R12')
+        expect(rCodeObj).toEqual({
+          code: 'R12',
+          isNotRecoveryToFinalProduct: true,
+          description:
+            'Exchange of wastes for submission to any of the operations numbered R1 to R11'
+        })
       })
     })
   })
