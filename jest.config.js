@@ -16,7 +16,7 @@ export default {
   testMatch: ['**/test/specs/**/*.js'],
   verbose: true,
   transformIgnorePatterns: [],
-  maxWorkers: '50%',
+  maxWorkers: 5, // Limited to 5 to avoid 429s in dev/test (single instance). Use --maxWorkers=10 for perf-test.
   testTimeout: 60000, // Longer timeout for individual tests
   forceExit: false, // Let Jest handle cleanup properly
   detectOpenHandles: false // Disable to avoid interference with undici
