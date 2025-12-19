@@ -21,16 +21,7 @@ describe('Retrieve EWC Codes', () => {
         )
       expect(response.statusCode).toBe(200)
       expect(response.json.length).toEqual(842)
-    })
 
-    it('should return EWC codes with correct structure and properties @allure.label.tag:DWT-1285', async () => {
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.retrieveReferenceData(
-          'ewc-codes'
-        )
-      expect(response.statusCode).toBe(200)
-
-      // Verify EWC code structure
       const nonHazardousCode = response.json.find(
         (item) => item.code === '200138'
       )
