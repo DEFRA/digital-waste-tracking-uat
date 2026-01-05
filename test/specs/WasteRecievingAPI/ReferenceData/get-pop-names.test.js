@@ -59,7 +59,7 @@ describe('Retrieve Pop names', () => {
       const codeObj = response.json.find((item) => item.code === 'TETRABDE')
       expect(codeObj).toEqual({
         code: 'TETRABDE',
-        description: 'Tetrabromodiphenyl ether'
+        chemicalName: 'Tetrabromodiphenyl ether'
       })
     })
   })
