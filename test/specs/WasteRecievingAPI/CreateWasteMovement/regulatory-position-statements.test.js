@@ -79,7 +79,7 @@ describe('Regulatory Position Statements Validation', () => {
             errors: [
               {
                 key: 'receiver.regulatoryPositionStatements.0',
-                errorType: 'UnexpectedError',
+                errorType: 'OutOfRange',
                 message:
                   '"receiver.regulatoryPositionStatements[0]" must be a positive number'
               }
@@ -104,7 +104,7 @@ describe('Regulatory Position Statements Validation', () => {
             errors: [
               {
                 key: 'receiver.regulatoryPositionStatements.0',
-                errorType: 'UnexpectedError',
+                errorType: 'OutOfRange',
                 message:
                   '"receiver.regulatoryPositionStatements[0]" must be a positive number'
               }
@@ -133,7 +133,7 @@ describe('Regulatory Position Statements Validation', () => {
             errors: [
               {
                 key: 'receiver.regulatoryPositionStatements.1',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidType',
                 message:
                   '"receiver.regulatoryPositionStatements[1]" must be a number'
               }
@@ -160,7 +160,7 @@ describe('Regulatory Position Statements Validation', () => {
             errors: [
               {
                 key: 'receiver.regulatoryPositionStatements.1',
-                errorType: 'UnexpectedError',
+                errorType: 'OutOfRange',
                 message:
                   '"receiver.regulatoryPositionStatements[1]" must be an integer'
               }

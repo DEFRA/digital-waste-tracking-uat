@@ -107,7 +107,7 @@ describe('Carrier Registration Reason Validation', () => {
             errors: [
               {
                 key: 'carrier.reasonForNoRegistrationNumber',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidValue',
                 message:
                   '"carrier.reasonForNoRegistrationNumber" must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE'
               }

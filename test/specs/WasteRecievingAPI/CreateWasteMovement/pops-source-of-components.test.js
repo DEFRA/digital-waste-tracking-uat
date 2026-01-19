@@ -43,13 +43,13 @@ describe('POPs Source Of Components Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.pops.sourceOfComponents',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidValue',
                 message:
                   '"wasteItems[0].pops.sourceOfComponents" must be one of [PROVIDED_WITH_WASTE, GUIDANCE, OWN_TESTING, NOT_PROVIDED]'
               },
               {
                 key: 'wasteItems.0.pops.sourceOfComponents',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidValue',
                 message:
                   '"wasteItems[0].pops.sourceOfComponents" is not allowed to be empty'
               }
@@ -84,7 +84,7 @@ describe('POPs Source Of Components Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.pops',
-                errorType: 'UnexpectedError',
+                errorType: 'BusinessRuleViolation',
                 message:
                   '"wasteItems[0].pops.sourceOfComponents" is required when containsPops is true'
               }

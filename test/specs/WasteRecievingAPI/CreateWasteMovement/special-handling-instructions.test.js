@@ -53,7 +53,7 @@ describe('Special Handling Instructions Validation', () => {
             errors: [
               {
                 key: 'specialHandlingRequirements',
-                errorType: 'UnexpectedError',
+                errorType: 'OutOfRange',
                 message:
                   '"specialHandlingRequirements" length must be less than or equal to 5000 characters long'
               }

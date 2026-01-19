@@ -140,7 +140,7 @@ describe('Broker or Dealer Details Validation', () => {
             errors: [
               {
                 key: 'brokerOrDealer.registrationNumber',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidFormat',
                 message:
                   '"brokerOrDealer.registrationNumber" must be in a valid England, SEPA, NRW or NI format'
               }
@@ -186,7 +186,7 @@ describe('Broker or Dealer Details Validation', () => {
             errors: [
               {
                 key: 'brokerOrDealer.address.postcode',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidFormat',
                 message:
                   '"brokerOrDealer.address.postcode" must be in valid UK or Ireland format'
               }
@@ -208,7 +208,7 @@ describe('Broker or Dealer Details Validation', () => {
             errors: [
               {
                 key: 'brokerOrDealer.address.postcode',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidFormat',
                 message:
                   '"brokerOrDealer.address.postcode" must be in valid UK or Ireland format'
               }

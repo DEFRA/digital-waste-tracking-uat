@@ -131,7 +131,7 @@ describe('Carrier Contact Details Validation', () => {
           errors: [
             {
               key: 'carrier.address.postcode',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidFormat',
               message:
                 '"carrier.address.postcode" must be in valid UK or Ireland format'
             }
@@ -152,7 +152,7 @@ describe('Carrier Contact Details Validation', () => {
           errors: [
             {
               key: 'carrier.address.postcode',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidFormat',
               message:
                 '"carrier.address.postcode" must be in valid UK or Ireland format'
             }
@@ -177,7 +177,7 @@ describe('Carrier Contact Details Validation', () => {
           errors: [
             {
               key: 'carrier.emailAddress',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidFormat',
               message: '"carrier.emailAddress" must be a valid email'
             }
           ]

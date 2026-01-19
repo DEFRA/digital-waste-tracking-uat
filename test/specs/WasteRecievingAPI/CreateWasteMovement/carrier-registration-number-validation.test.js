@@ -148,7 +148,7 @@ describe('Carrier Registration Number Validation', () => {
             errors: [
               {
                 key: 'carrier.registrationNumber',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidFormat',
                 message:
                   '"carrier.registrationNumber" must be in a valid England, SEPA, NRW or NI format'
               }

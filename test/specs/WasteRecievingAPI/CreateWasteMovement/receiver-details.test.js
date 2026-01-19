@@ -59,7 +59,7 @@ describe('Receiver Details Validation', () => {
           errors: [
             {
               key: 'receiver.emailAddress',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidFormat',
               message: '"receiver.emailAddress" must be a valid email'
             }
           ]

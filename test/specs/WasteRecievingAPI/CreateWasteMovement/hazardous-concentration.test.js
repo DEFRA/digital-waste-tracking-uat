@@ -76,7 +76,7 @@ describe('Hazardous Component Concentration Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.hazardous.components.0.concentration',
-                errorType: 'UnexpectedError',
+                errorType: 'OutOfRange',
                 message:
                   '"wasteItems[0].hazardous.components[0].concentration" must be a positive number'
               }
@@ -114,7 +114,7 @@ describe('Hazardous Component Concentration Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.hazardous.components',
-                errorType: 'UnexpectedError',
+                errorType: 'BusinessRuleViolation',
                 message:
                   '"wasteItems[0].hazardous.components" must not be provided when sourceOfComponents is NOT_PROVIDED'
               }
@@ -151,7 +151,7 @@ describe('Hazardous Component Concentration Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.hazardous.components.0.concentration',
-                errorType: 'UnexpectedError',
+                errorType: 'OutOfRange',
                 message:
                   '"wasteItems[0].hazardous.components[0].concentration" must be a positive number'
               }
@@ -188,7 +188,7 @@ describe('Hazardous Component Concentration Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.hazardous.components.0.concentration',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidType',
                 message:
                   '"wasteItems[0].hazardous.components[0].concentration" must be a number'
               }
@@ -224,7 +224,7 @@ describe('Hazardous Component Concentration Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.hazardous.components',
-                errorType: 'UnexpectedError',
+                errorType: 'BusinessRuleViolation',
                 message:
                   '"wasteItems[0].hazardous.components" must not be provided when containsHazardous is false'
               }
