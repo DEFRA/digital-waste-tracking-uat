@@ -152,7 +152,7 @@ describe('Reason for No Consignment Code Validation', () => {
           errors: [
             {
               key: 'reasonForNoConsignmentCode',
-              errorType: 'UnexpectedError',
+              errorType: 'BusinessRuleViolation',
               message:
                 '"reasonForNoConsignmentCode" is required when wasteItems[*].ewcCodes contains a hazardous code and hazardousWasteConsignmentCode is not provided'
             }
@@ -190,7 +190,7 @@ describe('Reason for No Consignment Code Validation', () => {
           errors: [
             {
               key: 'reasonForNoConsignmentCode',
-              errorType: 'UnexpectedError',
+              errorType: 'BusinessRuleViolation',
               message:
                 '"reasonForNoConsignmentCode" is required when wasteItems[*].ewcCodes contains a hazardous code and hazardousWasteConsignmentCode is not provided'
             }
@@ -228,7 +228,7 @@ describe('Reason for No Consignment Code Validation', () => {
           errors: [
             {
               key: 'reasonForNoConsignmentCode',
-              errorType: 'UnexpectedError',
+              errorType: 'BusinessRuleViolation',
               message:
                 '"reasonForNoConsignmentCode" is required when wasteItems[*].ewcCodes contains a hazardous code and hazardousWasteConsignmentCode is not provided'
             }

@@ -57,7 +57,7 @@ describe('Receiving date timestamp validation', () => {
           errors: [
             {
               key: 'dateTimeReceived',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidFormat',
               message: '"dateTimeReceived" must be in ISO 8601 date format'
             }
           ]

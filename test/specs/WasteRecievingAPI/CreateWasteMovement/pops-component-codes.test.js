@@ -93,7 +93,7 @@ describe('POPs Component Codes Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.pops.components.0.code',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidValue',
                 message:
                   '"wasteItems[0].pops.components[0].code" is not allowed to be empty'
               }
@@ -120,7 +120,7 @@ describe('POPs Component Codes Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.pops.components',
-                errorType: 'UnexpectedError',
+                errorType: 'BusinessRuleViolation',
                 message:
                   '"wasteItems[0].pops.components" must not be provided when containsPops is false'
               }
@@ -149,7 +149,7 @@ describe('POPs Component Codes Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.pops.components.0.code',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidValue',
                 message:
                   '"wasteItems[0].pops.components[0].code" contains an invalid POP code'
               }
@@ -210,7 +210,7 @@ describe('POPs Component Codes Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.pops.components.1.code',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidValue',
                 message:
                   '"wasteItems[0].pops.components[1].code" contains an invalid POP code'
               }

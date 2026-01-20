@@ -84,7 +84,7 @@ describe('Waste Weight Estimate Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.weight.isEstimate',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidType',
                 message: '"wasteItems[0].weight.isEstimate" must be a boolean'
               }
             ]
@@ -166,7 +166,7 @@ describe('Waste Weight Estimate Validation', () => {
               errors: [
                 {
                   key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.isEstimate',
-                  errorType: 'UnexpectedError',
+                  errorType: 'InvalidType',
                   message:
                     '"wasteItems[0].disposalOrRecoveryCodes[0].weight.isEstimate" must be a boolean'
                 }

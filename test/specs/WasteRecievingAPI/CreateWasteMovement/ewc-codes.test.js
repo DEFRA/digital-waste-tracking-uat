@@ -73,7 +73,7 @@ describe('EWC Codes Validation', () => {
           errors: [
             {
               key: 'wasteItems.0.ewcCodes',
-              errorType: 'UnexpectedError',
+              errorType: 'OutOfRange',
               message:
                 '"wasteItems[0].ewcCodes" must contain no more than 5 EWC codes'
             }
@@ -118,7 +118,7 @@ describe('EWC Codes Validation', () => {
           errors: [
             {
               key: 'wasteItems.0.ewcCodes.0',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidFormat',
               message:
                 '"wasteItems[0].ewcCodes[0]" must be a valid 6-digit numeric code'
             }
@@ -141,7 +141,7 @@ describe('EWC Codes Validation', () => {
           errors: [
             {
               key: 'wasteItems.0.ewcCodes.0',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message:
                 '"wasteItems[0].ewcCodes[0]" must be a valid EWC code from the official list'
             }

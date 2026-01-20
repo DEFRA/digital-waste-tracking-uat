@@ -59,7 +59,7 @@ describe('Waste Weight unit of measurement Validation', () => {
           errors: [
             {
               key: 'wasteItems.0.weight.metric',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message:
                 '"wasteItems[0].weight.metric" must be one of [Grams, Kilograms, Tonnes]'
             }
@@ -83,14 +83,14 @@ describe('Waste Weight unit of measurement Validation', () => {
           errors: [
             {
               key: 'wasteItems.0.weight.metric',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message: expect.stringMatching(
                 /^"wasteItems\[0\]\.weight\.metric" (is not allowed to be empty|must be one of \[Grams, Kilograms, Tonnes\])$/
               )
             },
             {
               key: 'wasteItems.0.weight.metric',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message: expect.stringMatching(
                 /^"wasteItems\[0\]\.weight\.metric" (is not allowed to be empty|must be one of \[Grams, Kilograms, Tonnes\])$/
               )
@@ -145,7 +145,7 @@ describe('Waste Weight unit of measurement Validation', () => {
           errors: [
             {
               key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.metric',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message:
                 '"wasteItems[0].disposalOrRecoveryCodes[0].weight.metric" must be one of [Grams, Kilograms, Tonnes]'
             }
@@ -170,14 +170,14 @@ describe('Waste Weight unit of measurement Validation', () => {
           errors: [
             {
               key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.metric',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message: expect.stringMatching(
                 /^"wasteItems\[0\]\.disposalOrRecoveryCodes\[0\]\.weight\.metric" (is not allowed to be empty|must be one of \[Grams, Kilograms, Tonnes\])$/
               )
             },
             {
               key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.metric',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message: expect.stringMatching(
                 /^"wasteItems\[0\]\.disposalOrRecoveryCodes\[0\]\.weight\.metric" (is not allowed to be empty|must be one of \[Grams, Kilograms, Tonnes\])$/
               )

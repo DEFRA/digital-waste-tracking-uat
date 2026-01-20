@@ -114,7 +114,7 @@ describe('Hazardous Properties Indicator Validation', () => {
           errors: [
             {
               key: 'wasteItems.0.hazardous.components',
-              errorType: 'UnexpectedError',
+              errorType: 'BusinessRuleViolation',
               message:
                 '"wasteItems[0].hazardous.components" must not be provided when containsHazardous is false'
             }
@@ -172,7 +172,7 @@ describe('Hazardous Properties Indicator Validation', () => {
           errors: [
             {
               key: 'wasteItems.0.containsHazardous',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidType',
               message: '"wasteItems[0].containsHazardous" must be a boolean'
             }
           ]

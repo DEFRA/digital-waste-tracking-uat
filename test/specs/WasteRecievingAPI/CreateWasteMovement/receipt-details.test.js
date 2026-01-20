@@ -73,7 +73,7 @@ describe('Receipt Details Validation', () => {
           errors: [
             {
               key: 'receipt.address.postcode',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidFormat',
               message: '"receipt.address.postcode" must be in valid UK format'
             }
           ]
@@ -95,7 +95,7 @@ describe('Receipt Details Validation', () => {
           errors: [
             {
               key: 'receipt.address.postcode',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidFormat',
               message: '"receipt.address.postcode" must be in valid UK format'
             }
           ]
@@ -117,7 +117,7 @@ describe('Receipt Details Validation', () => {
           errors: [
             {
               key: 'receipt.address.postcode',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidFormat',
               message: '"receipt.address.postcode" must be in valid UK format'
             }
           ]

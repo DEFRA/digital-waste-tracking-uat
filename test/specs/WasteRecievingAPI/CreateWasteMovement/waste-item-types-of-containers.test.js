@@ -68,7 +68,7 @@ describe('Waste Item Container Types Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.typeOfContainers',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidValue',
                 message:
                   '"wasteItems[0].typeOfContainers" must be a valid container type'
               }

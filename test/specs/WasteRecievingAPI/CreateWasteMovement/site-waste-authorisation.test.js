@@ -108,7 +108,7 @@ describe('Site Waste Authorisation Validation', () => {
             errors: [
               {
                 key: 'receiver.authorisationNumber',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidValue',
                 message:
                   '"receiver.authorisationNumber" is not allowed to be empty'
               }
@@ -133,7 +133,7 @@ describe('Site Waste Authorisation Validation', () => {
             errors: [
               {
                 key: 'receiver.authorisationNumber',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidFormat',
                 message:
                   '"receiver.authorisationNumber" must be in a valid UK format'
               }

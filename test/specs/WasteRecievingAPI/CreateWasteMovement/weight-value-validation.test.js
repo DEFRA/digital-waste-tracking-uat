@@ -61,7 +61,7 @@ describe('Waste Weight value Validation', () => {
           errors: [
             {
               key: 'wasteItems.0.weight.amount',
-              errorType: 'UnexpectedError',
+              errorType: 'OutOfRange',
               message: '"wasteItems[0].weight.amount" must be a positive number'
             }
           ]
@@ -117,7 +117,7 @@ describe('Waste Weight value Validation', () => {
             errors: [
               {
                 key: 'wasteItems.0.disposalOrRecoveryCodes.0.weight.amount',
-                errorType: 'UnexpectedError',
+                errorType: 'OutOfRange',
                 message:
                   '"wasteItems[0].disposalOrRecoveryCodes[0].weight.amount" must be a positive number'
               }

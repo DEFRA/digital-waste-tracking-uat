@@ -98,7 +98,7 @@ describe('Carrier Means of transport Validation', () => {
             errors: [
               {
                 key: 'carrier.vehicleRegistration',
-                errorType: 'UnexpectedError',
+                errorType: 'NotAllowed',
                 message:
                   'If carrier.meansOfTransport is not "Road" then carrier.vehicleRegistration is not applicable'
               }
@@ -154,7 +154,7 @@ describe('Carrier Means of transport Validation', () => {
           errors: [
             {
               key: 'carrier.meansOfTransport',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message:
                 '"carrier.meansOfTransport" must be one of [Road, Rail, Air, Sea, Inland Waterway, Piped, Other]'
             }

@@ -76,7 +76,7 @@ describe('Waste physical form field validation', () => {
           errors: [
             {
               key: 'wasteItems.0.physicalForm',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message:
                 '"wasteItems[0].physicalForm" must be one of [Gas, Liquid, Solid, Powder, Sludge, Mixed]'
             }

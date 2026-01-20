@@ -94,7 +94,7 @@ describe('Other References For Movement Validation', () => {
           errors: [
             {
               key: 'otherReferencesForMovement',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidType',
               message: '"otherReferencesForMovement" must be an array'
             }
           ]
@@ -174,7 +174,7 @@ describe('Other References For Movement Validation', () => {
           errors: [
             {
               key: 'otherReferencesForMovement.0.label',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message:
                 '"otherReferencesForMovement[0].label" is not allowed to be empty'
             }
@@ -201,7 +201,7 @@ describe('Other References For Movement Validation', () => {
           errors: [
             {
               key: 'otherReferencesForMovement.0.reference',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidValue',
               message:
                 '"otherReferencesForMovement[0].reference" is not allowed to be empty'
             }
@@ -228,7 +228,7 @@ describe('Other References For Movement Validation', () => {
           errors: [
             {
               key: 'otherReferencesForMovement.0.label',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidType',
               message: '"otherReferencesForMovement[0].label" must be a string'
             }
           ]
@@ -254,7 +254,7 @@ describe('Other References For Movement Validation', () => {
           errors: [
             {
               key: 'otherReferencesForMovement.0.reference',
-              errorType: 'UnexpectedError',
+              errorType: 'InvalidType',
               message:
                 '"otherReferencesForMovement[0].reference" must be a string'
             }
