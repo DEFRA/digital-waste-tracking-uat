@@ -23,6 +23,7 @@ EXCLUDE_LIST=(
     "environments/3) perf-test-environment.bru"
     "environments/4) ext-test-environment.bru"
     "environments/6) prod-environment.bru"
+    "Internal Backend"
     ".git"
     "node_modules"
     "*.log"
