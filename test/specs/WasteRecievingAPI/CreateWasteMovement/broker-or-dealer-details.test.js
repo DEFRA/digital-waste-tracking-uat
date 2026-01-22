@@ -220,7 +220,7 @@ describe('Broker or Dealer Details Validation', () => {
 
     describe('Invalid Email Addresses', () => {
       it('should reject waste movement when invalid email is supplied for broker or dealer organisation @allure.label.tag:DWT-343', async () => {
-        wasteReceiptData.brokerOrDealer.address.emailAddress = 'invalidtest@'
+        wasteReceiptData.brokerOrDealer.emailAddress = 'invalidtest@'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -230,9 +230,9 @@ describe('Broker or Dealer Details Validation', () => {
           validation: {
             errors: [
               {
-                key: 'brokerOrDealer.address.emailAddress',
-                errorType: 'NotAllowed',
-                message: '"brokerOrDealer.address.emailAddress" is not allowed'
+                key: 'brokerOrDealer.emailAddress',
+                errorType: 'InvalidFormat',
+                message: '"brokerOrDealer.emailAddress" must be a valid email'
               }
             ]
           }
