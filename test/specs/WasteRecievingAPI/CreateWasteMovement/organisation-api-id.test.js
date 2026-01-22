@@ -72,7 +72,7 @@ describe('Organisation API ID Validation', () => {
             errors: [
               {
                 key: 'apiCode',
-                errorType: 'UnexpectedError',
+                errorType: 'InvalidValue',
                 message: 'the API Code supplied is invalid'
               }
             ]

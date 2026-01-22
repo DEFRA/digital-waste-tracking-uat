@@ -123,7 +123,7 @@ describe('Waste Movement Update', () => {
             errors: [
               {
                 key: 'apiCode',
-                errorType: 'UnexpectedError',
+                errorType: 'BusinessRuleViolation',
                 message:
                   'the API Code supplied does not relate to the same Organisation as created the original waste item record'
               }
