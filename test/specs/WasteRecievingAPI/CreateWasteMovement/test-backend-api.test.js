@@ -30,10 +30,13 @@ describe('Test backend API', () => {
 
         const wasteTrackingId = createResponse.json.wasteTrackingId
         const retryAuditLogResponse =
-          await globalThis.apis.wasteMovementBackendAPI.retryAuditLog({
-            wasteTrackingId,
-            revision: 1
-          })
+          await globalThis.apis.wasteMovementBackendAPI.retryAuditLog(
+            globalThis.testConfig.backendPassword,
+            {
+              wasteTrackingId,
+              revision: 1
+            }
+          )
         expect(retryAuditLogResponse.statusCode).toBe(200)
       }
     )

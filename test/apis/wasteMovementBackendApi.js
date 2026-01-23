@@ -8,11 +8,21 @@ export class WasteMovementBackendAPI extends BaseAPI {
   /**
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
-  async retryAuditLog(requestBody) {
+  async retryAuditLog(password, requestBody) {
+    // Create Basic Authorization header with base64 encoded credentials
+    const credentials = `waste-movement-external-api:${password}`
+    const base64Credentials = Buffer.from(credentials).toString('base64')
+
+    // Set the correct headers for OAuth token requests
+    const requestHeaders = {
+      Authorization: `Basic ${base64Credentials}`,
+      'Content-Type': 'application/json'
+    }
+
     const { statusCode, headers, json } = await this.post(
       '/movements/retry-audit-log',
       JSON.stringify(requestBody),
-      { 'Content-Type': 'application/json' }
+      requestHeaders
     )
 
     return {
