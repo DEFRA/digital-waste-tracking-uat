@@ -75,6 +75,11 @@ export class TestConfig {
     return process.env.WASTE_MOVEMENT_EXTERNAL_API_BASE_URL
   }
 
+  /** */
+  get wasteMovementBackendApiBaseUrl() {
+    return `https://waste-movement-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`
+  }
+
   /**
    * Check if additional logging is available
    * @returns {boolean} Whether additional logging is available
