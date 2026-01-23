@@ -46,6 +46,10 @@ export class TestConfig {
     return process.env.COGNITO_OAUTH_BASE_URL
   }
 
+  get backendPassword() {
+    return process.env.BACKEND_PASSWORD
+  }
+
   /**
    * get JIRA base URL
    * @returns {string}
@@ -73,6 +77,11 @@ export class TestConfig {
   /** */
   get wasteMovementExternalApiBaseUrl() {
     return process.env.WASTE_MOVEMENT_EXTERNAL_API_BASE_URL
+  }
+
+  /** */
+  get wasteMovementBackendApiBaseUrl() {
+    return `https://waste-movement-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`
   }
 
   /**
