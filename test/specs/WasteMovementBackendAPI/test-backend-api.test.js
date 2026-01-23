@@ -3,7 +3,14 @@ import { generateBaseWasteReceiptData } from '../../support/test-data-manager.js
 import { authenticateAndSetToken } from '../../support/helpers/auth.js'
 import { addAllureLink } from '../../support/helpers/allure-api-logger.js'
 
-describe.skip('Test backend API', () => {
+// Skip tests if environment is local or undefined
+const describeOnlyIfRunningOnCDP =
+  globalThis.testConfig?.environment !== undefined &&
+  globalThis.testConfig?.environment !== 'local'
+    ? describe
+    : describe.skip
+
+describeOnlyIfRunningOnCDP('Test backend API', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
