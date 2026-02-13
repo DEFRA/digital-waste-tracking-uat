@@ -1,11 +1,11 @@
 meta {
-  name: bulk-upload
+  name: Bulk Upload - Single Movement missing Organisation Data
   type: http
   seq: 2
 }
 
 post {
-  url: https://ephemeral-protected.api.{{env}}.cdp-int.defra.cloud/waste-movement-backend/bulk/{{$randomUUID}}/movements/receive
+  url: {{baseUrl}}/bulk/{{$randomUUID}}/movements/receive
   body: json
   auth: basic
 }
@@ -16,15 +16,12 @@ headers {
 
 auth:basic {
   username: waste-organisations-backend
-  password: {{waste-organisations-backend-password}}
+  password: {{backend-password-NEED_BETTER_NAME}}
 }
 
 body:json {
   [
     {
-      "submittingOrganisation": {
-        "defraCustomerOrganisationId": "{{$randomUUID}}"
-      },
       "dateTimeReceived": "{{timestamp}}",
       "wasteItems": [
         {
@@ -72,6 +69,13 @@ body:json {
       }
     }
   ]
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
 }
 
 settings {
