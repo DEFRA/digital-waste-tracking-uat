@@ -1,0 +1,286 @@
+meta {
+  name: Bulk Upload - Two Complex Movements
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/bulk/{{$randomUUID}}/movements/receive
+  body: json
+  auth: basic
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+}
+
+auth:basic {
+  username: waste-organisations-backend
+  password: {{SERVICE_AUTH_PASSWORD_WASTE_ORGANISATION_BACKEND}}
+}
+
+body:json {
+  [
+    {
+      "submittingOrganisation": {
+        "defraCustomerOrganisationId": "{{$randomUUID}}"
+      },
+      "dateTimeReceived": "{{timestamp}}",
+      "hazardousWasteConsignmentCode": "SB1234567",
+      "wasteItems": [
+        {
+          "ewcCodes": [
+            "200121"
+          ],
+          "wasteDescription": "Industrial waste containing persistent organic pollutants (POPs) and hazardous heavy metals from decommissioned electrical equipment and contaminated soil",
+          "physicalForm": "Mixed",
+          "numberOfContainers": 15,
+          "typeOfContainers": "SKI",
+          "weight": {
+            "metric": "Tonnes",
+            "amount": 1.2,
+            "isEstimate": true
+          },
+          "containsPops": true,
+          "pops": {
+            "sourceOfComponents": "PROVIDED_WITH_WASTE",
+            "components": [
+              {
+                "code": "CHL",
+                "concentration": 250
+              },
+              {
+                "code": "TOX",
+                "concentration": 156.4
+              },
+              {
+                "code": "DCF",
+                "concentration": 0.8
+              },
+              {
+                "code": "DDT",
+                "concentration": 1.2
+              }
+            ]
+          },
+          "containsHazardous": true,
+          "hazardous": {
+            "hazCodes": [
+              "HP_1",
+              "HP_3",
+              "HP_6"
+            ],
+            "sourceOfComponents": "PROVIDED_WITH_WASTE",
+            "components": [
+              {
+                "name": "Mercury",
+                "concentration": 0.35
+              },
+              {
+                "name": "Arsenic",
+                "concentration": 300
+              },
+              {
+                "name": "Chromium",
+                "concentration": 0.42
+              },
+              {
+                "name": "Lead",
+                "concentration": 0.89
+              }
+            ]
+          },
+          "disposalOrRecoveryCodes": [
+            {
+              "code": "R1",
+              "weight": {
+                "metric": "Tonnes",
+                "amount": 0.75,
+                "isEstimate": false
+              }
+            }
+          ]
+        }
+      ],
+      "carrier": {
+        "organisationName": "Carrier Ltd",
+        "registrationNumber": "CBDL999999",
+        "meansOfTransport": "Rail"
+      },
+      "receiver": {
+        "siteName": "Receiver Ltd",
+        "emailAddress": "receiver@test.com",
+        "authorisationNumber": "PPC/A/9999999"
+      },
+      "receipt": {
+        "address": {
+          "fullAddress": "123 Test Street, Test City",
+          "postcode": "TC1 2AB"
+        }
+      }
+    },
+    {
+      "submittingOrganisation": {
+        "defraCustomerOrganisationId": "{{$randomUUID}}"
+      },
+      "dateTimeReceived": "{{timestamp}}",
+      "reasonForNoConsignmentCode": "NO_DOC_WITH_WASTE",
+      "wasteItems": [
+        {
+          "ewcCodes": [
+            "200121"
+          ],
+          "wasteDescription": "Industrial waste containing persistent organic pollutants (POPs) and hazardous heavy metals from decommissioned electrical equipment and contaminated soil",
+          "physicalForm": "Mixed",
+          "numberOfContainers": 15,
+          "typeOfContainers": "SKI",
+          "weight": {
+            "metric": "Tonnes",
+            "amount": 1.2,
+            "isEstimate": true
+          },
+          "containsPops": true,
+          "pops": {
+            "sourceOfComponents": "PROVIDED_WITH_WASTE",
+            "components": [
+              {
+                "code": "CHL",
+                "concentration": 250
+              },
+              {
+                "code": "TOX",
+                "concentration": 156.4
+              },
+              {
+                "code": "DCF",
+                "concentration": 0.8
+              },
+              {
+                "code": "DDT",
+                "concentration": 1.2
+              }
+            ]
+          },
+          "containsHazardous": true,
+          "hazardous": {
+            "hazCodes": [
+              "HP_1",
+              "HP_3",
+              "HP_6"
+            ],
+            "sourceOfComponents": "PROVIDED_WITH_WASTE",
+            "components": [
+              {
+                "name": "Mercury",
+                "concentration": 0.35
+              },
+              {
+                "name": "Arsenic",
+                "concentration": 300
+              },
+              {
+                "name": "Chromium",
+                "concentration": 0.42
+              },
+              {
+                "name": "Lead",
+                "concentration": 0.89
+              }
+            ]
+          },
+          "disposalOrRecoveryCodes": [
+            {
+              "code": "R1",
+              "weight": {
+                "metric": "Tonnes",
+                "amount": 0.75,
+                "isEstimate": false
+              }
+            }
+          ]
+        },
+        {
+          "ewcCodes": [
+            "150110"
+          ],
+          "wasteDescription": "Secondary waste containing plastic packaging and minor contaminants",
+          "physicalForm": "Solid",
+          "numberOfContainers": 5,
+          "typeOfContainers": "SKI",
+          "weight": {
+            "metric": "Tonnes",
+            "amount": 1.1,
+            "isEstimate": true
+          },
+          "containsPops": false,
+          "pops": {
+            "sourceOfComponents": "NOT_PROVIDED"
+          },
+          "containsHazardous": true,
+          "hazardous": {
+            "hazCodes": [
+              "HP_6"
+            ],
+            "sourceOfComponents": "PROVIDED_WITH_WASTE",
+            "components": [
+              {
+                "name": "Arsenic",
+                "concentration": 75
+              }
+            ]
+          },
+          "disposalOrRecoveryCodes": [
+            {
+              "code": "R1",
+              "weight": {
+                "metric": "Tonnes",
+                "amount": 0.75,
+                "isEstimate": false
+              }
+            }
+          ]
+        }
+      ],
+      "carrier": {
+        "organisationName": "Carrier Ltd",
+        "registrationNumber": "CBDL999999",
+        "address": {
+          "fullAddress": "321 Test Street, Test City",
+          "postcode": "TC2 2CD"
+        },
+        "emailAddress": "test@carrier.com",
+        "phoneNumber": "01234567890",
+        "meansOfTransport": "Road",
+        "vehicleRegistration": "AB12 CDE"
+      },
+      "receiver": {
+        "siteName": "Receiver Ltd",
+        "emailAddress": "receiver@test.com",
+        "phoneNumber": "01234567890",
+        "authorisationNumber": "PPC/A/SEPA9999-9999",
+        "regulatoryPositionStatements": [
+          123,
+          456
+        ]
+      },
+      "receipt": {
+        "address": {
+          "fullAddress": "123 Test Street, Test City",
+          "postcode": "TC1 2AB"
+        }
+      }
+    }
+  ]
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
