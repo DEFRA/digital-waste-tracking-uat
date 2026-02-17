@@ -7,16 +7,11 @@ meta {
 post {
   url: {{baseUrl}}/bulk/{{$randomUUID}}/movements/receive
   body: json
-  auth: basic
+  auth: inherit
 }
 
 headers {
   x-api-key: {{cdp-api-key}}
-}
-
-auth:basic {
-  username: waste-organisations-backend
-  password: {{SERVICE_AUTH_PASSWORD_WASTE_ORGANISATION_BACKEND}}
 }
 
 body:json {

@@ -1,11 +1,11 @@
 meta {
-  name: Bulk Upload - Single Movement missing Organisation Data
+  name: Receive Movement - Single Movement
   type: http
-  seq: 2
+  seq: 5
 }
 
 post {
-  url: {{baseUrl}}/bulk/{{$randomUUID}}/movements/receive
+  url: {{baseUrl}}/movements/266HTGUN/receive
   body: json
   auth: inherit
 }
@@ -15,8 +15,12 @@ headers {
 }
 
 body:json {
-  [
-    {
+  {
+    "movement": {
+      "apiCode": "{{apiCode}}",
+      "submittingOrganisation": {
+        "defraCustomerOrganisationId": "{{$randomUUID}}"
+      },
       "dateTimeReceived": "{{timestamp}}",
       "wasteItems": [
         {
@@ -63,7 +67,7 @@ body:json {
         }
       }
     }
-  ]
+  }
 }
 
 script:pre-request {

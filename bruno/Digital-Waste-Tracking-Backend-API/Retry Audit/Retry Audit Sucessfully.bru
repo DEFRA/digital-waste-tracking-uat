@@ -7,16 +7,11 @@ meta {
 post {
   url: {{baseUrl}}/movements/retry-audit-log
   body: json
-  auth: basic
+  auth: inherit
 }
 
 headers {
   x-api-key: {{cdp-api-key}}
-}
-
-auth:basic {
-  username: waste-movement-external-api
-  password: {{SERVICE_AUTH_PASSWORD}}
 }
 
 body:json {
