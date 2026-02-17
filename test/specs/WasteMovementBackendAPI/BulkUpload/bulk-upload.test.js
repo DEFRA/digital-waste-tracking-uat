@@ -62,8 +62,8 @@ describe('@this Bulk Upload', () => {
       expect(response.statusCode).toBe(500)
       expect(response.json).toEqual({
         statusCode: 500,
-        error: 'TypeError',
-        message: "Cannot read properties of undefined (reading 'bulkId')"
+        error: 'Internal Server Error',
+        message: 'An internal server error occurred'
       })
     })
 
