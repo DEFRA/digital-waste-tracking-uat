@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
-describe('Retrieve Disposal or Recovery Codes', () => {
+describe('@smoke - Retrieve Disposal or Recovery Codes', () => {
   beforeEach(async () => {
     await addAllureLink('/DWT-719', 'DWT-719', 'jira')
     // Authenticate and set the auth token

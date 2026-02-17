@@ -1,9 +1,6 @@
 import { describe, it, expect } from '@jest/globals'
 
-// Skip tests if authentication is disabled in the test config
-const describeOnlyIfAuthDisabled =
-  globalThis.testConfig?.isAuthDisabled === true ? describe.skip : describe
-describeOnlyIfAuthDisabled('OAuth2 Client Credentials Authentication', () => {
+describe('@smoke - OAuth2 Client Credentials Authentication', () => {
   describe('Successful authentication with valid credentials', () => {
     it('should authenticate successfully with valid client credentials', async () => {
       const response = await globalThis.apis.cognitoOAuthApi.authenticate(

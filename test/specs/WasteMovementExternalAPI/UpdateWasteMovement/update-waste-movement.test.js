@@ -3,7 +3,7 @@ import { generateBaseWasteReceiptData } from '../../../support/test-data-manager
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
-describe('Waste Movement Update', () => {
+describe('@smoke - Waste Movement Update', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
