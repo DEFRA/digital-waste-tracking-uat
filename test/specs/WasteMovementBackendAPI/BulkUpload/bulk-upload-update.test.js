@@ -25,6 +25,7 @@ describe('Bulk Upload Update', () => {
           bulkUploadId,
           singleMovement
         )
+      expect(createResponse.statusCode).toBe(201)
 
       singleMovement[0].wasteTrackingId =
         createResponse.json.movements[0].wasteTrackingId
@@ -50,6 +51,7 @@ describe('Bulk Upload Update', () => {
           bulkUploadId,
           movements
         )
+      expect(createResponse.statusCode).toBe(201)
 
       movements[0].wasteTrackingId =
         createResponse.json.movements[0].wasteTrackingId
@@ -77,6 +79,7 @@ describe('Bulk Upload Update', () => {
           bulkUploadId,
           movements
         )
+      expect(createResponse.statusCode).toBe(201)
 
       movements[0].wasteTrackingId =
         createResponse.json.movements[0].wasteTrackingId
@@ -112,10 +115,12 @@ describe('Bulk Upload Update', () => {
   describe('Waste movements not updated', () => {
     it('should reject bulk update when array is empty', async () => {
       const bulkUploadId = randomUUID()
-      await globalThis.apis.wasteMovementBackendAPI.bulkUploadCreate(
-        bulkUploadId,
-        [generateBaseBulkUploadMovement()]
-      )
+      const createResponse =
+        await globalThis.apis.wasteMovementBackendAPI.bulkUploadCreate(
+          bulkUploadId,
+          [generateBaseBulkUploadMovement()]
+        )
+      expect(createResponse.statusCode).toBe(201)
 
       const response =
         await globalThis.apis.wasteMovementBackendAPI.bulkUploadUpdate(
@@ -138,6 +143,7 @@ describe('Bulk Upload Update', () => {
           bulkUploadId,
           movements
         )
+      expect(createResponse.statusCode).toBe(201)
 
       const validMovement = movements[0]
       validMovement.wasteTrackingId =
@@ -183,6 +189,7 @@ describe('Bulk Upload Update', () => {
           bulkUploadId,
           fourMovements
         )
+      expect(createResponse.statusCode).toBe(201)
 
       const movementWithOneError = { ...fourMovements[0] }
       movementWithOneError.wasteTrackingId =
