@@ -1,5 +1,5 @@
 meta {
-  name: Bulk Upload - Single Movement with Warning
+  name: Bulk Upload Create - Single Movement with Warning
   type: http
   seq: 2
 }
@@ -57,6 +57,10 @@ body:json {
       }
     }
   ]
+}
+
+vars:post-response {
+  movementsFromBulkCreate: res.body.movements
 }
 
 script:pre-request {

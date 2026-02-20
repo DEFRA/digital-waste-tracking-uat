@@ -1,10 +1,10 @@
 meta {
-  name: Bulk Upload - Two Complex Movements
+  name: Bulk Upload Update - Two Complex Movements
   type: http
   seq: 4
 }
 
-post {
+put {
   url: {{baseUrl}}/bulk/{{$randomUUID}}/movements/receive
   body: json
   auth: inherit
@@ -20,6 +20,7 @@ body:json {
       "submittingOrganisation": {
         "defraCustomerOrganisationId": "{{$randomUUID}}"
       },
+      "wasteTrackingId": "{{movementsFromBulkCreate.0.wasteTrackingId}}",
       "dateTimeReceived": "{{timestamp}}",
       "hazardousWasteConsignmentCode": "SB1234567",
       "wasteItems": [
@@ -118,6 +119,7 @@ body:json {
       "submittingOrganisation": {
         "defraCustomerOrganisationId": "{{$randomUUID}}"
       },
+      "wasteTrackingId": "{{movementsFromBulkCreate.1.wasteTrackingId}}",
       "dateTimeReceived": "{{timestamp}}",
       "reasonForNoConsignmentCode": "NO_DOC_WITH_WASTE",
       "wasteItems": [
