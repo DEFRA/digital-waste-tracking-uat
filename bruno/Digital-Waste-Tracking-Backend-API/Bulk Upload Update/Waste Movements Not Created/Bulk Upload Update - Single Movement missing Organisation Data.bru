@@ -1,10 +1,10 @@
 meta {
-  name: Bulk Upload - Single Movement missing Organisation Data
+  name: Bulk Upload Update - Single Movement missing Organisation Data
   type: http
   seq: 2
 }
 
-post {
+put {
   url: {{baseUrl}}/bulk/{{$randomUUID}}/movements/receive
   body: json
   auth: inherit
@@ -17,6 +17,7 @@ headers {
 body:json {
   [
     {
+      "wasteTrackingId": "{{movementsFromBulkCreate.0.wasteTrackingId}}",
       "dateTimeReceived": "{{timestamp}}",
       "wasteItems": [
         {

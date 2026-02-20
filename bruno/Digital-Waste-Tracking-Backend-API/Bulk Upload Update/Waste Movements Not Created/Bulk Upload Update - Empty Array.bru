@@ -1,10 +1,10 @@
 meta {
-  name: Bulk Upload - Empty Array
+  name: Bulk Upload Update - Empty Array
   type: http
   seq: 1
 }
 
-post {
+put {
   url: {{baseUrl}}/bulk/{{$randomUUID}}/movements/receive
   body: json
   auth: inherit

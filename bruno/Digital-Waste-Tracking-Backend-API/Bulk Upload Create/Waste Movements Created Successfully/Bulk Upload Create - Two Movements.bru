@@ -1,5 +1,5 @@
 meta {
-  name: Bulk Upload - Two Movements
+  name: Bulk Upload Create - Two Movements
   type: http
   seq: 3
 }
@@ -117,6 +117,10 @@ body:json {
     }
   }
   ]
+}
+
+vars:post-response {
+  movementsFromBulkCreate: res.body.movements
 }
 
 script:pre-request {
