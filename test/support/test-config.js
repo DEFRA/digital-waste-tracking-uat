@@ -53,7 +53,7 @@ export class TestConfig {
 
   get wasteOrganisationsBackendToWasteMovementBackendPassword() {
     return process.env
-      .WASTE_ORGANISATIONS_BACKEND_TO_WASTE_MOVEMENT_BACKEND_PASSWORD
+      .WASTE_ORGANISATION_BACKEND_TO_WASTE_MOVEMENT_BACKEND_PASSWORD
   }
 
   get cdpDevApiKey() {
