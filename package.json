@@ -21,7 +21,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
-    "test:integration": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern \"^.*(WasteMovementExternalAPI|WasteMovementBackendAPI).*$\"",
+    "test:integration": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern \"^.*(WasteMovementExternalAPI|WasteMovementBackendAPI).*$\" --testNamePattern \"^(?!.*@Authentication)\"",
     "test:uat": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern \"(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication)\"",
     "test:smoke": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern \"@smoke\"",
     "test:this": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern \"@this\"",
