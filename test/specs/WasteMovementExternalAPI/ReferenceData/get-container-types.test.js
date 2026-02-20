@@ -6,7 +6,7 @@ import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
  * Test suite for retrieving waste container types reference data
  * @fileoverview Tests the container types API endpoint functionality
  */
-describe('Retrieve Waste Container Types', () => {
+describe('@smoke - Retrieve Waste Container Types', () => {
   beforeEach(async () => {
     await addAllureLink('/DWT-721', 'DWT-721', 'jira')
     await addAllureLink('/DWT-1287', 'DWT-1287', 'jira')

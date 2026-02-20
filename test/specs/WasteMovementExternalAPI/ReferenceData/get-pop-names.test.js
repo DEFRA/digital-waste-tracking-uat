@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
-describe('Retrieve Pop names', () => {
+describe('@smoke - Retrieve Pop names', () => {
   beforeEach(async () => {
     await addAllureLink('/DWT-720', 'DWT-720', 'jira')
     await addAllureLink('/DWT-1288', 'DWT-1288', 'jira')

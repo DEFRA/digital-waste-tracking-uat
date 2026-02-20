@@ -46,8 +46,18 @@ export class TestConfig {
     return process.env.COGNITO_OAUTH_BASE_URL
   }
 
-  get backendPassword() {
-    return process.env.BACKEND_PASSWORD
+  get wasteMovementExternalApiToWasteMovementBackendPassword() {
+    return process.env
+      .WASTE_MOVEMENT_EXTERNAL_API_TO_WASTE_MOVEMENT_BACKEND_PASSWORD
+  }
+
+  get wasteOrganisationsBackendToWasteMovementBackendPassword() {
+    return process.env
+      .WASTE_ORGANISATIONS_BACKEND_TO_WASTE_MOVEMENT_BACKEND_PASSWORD
+  }
+
+  get cdpDevApiKey() {
+    return process.env.CDP_DEV_API_KEY
   }
 
   /**
@@ -81,7 +91,7 @@ export class TestConfig {
 
   /** */
   get wasteMovementBackendApiBaseUrl() {
-    return `https://waste-movement-backend.${process.env.ENVIRONMENT}.cdp-int.defra.cloud`
+    return process.env.WASTE_MOVEMENT_BACKEND_API_BASE_URL
   }
 
   /**
@@ -97,6 +107,7 @@ export class TestConfig {
    * @returns {boolean} Whether auth is disabled
    */
   get isAuthDisabled() {
+    // Should we do this based on test pack? i.e if integration test, then auth is disabled? Maybe not changing it allows us to run integration pack in CDP envs?
     return process.env.AUTH_DISABLED === 'true'
   }
 }

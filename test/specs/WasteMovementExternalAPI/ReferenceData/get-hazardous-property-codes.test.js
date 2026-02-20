@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
-describe('Retrieve Hazardous Property Codes', () => {
+describe('@smoke - Retrieve Hazardous Property Codes', () => {
   beforeEach(async () => {
     await addAllureLink('/DWT-718', 'DWT-718', 'jira')
     await addAllureLink('/DWT-1293', 'DWT-1293', 'jira')
