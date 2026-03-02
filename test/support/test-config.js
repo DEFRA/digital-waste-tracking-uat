@@ -51,6 +51,11 @@ export class TestConfig {
       .WASTE_MOVEMENT_EXTERNAL_API_TO_WASTE_MOVEMENT_BACKEND_PASSWORD
   }
 
+  get wasteMovementExternalApiToWasteOrganisationBackendPassword() {
+    return process.env
+      .WASTE_MOVEMENT_EXTERNAL_API_TO_WASTE_ORGANISATION_BACKEND_PASSWORD
+  }
+
   get wasteOrganisationsBackendToWasteMovementBackendPassword() {
     return process.env
       .WASTE_ORGANISATION_BACKEND_TO_WASTE_MOVEMENT_BACKEND_PASSWORD
@@ -92,6 +97,10 @@ export class TestConfig {
   /** */
   get wasteMovementBackendApiBaseUrl() {
     return process.env.WASTE_MOVEMENT_BACKEND_API_BASE_URL
+  }
+
+  get wasteOrganisationBackendApiBaseUrl() {
+    return process.env.WASTE_ORGANISATION_BACKEND_API_BASE_URL
   }
 
   /**
