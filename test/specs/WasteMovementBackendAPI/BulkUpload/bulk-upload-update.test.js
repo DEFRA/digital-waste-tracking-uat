@@ -128,11 +128,18 @@ describe('Bulk Upload Update', () => {
           []
         )
 
-      expect(response.statusCode).toBe(500)
+      expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
-        statusCode: 500,
-        error: 'Internal Server Error',
-        message: 'An internal server error occurred'
+        validation: {
+          errors: [
+            {
+              key: 'BulkUpdateMovementRequest',
+              errorType: 'UnexpectedError',
+              message:
+                '"BulkUpdateMovementRequest" must contain at least 1 items'
+            }
+          ]
+        }
       })
     })
 
