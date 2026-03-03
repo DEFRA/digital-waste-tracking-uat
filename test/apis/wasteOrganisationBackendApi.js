@@ -4,7 +4,7 @@ export class WasteOrganisationBackendAPI extends BaseAPI {
   constructor() {
     super(globalThis.testConfig.wasteOrganisationBackendApiBaseUrl, false)
     // Create Basic Authorization header with base64 encoded credentials
-    const credentials = `WASTE_MOVEMENT_EXTERNAL_API:${process.env.WASTE_MOVEMENT_EXTERNAL_API_TO_WASTE_ORGANISATION_BACKEND_PASSWORD}`
+    const credentials = `waste-movement-external-api:${globalThis.testConfig.serviceAuthPassword}`
     this.base64Credentials = Buffer.from(credentials).toString('base64')
   }
 
