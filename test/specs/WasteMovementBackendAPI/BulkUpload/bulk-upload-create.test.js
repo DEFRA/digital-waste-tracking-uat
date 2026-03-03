@@ -93,15 +93,22 @@ describe('Bulk Upload Create', () => {
           []
         )
 
-      expect(response.statusCode).toBe(500)
+      expect(response.statusCode).toBe(400)
       expect(response.json).toEqual({
-        statusCode: 500,
-        error: 'Internal Server Error',
-        message: 'An internal server error occurred'
+        validation: {
+          errors: [
+            {
+              key: 'BulkReceiveMovementRequest',
+              errorType: 'UnexpectedError',
+              message:
+                '"BulkReceiveMovementRequest" must contain at least 1 items'
+            }
+          ]
+        }
       })
     })
 
-    it('should reject bulk upload when one movement is missing a required field', async () => {
+    it('@this should reject bulk upload when one movement is missing a required field', async () => {
       const validMovement = generateBaseBulkUploadMovement()
       const movementMissingSubmittingOrganisation = {
         ...validMovement
