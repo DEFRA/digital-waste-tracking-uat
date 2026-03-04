@@ -12,7 +12,7 @@ export class WasteMovementBackendAPI extends BaseAPI {
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async bulkUploadCreate(bulkUploadId, movements) {
-    const credentials = `waste-organisation-backend:${globalThis.testConfig.wasteOrganisationsBackendToWasteMovementBackendPassword}`
+    const credentials = `waste-organisation-backend:${globalThis.testConfig.serviceAuthPasswordWasteOrganisationBackend}`
     const base64Credentials = Buffer.from(credentials).toString('base64')
     const requestHeaders = {
       Authorization: `Basic ${base64Credentials}`,
@@ -36,7 +36,7 @@ export class WasteMovementBackendAPI extends BaseAPI {
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async bulkUploadUpdate(bulkUploadId, movements) {
-    const credentials = `waste-organisation-backend:${globalThis.testConfig.wasteOrganisationsBackendToWasteMovementBackendPassword}`
+    const credentials = `waste-organisation-backend:${globalThis.testConfig.serviceAuthPasswordWasteOrganisationBackend}`
     const base64Credentials = Buffer.from(credentials).toString('base64')
     const requestHeaders = {
       Authorization: `Basic ${base64Credentials}`,
@@ -58,7 +58,7 @@ export class WasteMovementBackendAPI extends BaseAPI {
    */
   async retryAuditLog(requestBody) {
     // Create Basic Authorization header with base64 encoded credentials
-    const credentials = `waste-movement-external-api:${globalThis.testConfig.wasteMovementExternalApiToWasteMovementBackendPassword}`
+    const credentials = `waste-movement-external-api:${globalThis.testConfig.serviceAuthPassword}`
     const base64Credentials = Buffer.from(credentials).toString('base64')
 
     // Set the correct headers for OAuth token requests

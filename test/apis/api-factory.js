@@ -1,12 +1,14 @@
 import { WasteMovementExternalAPI } from './wasteMovementApi.js'
 import { CognitoOAuthApi } from './cognitoOAuth.js'
 import { WasteMovementBackendAPI } from './wasteMovementBackendApi.js'
+import { WasteOrganisationBackendAPI } from './wasteOrganisationBackendApi.js'
 
 /**
  * @typedef {Object} ApiInstances
  * @property {WasteMovementExternalAPI} wasteMovementExternalAPI - Waste Movement External API instance
  * @property {CognitoOAuthApi} cognitoOAuthApi - Cognito OAuth instance
  * @property {WasteMovementBackendAPI} wasteMovementBackendAPI - Waste Movement Backend API instance
+ * @property {WasteOrganisationBackendAPI} wasteOrganisationBackendAPI - Waste Organisation Backend API instance
  */
 
 /**
@@ -21,7 +23,8 @@ export class ApiFactory {
     return {
       wasteMovementExternalAPI: new WasteMovementExternalAPI(),
       cognitoOAuthApi: new CognitoOAuthApi(),
-      wasteMovementBackendAPI: new WasteMovementBackendAPI()
+      wasteMovementBackendAPI: new WasteMovementBackendAPI(),
+      wasteOrganisationBackendAPI: new WasteOrganisationBackendAPI()
     }
   }
 }
