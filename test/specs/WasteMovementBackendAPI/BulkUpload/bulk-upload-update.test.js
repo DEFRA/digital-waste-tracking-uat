@@ -241,5 +241,52 @@ describe('Bulk Upload Update', () => {
       expect(response.json[2]).toEqual({})
       expect(response.json[3].validation.errors).toHaveLength(3)
     })
+
+    it('@this should reject bulk update when movement organisation does not match original organisation @allure.label.tag:DWT-1698', async () => {
+      await addAllureLink('/DWT-1698', 'DWT-1698', 'jira')
+
+      const bulkUploadId = randomUUID()
+      const originalMovements = [
+        generateBaseBulkUploadMovement(),
+        generateBaseBulkUploadMovement()
+      ]
+
+      const createResponse =
+        await globalThis.apis.wasteMovementBackendAPI.bulkUploadCreate(
+          bulkUploadId,
+          originalMovements
+        )
+      expect(createResponse.statusCode).toBe(201)
+
+      const updatedMovements = [
+        {
+          ...originalMovements[0],
+          submittingOrganisation: {
+            defraCustomerOrganisationId: 'c2a7c1d5-6f4b-4e2b-9a3b-1b2c3d4e5f60'
+          },
+          wasteTrackingId: createResponse.json.movements[0].wasteTrackingId
+        },
+        {
+          ...originalMovements[1],
+          wasteTrackingId: createResponse.json.movements[1].wasteTrackingId
+        }
+      ]
+
+      const response =
+        await globalThis.apis.wasteMovementBackendAPI.bulkUploadUpdate(
+          bulkUploadId,
+          updatedMovements
+        )
+
+      expect(response.statusCode).toBe(400)
+      expect(Array.isArray(response.json)).toBe(true)
+      expect(response.json).toHaveLength(2)
+      expect(response.json[0].validation.errors[0]).toMatchObject({
+        key: '0',
+        errorType: 'BusinessRuleViolation',
+        message: expect.stringContaining('Organisation')
+      })
+      expect(response.json[1]).toEqual({})
+    })
   })
 })

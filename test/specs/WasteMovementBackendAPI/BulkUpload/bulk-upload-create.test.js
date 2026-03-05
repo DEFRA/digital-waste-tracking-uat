@@ -108,7 +108,7 @@ describe('Bulk Upload Create', () => {
       })
     })
 
-    it('@this should reject bulk upload when one movement is missing a required field', async () => {
+    it('should reject bulk upload when one movement is missing a required field', async () => {
       const validMovement = generateBaseBulkUploadMovement()
       const movementMissingSubmittingOrganisation = {
         ...validMovement
