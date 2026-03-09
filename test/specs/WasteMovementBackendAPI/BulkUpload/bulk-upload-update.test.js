@@ -244,7 +244,7 @@ describe('Bulk Upload Update', () => {
       expect(response.json[3].validation.errors).toHaveLength(3)
     })
 
-    it('@this should return a 400 error when one wasteTrackingId is invalid for the bulk upload', async () => {
+    it('should return a 400 error when one wasteTrackingId is invalid for the bulk upload', async () => {
       const bulkUploadId = randomUUID()
 
       const createMovements = [
