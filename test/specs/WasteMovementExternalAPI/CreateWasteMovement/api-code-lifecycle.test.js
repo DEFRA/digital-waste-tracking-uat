@@ -4,7 +4,7 @@ import { generateBaseWasteReceiptData } from '../../../support/test-data-manager
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
-describe('@this @smoke - API Code Lifecycle', () => {
+describe('@smoke - API Code Lifecycle', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
