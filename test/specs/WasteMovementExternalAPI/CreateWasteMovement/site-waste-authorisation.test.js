@@ -73,23 +73,6 @@ describe('Site Waste Authorisation Validation', () => {
         expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
-
-    // this test is obsolete after DWT-578 changes
-    it.skip(
-      'should accept waste movement with any string as the authorisation format' +
-        ' @allure.label.tag:DWT-339',
-      async () => {
-        wasteReceiptData.receiver.authorisationNumber =
-          'Not An Authorisation Format'
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-            wasteReceiptData
-          )
-        expect(response.statusCode).toBe(201)
-        expect(response.json).toHaveProperty('wasteTrackingId')
-      }
-    )
   })
 
   describe('Invalid Site Waste Authorisation Scenarios', () => {
