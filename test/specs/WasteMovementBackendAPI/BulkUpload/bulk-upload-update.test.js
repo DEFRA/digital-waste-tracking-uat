@@ -281,10 +281,11 @@ describe('Bulk Upload Update', () => {
       expect(response.statusCode).toBe(400)
       expect(Array.isArray(response.json)).toBe(true)
       expect(response.json).toHaveLength(2)
-      expect(response.json[0].validation.errors[0]).toMatchObject({
-        key: '0',
+      expect(response.json[0].validation.errors[0]).toEqual({
+        key: '0.submittingOrganisation',
         errorType: 'BusinessRuleViolation',
-        message: expect.stringContaining('Organisation')
+        message:
+          '[0].submittingOrganisation the submitting organisation does not match the Organisation that created the original waste item record'
       })
       expect(response.json[1]).toEqual({})
     })
