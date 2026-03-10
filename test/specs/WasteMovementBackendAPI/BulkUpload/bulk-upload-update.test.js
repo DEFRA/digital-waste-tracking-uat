@@ -242,7 +242,7 @@ describe('Bulk Upload Update', () => {
       expect(response.json[3].validation.errors).toHaveLength(3)
     })
 
-    it('@this should reject bulk update when movement organisation does not match original organisation @allure.label.tag:DWT-1698', async () => {
+    it('should reject bulk update when movement organisation does not match original organisation @allure.label.tag:DWT-1698', async () => {
       await addAllureLink('/DWT-1698', 'DWT-1698', 'jira')
 
       const bulkUploadId = randomUUID()
