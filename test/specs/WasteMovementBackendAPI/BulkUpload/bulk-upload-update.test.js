@@ -289,5 +289,50 @@ describe('Bulk Upload Update', () => {
       })
       expect(response.json[1]).toEqual({})
     })
+
+    it('should return a 400 error when one wasteTrackingId is invalid for the bulk upload @allure.label.tag:DWT-1834', async () => {
+      await addAllureLink('/DWT-1834', 'DWT-1834', 'jira')
+      const bulkUploadId = randomUUID()
+
+      const createMovements = [
+        generateBaseBulkUploadMovement(),
+        generateBaseBulkUploadMovement()
+      ]
+
+      const createResponse =
+        await globalThis.apis.wasteMovementBackendAPI.bulkUploadCreate(
+          bulkUploadId,
+          createMovements
+        )
+
+      expect(createResponse.statusCode).toBe(201)
+
+      const validMovement = {
+        ...createMovements[0],
+        wasteTrackingId: createResponse.json.movements[0].wasteTrackingId
+      }
+
+      const movementWithInvalidWasteTrackingId = {
+        ...createMovements[1],
+        wasteTrackingId: '20ABC01A'
+      }
+
+      const response =
+        await globalThis.apis.wasteMovementBackendAPI.bulkUploadUpdate(
+          bulkUploadId,
+          [validMovement, movementWithInvalidWasteTrackingId]
+        )
+
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toHaveProperty('validation')
+      expect(response.json.validation).toHaveProperty('errors')
+      expect(Array.isArray(response.json.validation.errors)).toBe(true)
+      throw new Error('Implement correct body expectation')
+      // expect(response.json.validation.errors[0]).toMatchObject({
+      //   key: expect.any(String),
+      //   errorType: expect.any(String),
+      //   message: expect.stringContaining('waste tracking id')
+      // })
+    })
   })
 })
