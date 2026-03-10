@@ -324,15 +324,17 @@ describe('Bulk Upload Update', () => {
         )
 
       expect(response.statusCode).toBe(400)
-      expect(response.json).toHaveProperty('validation')
-      expect(response.json.validation).toHaveProperty('errors')
-      expect(Array.isArray(response.json.validation.errors)).toBe(true)
-      throw new Error('Implement correct body expectation')
-      // expect(response.json.validation.errors[0]).toMatchObject({
-      //   key: expect.any(String),
-      //   errorType: expect.any(String),
-      //   message: expect.stringContaining('waste tracking id')
-      // })
+      expect(Array.isArray(response.json)).toBe(true)
+      expect(response.json).toHaveLength(2)
+      expect(response.json[0]).toEqual({})
+      expect(response.json[1]).toHaveProperty('validation')
+      expect(response.json[1].validation).toHaveProperty('errors')
+      expect(response.json[1].validation.errors).toHaveLength(1)
+      expect(response.json[1].validation.errors[0]).toEqual({
+        key: '1.wasteTrackingId',
+        errorType: 'BusinessRuleViolation',
+        message: '[1].wasteTrackingId waste tracking id not found'
+      })
     })
   })
 })
