@@ -1,4 +1,5 @@
 import { BaseAPI } from './base-api.js'
+import { randomUUID } from 'crypto'
 
 export class WasteOrganisationBackendAPI extends BaseAPI {
   constructor() {
@@ -39,7 +40,8 @@ export class WasteOrganisationBackendAPI extends BaseAPI {
   async createApiCodeForOrganisation(organisationId) {
     const requestHeaders = {
       Authorization: `Basic ${this.base64Credentials}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-cdp-request-id': randomUUID()
     }
 
     if (globalThis.testConfig.cdpDevApiKey != null) {
@@ -67,7 +69,8 @@ export class WasteOrganisationBackendAPI extends BaseAPI {
   async disableApiCodeForOrganisation(organisationId, apiCode) {
     const requestHeaders = {
       Authorization: `Basic ${this.base64Credentials}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-cdp-request-id': randomUUID()
     }
 
     if (globalThis.testConfig.cdpDevApiKey != null) {
