@@ -1,4 +1,5 @@
 import { BaseAPI } from './base-api.js'
+import { randomUUID } from 'crypto'
 
 export class WasteMovementBackendAPI extends BaseAPI {
   constructor() {
@@ -16,7 +17,8 @@ export class WasteMovementBackendAPI extends BaseAPI {
     const base64Credentials = Buffer.from(credentials).toString('base64')
     const requestHeaders = {
       Authorization: `Basic ${base64Credentials}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-cdp-request-id': randomUUID()
     }
     if (globalThis.testConfig.cdpDevApiKey != null) {
       requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
@@ -40,7 +42,8 @@ export class WasteMovementBackendAPI extends BaseAPI {
     const base64Credentials = Buffer.from(credentials).toString('base64')
     const requestHeaders = {
       Authorization: `Basic ${base64Credentials}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-cdp-request-id': randomUUID()
     }
     if (globalThis.testConfig.cdpDevApiKey != null) {
       requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
@@ -64,7 +67,8 @@ export class WasteMovementBackendAPI extends BaseAPI {
     // Set the correct headers for OAuth token requests
     const requestHeaders = {
       Authorization: `Basic ${base64Credentials}`,
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-cdp-request-id': randomUUID()
     }
 
     // Only add the CDP Dev API key if it is set. This is only need for running locally.

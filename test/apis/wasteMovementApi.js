@@ -1,4 +1,5 @@
 import { BaseAPI } from './base-api.js'
+import { randomUUID } from 'crypto'
 
 export class WasteMovementExternalAPI extends BaseAPI {
   constructor() {
@@ -12,7 +13,7 @@ export class WasteMovementExternalAPI extends BaseAPI {
     const { statusCode, headers, json } = await this.post(
       '/movements/receive',
       JSON.stringify(movementData),
-      { 'Content-Type': 'application/json' }
+      { 'Content-Type': 'application/json', 'x-cdp-request-id': randomUUID() }
     )
 
     return {
@@ -29,7 +30,7 @@ export class WasteMovementExternalAPI extends BaseAPI {
     const { statusCode, headers, json } = await this.put(
       `/movements/${wasteTrackingId}/receive`,
       JSON.stringify(movementData),
-      { 'Content-Type': 'application/json' }
+      { 'Content-Type': 'application/json', 'x-cdp-request-id': randomUUID() }
     )
 
     return {
