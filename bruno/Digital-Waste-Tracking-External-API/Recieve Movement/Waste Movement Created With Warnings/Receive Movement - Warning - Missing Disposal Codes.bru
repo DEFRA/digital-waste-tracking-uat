@@ -11,7 +11,7 @@ post {
 }
 
 headers {
-  x-cdp-request-id: {{traceId}}
+  x-cdp-request-id: {{$randomUUID}}
   ~Authorization: {{ManuallyObtainedAccessToken}}
 }
 

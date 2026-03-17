@@ -12,7 +12,7 @@ post {
 
 headers {
   x-api-key: {{cdp-api-key}}
-  x-cdp-request-id: {{traceId}}
+  x-cdp-request-id: {{$randomUUID}}
 }
 
 body:json {
