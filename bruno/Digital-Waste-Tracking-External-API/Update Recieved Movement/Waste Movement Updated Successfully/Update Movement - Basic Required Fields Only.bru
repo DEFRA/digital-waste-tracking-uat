@@ -11,6 +11,7 @@ put {
 }
 
 headers {
+  x-cdp-request-id: {{$randomUUID}}
   ~Authorization: {{ManuallyObtainedAccessToken}}
 }
 
