@@ -9,6 +9,7 @@ describe('Bulk Upload Update', () => {
   beforeEach(async () => {
     await addAllureLink('/DWT-1515', 'DWT-1515', 'jira')
     await addAllureLink('/DWT-1393', 'DWT-1393', 'jira')
+    await addAllureLink('/DWT-1702', 'DWT-1702', 'jira')
     movements = [
       generateBaseBulkUploadMovement(),
       generateBaseBulkUploadMovement()
@@ -134,7 +135,7 @@ describe('Bulk Upload Update', () => {
           errors: [
             {
               key: 'BulkUpdateMovementRequest',
-              errorType: 'UnexpectedError',
+              errorType: 'OutOfRange',
               message:
                 '"BulkUpdateMovementRequest" must contain at least 1 items'
             }
