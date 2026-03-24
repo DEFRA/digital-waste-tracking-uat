@@ -83,7 +83,7 @@ describe('POPs Source Of Components Validation', () => {
           validation: {
             errors: [
               {
-                key: 'wasteItems.0.pops',
+                key: 'wasteItems.0.pops.sourceOfComponents',
                 errorType: 'BusinessRuleViolation',
                 message:
                   '"wasteItems[0].pops.sourceOfComponents" is required when containsPops is true'
