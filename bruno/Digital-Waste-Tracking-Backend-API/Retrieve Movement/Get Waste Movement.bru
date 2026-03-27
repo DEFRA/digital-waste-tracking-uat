@@ -1,0 +1,32 @@
+meta {
+  name: Get Waste Movement
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/qa-non-prod/movements?wasteTrackingId=26NWSI1G&includeHistory=true
+  body: none
+  auth: basic
+}
+
+params:query {
+  wasteTrackingId: 26NWSI1G
+  includeHistory: true
+  ~bulkId: b36c3129-3da8-4ccb-a2ca-fc95b0af3e5e
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  x-cdp-request-id: {{$randomUUID}}
+}
+
+auth:basic {
+  username: qa-non-prod
+  password: {{AUTH_PASSWORD_QA_NON_PROD}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
