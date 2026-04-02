@@ -1,24 +1,23 @@
 meta {
-  name: Get Waste Movement
+  name: Get Waste Movement By Waste Tracking ID
   type: http
   seq: 1
 }
 
 get {
-  url: {{baseUrl}}/qa-non-prod/movements?wasteTrackingId=26NWSI1G&includeHistory=true
+  url: {{baseUrl}}/qa-non-prod/movements?wasteTrackingId=26ALK418
   body: none
   auth: basic
 }
 
 params:query {
-  wasteTrackingId: 26NWSI1G
-  includeHistory: true
-  ~bulkId: b36c3129-3da8-4ccb-a2ca-fc95b0af3e5e
+  wasteTrackingId: 26ALK418
 }
 
 headers {
   x-api-key: {{cdp-api-key}}
   x-cdp-request-id: {{$randomUUID}}
+  Accept-Encoding: identity
 }
 
 auth:basic {

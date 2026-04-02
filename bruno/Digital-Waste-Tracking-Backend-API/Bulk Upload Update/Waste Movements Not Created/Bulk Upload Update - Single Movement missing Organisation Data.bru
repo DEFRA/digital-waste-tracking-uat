@@ -13,12 +13,13 @@ put {
 headers {
   x-api-key: {{cdp-api-key}}
   x-cdp-request-id: {{$randomUUID}}
+  Accept-Encoding: identity
 }
 
 body:json {
   [
     {
-      "wasteTrackingId": "{{movementsFromBulkCreate.0.wasteTrackingId}}",
+      "wasteTrackingId": "{{wasteTrackingIds.0}}",
       "dateTimeReceived": "{{timestamp}}",
       "wasteItems": [
         {

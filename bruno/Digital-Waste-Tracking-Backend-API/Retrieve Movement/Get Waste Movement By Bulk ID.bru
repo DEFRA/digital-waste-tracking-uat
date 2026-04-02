@@ -1,0 +1,31 @@
+meta {
+  name: Get Waste Movement By Bulk ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/qa-non-prod/movements?bulkId=e465a401-ba2e-4c08-a9bd-022232187320
+  body: none
+  auth: basic
+}
+
+params:query {
+  bulkId: e465a401-ba2e-4c08-a9bd-022232187320
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  x-cdp-request-id: {{$randomUUID}}
+  Accept-Encoding: identity
+}
+
+auth:basic {
+  username: qa-non-prod
+  password: {{AUTH_PASSWORD_QA_NON_PROD}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

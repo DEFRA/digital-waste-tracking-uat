@@ -13,6 +13,7 @@ post {
 headers {
   x-api-key: {{cdp-api-key}}
   x-cdp-request-id: {{$randomUUID}}
+  Accept-Encoding: identity
 }
 
 body:json {
@@ -61,7 +62,8 @@ body:json {
 }
 
 vars:post-response {
-  movementsFromBulkCreate: res.body.movements
+  wasteTrackingIds: res.body.movements?.map((item) => item.wasteTrackingId)
+  defraCustomerOrganisationIds: req.body.map((item) => item.submittingOrganisation?.defraCustomerOrganisationId)
 }
 
 script:pre-request {
