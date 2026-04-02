@@ -88,4 +88,57 @@ export class WasteMovementBackendAPI extends BaseAPI {
       json
     }
   }
+
+  /**
+   * QA-only GET by bulk ID (pre-prod). GET /qa-non-prod/movements?bulkId=…
+   * @param {string} bulkId - Bulk upload id
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
+  async qaRetrieveMovementsByBulkId(bulkId) {
+    const params = new URLSearchParams()
+    params.set('bulkId', bulkId)
+    return this._qaNonProdMovementsGet(params)
+  }
+
+  /**
+   * QA-only GET by waste tracking id (pre-prod). GET /qa-non-prod/movements?wasteTrackingId=…
+   * @param {string} wasteTrackingId - Waste tracking id
+   * @param {boolean} [includeHistory=false] - When true, adds includeHistory=true (all revisions)
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
+  async qaRetrieveMovementsByWasteTrackingId(
+    wasteTrackingId,
+    includeHistory = false
+  ) {
+    const params = new URLSearchParams()
+    params.set('wasteTrackingId', wasteTrackingId)
+    if (includeHistory) {
+      params.set('includeHistory', 'true')
+    }
+    return this._qaNonProdMovementsGet(params)
+  }
+
+  /**
+   * @param {URLSearchParams} params - Query string for GET /qa-non-prod/movements
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
+  async _qaNonProdMovementsGet(params) {
+    const password = globalThis.testConfig.authPasswordQaNonProd
+    const credentials = `qa-non-prod:${password}`
+    const base64Credentials = Buffer.from(credentials).toString('base64')
+    const qs = params.toString()
+    const endpoint = `/qa-non-prod/movements?${qs}`
+    const requestHeaders = {
+      Authorization: `Basic ${base64Credentials}`,
+      'x-cdp-request-id': randomUUID()
+    }
+    if (globalThis.testConfig.cdpDevApiKey != null) {
+      requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
+    }
+    const { statusCode, headers, json } = await this.get(
+      endpoint,
+      requestHeaders
+    )
+    return { statusCode, headers, json }
+  }
 }
