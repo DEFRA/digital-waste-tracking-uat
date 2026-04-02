@@ -1,0 +1,32 @@
+meta {
+  name: Get Waste Movement By Waste Tracking ID with History
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/qa-non-prod/movements?wasteTrackingId=26ALK418&includeHistory=true
+  body: none
+  auth: basic
+}
+
+params:query {
+  wasteTrackingId: 26ALK418
+  includeHistory: true
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  x-cdp-request-id: {{$randomUUID}}
+  Accept-Encoding: identity
+}
+
+auth:basic {
+  username: qa-non-prod
+  password: {{AUTH_PASSWORD_QA_NON_PROD}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

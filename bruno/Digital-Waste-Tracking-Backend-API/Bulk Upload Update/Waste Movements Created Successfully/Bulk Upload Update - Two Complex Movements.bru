@@ -13,15 +13,16 @@ put {
 headers {
   x-api-key: {{cdp-api-key}}
   x-cdp-request-id: {{$randomUUID}}
+  Accept-Encoding: identity
 }
 
 body:json {
   [
     {
       "submittingOrganisation": {
-        "defraCustomerOrganisationId": "{{$randomUUID}}"
+        "defraCustomerOrganisationId": "{{defraCustomerOrganisationIds.0}}"
       },
-      "wasteTrackingId": "{{movementsFromBulkCreate.0.wasteTrackingId}}",
+      "wasteTrackingId": "{{wasteTrackingIds.0}}",
       "dateTimeReceived": "{{timestamp}}",
       "hazardousWasteConsignmentCode": "SB1234567",
       "wasteItems": [
@@ -118,9 +119,9 @@ body:json {
     },
     {
       "submittingOrganisation": {
-        "defraCustomerOrganisationId": "{{$randomUUID}}"
+        "defraCustomerOrganisationId": "{{defraCustomerOrganisationIds.1}}"
       },
-      "wasteTrackingId": "{{movementsFromBulkCreate.1.wasteTrackingId}}",
+      "wasteTrackingId": "{{wasteTrackingIds.1}}",
       "dateTimeReceived": "{{timestamp}}",
       "reasonForNoConsignmentCode": "NO_DOC_WITH_WASTE",
       "wasteItems": [
