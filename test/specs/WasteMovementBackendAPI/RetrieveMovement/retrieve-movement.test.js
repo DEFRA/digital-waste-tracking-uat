@@ -7,7 +7,7 @@ import {
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
-describe('@this Retrieve movement (QA)', () => {
+describe('Retrieve movement (Functionality only in Pre Prod)', () => {
   beforeEach(async () => {
     await addAllureLink('/DWTA-45', 'DWTA-45', 'jira')
   })
