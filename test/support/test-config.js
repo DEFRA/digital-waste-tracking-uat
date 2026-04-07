@@ -61,6 +61,15 @@ export class TestConfig {
   }
 
   /**
+   * Basic auth password for QA-only backend routes (e.g. GET /qa-non-prod/movements).
+   * Set in dev/test CDP environments when running retrieve-movement tests.
+   * @returns {string|undefined}
+   */
+  get authPasswordQaNonProd() {
+    return process.env.AUTH_PASSWORD_QA_NON_PROD
+  }
+
+  /**
    * get JIRA base URL
    * @returns {string}
    */
