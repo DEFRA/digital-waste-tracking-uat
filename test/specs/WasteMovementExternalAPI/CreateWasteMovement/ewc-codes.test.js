@@ -1,11 +1,13 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
+import { addAllureLink } from '../../../support/helpers/allure-api-logger.js'
 
 describe('EWC Codes Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
+    await addAllureLink('/DWTA-152', 'DWTA-152', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
     // Authenticate and set the auth token
@@ -98,6 +100,28 @@ describe('EWC Codes Validation', () => {
               key: 'wasteItems.0.ewcCodes',
               errorType: 'NotProvided',
               message: '"wasteItems[0].ewcCodes" is required'
+            }
+          ]
+        }
+      })
+    })
+
+    it('should reject when EWC codes array is empty @allure.label.tag:DWTA-152', async () => {
+      wasteReceiptData.wasteItems[0].ewcCodes = []
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'wasteItems.0.ewcCodes',
+              errorType: 'OutOfRange',
+              message: '"wasteItems[0].ewcCodes" must contain at least 1 items'
             }
           ]
         }
