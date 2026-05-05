@@ -112,7 +112,7 @@ describe('Bulk Upload Update', () => {
       )
     })
 
-    it('should return validation warnings on bulk update when a movement omits disposal codes @allure.label.tag:DWTA-162', async () => {
+    it('should return validation warnings on bulk update when a movement omits Disposal or Recovery Codes @allure.label.tag:DWTA-162', async () => {
       await addAllureLink('/DWTA-162', 'DWTA-162', 'jira')
 
       const bulkUploadId = randomUUID()
