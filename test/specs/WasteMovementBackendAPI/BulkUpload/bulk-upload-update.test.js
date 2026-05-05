@@ -111,6 +111,52 @@ describe('Bulk Upload Update', () => {
         ['MOVEMENTS_UPDATED', 'NO_MOVEMENTS_UPDATED'].sort()
       )
     })
+
+    it('should return validation warnings on bulk update when a movement omits Disposal or Recovery Codes @allure.label.tag:DWTA-162', async () => {
+      await addAllureLink('/DWTA-162', 'DWTA-162', 'jira')
+
+      const bulkUploadId = randomUUID()
+
+      const createResponse =
+        await globalThis.apis.wasteMovementBackendAPI.bulkUploadCreate(
+          bulkUploadId,
+          movements
+        )
+      expect(createResponse.statusCode).toBe(201)
+
+      movements[0].wasteTrackingId =
+        createResponse.json.movements[0].wasteTrackingId
+      movements[1].wasteTrackingId =
+        createResponse.json.movements[1].wasteTrackingId
+
+      delete movements[1].wasteItems[0].disposalOrRecoveryCodes
+
+      const response =
+        await globalThis.apis.wasteMovementBackendAPI.bulkUploadUpdate(
+          bulkUploadId,
+          movements
+        )
+
+      expect(response.statusCode).toBe(200)
+      expect(response.json).toEqual({
+        status: 'MOVEMENTS_UPDATED',
+        movements: [
+          {},
+          {
+            validation: {
+              warnings: [
+                {
+                  key: 'wasteItems.0.disposalOrRecoveryCodes',
+                  errorType: 'NotProvided',
+                  message:
+                    'wasteItems[0].disposalOrRecoveryCodes is required for proper waste tracking and compliance'
+                }
+              ]
+            }
+          }
+        ]
+      })
+    })
   })
 
   describe('Waste movements not updated', () => {
