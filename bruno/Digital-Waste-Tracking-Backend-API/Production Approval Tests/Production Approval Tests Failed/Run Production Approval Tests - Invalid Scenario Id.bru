@@ -1,0 +1,37 @@
+meta {
+  name: Run Production Approval Tests - Invalid Scenario Id
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/production-approval-tests
+  body: json
+  auth: basic
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  x-cdp-request-id: {{$randomUUID}}
+  Accept-Encoding: identity
+}
+
+auth:basic {
+  username: production-approval-tests
+  password: {{AUTH_PASSWORD_PRODUCTION_APPROVAL_TESTS}}
+}
+
+body:json {
+  [
+    {
+      "scenarioId": "R11",
+      "wasteTrackingId": "26BHUT6U"
+    }
+  ]  
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

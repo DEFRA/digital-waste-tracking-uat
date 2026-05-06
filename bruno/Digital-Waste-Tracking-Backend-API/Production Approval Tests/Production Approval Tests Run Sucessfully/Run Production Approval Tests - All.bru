@@ -1,0 +1,81 @@
+meta {
+  name: Run Production Approval Tests - All
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/production-approval-tests
+  body: json
+  auth: basic
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  x-cdp-request-id: {{$randomUUID}}
+  Accept-Encoding: identity
+}
+
+auth:basic {
+  username: production-approval-tests
+  password: {{AUTH_PASSWORD_PRODUCTION_APPROVAL_TESTS}}
+}
+
+body:json {
+  [
+    {
+      "scenarioId": "R01",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "R02",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "R03",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "R04",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "R05",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "R07",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "C02",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "B01",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "P01",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "H01",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "H03",
+      "wasteTrackingId": "26BHUT6U"
+    },
+    {
+      "scenarioId": "X01",
+      "wasteTrackingId": "26BHUT6U"
+    }
+  ]  
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
