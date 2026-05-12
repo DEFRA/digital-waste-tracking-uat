@@ -20,11 +20,32 @@ export class ApiFactory {
    * @returns {ApiInstances}
    */
   static create() {
+    const proxyMode = globalThis.testConfig?.proxyMode ?? 'off'
+
+    let proxyInternalCalls = false
+    let proxyExternalCalls = false
+
+    if (proxyMode === 'cdp') {
+      // CDP: only proxy "external" calls (e.g. Cognito) when the platform proxy is required.
+      proxyExternalCalls = true
+    } else if (proxyMode === 'zap') {
+      // ZAP: proxy both internal + external so ZAP can observe the full flow.
+      proxyInternalCalls = true
+      proxyExternalCalls = true
+    }
+
     return {
-      wasteMovementExternalAPI: new WasteMovementExternalAPI(),
-      cognitoOAuthApi: new CognitoOAuthApi(),
-      wasteMovementBackendAPI: new WasteMovementBackendAPI(),
-      wasteOrganisationBackendAPI: new WasteOrganisationBackendAPI()
+      // Internal Services
+      wasteMovementExternalAPI: new WasteMovementExternalAPI(
+        proxyInternalCalls
+      ),
+      wasteMovementBackendAPI: new WasteMovementBackendAPI(proxyInternalCalls),
+      wasteOrganisationBackendAPI: new WasteOrganisationBackendAPI(
+        proxyInternalCalls
+      ),
+
+      // External Services
+      cognitoOAuthApi: new CognitoOAuthApi(proxyExternalCalls)
     }
   }
 }

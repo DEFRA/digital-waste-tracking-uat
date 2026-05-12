@@ -2,8 +2,14 @@ import { BaseAPI } from './base-api.js'
 import { randomUUID } from 'crypto'
 
 export class WasteOrganisationBackendAPI extends BaseAPI {
-  constructor() {
-    super(globalThis.testConfig.wasteOrganisationBackendApiBaseUrl, false)
+  /**
+   * @param {boolean} [useProxyWhenAvailable=false] - When true, honours HTTP_PROXY.
+   */
+  constructor(useProxyWhenAvailable = false) {
+    super(
+      globalThis.testConfig.wasteOrganisationBackendApiBaseUrl,
+      useProxyWhenAvailable
+    )
     // Create Basic Authorization header with base64 encoded credentials
     const credentials = `waste-movement-external-api:${globalThis.testConfig.serviceAuthPassword}`
     this.base64Credentials = Buffer.from(credentials).toString('base64')

@@ -95,6 +95,23 @@ export class TestConfig {
   }
 
   /**
+   * Decide when to honour HTTP_PROXY (CDP sets it implicitly).
+   * - off: never use proxy (ignore HTTP_PROXY)
+   * - cdp: use proxy only for CDP-required external calls (e.g. Cognito)
+   * - zap: use proxy for service calls so ZAP can observe traffic
+   * @returns {'off'|'cdp'|'zap'}
+   */
+  get proxyMode() {
+    const value = process.env.PROXY_MODE
+    if (value === 'off' || value === 'cdp' || value === 'zap') {
+      return value
+    }
+    throw new Error(
+      `Invalid PROXY_MODE "${value}". Expected one of: off, cdp, zap.`
+    )
+  }
+
+  /**
    * Get the environment name
    * @returns {string} The environment name
    */

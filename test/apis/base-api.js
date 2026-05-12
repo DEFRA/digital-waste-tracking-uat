@@ -35,6 +35,8 @@ export class BaseAPI {
       }
     }
 
+    // Some API objects have to use the proxy in CDP in order to work with APIs from outside the CDP network.
+
     if (globalThis.testConfig?.httpProxy && this.useProxyWhenAvailable) {
       this.agent = new ProxyAgent({
         uri: globalThis.testConfig.httpProxy,

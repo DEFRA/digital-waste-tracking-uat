@@ -2,8 +2,11 @@ import { testConfig } from '../support/test-config.js'
 import { BaseAPI } from './base-api.js'
 
 export class CognitoOAuthApi extends BaseAPI {
-  constructor() {
-    super(testConfig.cognitoOAuthBaseUrl, true)
+  /**
+   * @param {boolean} [useProxyWhenAvailable=false] - When true, honours HTTP_PROXY.
+   */
+  constructor(useProxyWhenAvailable = false) {
+    super(testConfig.cognitoOAuthBaseUrl, useProxyWhenAvailable)
   }
 
   /**
