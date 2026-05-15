@@ -90,6 +90,31 @@ export class WasteMovementBackendAPI extends BaseAPI {
   }
 
   /**
+   * POST /production-approval-tests — run production approval scenarios (Bruno: Production Approval Tests).
+   * @param {Array<{ scenarioId: string, wasteTrackingId: string }>} scenarios - Request body (JSON array)
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
+  async runProductionApprovalTests(scenarios) {
+    const password = globalThis.testConfig.authPasswordProductionApprovalTests
+    const credentials = `production-approval-tests:${password}`
+    const base64Credentials = Buffer.from(credentials).toString('base64')
+    const requestHeaders = {
+      Authorization: `Basic ${base64Credentials}`,
+      'Content-Type': 'application/json',
+      'x-cdp-request-id': randomUUID()
+    }
+    if (globalThis.testConfig.cdpDevApiKey != null) {
+      requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
+    }
+    const { statusCode, headers, json } = await this.post(
+      '/production-approval-tests',
+      JSON.stringify(scenarios),
+      requestHeaders
+    )
+    return { statusCode, headers, json }
+  }
+
+  /**
    * QA-only GET by bulk ID (pre-prod). GET /qa-non-prod/movements?bulkId=…
    * @param {string} bulkId - Bulk upload id
    * @returns {Promise<import('./base-api.js').JsonResponse>}

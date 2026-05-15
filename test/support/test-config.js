@@ -70,6 +70,15 @@ export class TestConfig {
   }
 
   /**
+   * Basic auth password for POST /production-approval-tests (production-approval-tests user).
+   * Set in CDP environments when running production approval API tests.
+   * @returns {string|undefined}
+   */
+  get authPasswordProductionApprovalTests() {
+    return process.env.AUTH_PASSWORD_PRODUCTION_APPROVAL_TESTS
+  }
+
+  /**
    * get JIRA base URL
    * @returns {string}
    */

@@ -4,5 +4,10 @@ meta {
 }
 
 auth {
-  mode: inherit
+  mode: basic
+}
+
+auth:basic {
+  username: production-approval-tests
+  password: {{AUTH_PASSWORD_PRODUCTION_APPROVAL_TESTS}}
 }
