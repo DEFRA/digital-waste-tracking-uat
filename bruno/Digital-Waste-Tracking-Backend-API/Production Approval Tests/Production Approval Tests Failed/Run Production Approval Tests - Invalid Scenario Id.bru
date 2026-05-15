@@ -7,18 +7,13 @@ meta {
 post {
   url: {{baseUrl}}/production-approval-tests
   body: json
-  auth: basic
+  auth: inherit
 }
 
 headers {
   x-api-key: {{cdp-api-key}}
   x-cdp-request-id: {{$randomUUID}}
   Accept-Encoding: identity
-}
-
-auth:basic {
-  username: production-approval-tests
-  password: {{AUTH_PASSWORD_PRODUCTION_APPROVAL_TESTS}}
 }
 
 body:json {
