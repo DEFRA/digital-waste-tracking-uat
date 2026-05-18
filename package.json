@@ -27,13 +27,15 @@
     "test:this": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern \"@this\"",
     "test": "npm run test:${PROFILE:-uat}",
     "test-name-pattern": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern",
+    "test-location-pattern": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern",
     "report:generate": "allure generate allure-results --single-file --clean",
     "report:clean": "rm -rf allure-results && rm -rf allure-report",
     "report:open": "open ./allure-report/index.html",
     "report:publish": "npm run report:generate ; ./bin/publish-tests.sh",
     "source:clean:test:report": ". ./env.sh && npm run report:clean && npm run test ; npm run report:generate && npm run report:open",
     "source:clean:test:this:report": ". ./env.sh && npm run report:clean && npm run test:this ; npm run report:generate && npm run report:open",
-    "source:clean:test-name-pattern:report": "bash -c '. ./env.sh && npm run report:clean && npm run test-name-pattern -- \"$1\" ; npm run report:generate && npm run report:open' --"
+    "source:clean:test-name-pattern:report": "bash -c '. ./env.sh && npm run report:clean && npm run test-name-pattern -- \"$1\" ; npm run report:generate && npm run report:open' --",
+    "source:clean:test-location-pattern:report": "bash -c '. ./env.sh && npm run report:clean && npm run test-location-pattern -- \"$1\" ; npm run report:generate && npm run report:open' --"
   },
   "dependencies": {
     "allure-commandline": "2.32.0",
