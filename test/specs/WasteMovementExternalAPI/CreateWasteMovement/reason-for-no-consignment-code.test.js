@@ -161,6 +161,51 @@ describe('Reason for No Consignment Code Validation', () => {
       })
     })
 
+    it('should require reason when only the second waste item has a hazardous EWC code and no consignment code is provided @allure.label.tag:DWT-328 @allure.label.tag:DWT-797', async () => {
+      await addAllureLink('/DWT-797', 'DWT-797', 'jira')
+      const first = wasteReceiptData.wasteItems[0]
+      const second = { ...first }
+      second.ewcCodes = ['200121']
+      second.containsHazardous = true
+      second.hazardous = {
+        hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      wasteReceiptData.wasteItems = [first, second]
+
+      expect(wasteReceiptData.wasteItems[0].ewcCodes).toEqual(['020101'])
+      expect(wasteReceiptData.wasteItems[0].containsHazardous).toBe(false)
+      expect(wasteReceiptData.wasteItems[0]).not.toHaveProperty('hazardous')
+      expect(wasteReceiptData.wasteItems[1].ewcCodes).toEqual(['200121'])
+      expect(wasteReceiptData.wasteItems[1].containsHazardous).toBe(true)
+      expect(wasteReceiptData.wasteItems[1].hazardous.hazCodes.length).toBeGreaterThan(0)
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'reasonForNoConsignmentCode',
+              errorType: 'BusinessRuleViolation',
+              message:
+                '"reasonForNoConsignmentCode" is required when wasteItems[*].ewcCodes contains a hazardous code and hazardousWasteConsignmentCode is not provided'
+            }
+          ]
+        }
+      })
+    })
+
     it('should require reason when empty reason provided for hazardous EWC codes without consignment code @allure.label.tag:DWT-328', async () => {
       await addAllureLink('/DWT-797', 'DWT-797', 'jira')
       wasteReceiptData.wasteItems[0].ewcCodes = ['200121'] // Hazardous EWC code (fluorescent tubes)

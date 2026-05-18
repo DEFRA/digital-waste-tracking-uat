@@ -28,7 +28,7 @@ describe('Production Approval Tests All Automated Scenarios', () => {
   })
 
   describe('Bulk assessment of passing movements', () => {
-    it('should pass all R and C02 scenarios when each waste tracking id satisfies its scenario', async () => {
+    it('should pass all automated PAT scenarios when each waste tracking id satisfies its scenario', async () => {
       const r01Data = generateBaseWasteReceiptData()
       const r01WasteTrackingId =
         await createMovementAndGetWasteTrackingId(r01Data)
@@ -83,6 +83,71 @@ describe('Production Approval Tests All Automated Scenarios', () => {
       const c02WasteTrackingId =
         await createMovementAndGetWasteTrackingId(c02Data)
 
+      const b01Data = generateBaseWasteReceiptData()
+      b01Data.brokerOrDealer = {
+        organisationName: 'Test Broker Ltd',
+        address: {
+          fullAddress: '123 Test Street, Test City',
+          postcode: 'TC1 2AB'
+        }
+      }
+      const b01WasteTrackingId =
+        await createMovementAndGetWasteTrackingId(b01Data)
+
+      const p01Data = generateBaseWasteReceiptData()
+      p01Data.wasteItems[0].containsPops = true
+      p01Data.wasteItems[0].pops = {
+        sourceOfComponents: 'OWN_TESTING',
+        components: [
+          {
+            code: 'HBB',
+            concentration: 2.5
+          },
+          {
+            code: 'CHL',
+            concentration: 2.0
+          }
+        ]
+      }
+      const p01WasteTrackingId =
+        await createMovementAndGetWasteTrackingId(p01Data)
+
+      const h01Data = generateBaseWasteReceiptData()
+      h01Data.wasteItems[0].containsHazardous = true
+      h01Data.wasteItems[0].hazardous = {
+        hazCodes: ['HP_1', 'HP_3', 'HP_5'],
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 12.5
+          },
+          {
+            name: 'Lead',
+            concentration: 5.0
+          }
+        ]
+      }
+      const h01WasteTrackingId =
+        await createMovementAndGetWasteTrackingId(h01Data)
+
+      const h03Data = generateBaseWasteReceiptData()
+      h03Data.wasteItems[0].ewcCodes = ['200121']
+      h03Data.wasteItems[0].containsHazardous = true
+      h03Data.wasteItems[0].hazardous = {
+        hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      h03Data.reasonForNoConsignmentCode = 'NO_DOC_WITH_WASTE'
+      const h03WasteTrackingId =
+        await createMovementAndGetWasteTrackingId(h03Data)
+
       const patResponse =
         await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
           [
@@ -92,7 +157,11 @@ describe('Production Approval Tests All Automated Scenarios', () => {
             { scenarioId: 'R04', wasteTrackingId: r04WasteTrackingId },
             { scenarioId: 'R05', wasteTrackingId: r05WasteTrackingId },
             { scenarioId: 'R07', wasteTrackingId: r07WasteTrackingId },
-            { scenarioId: 'C02', wasteTrackingId: c02WasteTrackingId }
+            { scenarioId: 'C02', wasteTrackingId: c02WasteTrackingId },
+            { scenarioId: 'B01', wasteTrackingId: b01WasteTrackingId },
+            { scenarioId: 'P01', wasteTrackingId: p01WasteTrackingId },
+            { scenarioId: 'H01', wasteTrackingId: h01WasteTrackingId },
+            { scenarioId: 'H03', wasteTrackingId: h03WasteTrackingId }
           ]
         )
 
@@ -137,6 +206,30 @@ describe('Production Approval Tests All Automated Scenarios', () => {
         {
           scenarioId: 'C02',
           wasteTrackingId: c02WasteTrackingId,
+          status: 'Pass',
+          message: ''
+        },
+        {
+          scenarioId: 'B01',
+          wasteTrackingId: b01WasteTrackingId,
+          status: 'Pass',
+          message: ''
+        },
+        {
+          scenarioId: 'P01',
+          wasteTrackingId: p01WasteTrackingId,
+          status: 'Pass',
+          message: ''
+        },
+        {
+          scenarioId: 'H01',
+          wasteTrackingId: h01WasteTrackingId,
+          status: 'Pass',
+          message: ''
+        },
+        {
+          scenarioId: 'H03',
+          wasteTrackingId: h03WasteTrackingId,
           status: 'Pass',
           message: ''
         }
