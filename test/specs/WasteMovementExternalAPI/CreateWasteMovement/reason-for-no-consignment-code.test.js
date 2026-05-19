@@ -184,7 +184,9 @@ describe('Reason for No Consignment Code Validation', () => {
       expect(wasteReceiptData.wasteItems[0]).not.toHaveProperty('hazardous')
       expect(wasteReceiptData.wasteItems[1].ewcCodes).toEqual(['200121'])
       expect(wasteReceiptData.wasteItems[1].containsHazardous).toBe(true)
-      expect(wasteReceiptData.wasteItems[1].hazardous.hazCodes.length).toBeGreaterThan(0)
+      expect(
+        wasteReceiptData.wasteItems[1].hazardous.hazCodes.length
+      ).toBeGreaterThan(0)
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(

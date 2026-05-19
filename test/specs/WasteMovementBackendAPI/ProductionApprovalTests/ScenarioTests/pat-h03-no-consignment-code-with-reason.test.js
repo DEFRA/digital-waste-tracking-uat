@@ -30,7 +30,9 @@ describe('Production Approval Test H03 - No Consignment Code With Reason', () =>
         ]
       }
       wasteReceiptData.reasonForNoConsignmentCode = 'NO_DOC_WITH_WASTE'
-      expect(wasteReceiptData).not.toHaveProperty('hazardousWasteConsignmentCode')
+      expect(wasteReceiptData).not.toHaveProperty(
+        'hazardousWasteConsignmentCode'
+      )
 
       const createResponse =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -91,8 +93,7 @@ describe('Production Approval Test H03 - No Consignment Code With Reason', () =>
           scenarioId: 'H03',
           wasteTrackingId,
           status: 'Fail',
-          message:
-            'Expected reasonForNoConsignmentCode to be given for H03'
+          message: 'Expected reasonForNoConsignmentCode to be given for H03'
         }
       ])
     })

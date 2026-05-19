@@ -32,7 +32,9 @@ describe('Production Approval Test H01 - Multiple Hazardous Components', () => {
           }
         ]
       }
-      expect(wasteReceiptData.wasteItems[0].hazardous.components.length).toBeGreaterThan(1)
+      expect(
+        wasteReceiptData.wasteItems[0].hazardous.components.length
+      ).toBeGreaterThan(1)
 
       const createResponse =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(

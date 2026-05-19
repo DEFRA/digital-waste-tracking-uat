@@ -31,7 +31,9 @@ describe('Production Approval Test P01 - POPs Components', () => {
           }
         ]
       }
-      expect(wasteReceiptData.wasteItems[0].pops.components.length).toBeGreaterThan(1)
+      expect(
+        wasteReceiptData.wasteItems[0].pops.components.length
+      ).toBeGreaterThan(1)
 
       const createResponse =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
