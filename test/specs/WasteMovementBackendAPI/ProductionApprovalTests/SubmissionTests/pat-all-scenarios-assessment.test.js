@@ -148,6 +148,33 @@ describe('Production Approval Tests All Automated Scenarios', () => {
       const h03WasteTrackingId =
         await createMovementAndGetWasteTrackingId(h03Data)
 
+      const x01Data = generateBaseWasteReceiptData()
+      x01Data.wasteItems[0].ewcCodes = ['200121']
+      x01Data.wasteItems[0].containsHazardous = true
+      x01Data.wasteItems[0].hazardous = {
+        hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      x01Data.wasteItems[0].containsPops = true
+      x01Data.wasteItems[0].pops = {
+        sourceOfComponents: 'OWN_TESTING',
+        components: [
+          {
+            code: 'HBB',
+            concentration: 2.5
+          }
+        ]
+      }
+      x01Data.hazardousWasteConsignmentCode = 'CJTILE/A0001'
+      const x01WasteTrackingId =
+        await createMovementAndGetWasteTrackingId(x01Data)
+
       const patResponse =
         await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
           [
@@ -161,7 +188,8 @@ describe('Production Approval Tests All Automated Scenarios', () => {
             { scenarioId: 'B01', wasteTrackingId: b01WasteTrackingId },
             { scenarioId: 'P01', wasteTrackingId: p01WasteTrackingId },
             { scenarioId: 'H01', wasteTrackingId: h01WasteTrackingId },
-            { scenarioId: 'H03', wasteTrackingId: h03WasteTrackingId }
+            { scenarioId: 'H03', wasteTrackingId: h03WasteTrackingId },
+            { scenarioId: 'X01', wasteTrackingId: x01WasteTrackingId }
           ]
         )
 
@@ -230,6 +258,12 @@ describe('Production Approval Tests All Automated Scenarios', () => {
         {
           scenarioId: 'H03',
           wasteTrackingId: h03WasteTrackingId,
+          status: 'Pass',
+          message: ''
+        },
+        {
+          scenarioId: 'X01',
+          wasteTrackingId: x01WasteTrackingId,
           status: 'Pass',
           message: ''
         }
