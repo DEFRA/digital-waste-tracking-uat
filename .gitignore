@@ -26,6 +26,7 @@ ehthumbs.db
 Thumbs.db
 
 # Runtime and cache
+.tmp/
 .cache/
 .server
 *.png
