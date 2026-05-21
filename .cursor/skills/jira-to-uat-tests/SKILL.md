@@ -18,7 +18,7 @@ Turns Jira acceptance criteria into behavioural API tests for this repo.
 
 Follow [read-jira-ticket](../read-jira-ticket/SKILL.md) — run all scripts including `related-tickets.sh` and save output to `.tmp/jira-tickets/<ticket>/`.
 
-Read all files there — especially `ticket.txt`, `comments.txt`, `related/`, `epic/`, and `attachments/`.
+Read all files there — especially `ticket.txt`, `comments.txt`, `github.txt`, `related/`, `epic/`, and `attachments/`. Use [pr-service-version](../pr-service-version/SKILL.md) to resolve minted version IDs for merged service PRs in `github.txt`.
 
 Extract: summary, description, comments, acceptance criteria, testing notes, linked tickets, and attachment content.
 
@@ -29,6 +29,7 @@ Read these before proposing or writing tests:
 - `.cursor/rules/test.mdc` (index — follow all linked rule files)
 - `test/README.md` and `test/CONFIGURATION.md`
 - Existing tests for the same API/feature under `test/specs/`
+- Confluence pages linked from the ticket — use [read-confluence-page](../read-confluence-page/SKILL.md) if the ticket references wiki docs
 
 Match file placement, naming, assertions, auth patterns, and test data helpers already used nearby.
 

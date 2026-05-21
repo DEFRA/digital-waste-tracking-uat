@@ -1,6 +1,6 @@
 # Atlassian credentials setup
 
-Scripts under `.cursor/skills/read-jira-ticket/scripts/` (and the skills that call them) require Atlassian API credentials.
+Scripts under `.cursor/skills/read-jira-ticket/scripts/`, `.cursor/skills/read-confluence-page/scripts/`, and `.cursor/skills/write-confluence-page/scripts/` require Atlassian API credentials.
 
 ## Required environment variables
 
@@ -9,7 +9,7 @@ Scripts under `.cursor/skills/read-jira-ticket/scripts/` (and the skills that ca
 | `ATLASSIAN_USER`  | Your Atlassian account email                                                                                                      |
 | `ATLASSIAN_TOKEN` | API token from [id.atlassian.com/manage-profile/security/api-tokens](https://id.atlassian.com/manage-profile/security/api-tokens) |
 
-Use a token created via "Create API token" (not the scoped variant) so it covers Jira in one go.
+Use a token created via "Create API token" (not the scoped variant) so it covers both Jira and Confluence.
 
 ## Where to set them
 
@@ -25,17 +25,34 @@ export ATLASSIAN_TOKEN=your-atlassian-api-token
 
 For bash users, add the same exports to `~/.bash_profile` (or `~/.bashrc`).
 
-## Verify
+## Verify Jira
 
-````bash
 ```bash
 mkdir -p .tmp/jira-tickets/DWT-123/attachments
 bash .cursor/skills/read-jira-ticket/scripts/ticket.sh DWT-123 full > .tmp/jira-tickets/DWT-123/ticket.txt
 bash .cursor/skills/read-jira-ticket/scripts/comments.sh DWT-123 list > .tmp/jira-tickets/DWT-123/comments.txt
 bash .cursor/skills/read-jira-ticket/scripts/attachments.sh DWT-123 .tmp/jira-tickets/DWT-123/attachments
-````
-
 ```
 
 Replace `DWT-123` with a ticket you can access.
+
+## Verify Confluence read (folder)
+
+```bash
+bash .cursor/skills/read-confluence-page/scripts/folder-contents.sh \
+  "https://eaflood.atlassian.net/wiki/spaces/WTPG/folder/6483182044" \
+  .tmp/confluence-folders/6483182044
+```
+
+## Verify Confluence read (single page)
+
+```bash
+bash .cursor/skills/read-confluence-page/scripts/page.sh <page_id> summary
+```
+
+## Verify Confluence write (draft only)
+
+```bash
+# Draft locally first — do not run create-page.sh without user confirmation
+bash .cursor/skills/write-confluence-page/scripts/create-page.sh <parent_page_id> "Draft title" .tmp/confluence-drafts/example/page.html
 ```
