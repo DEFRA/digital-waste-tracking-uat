@@ -144,5 +144,61 @@ describe('Production Approval Test X01 - Hazardous and POPs Components', () => {
         }
       ])
     })
+
+    it('should fail when hazardous and POPs components are on different waste items', async () => {
+      const first = wasteReceiptData.wasteItems[0]
+      const second = { ...first }
+      first.ewcCodes = ['200121']
+      first.containsHazardous = true
+      first.hazardous = {
+        hazCodes: ['HP_1', 'HP_3'],
+        sourceOfComponents: 'PROVIDED_WITH_WASTE',
+        components: [
+          {
+            name: 'Mercury',
+            concentration: 0.25
+          }
+        ]
+      }
+      second.containsPops = true
+      second.pops = {
+        sourceOfComponents: 'OWN_TESTING',
+        components: [
+          {
+            code: 'HBB',
+            concentration: 2.5
+          }
+        ]
+      }
+      wasteReceiptData.hazardousWasteConsignmentCode = 'CJTILE/A0001'
+      wasteReceiptData.wasteItems = [first, second]
+      expect(first.containsPops).toBe(false)
+      expect(first).not.toHaveProperty('pops')
+      expect(second.containsHazardous).toBe(false)
+      expect(second).not.toHaveProperty('hazardous')
+
+      const createResponse =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+          wasteReceiptData
+        )
+      expect(createResponse.statusCode).toBe(201)
+      expect(createResponse.json).toHaveProperty('wasteTrackingId')
+      const wasteTrackingId = createResponse.json.wasteTrackingId
+
+      const patResponse =
+        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+          [{ scenarioId: 'X01', wasteTrackingId }]
+        )
+      expect(patResponse.statusCode).toBe(200)
+      expect(patResponse.json).toEqual([
+        {
+          scenarioId: 'X01',
+          wasteTrackingId,
+          status: 'Fail',
+          message:
+            'Expected one or more waste items to have POPs and Hazardous components'
+        }
+      ])
+    })
   })
 })
