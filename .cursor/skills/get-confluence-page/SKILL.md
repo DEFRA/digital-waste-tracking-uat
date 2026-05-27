@@ -1,7 +1,11 @@
 ---
-name: read-confluence-page
-description: Fetch a Confluence page or folder (title, body, labels, child pages) by page/folder ID or URL, or search by query, and save everything to .tmp for analysis. Use when the user asks to read Confluence documentation, wiki pages, folders, or design docs for Digital Waste Tracking.
+name: get-confluence-page
+description: Get a Confluence page or folder (title, body, labels, child pages) by page/folder ID or URL, or search by query, and save everything to .tmp for analysis. Use when the user asks for Confluence documentation, wiki pages, folders, or design docs for Digital Waste Tracking.
 ---
+
+# Get Confluence page
+
+Read-only fetch of Confluence pages, folders, or search results to `.tmp/confluence-*`.
 
 ## Parameters
 
@@ -33,7 +37,7 @@ Otherwise                   → Page workflow (step 3)
 ```bash
 mkdir -p .tmp/confluence-folders/<folder-id>
 
-bash .cursor/skills/read-confluence-page/scripts/folder-contents.sh \
+bash .cursor/skills/get-confluence-page/scripts/folder-contents.sh \
   <folder_id_or_url> \
   .tmp/confluence-folders/<folder-id>
 ```
@@ -56,7 +60,7 @@ Only when the user gives a search term, not a URL or ID:
 ```bash
 mkdir -p .tmp/confluence-searches
 
-bash .cursor/skills/read-confluence-page/scripts/search.sh "<query>" [space_key] \
+bash .cursor/skills/get-confluence-page/scripts/search.sh "<query>" [space_key] \
   > ".tmp/confluence-searches/<query-slug>.txt"
 ```
 
@@ -71,9 +75,9 @@ For a single page URL or ID:
 ```bash
 mkdir -p .tmp/confluence-pages/<page-id>
 
-bash .cursor/skills/read-confluence-page/scripts/page.sh <page_id_or_url> full > .tmp/confluence-pages/<page-id>/page.txt
-bash .cursor/skills/read-confluence-page/scripts/page.sh <page_id_or_url> json > .tmp/confluence-pages/<page-id>/page.json
-bash .cursor/skills/read-confluence-page/scripts/child-pages.sh <page-id> .tmp/confluence-pages/<page-id>
+bash .cursor/skills/get-confluence-page/scripts/page.sh <page_id_or_url> full > .tmp/confluence-pages/<page-id>/page.txt
+bash .cursor/skills/get-confluence-page/scripts/page.sh <page_id_or_url> json > .tmp/confluence-pages/<page-id>/page.json
+bash .cursor/skills/get-confluence-page/scripts/child-pages.sh <page-id> .tmp/confluence-pages/<page-id>
 ```
 
 Output: `.tmp/confluence-pages/<page-id>/`
@@ -115,7 +119,12 @@ After a successful fetch:
 ## Examples
 
 ```
-/read-confluence-page https://eaflood.atlassian.net/wiki/spaces/WTPG/folder/6483182044
-/read-confluence-page 6511037444
-/read-confluence-page POPs validation WTPG
+/get-confluence-page https://eaflood.atlassian.net/wiki/spaces/WTPG/folder/6483182044
+/get-confluence-page 6511037444
+/get-confluence-page POPs validation WTPG
 ```
+
+## Related skills
+
+- [create-confluence-page](../create-confluence-page/SKILL.md) — publish or update pages (after reading existing content)
+- [create-release-note-in-confluence](../create-release-note-in-confluence/SKILL.md) — uses this to load the release note template

@@ -5,6 +5,6 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-READ_RESOLVE="$SCRIPT_DIR/../../read-confluence-page/scripts/resolve-content-id.sh"
+GET_RESOLVE="$SCRIPT_DIR/../../get-confluence-page/scripts/resolve-content-id.sh"
 
-exec bash "$READ_RESOLVE" "$1"
+exec bash "$GET_RESOLVE" "$1"

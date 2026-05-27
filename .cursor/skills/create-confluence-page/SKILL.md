@@ -1,9 +1,9 @@
 ---
-name: write-confluence-page
-description: Draft and publish a Confluence page under a specified parent page. Use when the user asks to write, create, or update Confluence documentation, test plans, or wiki pages for Digital Waste Tracking.
+name: create-confluence-page
+description: Draft and publish a Confluence page under a specified parent page. Use when the user asks to create or update Confluence documentation, test plans, or wiki pages for Digital Waste Tracking.
 ---
 
-# Write Confluence page
+# Create Confluence page
 
 Creates or updates a Confluence page as a child of a parent page.
 
@@ -22,10 +22,10 @@ If the parent is not provided, ask the user. Optionally verify it exists:
 
 ```bash
 # Page parent
-bash .cursor/skills/read-confluence-page/scripts/page.sh <parent_id_or_url> summary
+bash .cursor/skills/get-confluence-page/scripts/page.sh <parent_id_or_url> summary
 
 # Folder parent
-bash .cursor/skills/read-confluence-page/scripts/folder-contents.sh <folder_id_or_url> .tmp/confluence-folders/<folder-id>
+bash .cursor/skills/get-confluence-page/scripts/folder-contents.sh <folder_id_or_url> .tmp/confluence-folders/<folder-id>
 ```
 
 The new page inherits the parent's space. Pages can be created under a **page or folder** parent.
@@ -53,7 +53,7 @@ Show the draft to the user and **ask for confirmation before publishing**.
 **Create** a new child page:
 
 ```bash
-bash .cursor/skills/write-confluence-page/scripts/create-page.sh \
+bash .cursor/skills/create-confluence-page/scripts/create-page.sh \
   <parent_id_or_url> \
   "<title>" \
   .tmp/confluence-drafts/<slug>/page.html
@@ -62,7 +62,7 @@ bash .cursor/skills/write-confluence-page/scripts/create-page.sh \
 **Update** an existing page:
 
 ```bash
-bash .cursor/skills/write-confluence-page/scripts/update-page.sh \
+bash .cursor/skills/create-confluence-page/scripts/update-page.sh \
   <page_id_or_url> \
   .tmp/confluence-drafts/<slug>/page.html \
   "<new_title>"
@@ -79,7 +79,7 @@ Return the page ID and URL from the script output. Save them to `.tmp/confluence
 - **Never publish without user confirmation**
 - **If any script fails, stop immediately** — report the exact error; do not retry with guessed content
 - Prefer updating an existing page when the user asks to revise docs they already own
-- Use [read-confluence-page](../read-confluence-page/SKILL.md) first when extending existing documentation
+- Use [get-confluence-page](../get-confluence-page/SKILL.md) first when extending existing documentation
 
 ## Scripts
 
@@ -100,3 +100,8 @@ Return the page ID and URL from the script output. Save them to `.tmp/confluence
   <li>Reject missing sourceOfComponents when POPs present</li>
 </ul>
 ```
+
+## Related skills
+
+- [get-confluence-page](../get-confluence-page/SKILL.md) — read existing pages before update
+- [create-release-note-in-confluence](../create-release-note-in-confluence/SKILL.md) — specialised release note publish (uses these scripts internally)

@@ -75,7 +75,7 @@ case "$FORMAT" in
       echo "=== Attachments ($attachment_count) ==="
       echo "$response" | jq -r '.fields.attachment[] | "\(.id)\t\(.filename)\t\(.mimeType)\t\(.size) bytes"' | column -t -s $'\t'
       echo ""
-      echo "Download with: bash .cursor/skills/read-jira-ticket/scripts/attachments.sh '"$TICKET"' .tmp/jira-tickets/'"$TICKET"'/attachments"
+      echo "Download with: bash .cursor/skills/get-jira-ticket/scripts/attachments.sh '"$TICKET"' .tmp/jira-tickets/'"$TICKET"'/attachments"
     fi
 
     subtask_count=$(echo "$response" | jq '.fields.subtasks | length')

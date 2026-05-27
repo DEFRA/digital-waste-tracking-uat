@@ -1,7 +1,11 @@
 ---
-name: read-jira-ticket
-description: Fetch a Jira ticket's details (summary, description, comments, attachments, GitHub PRs/commits, epic, and related tickets) by ticket ID and save everything to .tmp for analysis. Use whenever another skill or task needs to read a Jira ticket in this repository.
+name: get-jira-ticket
+description: Get a Jira ticket's details (summary, description, comments, attachments, GitHub PRs/commits, epic, and related tickets) by ticket ID and save everything to .tmp for analysis. Use whenever another skill or task needs Jira ticket data in this repository.
 ---
+
+# Get Jira ticket
+
+Fetches a single issue and related context to `.tmp/jira-tickets/<ticket>/`. Used by release notes, UAT test creation, and ad-hoc analysis.
 
 ## Parameters
 
@@ -14,13 +18,13 @@ description: Fetch a Jira ticket's details (summary, description, comments, atta
    ```bash
    mkdir -p .tmp/jira-tickets/<ticket>/attachments
 
-   bash .cursor/skills/read-jira-ticket/scripts/ticket.sh <ticket> full > .tmp/jira-tickets/<ticket>/ticket.txt
-   bash .cursor/skills/read-jira-ticket/scripts/ticket.sh <ticket> json > .tmp/jira-tickets/<ticket>/ticket.json
-   bash .cursor/skills/read-jira-ticket/scripts/comments.sh <ticket> list > .tmp/jira-tickets/<ticket>/comments.txt
-   bash .cursor/skills/read-jira-ticket/scripts/comments.sh <ticket> json > .tmp/jira-tickets/<ticket>/comments.json
-   bash .cursor/skills/read-jira-ticket/scripts/attachments.sh <ticket> .tmp/jira-tickets/<ticket>/attachments
-   bash .cursor/skills/read-jira-ticket/scripts/github-dev.sh <ticket> .tmp/jira-tickets/<ticket>
-   bash .cursor/skills/read-jira-ticket/scripts/related-tickets.sh <ticket> .tmp/jira-tickets/<ticket>
+   bash .cursor/skills/get-jira-ticket/scripts/ticket.sh <ticket> full > .tmp/jira-tickets/<ticket>/ticket.txt
+   bash .cursor/skills/get-jira-ticket/scripts/ticket.sh <ticket> json > .tmp/jira-tickets/<ticket>/ticket.json
+   bash .cursor/skills/get-jira-ticket/scripts/comments.sh <ticket> list > .tmp/jira-tickets/<ticket>/comments.txt
+   bash .cursor/skills/get-jira-ticket/scripts/comments.sh <ticket> json > .tmp/jira-tickets/<ticket>/comments.json
+   bash .cursor/skills/get-jira-ticket/scripts/attachments.sh <ticket> .tmp/jira-tickets/<ticket>/attachments
+   bash .cursor/skills/get-jira-ticket/scripts/github-dev.sh <ticket> .tmp/jira-tickets/<ticket>
+   bash .cursor/skills/get-jira-ticket/scripts/related-tickets.sh <ticket> .tmp/jira-tickets/<ticket>
    ```
 
    Requires `ATLASSIAN_USER` and `ATLASSIAN_TOKEN` env vars. See [atlassian-credentials.md](../../../docs/ai/atlassian-credentials.md).
@@ -57,3 +61,17 @@ description: Fetch a Jira ticket's details (summary, description, comments, atta
 | `epic-issues.sh`     | List all issues in an epic (called by `related-tickets.sh`)                      |
 
 Set `JIRA_MAX_RELATED=20` to fetch more than the default 10 related tickets.
+
+## Examples
+
+```
+/get-jira-ticket DWT-624
+/get-jira-ticket DWTA-166
+```
+
+## Related skills
+
+- [get-pr-service-version](../get-pr-service-version/SKILL.md) — minted versions for linked service PRs
+- [get-jira-release](../get-jira-release/SKILL.md) — release containing this ticket
+- [create-uat-tests-from-jira](../create-uat-tests-from-jira/SKILL.md) — tests from ticket data
+- [create-release-note-in-confluence](../create-release-note-in-confluence/SKILL.md) — uses this via `collect-release-data.sh`

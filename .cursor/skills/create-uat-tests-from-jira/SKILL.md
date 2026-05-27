@@ -1,9 +1,9 @@
 ---
-name: jira-to-uat-tests
-description: Reads a Jira ticket (with attachments), analyses acceptance criteria, and proposes or implements UAT API tests for digital-waste-tracking-uat. Use when the user asks to write tests from a Jira ticket, plan tests for DWT/DWTA work, or mentions a ticket number like DWT-123.
+name: create-uat-tests-from-jira
+description: Create UAT API tests from Jira ticket data (acceptance criteria, attachments, linked PRs). Use when the user asks to write tests from a Jira ticket, plan tests for DWT/DWTA work, or mentions a ticket number like DWT-123.
 ---
 
-# Jira ticket to UAT tests
+# Create UAT tests from Jira
 
 Turns Jira acceptance criteria into behavioural API tests for this repo.
 
@@ -16,9 +16,9 @@ Turns Jira acceptance criteria into behavioural API tests for this repo.
 
 ### 1. Fetch ticket
 
-Follow [read-jira-ticket](../read-jira-ticket/SKILL.md) — run all scripts including `related-tickets.sh` and save output to `.tmp/jira-tickets/<ticket>/`.
+Follow [get-jira-ticket](../get-jira-ticket/SKILL.md) — run all scripts including `related-tickets.sh` and save output to `.tmp/jira-tickets/<ticket>/`.
 
-Read all files there — especially `ticket.txt`, `comments.txt`, `github.txt`, `related/`, `epic/`, and `attachments/`. Use [pr-service-version](../pr-service-version/SKILL.md) to resolve minted version IDs for merged service PRs in `github.txt`.
+Read all files there — especially `ticket.txt`, `comments.txt`, `github.txt`, `related/`, `epic/`, and `attachments/`. Use [get-pr-service-version](../get-pr-service-version/SKILL.md) to get minted version IDs for merged service PRs in `github.txt`.
 
 Extract: summary, description, comments, acceptance criteria, testing notes, linked tickets, and attachment content.
 
@@ -29,7 +29,7 @@ Read these before proposing or writing tests:
 - `.cursor/rules/test.mdc` (index — follow all linked rule files)
 - `test/README.md` and `test/CONFIGURATION.md`
 - Existing tests for the same API/feature under `test/specs/`
-- Confluence pages linked from the ticket — use [read-confluence-page](../read-confluence-page/SKILL.md) if the ticket references wiki docs
+- Confluence pages linked from the ticket — use [get-confluence-page](../get-confluence-page/SKILL.md) if the ticket references wiki docs
 
 Match file placement, naming, assertions, auth patterns, and test data helpers already used nearby.
 
@@ -111,3 +111,9 @@ Ask: **"Implement these tests?"** Stop here unless mode is `implement` or the us
 
 - Atlassian setup: [atlassian-credentials.md](../../../docs/ai/atlassian-credentials.md)
 - Example tagged test: `test/specs/WasteMovementExternalAPI/CreateWasteMovement/pops-source-of-components.test.js`
+
+## Related skills
+
+- [get-jira-ticket](../get-jira-ticket/SKILL.md) — fetch ticket data (step 1)
+- [get-pr-service-version](../get-pr-service-version/SKILL.md) — service versions from linked PRs
+- [get-confluence-page](../get-confluence-page/SKILL.md) — linked wiki docs from the ticket

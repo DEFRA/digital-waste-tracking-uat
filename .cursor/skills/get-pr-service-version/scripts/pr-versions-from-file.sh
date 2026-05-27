@@ -1,5 +1,5 @@
 #!/bin/bash
-# Resolve minted versions for PR URLs listed in a file (e.g. github.txt from read-jira-ticket)
+# Resolve minted versions for PR URLs listed in a file (e.g. github.txt from get-jira-ticket)
 # Usage: ./pr-versions-from-file.sh <file> [output_dir]
 
 set -e

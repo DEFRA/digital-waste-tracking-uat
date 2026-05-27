@@ -1,9 +1,9 @@
 ---
-name: pr-service-version
-description: Resolves minted CDP service version IDs for merged GitHub pull requests in DEFRA waste tracking service repos. Use when the user asks for the version minted by a PR or service version from Jira-linked GitHub PRs.
+name: get-pr-service-version
+description: Get minted CDP service version IDs for merged GitHub pull requests in DEFRA waste tracking service repos. Use when the user asks for the version minted by a PR or service version from Jira-linked GitHub PRs.
 ---
 
-# PR to service version
+# Get PR service version
 
 When a PR merges to `main` in a CDP **service repo**, the Publish workflow runs `DEFRA/cdp-build-action/build`, which auto-tags the merge commit with a version ID.
 
@@ -23,7 +23,7 @@ One of:
 
 1. **PR URL** — e.g. `https://github.com/DEFRA/waste-movement-backend/pull/113`
 2. **Repo + number** — e.g. `waste-movement-backend 113`
-3. **Jira github.txt** — after [read-jira-ticket](../read-jira-ticket/SKILL.md), resolve all PRs in `github.txt`
+3. **Jira github.txt** — after [get-jira-ticket](../get-jira-ticket/SKILL.md), resolve all PRs in `github.txt`
 
 Optional: `GITHUB_TOKEN` for higher GitHub API rate limits (public repos work without it).
 
@@ -32,20 +32,20 @@ Optional: `GITHUB_TOKEN` for higher GitHub API rate limits (public repos work wi
 ### Single PR
 
 ```bash
-bash .cursor/skills/pr-service-version/scripts/pr-version.sh <pr_url>
+bash .cursor/skills/get-pr-service-version/scripts/pr-version.sh <pr_url>
 ```
 
 Save output when working from a ticket:
 
 ```bash
-bash .cursor/skills/pr-service-version/scripts/pr-version.sh <pr_url> \
+bash .cursor/skills/get-pr-service-version/scripts/pr-version.sh <pr_url> \
   | tee -a .tmp/jira-tickets/<ticket>/service-versions.txt
 ```
 
 ### All PRs from a Jira fetch
 
 ```bash
-bash .cursor/skills/pr-service-version/scripts/pr-versions-from-file.sh \
+bash .cursor/skills/get-pr-service-version/scripts/pr-versions-from-file.sh \
   .tmp/jira-tickets/<ticket>/github.txt \
   .tmp/jira-tickets/<ticket>
 ```
@@ -66,7 +66,7 @@ Writes:
 
 ### 3. Typical workflow with Jira
 
-1. [read-jira-ticket](../read-jira-ticket/SKILL.md) → saves `github.txt`
+1. [get-jira-ticket](../get-jira-ticket/SKILL.md) → saves `github.txt`
 2. This skill → resolves minted versions for service PRs only
 
 ## Output format
@@ -92,14 +92,19 @@ Version: 0.107.0
 ## Examples
 
 ```
-/pr-service-version https://github.com/DEFRA/waste-movement-backend/pull/113
-/pr-service-version waste-movement-external-api 42
+/get-pr-service-version https://github.com/DEFRA/waste-movement-backend/pull/113
+/get-pr-service-version waste-movement-external-api 42
 ```
 
 After fetching DWTA-180:
 
 ```bash
-bash .cursor/skills/pr-service-version/scripts/pr-versions-from-file.sh \
+bash .cursor/skills/get-pr-service-version/scripts/pr-versions-from-file.sh \
   .tmp/jira-tickets/DWTA-180/github.txt \
   .tmp/jira-tickets/DWTA-180
 ```
+
+## Related skills
+
+- [get-jira-ticket](../get-jira-ticket/SKILL.md) — provides `github.txt` for batch resolution
+- [create-release-note-in-confluence](../create-release-note-in-confluence/SKILL.md) — service versions section in release notes
