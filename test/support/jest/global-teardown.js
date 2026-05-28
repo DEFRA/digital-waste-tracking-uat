@@ -22,6 +22,22 @@ export default async function globalTeardown() {
       join(process.cwd(), 'zap-report', 'zap.html'),
       htmlReport.body
     )
+    const alertsSummary = await apis.zapApi.alertsSummary()
     await apis.close()
+
+    if (alertsSummary.statusCode === 200) {
+      if (alertsSummary.json?.alertsSummary?.High > 0) {
+        // eslint-disable-next-line no-console -- intentional stderr output for ZAP gate in CI
+        console.error(
+          `\n\x1b[31mZAP In alertsSummary, expected High to be 0, received: \n${JSON.stringify(alertsSummary.json?.alertsSummary, null, 2)}\x1b[0m`
+        )
+        process.exitCode = 1
+      } else {
+        // eslint-disable-next-line no-console -- intentional stdout summary when ZAP gate passes
+        console.log(
+          `\n\x1b[32mZAP alertsSummary: \n${JSON.stringify(alertsSummary.json?.alertsSummary, null, 2)}\x1b[0m`
+        )
+      }
+    }
   }
 }

@@ -37,6 +37,14 @@ export class ZapApi extends BaseAPI {
   }
 
   /**
+   * Gets number of alerts grouped by each risk level.
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
+  async alertsSummary() {
+    return this.get(this.#endpoint('/JSON/alert/view/alertsSummary/'))
+  }
+
+  /**
    * @param {string} path - API path
    * @param {Record<string, string>} [queryParams={}]
    * @returns {string}
