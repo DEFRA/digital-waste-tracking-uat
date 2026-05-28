@@ -2,6 +2,7 @@ import { WasteMovementExternalAPI } from './wasteMovementApi.js'
 import { CognitoOAuthApi } from './cognitoOAuth.js'
 import { WasteMovementBackendAPI } from './wasteMovementBackendApi.js'
 import { WasteOrganisationBackendAPI } from './wasteOrganisationBackendApi.js'
+import { ZapApi } from './zap-api.js'
 
 /**
  * @typedef {Object} ApiInstances
@@ -9,6 +10,8 @@ import { WasteOrganisationBackendAPI } from './wasteOrganisationBackendApi.js'
  * @property {CognitoOAuthApi} cognitoOAuthApi - Cognito OAuth instance
  * @property {WasteMovementBackendAPI} wasteMovementBackendAPI - Waste Movement Backend API instance
  * @property {WasteOrganisationBackendAPI} wasteOrganisationBackendAPI - Waste Organisation Backend API instance
+ * @property {ZapApi} [zapApi] - ZAP REST API instance when PROXY_MODE=zap
+ * @property {() => Promise<void>} close - Close all API connection pools
  */
 
 /**
@@ -34,7 +37,7 @@ export class ApiFactory {
       proxyExternalCalls = true
     }
 
-    return {
+    const apis = {
       // Internal Services
       wasteMovementExternalAPI: new WasteMovementExternalAPI(
         proxyInternalCalls
@@ -47,5 +50,19 @@ export class ApiFactory {
       // External Services
       cognitoOAuthApi: new CognitoOAuthApi(proxyExternalCalls)
     }
+
+    if (proxyMode === 'zap') {
+      apis.zapApi = new ZapApi()
+    }
+
+    apis.close = async () => {
+      await Promise.all(
+        Object.values(apis)
+          .filter((api) => api?.close)
+          .map((api) => api.close())
+      )
+    }
+
+    return /** @type {ApiInstances} */ (apis)
   }
 }

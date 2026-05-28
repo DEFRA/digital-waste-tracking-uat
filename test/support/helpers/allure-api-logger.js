@@ -21,7 +21,7 @@ export async function logAllureRequest(
   usingProxy,
   data = null
 ) {
-  if (globalThis.testConfig.isAdditionalLoggingEnabled) {
+  if (globalThis.testConfig.isAdditionalLoggingEnabled && globalThis.allure) {
     await globalThis.allure.step(
       `${method} Request to ${endpoint}`,
       async () => {
@@ -73,7 +73,7 @@ export async function logAllureResponse(
   headers,
   body = null
 ) {
-  if (globalThis.testConfig.isAdditionalLoggingEnabled) {
+  if (globalThis.testConfig.isAdditionalLoggingEnabled && globalThis.allure) {
     await globalThis.allure.step(
       `${method} Response from ${endpoint}`,
       async () => {
@@ -111,6 +111,10 @@ export async function logAllureResponse(
  * @param {string} [type='link'] - The type of link ('issue', 'tms', 'link', 'jira', etc.)
  */
 export async function addAllureLink(url, name, type = 'link') {
+  if (!globalThis.allure) {
+    return
+  }
+
   if (type === 'issue') {
     await globalThis.allure.issue(globalThis.testConfig.jiraBaseUrl + url, name)
   } else {

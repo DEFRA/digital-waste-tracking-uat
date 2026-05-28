@@ -112,6 +112,22 @@ export class TestConfig {
   }
 
   /**
+   * ZAP REST API base URL (not the proxied application URLs).
+   * @returns {string|undefined}
+   */
+  get zapApiBaseUrl() {
+    return process.env.ZAP_API_BASE_URL
+  }
+
+  /**
+   * ZAP API key for REST API calls (session clear, report download).
+   * @returns {string|undefined}
+   */
+  get zapApiKey() {
+    return process.env.ZAP_API_KEY
+  }
+
+  /**
    * Get the environment name
    * @returns {string} The environment name
    */
