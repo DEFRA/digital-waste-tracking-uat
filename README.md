@@ -86,8 +86,11 @@ npm run lint:fix        # Fix ESLint issues
 # Test reporting
 npm run report:generate # Generate Allure report
 npm run report:open     # Open Allure report in browser
-npm run report:clean    # Clean test results
+npm run report:clean    # Clean Allure and zap-report directories
 npm run report:publish  # Publish results to S3
+
+# ZAP scan + gate (Docker Compose; sources env.sh)
+npm run source:clean:test:integration-zap:report
 
 # Development setup
 npm run setup:husky     # Setup Git hooks
@@ -161,7 +164,7 @@ The test suite uses Allure for generating detailed test reports. Available repor
 
 ```bash
 # Generate and open test report (cleans previous results first)
-npm run source:clean:test:open
+npm run source:clean:test:uat:report
 
 # Generate test report only
 npm run report:generate

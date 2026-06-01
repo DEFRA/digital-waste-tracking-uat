@@ -45,6 +45,21 @@ export class ZapApi extends BaseAPI {
   }
 
   /**
+   * Disable a passive scan rule (omit from scan; alertThreshold OFF).
+   * @param {string} scannerId - Passive scan rule id (plugin id)
+   * @param {'OFF'|'DEFAULT'|'LOW'|'MEDIUM'|'HIGH'} [alertThreshold='OFF']
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
+  async setPassiveScannerAlertThreshold(scannerId, alertThreshold = 'OFF') {
+    return this.get(
+      this.#endpoint('/JSON/pscan/action/setScannerAlertThreshold/', {
+        id: scannerId,
+        alertThreshold
+      })
+    )
+  }
+
+  /**
    * @param {string} path - API path
    * @param {Record<string, string>} [queryParams={}]
    * @returns {string}
