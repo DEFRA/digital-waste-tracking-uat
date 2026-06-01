@@ -9,15 +9,13 @@ export default async function globalSetup() {
   if (testConfig.proxyMode === 'zap') {
     globalThis.testConfig = testConfig
     const apis = ApiFactory.create()
-
     const response = await apis.zapApi.newSession()
-    if (response.statusCode !== 200 && response.json?.Result !== 'OK') {
+    if (response.statusCode !== 200 || response.json?.Result !== 'OK') {
       await apis.close()
       throw new Error(
         `ZAP newSession failed with status ${response.statusCode} and result ${response.json?.Result}`
       )
     }
-
     await apis.close()
   }
 }

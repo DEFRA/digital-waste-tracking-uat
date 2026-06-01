@@ -221,6 +221,15 @@ Tests are organized into logical groups:
 
 **Note:** Use `jest` directly for debugging to avoid the report generation step that runs after tests.
 
+## ZAP security scan (two-step)
+
+When `PROXY_MODE=zap`, traffic is proxied through OWASP ZAP. The scan and gate are separate Jest runs:
+
+1. **Scan** (`npm run test:uat` with `PROXY_MODE=zap`) — `globalTeardown` writes `zap-report/zap.json`, `zap.html`, and `alerts-summary.json`.
+2. **Gate** (`npm run test:zap-result`, `PROXY_MODE=off`) — reads `zap-report/zap.json`, fails on High alerts, attaches reports to Allure.
+
+`npm run source:clean:test:uat-zap` runs clean, scan, gate, and opens the Allure report (after sourcing `env.sh`).
+
 ## Allure Reporting
 
 The test suite integrates with Allure for comprehensive test reporting:
