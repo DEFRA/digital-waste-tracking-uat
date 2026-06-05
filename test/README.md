@@ -247,12 +247,11 @@ OWASP ZAP passive scanning is intended for **Docker Compose CI** (internal HTTP 
 
 ### Environment variables
 
-| Variable           | Scan run              | Gate run           |
-| ------------------ | --------------------- | ------------------ |
-| `PROXY_MODE`       | `zap`                 | `off`              |
-| `HTTP_PROXY`       | ZAP proxy URL         | ignored when `off` |
-| `ZAP_API_BASE_URL` | ZAP REST API base URL | not used           |
-| `ZAP_API_KEY`      | ZAP API key           | not used           |
+| Variable      | Scan run                   | Gate run           |
+| ------------- | -------------------------- | ------------------ |
+| `PROXY_MODE`  | `zap`                      | `off`              |
+| `HTTP_PROXY`  | ZAP proxy and REST API URL | ignored when `off` |
+| `ZAP_API_KEY` | ZAP API key                | not used           |
 
 `PROXY_MODE` also supports `cdp` (proxy external calls only, e.g. Cognito). See `test/support/test-config.js`.
 

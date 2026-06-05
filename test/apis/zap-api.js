@@ -2,11 +2,11 @@ import { testConfig } from '../support/test-config.js'
 import { BaseAPI } from './base-api.js'
 
 /**
- * Client for the ZAP REST API (direct to ZAP, not via the HTTP proxy).
+ * Client for the ZAP REST API (same host/port as HTTP_PROXY).
  */
 export class ZapApi extends BaseAPI {
   constructor() {
-    super(testConfig.zapApiBaseUrl, false)
+    super(testConfig.httpProxy, false)
     this.apiKey = testConfig.zapApiKey
   }
 
