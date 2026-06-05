@@ -13,7 +13,8 @@ export class TestConfig {
   validateRequiredEnvVars() {
     const requiredVars = [
       'WASTE_MOVEMENT_EXTERNAL_API_BASE_URL',
-      'JIRA_BASE_URL'
+      'JIRA_BASE_URL',
+      'PROXY_MODE'
     ]
 
     const missingVars = requiredVars.filter((varName) => !process.env[varName])

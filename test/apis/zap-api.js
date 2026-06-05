@@ -16,7 +16,7 @@ export class ZapApi extends BaseAPI {
   async newSession() {
     return this.get(
       this.#endpoint('/JSON/core/action/newSession/', {
-        name: 'digital-waste-tracking-uat ',
+        name: 'digital-waste-tracking-uat',
         overwrite: 'true'
       })
     )
