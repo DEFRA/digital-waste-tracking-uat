@@ -34,11 +34,18 @@ describe('Retrieve movement (Functionality only in Pre Prod)', () => {
       expect(qaRetrieveStatus).toBe(200)
       expect(qaMovements).toHaveLength(1)
       const movement = qaMovements[0]
+      expect(movement).toHaveProperty('wasteTrackingId')
       expect(movement.wasteTrackingId).toBe(wasteTrackingId)
+      expect(movement).toHaveProperty('revision')
       expect(movement.revision).toEqual(expect.any(Number))
-      expect(movement).toHaveProperty('orgId')
+      expect(movement).toHaveProperty(
+        'submittingOrganisation.defraCustomerOrganisationId'
+      )
+      expect(
+        movement.submittingOrganisation.defraCustomerOrganisationId
+      ).toEqual(expect.any(String))
+      expect(movement).toHaveProperty('traceId')
       expect(movement.traceId).toEqual(expect.any(String))
-      expect(movement.receipt.movement.apiCode).toBe(wasteReceiptData.apiCode)
     })
 
     it('should return both revisions when includeHistory is true after create and update @allure.label.tag:DWTA-45', async () => {

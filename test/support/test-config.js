@@ -47,6 +47,17 @@ export class TestConfig {
     return process.env.COGNITO_OAUTH_BASE_URL
   }
 
+  /**
+   * Organisation API code for testing GIO org exclude behaviour in pre-prod environments.
+   * This shouldn't be used in the production smoke tests.
+   * @returns {string} The API code
+   */
+  get apiCodeInGioOrgExcludeList() {
+    return process.env.API_CODE_IN_GIO_ORG_EXCLUDE_LIST
+      ? process.env.API_CODE_IN_GIO_ORG_EXCLUDE_LIST
+      : undefined
+  }
+
   // Service auth password for the Waste Movement External API to connect to other services
   get serviceAuthPassword() {
     return process.env.SERVICE_AUTH_PASSWORD
