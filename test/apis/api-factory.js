@@ -2,6 +2,7 @@ import { WasteMovementExternalAPI } from './wasteMovementApi.js'
 import { CognitoOAuthApi } from './cognitoOAuth.js'
 import { WasteMovementBackendAPI } from './wasteMovementBackendApi.js'
 import { WasteOrganisationBackendAPI } from './wasteOrganisationBackendApi.js'
+import { ZapApi } from './zap-api.js'
 
 /**
  * @typedef {Object} ApiInstances
@@ -9,6 +10,8 @@ import { WasteOrganisationBackendAPI } from './wasteOrganisationBackendApi.js'
  * @property {CognitoOAuthApi} cognitoOAuthApi - Cognito OAuth instance
  * @property {WasteMovementBackendAPI} wasteMovementBackendAPI - Waste Movement Backend API instance
  * @property {WasteOrganisationBackendAPI} wasteOrganisationBackendAPI - Waste Organisation Backend API instance
+ * @property {ZapApi} [zapApi] - ZAP REST API instance when PROXY_MODE=zap
+ * @property {() => Promise<void>} close - Close all API connection pools
  */
 
 /**
@@ -20,11 +23,46 @@ export class ApiFactory {
    * @returns {ApiInstances}
    */
   static create() {
-    return {
-      wasteMovementExternalAPI: new WasteMovementExternalAPI(),
-      cognitoOAuthApi: new CognitoOAuthApi(),
-      wasteMovementBackendAPI: new WasteMovementBackendAPI(),
-      wasteOrganisationBackendAPI: new WasteOrganisationBackendAPI()
+    const proxyMode = globalThis.testConfig?.proxyMode ?? 'off'
+
+    let proxyInternalCalls = false
+    let proxyExternalCalls = false
+
+    if (proxyMode === 'cdp') {
+      // CDP: only proxy "external" calls (e.g. Cognito) when the platform proxy is required.
+      proxyExternalCalls = true
+    } else if (proxyMode === 'zap') {
+      // ZAP: proxy both internal + external so ZAP can observe the full flow.
+      proxyInternalCalls = true
+      proxyExternalCalls = true
     }
+
+    const apis = {
+      // Internal Services
+      wasteMovementExternalAPI: new WasteMovementExternalAPI(
+        proxyInternalCalls
+      ),
+      wasteMovementBackendAPI: new WasteMovementBackendAPI(proxyInternalCalls),
+      wasteOrganisationBackendAPI: new WasteOrganisationBackendAPI(
+        proxyInternalCalls
+      ),
+
+      // External Services
+      cognitoOAuthApi: new CognitoOAuthApi(proxyExternalCalls)
+    }
+
+    if (proxyMode === 'zap') {
+      apis.zapApi = new ZapApi()
+    }
+
+    apis.close = async () => {
+      await Promise.all(
+        Object.values(apis)
+          .filter((api) => api?.close)
+          .map((api) => api.close())
+      )
+    }
+
+    return /** @type {ApiInstances} */ (apis)
   }
 }

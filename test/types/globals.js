@@ -8,6 +8,14 @@
  */
 
 /**
+ * @typedef {Object} Allure
+ * @property {(name: string, fn: () => Promise<void>) => Promise<void>} step
+ * @property {(name: string, content: string, type: string) => void} attachment
+ * @property {(url: string, name: string) => Promise<void>} issue
+ * @property {(url: string, name: string, type?: string) => Promise<void>} link
+ */
+
+/**
  * Global APIs available in tests
  * @type {import('../apis/api-factory.js').ApiInstances}
  */
@@ -18,3 +26,9 @@ globalThis.apis = null
  * @type {import('../support/test-config.js').TestConfig}
  */
 globalThis.testConfig = null
+
+/**
+ * Allure reporter API provided by allure-jest during test execution
+ * @type {Allure}
+ */
+globalThis.allure = undefined

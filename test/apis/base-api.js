@@ -12,6 +12,13 @@ import {
  */
 
 /**
+ * @typedef {Object} TextResponse
+ * @property {number} statusCode - HTTP status code
+ * @property {Object} headers - Response headers
+ * @property {string} body - Raw response body
+ */
+
+/**
  * Base API class that provides common HTTP methods
  */
 export class BaseAPI {
@@ -34,6 +41,8 @@ export class BaseAPI {
         timeout: 15000 // Custom: 15s connection establishment timeout (default is 10s)
       }
     }
+
+    // Some API objects have to use the proxy in CDP in order to work with APIs from outside the CDP network.
 
     if (globalThis.testConfig?.httpProxy && this.useProxyWhenAvailable) {
       this.agent = new ProxyAgent({
@@ -87,6 +96,47 @@ export class BaseAPI {
       statusCode: response.statusCode,
       headers: response.headers,
       json
+    }
+  }
+
+  /**
+   * Make a GET request and return the raw response body (for non-JSON endpoints).
+   * @param {string} endpoint - API endpoint
+   * @param {Object} [headers={}] - Additional headers
+   * @returns {Promise<TextResponse>}
+   */
+  async getText(endpoint, headers = {}) {
+    const url = `${this.baseUrl}${endpoint}`
+    const requestHeaders = { ...this.defaultHeaders, ...headers }
+
+    await logAllureRequest(
+      'GET',
+      endpoint,
+      url,
+      requestHeaders,
+      this.usingProxy
+    )
+
+    const response = await request(url, {
+      method: 'GET',
+      headers: requestHeaders,
+      dispatcher: this.agent
+    })
+
+    const body = await response.body.text()
+
+    await logAllureResponse(
+      'GET',
+      endpoint,
+      response.statusCode,
+      response.headers,
+      body
+    )
+
+    return {
+      statusCode: response.statusCode,
+      headers: response.headers,
+      body
     }
   }
 

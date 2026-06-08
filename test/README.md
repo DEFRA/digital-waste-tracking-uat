@@ -156,7 +156,8 @@ beforeEach(() => {
 })
 
 // After each test
-afterEach(() => {
+afterEach(async () => {
+  await globalThis.apis?.close()
   delete globalThis.apis
 })
 ```
@@ -195,6 +196,7 @@ See `CONFIGURATION.md` for detailed setup instructions.
 The test suite is organized by feature and functionality:
 
 - `test/specs/Authentication/` - OAuth2 authentication tests
+- `test/specs/Security/ZapGate/` - ZAP passive scan gate (second Jest run after scan)
 - `test/specs/WasteRecievingAPI/CreateWasteMovement/` - Waste movement creation tests
 - `test/specs/WasteRecievingAPI/UpdateWasteMovement/` - Waste movement update tests
 
@@ -212,14 +214,60 @@ Tests are organized into logical groups:
 
 ## Running Tests
 
-- `npm test` - Run all tests with Allure reporting
-- `npm run test:watch` - Run tests in watch mode for development
-- `npm run test:coverage` - Run tests with coverage reporting
-- `jest` - Run Jest directly without reporting
+- `npm test` - Run UAT profile tests (`test:uat` by default)
+- `npm run test:integration` - Integration API tests (excludes `@Authentication`)
+- `npm run test:uat` - UAT profile including bulk upload and authentication
+- `npm run test:zap-gate` - ZAP gate only (`PROXY_MODE=off`; requires scan artefacts)
+- `jest` - Run Jest directly without report scripts
 - `jest --testPathPattern=test/specs/Authentication/` - Run specific test directories
 - `jest --testNamePattern="should authenticate successfully"` - Run tests matching a pattern
 
+**Source env and open Allure report:**
+
+- `npm run source:clean:test:integration:report` — integration tests
+- `npm run source:clean:test:uat:report` — UAT profile
+- `npm run source:clean:test:integration-zap:report` — ZAP scan + gate (see below)
+
 **Note:** Use `jest` directly for debugging to avoid the report generation step that runs after tests.
+
+## ZAP security scan (two-step)
+
+OWASP ZAP passive scanning is intended for **Docker Compose CI** (internal HTTP service URLs), not CDP HTTPS endpoints. When `PROXY_MODE=zap`, API traffic is proxied through ZAP. The **scan** and **gate** are separate Jest runs so the gate can run with `PROXY_MODE=off` and read reports from disk.
+
+### Flow
+
+1. **Scan** — set `PROXY_MODE=zap` and `HTTP_PROXY` to the ZAP proxy (e.g. in `env.sh`), then run integration tests:
+   - `test/support/jest/global-setup.js` — `newSession` and disable passive scan rules listed in `zapPassiveScanRulesToDisable`
+   - Tests execute through the proxy
+   - `test/support/jest/global-teardown.js` — writes `zap-report/zap.json`, `zap.html`, and `alerts-summary.json`
+2. **Gate** — `PROXY_MODE=off`, `npm run test:zap-gate`:
+   - `test/specs/Security/ZapGate/zap-gate.test.js` — asserts artefacts exist, attaches all three reports to Allure, fails when `alertsSummary.High !== 0`
+
+`npm run source:clean:test:integration-zap:report` runs `report:clean`, scan, gate, Allure generate, and opens the report (sources `env.sh` first).
+
+### Environment variables
+
+| Variable      | Scan run                   | Gate run           |
+| ------------- | -------------------------- | ------------------ |
+| `PROXY_MODE`  | `zap`                      | `off`              |
+| `HTTP_PROXY`  | ZAP proxy and REST API URL | ignored when `off` |
+| `ZAP_API_KEY` | ZAP API key                | not used           |
+
+`PROXY_MODE` also supports `cdp` (proxy external calls only, e.g. Cognito). See `test/support/test-config.js`.
+
+### Passive scan rules disabled for CI
+
+Docker Compose uses HTTP and Basic auth on the internal network, which triggers ZAP plugin **10105** (Authentication Credentials Captured). Plugin ids to disable are listed in `test/support/jest/global-setup.js` (`setPassiveScannerAlertThreshold` → `OFF`). Add or remove ids there as needed; the gate still expects `High: 0` in `alerts-summary.json`.
+
+### Artefacts
+
+| Path                             | Written by       | Used by gate       |
+| -------------------------------- | ---------------- | ------------------ |
+| `zap-report/zap.json`            | `globalTeardown` | Allure attachment  |
+| `zap-report/zap.html`            | `globalTeardown` | Allure attachment  |
+| `zap-report/alerts-summary.json` | `globalTeardown` | Assertion + Allure |
+
+`npm run report:clean` removes `zap-report/` along with `allure-results/` and `allure-report/`.
 
 ## Allure Reporting
 
@@ -227,7 +275,7 @@ The test suite integrates with Allure for comprehensive test reporting:
 
 - `npm run report:generate` - Generate Allure report from test results
 - `npm run report:open` - Open the generated report in browser
-- `npm run report:clean` - Clean up report files
+- `npm run report:clean` - Clean Allure and `zap-report/` directories
 - `npm run report:publish` - Generate and publish reports
 
 ## Troubleshooting

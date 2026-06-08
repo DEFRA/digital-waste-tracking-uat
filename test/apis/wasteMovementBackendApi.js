@@ -2,8 +2,14 @@ import { BaseAPI } from './base-api.js'
 import { randomUUID } from 'crypto'
 
 export class WasteMovementBackendAPI extends BaseAPI {
-  constructor() {
-    super(globalThis.testConfig.wasteMovementBackendApiBaseUrl, false)
+  /**
+   * @param {boolean} [useProxyWhenAvailable=false] - When true, honours HTTP_PROXY.
+   */
+  constructor(useProxyWhenAvailable = false) {
+    super(
+      globalThis.testConfig.wasteMovementBackendApiBaseUrl,
+      useProxyWhenAvailable
+    )
   }
 
   /**
