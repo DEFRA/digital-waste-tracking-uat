@@ -1,5 +1,6 @@
 import { ApiFactory } from '../../apis/api-factory.js'
 import { testConfig } from '../test-config.js'
+import { randomUUID } from 'crypto'
 
 /**
  * Runs once before all test workers when PROXY_MODE=zap.
@@ -7,9 +8,21 @@ import { testConfig } from '../test-config.js'
  * @returns {Promise<void>}
  */
 export default async function globalSetup() {
+  const apis = ApiFactory.create()
+  if (globalThis.testConfig.apiCodeInGioOrgExcludeList === undefined) {
+    const createCodeResponse =
+      await apis.wasteOrganisationBackendAPI.createApiCodeForOrganisation(
+        randomUUID()
+      )
+    expect(createCodeResponse.statusCode).toBe(200)
+    globalThis.generatedApiCode = createCodeResponse.json.code
+  } else {
+    globalThis.generatedApiCode =
+      globalThis.testConfig.apiCodeInGioOrgExcludeList
+  }
+
   if (testConfig.proxyMode === 'zap') {
     globalThis.testConfig = testConfig
-    const apis = ApiFactory.create()
     const sessionResponse = await apis.zapApi.newSession()
     if (
       sessionResponse.statusCode !== 200 ||
@@ -38,7 +51,6 @@ export default async function globalSetup() {
         )
       }
     }
-
-    await apis.close()
   }
+  await apis?.close()
 }
