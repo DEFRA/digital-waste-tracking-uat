@@ -81,7 +81,7 @@ describe('@smoke - Waste Movement Update', () => {
         // Update the movement with a different API code from the same org
         const updatedData = generateBaseWasteReceiptData()
         updatedData.apiCode = orgApiCode2.json.code
-        //updatedData.apiCode = '94d744a5-e6d0-4c71-82c8-db52405cbba5'
+        // updatedData.apiCode = '94d744a5-e6d0-4c71-82c8-db52405cbba5'
 
         const updateResponse =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
