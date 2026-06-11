@@ -16,8 +16,8 @@
   "scripts": {
     "postinstall": "npm run setup:husky",
     "setup:husky": "node -e \"try { (await import('husky')).default() } catch (e) { if (e.code !== 'ERR_MODULE_NOT_FOUND') throw e }\" --input-type module",
-    "format": "prettier --write 'test/**/*.js' '**/*.{js,md,json,config.js}'",
-    "format:check": "prettier --check 'test/**/*.js' '**/*.{js,md,json,config.js}'",
+    "format": "prettier --write \"test/**/*.js\" \"**/*.{js,md,json,config.js}\"",
+    "format:check": "prettier --check \"test/**/*.js\" \"**/*.{js,md,json,config.js}\"",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
@@ -25,6 +25,7 @@
     "test:uat": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern \"(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication)\"",
     "test:zap-gate": "PROXY_MODE=off NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern zap-gate",
     "test:smoke": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern \"@smoke\"",
+    "test:prod-smoke": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern \"@prod-smoke\"",
     "test": "npm run test:${PROFILE:-uat}",
     "test-name-pattern": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern",
     "test-location-pattern": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern",

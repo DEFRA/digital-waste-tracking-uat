@@ -3,7 +3,7 @@ import { generateBaseWasteReceiptData } from '../../../support/test-data-manager
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
-describe('GIO Org Exclude List', () => {
+describe('@prod-smoke - GIO Org Exclude List', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
@@ -21,9 +21,6 @@ describe('GIO Org Exclude List', () => {
       'should successfully update a waste movement when the organisation is in the GIO org exclude list' +
         ' @allure.label.tag:DWTA-204',
       async () => {
-        wasteReceiptData.apiCode =
-          globalThis.testConfig.apiCodeInGioOrgExcludeList
-
         const createResponse =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -33,7 +30,6 @@ describe('GIO Org Exclude List', () => {
         const wasteTrackingId = createResponse.json.wasteTrackingId
 
         const updatedData = generateBaseWasteReceiptData()
-        updatedData.apiCode = globalThis.testConfig.apiCodeInGioOrgExcludeList
         updatedData.wasteItems[0].disposalOrRecoveryCodes = [
           {
             code: 'D1',

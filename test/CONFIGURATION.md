@@ -13,6 +13,7 @@ This test suite requires certain environment variables to be set for authenticat
 
 - `ENVIRONMENT`: The environment name (defaults to 'test')
 - `RESULTS_OUTPUT_S3_PATH`: S3 path for publishing test results (used in CI/CD)
+- `API_CODE_IN_GIO_ORG_EXCLUDE_LIST`: A comma seperated list of API codes. These API codes will NOT send audit logs to S3, as they 'should' be excluded by the waste-backend service, which has the corresponding org ids for these API codes. When API_CODE_IN_GIO_ORG_EXCLUDE_LIST is set, the tests will exclusively use API codes from the list when creating/updating movements.
 
 ## Setting Up Environment Variables
 
