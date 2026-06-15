@@ -10,7 +10,7 @@
  * @returns {Object} Complete waste receipt data object
  */
 export const generateBaseWasteReceiptData = () => ({
-  apiCode: '1f83215e-4b90-4785-9ab2-2614839aa2e9',
+  apiCode: globalThis.generatedApiCode,
   dateTimeReceived: new Date().toISOString(),
   wasteItems: [
     {

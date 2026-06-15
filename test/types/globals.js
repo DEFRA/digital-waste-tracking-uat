@@ -32,3 +32,9 @@ globalThis.testConfig = null
  * @type {Allure}
  */
 globalThis.allure = undefined
+
+/**
+ * API code generated in beforeEach when GIO org exclude list testing is enabled
+ * @type {string|undefined}
+ */
+globalThis.generatedApiCode = undefined

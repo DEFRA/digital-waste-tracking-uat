@@ -28,6 +28,8 @@ Generates a complete waste receipt data object with all required fields for the 
 - `acceptance`: Acceptance details
 - `receipt`: Receipt information with disposal/recovery codes
 
+> **Note (`apiCode`):** The value is sourced from `globalThis.generatedApiCode`, which global setup sets to either the `API_CODE_IN_GIO_ORG_EXCLUDE_LIST` environment variable or an API code auto-generated via `wasteOrganisationBackendAPI.createApiCodeForOrganisation` when that variable is unset.
+
 ### Example Usage
 
 ```javascript

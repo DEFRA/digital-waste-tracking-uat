@@ -1,9 +1,9 @@
 import { ApiFactory } from '../../apis/api-factory.js'
 import { testConfig } from '../../support/test-config.js'
-// Note: Global this is per worker
 
 // Set testConfig globally at module load time (before tests are parsed).
 globalThis.testConfig = testConfig
+globalThis.generatedApiCode = process.env.GENERATED_API_CODE
 
 // Setup before each test
 beforeEach(async () => {

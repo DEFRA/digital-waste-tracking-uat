@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
+import { randomUUID } from 'node:crypto'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
@@ -54,8 +55,16 @@ describe('@smoke - Waste Movement Update', () => {
         ' @allure.label.tag:DWT-823',
       async () => {
         await addAllureLink('/DWT-823', 'DWT-823', 'jira')
-        // First create a movement
-        wasteReceiptData.apiCode = '75ff9140-8617-406e-9163-2ba4907e645b'
+
+        // This organisation will have multiple API codes
+        const orgWithMultipleApiCodes = randomUUID()
+        const orgApiCode1 =
+          await globalThis.apis.wasteOrganisationBackendAPI.createApiCodeForOrganisation(
+            orgWithMultipleApiCodes
+          )
+        wasteReceiptData.apiCode = orgApiCode1.json.code
+        // wasteReceiptData.apiCode = '75ff9140-8617-406e-9163-2ba4907e645b'
+        // Create a movement for the org with the first API code
         const createResponse =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -64,9 +73,15 @@ describe('@smoke - Waste Movement Update', () => {
 
         const wasteTrackingId = createResponse.json.wasteTrackingId
 
-        // Update the movement with different disposal codes
+        // Create a second API code for the same org
+        const orgApiCode2 =
+          await globalThis.apis.wasteOrganisationBackendAPI.createApiCodeForOrganisation(
+            orgWithMultipleApiCodes
+          )
+        // Update the movement with a different API code from the same org
         const updatedData = generateBaseWasteReceiptData()
-        updatedData.apiCode = '94d744a5-e6d0-4c71-82c8-db52405cbba5'
+        updatedData.apiCode = orgApiCode2.json.code
+        // updatedData.apiCode = '94d744a5-e6d0-4c71-82c8-db52405cbba5'
 
         const updateResponse =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
