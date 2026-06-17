@@ -1,7 +1,10 @@
 export default {
   testEnvironment: 'allure-jest/node',
   setupFilesAfterEnv: ['<rootDir>/test/support/jest/setup.js'],
-  globalSetup: '<rootDir>/test/support/jest/global-setup.js',
+  globalSetup:
+    process.env.EXCLUDE_GLOBAL_SETUP === 'true'
+      ? undefined
+      : '<rootDir>/test/support/jest/global-setup.js',
   globalTeardown: '<rootDir>/test/support/jest/global-teardown.js',
   reporters: [
     'default',
