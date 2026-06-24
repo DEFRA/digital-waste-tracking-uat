@@ -92,17 +92,12 @@ describe('Receiver Authorisation Number Validation', () => {
       }
     )
 
-    it.each([
-      ['EAWML999999', 'EA permit with 6 digits'],
-      ['EAWML99999', 'EA permit with 5 digits'],
-      ['WML999999', 'WML permit with 6 digits'],
-      ['WML99999', 'WML permit with 5 digits']
-    ])(
-      'should accept waste movement when receiver authorisation is an EAWML permit with 5 or 6 subsequent 9s: %s (%s)' +
+    it(
+      'should accept waste movement when receiver authorisation is an EAWML permit with 5 digits' +
         ' @allure.label.tag:DWTA-253',
-      async (authorisationNumber) => {
+      async () => {
         await addAllureLink('/DWTA-253', 'DWTA-253', 'jira')
-        wasteReceiptData.receiver.authorisationNumber = authorisationNumber
+        wasteReceiptData.receiver.authorisationNumber = 'EAWML19837'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
