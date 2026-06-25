@@ -91,6 +91,21 @@ describe('Receiver Authorisation Number Validation', () => {
         expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
+
+    it(
+      'should accept waste movement when receiver authorisation is an EAWML permit with 5 digits' +
+        ' @allure.label.tag:DWTA-253',
+      async () => {
+        await addAllureLink('/DWTA-253', 'DWTA-253', 'jira')
+        wasteReceiptData.receiver.authorisationNumber = 'EAWML19837'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toHaveProperty('wasteTrackingId')
+      }
+    )
   })
 
   describe('Invalid Receiver Authorisation Number Scenarios', () => {

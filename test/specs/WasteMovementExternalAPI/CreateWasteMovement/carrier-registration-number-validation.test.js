@@ -7,8 +7,6 @@ describe('Carrier Registration Number Validation', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
-    await addAllureLink('/DWT-326', 'DWT-326', 'jira')
-    await addAllureLink('/DWT-576', 'DWT-576', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
 
     // Authenticate and set the auth token
@@ -23,6 +21,8 @@ describe('Carrier Registration Number Validation', () => {
       'should accept waste movement with valid carrier registration number for England and Wales' +
         ' @allure.label.tag:DWT-326 @allure.label.tag:DWT-576',
       async () => {
+        await addAllureLink('/DWT-326', 'DWT-326', 'jira')
+        await addAllureLink('/DWT-576', 'DWT-576', 'jira')
         wasteReceiptData.carrier.registrationNumber = 'CBDL999999'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -36,6 +36,8 @@ describe('Carrier Registration Number Validation', () => {
       'should accept waste movement with valid carrier registration number for Scotland' +
         ' @allure.label.tag:DWT-326 @allure.label.tag:DWT-576',
       async () => {
+        await addAllureLink('/DWT-326', 'DWT-326', 'jira')
+        await addAllureLink('/DWT-576', 'DWT-576', 'jira')
         wasteReceiptData.carrier.registrationNumber = 'wcr/r/1234567'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -49,7 +51,23 @@ describe('Carrier Registration Number Validation', () => {
       'should accept waste movement with valid carrier registration number for Northern Ireland' +
         ' @allure.label.tag:DWT-326 @allure.label.tag:DWT-576',
       async () => {
+        await addAllureLink('/DWT-326', 'DWT-326', 'jira')
+        await addAllureLink('/DWT-576', 'DWT-576', 'jira')
         wasteReceiptData.carrier.registrationNumber = 'ROC UT 99999'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toHaveProperty('wasteTrackingId')
+      }
+    )
+    it(
+      'should accept waste movement with valid carrier registration number for addtional SEPA format' +
+        ' @allure.label.tag:DWTA-213',
+      async () => {
+        await addAllureLink('/DWTA-213', 'DWTA-213', 'jira')
+        wasteReceiptData.carrier.registrationNumber = 'pct-q-1910191'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -65,6 +83,7 @@ describe('Carrier Registration Number Validation', () => {
       'should reject waste movement with blank registration number' +
         ' @allure.label.tag:DWT-326',
       async () => {
+        await addAllureLink('/DWT-326', 'DWT-326', 'jira')
         wasteReceiptData.carrier.registrationNumber = ''
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -89,6 +108,7 @@ describe('Carrier Registration Number Validation', () => {
       'should reject waste movement with null registration number' +
         ' @allure.label.tag:DWT-326',
       async () => {
+        await addAllureLink('/DWT-326', 'DWT-326', 'jira')
         wasteReceiptData.carrier.registrationNumber = null
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -113,6 +133,7 @@ describe('Carrier Registration Number Validation', () => {
       'should reject waste movement when registration number field is missing' +
         ' @allure.label.tag:DWT-326',
       async () => {
+        await addAllureLink('/DWT-326', 'DWT-326', 'jira')
         delete wasteReceiptData.carrier.registrationNumber
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -137,6 +158,7 @@ describe('Carrier Registration Number Validation', () => {
       'should reject waste movement when registration number format is invalid' +
         ' @allure.label.tag:DWT-576',
       async () => {
+        await addAllureLink('/DWT-576', 'DWT-576', 'jira')
         wasteReceiptData.carrier.registrationNumber = 'CBDL99'
         const response =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
