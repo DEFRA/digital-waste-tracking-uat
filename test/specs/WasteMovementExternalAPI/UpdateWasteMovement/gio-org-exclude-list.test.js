@@ -3,6 +3,7 @@ import { generateBaseWasteReceiptData } from '../../../support/test-data-manager
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
+// TODO - Discuss with Lewis: Why not tag a standard update movement test with @prod-smoke?
 describe('@prod-smoke - GIO Org Exclude List', () => {
   let wasteReceiptData
 
