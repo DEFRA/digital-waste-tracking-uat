@@ -44,7 +44,7 @@ describe('Bulk Upload Update', () => {
       })
     })
 
-    it('should accept bulk update of two movements after create', async () => {
+    it('@prod-smoke should accept bulk update of two movements after create', async () => {
       const bulkUploadId = randomUUID()
 
       const createResponse =

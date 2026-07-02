@@ -28,7 +28,7 @@ Generates a complete waste receipt data object with all required fields for the 
 - `acceptance`: Acceptance details
 - `receipt`: Receipt information with disposal/recovery codes
 
-> **Note (`apiCode`):** The value is sourced from `globalThis.generatedApiCode`, which global setup sets to either the `API_CODE_IN_GIO_ORG_EXCLUDE_LIST` environment variable or an API code auto-generated via `wasteOrganisationBackendAPI.createApiCodeForOrganisation` when that variable is unset.
+> **Note (`apiCode`):** The value is sourced from `globalThis.generatedApiCode`, set once per test run in global setup. If `API_CODE_IN_GIO_ORG_EXCLUDE_LIST` is unset, setup creates a code via `createApiCodeForOrganisation`; otherwise it picks one from the list. Setup then calls `getOrganisationByApiCode` to resolve the defra organisation ID which is used by `generateBaseBulkUploadMovement()` when generating the bulk upload payloads.
 
 ### Example Usage
 
