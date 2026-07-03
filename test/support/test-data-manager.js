@@ -64,7 +64,7 @@ export const generateBaseWasteReceiptData = () => ({
  */
 export const generateBaseBulkUploadMovement = () => ({
   submittingOrganisation: {
-    // random organisation id from which we will need to replace when validation is implemented
+    // Defra org ID is determined during global-setup based on the API code being used
     defraCustomerOrganisationId: globalThis.generatedDefraId
   },
   dateTimeReceived: new Date().toISOString(),
