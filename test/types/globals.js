@@ -34,7 +34,13 @@ globalThis.testConfig = null
 globalThis.allure = undefined
 
 /**
- * API code generated in beforeEach when GIO org exclude list testing is enabled
+ * API code generated in global setup for the test run
  * @type {string|undefined}
  */
 globalThis.generatedApiCode = undefined
+
+/**
+ * Defra customer organisation ID resolved from the generated API code in global setup
+ * @type {string|undefined}
+ */
+globalThis.generatedDefraId = undefined

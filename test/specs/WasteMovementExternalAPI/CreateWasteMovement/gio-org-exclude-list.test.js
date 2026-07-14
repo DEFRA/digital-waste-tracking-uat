@@ -3,6 +3,8 @@ import { generateBaseWasteReceiptData } from '../../../support/test-data-manager
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
+// TODO - Discuss with Lewis: The create movement is already done in the corresponding
+// update 'gio-org-exclude-list'movement test. Can this test be removed?
 describe('@prod-smoke - GIO Org Exclude List', () => {
   let wasteReceiptData
 

@@ -177,6 +177,19 @@ const environment = globalThis.testConfig.environment
 
 The test suite validates that all required environment variables are present when tests start. If any required variables are missing, tests will fail with a clear error message.
 
+## Global Setup
+
+Before Jest workers start, `test/support/jest/global-setup.js` runs in a separate Node.js process and:
+
+1. Resolves an API code — creates one via `createApiCodeForOrganisation` when `API_CODE_IN_GIO_ORG_EXCLUDE_LIST` is unset, or picks a random code from the list when it is set
+2. Looks up the organisation via `getOrganisationByApiCode` and reads `defraCustomerOrganisationId`
+3. Sets `GENERATED_API_CODE` and `GENERATED_DEFRA_ID` on `process.env` for worker processes
+4. When `PROXY_MODE=zap`, initialises the ZAP session (see [ZAP security scan](#zap-security-scan-two-step))
+
+Worker processes read these values in `test/support/jest/setup.js` as `globalThis.generatedApiCode` and `globalThis.generatedDefraId`. See `CONFIGURATION.md` for required environment variables and runtime-generated variable details.
+
+Global setup is skipped when `EXCLUDE_GLOBAL_SETUP=true` (used by `test:zap-gate`). Tests that depend on `generatedApiCode` or `generatedDefraId` will fail without global setup.
+
 ## Environment Configuration
 
 Some tests require environment variables to be set. Before running tests, configure your environment:
@@ -217,6 +230,8 @@ Tests are organized into logical groups:
 - `npm test` - Run UAT profile tests (`test:uat` by default)
 - `npm run test:integration` - Integration API tests (excludes `@Authentication`)
 - `npm run test:uat` - UAT profile including bulk upload and authentication
+- `npm run test:smoke` - Tests tagged `@smoke`
+- `npm run test:prod-smoke` - Tests tagged `@prod-smoke` (A small subset of tests to run after production releases)
 - `npm run test:zap-gate` - ZAP gate only (`PROXY_MODE=off`; requires scan artefacts)
 - `jest` - Run Jest directly without report scripts
 - `jest --testPathPattern=test/specs/Authentication/` - Run specific test directories
@@ -237,7 +252,7 @@ OWASP ZAP passive scanning is intended for **Docker Compose CI** (internal HTTP 
 ### Flow
 
 1. **Scan** — set `PROXY_MODE=zap` and `HTTP_PROXY` to the ZAP proxy (e.g. in `env.sh`), then run integration tests:
-   - `test/support/jest/global-setup.js` — `newSession` and disable passive scan rules listed in `zapPassiveScanRulesToDisable`
+   - `test/support/jest/global-setup.js` — resolves API code and organisation ID, then `newSession` and disable passive scan rules listed in `zapPassiveScanRulesToDisable`
    - Tests execute through the proxy
    - `test/support/jest/global-teardown.js` — writes `zap-report/zap.json`, `zap.html`, and `alerts-summary.json`
 2. **Gate** — `PROXY_MODE=off`, `npm run test:zap-gate`:
