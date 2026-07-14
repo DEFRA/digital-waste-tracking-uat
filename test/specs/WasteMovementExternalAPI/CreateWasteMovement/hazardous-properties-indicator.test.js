@@ -157,6 +157,34 @@ describe('Hazardous Properties Indicator Validation', () => {
       })
     })
 
+    it(
+      'should reject waste receipt when containsHazardous is true and hazardous is missing' +
+        ' @allure.label.tag:DWTA-276',
+      async () => {
+        await addAllureLink('/DWTA-276', 'DWTA-276', 'jira')
+        wasteReceiptData.wasteItems[0].containsHazardous = true
+        delete wasteReceiptData.wasteItems[0].hazardous
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.hazardous',
+                errorType: 'NotProvided',
+                message: '"wasteItems[0].hazardous" is required'
+              }
+            ]
+          }
+        })
+      }
+    )
+
     it('should reject waste receipt when hazardous indicator is invalid', async () => {
       wasteReceiptData.wasteItems[0].containsHazardous = 'invalid'
       wasteReceiptData.wasteItems[0].hazardous = {}

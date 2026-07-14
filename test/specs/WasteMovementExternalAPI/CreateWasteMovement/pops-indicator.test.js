@@ -120,5 +120,33 @@ describe('POPs Indicator Validation', () => {
         }
       })
     })
+
+    it(
+      'should reject waste when containsPops is true and pops is missing' +
+        ' @allure.label.tag:DWTA-276',
+      async () => {
+        await addAllureLink('/DWTA-276', 'DWTA-276', 'jira')
+        wasteReceiptData.wasteItems[0].containsPops = true
+        delete wasteReceiptData.wasteItems[0].pops
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.pops',
+                errorType: 'NotProvided',
+                message: '"wasteItems[0].pops" is required'
+              }
+            ]
+          }
+        })
+      }
+    )
   })
 })
