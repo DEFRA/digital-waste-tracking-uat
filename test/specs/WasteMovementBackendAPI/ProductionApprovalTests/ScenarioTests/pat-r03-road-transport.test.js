@@ -32,14 +32,17 @@ describe('Production Approval Test R03 - Road Transport', () => {
           [{ scenarioId: 'R03', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R03',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R03',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -61,15 +64,18 @@ describe('Production Approval Test R03 - Road Transport', () => {
           [{ scenarioId: 'R03', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R03',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected carrier.meansOfTransport to be "Road" for R03, found "Other"'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R03',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected carrier.meansOfTransport to be "Road" for R03, found "Other"'
+          }
+        ]
+      })
     })
   })
 })

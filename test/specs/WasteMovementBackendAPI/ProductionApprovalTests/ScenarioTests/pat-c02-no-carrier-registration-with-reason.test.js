@@ -32,14 +32,17 @@ describe('Production Approval Test C02 - No Carrier Registration Number and Reas
           [{ scenarioId: 'C02', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'C02',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'C02',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -58,15 +61,18 @@ describe('Production Approval Test C02 - No Carrier Registration Number and Reas
           [{ scenarioId: 'C02', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'C02',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected carrier.reasonForNoRegistrationNumber to be given for C02'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'C02',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected carrier.reasonForNoRegistrationNumber to be given for C02'
+          }
+        ]
+      })
     })
 
     it('should fail when a waste movement is created with a blank reason for no registration number and a receive warning', async () => {
@@ -86,15 +92,18 @@ describe('Production Approval Test C02 - No Carrier Registration Number and Reas
           [{ scenarioId: 'C02', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'C02',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected carrier.reasonForNoRegistrationNumber to be given for C02'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'C02',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected carrier.reasonForNoRegistrationNumber to be given for C02'
+          }
+        ]
+      })
     })
 
     it('should fail when a waste movement is created with a null reason for no registration number and a receive warning', async () => {
@@ -114,15 +123,18 @@ describe('Production Approval Test C02 - No Carrier Registration Number and Reas
           [{ scenarioId: 'C02', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'C02',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected carrier.reasonForNoRegistrationNumber to be given for C02'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'C02',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected carrier.reasonForNoRegistrationNumber to be given for C02'
+          }
+        ]
+      })
     })
   })
 })

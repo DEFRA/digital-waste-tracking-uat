@@ -31,14 +31,17 @@ describe('Production Approval Test R04 - No Disposal or Recovery Codes', () => {
           [{ scenarioId: 'R04', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R04',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R04',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -57,15 +60,18 @@ describe('Production Approval Test R04 - No Disposal or Recovery Codes', () => {
           [{ scenarioId: 'R04', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R04',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected no disposal or recovery codes for R04, found codes on waste item(s) at index 0'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R04',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected no disposal or recovery codes for R04, found codes on waste item(s) at index 0'
+          }
+        ]
+      })
     })
 
     it('should fail when disposal or recovery codes are only on the second waste item', async () => {
@@ -87,15 +93,18 @@ describe('Production Approval Test R04 - No Disposal or Recovery Codes', () => {
           [{ scenarioId: 'R04', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R04',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected no disposal or recovery codes for R04, found codes on waste item(s) at index 1'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R04',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected no disposal or recovery codes for R04, found codes on waste item(s) at index 1'
+          }
+        ]
+      })
     })
   })
 })
