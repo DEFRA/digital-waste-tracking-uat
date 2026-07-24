@@ -48,14 +48,17 @@ describe('Production Approval Test P01 - POPs Components', () => {
           [{ scenarioId: 'P01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'P01',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'P01',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -77,15 +80,18 @@ describe('Production Approval Test P01 - POPs Components', () => {
           [{ scenarioId: 'P01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'P01',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected one or more waste items to have multiple POPs components'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'P01',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected one or more waste items to have multiple POPs components'
+          }
+        ]
+      })
     })
   })
 })

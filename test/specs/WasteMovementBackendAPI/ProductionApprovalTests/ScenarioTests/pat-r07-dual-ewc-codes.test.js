@@ -31,14 +31,17 @@ describe('Production Approval Test R07 - Dual EWC Codes', () => {
           [{ scenarioId: 'R07', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R07',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R07',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -57,15 +60,18 @@ describe('Production Approval Test R07 - Dual EWC Codes', () => {
           [{ scenarioId: 'R07', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R07',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected at least one waste item to have at least 2 EWC codes for R07'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R07',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected at least one waste item to have at least 2 EWC codes for R07'
+          }
+        ]
+      })
     })
   })
 })

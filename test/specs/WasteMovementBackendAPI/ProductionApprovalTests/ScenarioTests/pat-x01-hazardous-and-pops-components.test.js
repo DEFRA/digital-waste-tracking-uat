@@ -54,14 +54,17 @@ describe('Production Approval Test X01 - Hazardous and POPs Components', () => {
           [{ scenarioId: 'X01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'X01',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'X01',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -93,15 +96,18 @@ describe('Production Approval Test X01 - Hazardous and POPs Components', () => {
           [{ scenarioId: 'X01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'X01',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected one or more waste items to have POPs and Hazardous components'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'X01',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected one or more waste items to have POPs and Hazardous components'
+          }
+        ]
+      })
     })
 
     it('should fail when a waste item is supplied with hazardous components but no POPs components', async () => {
@@ -134,15 +140,18 @@ describe('Production Approval Test X01 - Hazardous and POPs Components', () => {
           [{ scenarioId: 'X01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'X01',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected one or more waste items to have POPs and Hazardous components'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'X01',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected one or more waste items to have POPs and Hazardous components'
+          }
+        ]
+      })
     })
 
     it('should fail when hazardous and POPs components are on different waste items', async () => {
@@ -190,15 +199,18 @@ describe('Production Approval Test X01 - Hazardous and POPs Components', () => {
           [{ scenarioId: 'X01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'X01',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected one or more waste items to have POPs and Hazardous components'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'X01',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected one or more waste items to have POPs and Hazardous components'
+          }
+        ]
+      })
     })
   })
 })

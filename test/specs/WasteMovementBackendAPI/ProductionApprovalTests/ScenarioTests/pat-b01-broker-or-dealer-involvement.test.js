@@ -38,14 +38,17 @@ describe('Production Approval Test B01 - Broker or Dealer Involvement', () => {
           [{ scenarioId: 'B01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'B01',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'B01',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -66,14 +69,17 @@ describe('Production Approval Test B01 - Broker or Dealer Involvement', () => {
           [{ scenarioId: 'B01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'B01',
-          wasteTrackingId,
-          status: 'Fail',
-          message: 'No broker or dealer involvement in the movement'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'B01',
+            wasteTrackingId,
+            status: 'Fail',
+            message: 'No broker or dealer involvement in the movement'
+          }
+        ]
+      })
     })
   })
 })

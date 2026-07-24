@@ -49,14 +49,17 @@ describe('Production Approval Test H01 - Multiple Hazardous Components', () => {
           [{ scenarioId: 'H01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'H01',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'H01',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -78,15 +81,18 @@ describe('Production Approval Test H01 - Multiple Hazardous Components', () => {
           [{ scenarioId: 'H01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'H01',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected one or more waste items to have multiple hazardous components'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'H01',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected one or more waste items to have multiple hazardous components'
+          }
+        ]
+      })
     })
   })
 })

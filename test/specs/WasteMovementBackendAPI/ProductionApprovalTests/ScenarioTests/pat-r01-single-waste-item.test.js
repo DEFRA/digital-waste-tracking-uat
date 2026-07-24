@@ -37,14 +37,17 @@ describe('Production Approval Test R01 - Single Waste Item', () => {
           [{ scenarioId: 'R01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R01',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R01',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -65,14 +68,17 @@ describe('Production Approval Test R01 - Single Waste Item', () => {
           [{ scenarioId: 'R01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R01',
-          wasteTrackingId,
-          status: 'Fail',
-          message: 'No disposal or recovery code provided'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R01',
+            wasteTrackingId,
+            status: 'Fail',
+            message: 'No disposal or recovery code provided'
+          }
+        ]
+      })
     })
 
     it('should fail when a waste movement is supplied with multiple waste items', async () => {
@@ -92,14 +98,17 @@ describe('Production Approval Test R01 - Single Waste Item', () => {
           [{ scenarioId: 'R01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R01',
-          wasteTrackingId,
-          status: 'Fail',
-          message: 'Multiple waste items provided'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R01',
+            wasteTrackingId,
+            status: 'Fail',
+            message: 'Multiple waste items provided'
+          }
+        ]
+      })
     })
 
     it('should fail when a waste movement is supplied with POPs components on the waste item', async () => {
@@ -127,14 +136,17 @@ describe('Production Approval Test R01 - Single Waste Item', () => {
           [{ scenarioId: 'R01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R01',
-          wasteTrackingId,
-          status: 'Fail',
-          message: expect.stringMatching(/POPs components provided/i)
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R01',
+            wasteTrackingId,
+            status: 'Fail',
+            message: expect.stringMatching(/POPs components provided/i)
+          }
+        ]
+      })
     })
 
     it('should fail when a waste movement is supplied with a hazardous waste item', async () => {
@@ -157,14 +169,17 @@ describe('Production Approval Test R01 - Single Waste Item', () => {
           [{ scenarioId: 'R01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R01',
-          wasteTrackingId,
-          status: 'Fail',
-          message: expect.stringMatching(/hazardous waste items provided/i)
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R01',
+            wasteTrackingId,
+            status: 'Fail',
+            message: expect.stringMatching(/hazardous waste items provided/i)
+          }
+        ]
+      })
     })
   })
 })

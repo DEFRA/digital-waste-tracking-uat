@@ -48,14 +48,17 @@ describe('Production Approval Test R05 - Multiple Disposal or Recovery Codes', (
           [{ scenarioId: 'R05', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R05',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R05',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
 
     it('should pass when multiple disposal or recovery codes are only on the second waste item', async () => {
@@ -94,14 +97,17 @@ describe('Production Approval Test R05 - Multiple Disposal or Recovery Codes', (
           [{ scenarioId: 'R05', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R05',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R05',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -120,15 +126,18 @@ describe('Production Approval Test R05 - Multiple Disposal or Recovery Codes', (
           [{ scenarioId: 'R05', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R05',
-          wasteTrackingId,
-          status: 'Fail',
-          message:
-            'Expected at least one waste item to have multiple disposal or recovery codes for R05'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R05',
+            wasteTrackingId,
+            status: 'Fail',
+            message:
+              'Expected at least one waste item to have multiple disposal or recovery codes for R05'
+          }
+        ]
+      })
     })
   })
 })

@@ -32,14 +32,17 @@ describe('Production Approval Test R02 - Multiple Waste Items', () => {
           [{ scenarioId: 'R02', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R02',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R02',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 
@@ -58,14 +61,17 @@ describe('Production Approval Test R02 - Multiple Waste Items', () => {
           [{ scenarioId: 'R02', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R02',
-          wasteTrackingId,
-          status: 'Fail',
-          message: 'Expected more than 1 waste item for R02, found 1'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        results: [
+          {
+            scenarioId: 'R02',
+            wasteTrackingId,
+            status: 'Fail',
+            message: 'Expected more than 1 waste item for R02, found 1'
+          }
+        ]
+      })
     })
   })
 })
