@@ -25,7 +25,7 @@ export class WasteMovementBackendAPI extends BaseAPI {
       Authorization: `Basic ${base64Credentials}`,
       'Content-Type': 'application/json',
       'x-cdp-request-id': randomUUID(),
-      'x-dwt-client-id': globalThis.testConfig.cognitoClientId
+      'x-dwt-client-id': randomUUID()
     }
     if (globalThis.testConfig.cdpDevApiKey != null) {
       requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
@@ -51,7 +51,7 @@ export class WasteMovementBackendAPI extends BaseAPI {
       Authorization: `Basic ${base64Credentials}`,
       'Content-Type': 'application/json',
       'x-cdp-request-id': randomUUID(),
-      'x-dwt-client-id': globalThis.testConfig.cognitoClientId
+      'x-dwt-client-id': randomUUID()
     }
     if (globalThis.testConfig.cdpDevApiKey != null) {
       requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
@@ -77,7 +77,7 @@ export class WasteMovementBackendAPI extends BaseAPI {
       Authorization: `Basic ${base64Credentials}`,
       'Content-Type': 'application/json',
       'x-cdp-request-id': randomUUID(),
-      'x-dwt-client-id': globalThis.testConfig.cognitoClientId
+      'x-dwt-client-id': randomUUID()
     }
 
     // Only add the CDP Dev API key if it is set. This is only need for running locally.
@@ -111,7 +111,7 @@ export class WasteMovementBackendAPI extends BaseAPI {
       Authorization: `Basic ${base64Credentials}`,
       'Content-Type': 'application/json',
       'x-cdp-request-id': randomUUID(),
-      'x-dwt-client-id': globalThis.testConfig.cognitoClientId
+      'x-dwt-client-id': randomUUID()
     }
     if (globalThis.testConfig.cdpDevApiKey != null) {
       requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
@@ -166,7 +166,7 @@ export class WasteMovementBackendAPI extends BaseAPI {
     const requestHeaders = {
       Authorization: `Basic ${base64Credentials}`,
       'x-cdp-request-id': randomUUID(),
-      'x-dwt-client-id': globalThis.testConfig.cognitoClientId
+      'x-dwt-client-id': randomUUID()
     }
     if (globalThis.testConfig.cdpDevApiKey != null) {
       requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
