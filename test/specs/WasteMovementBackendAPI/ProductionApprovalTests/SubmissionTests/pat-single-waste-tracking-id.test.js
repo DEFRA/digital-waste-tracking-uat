@@ -32,20 +32,23 @@ describe('Production Approval Tests With a Single Waste Tracking Id', () => {
           ]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R01',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'R02',
-          wasteTrackingId,
-          status: 'Fail',
-          message: 'Expected more than 1 waste item for R02, found 1'
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String),
+        results: [
+          {
+            scenarioId: 'R01',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'R02',
+            wasteTrackingId,
+            status: 'Fail',
+            message: 'Expected more than 1 waste item for R02, found 1'
+          }
+        ]
+      })
     })
 
     it('should return mixed R01 and R02 results for a multiple waste item movement', async () => {
@@ -68,20 +71,23 @@ describe('Production Approval Tests With a Single Waste Tracking Id', () => {
           ]
         )
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R01',
-          wasteTrackingId,
-          status: 'Fail',
-          message: 'Multiple waste items provided'
-        },
-        {
-          scenarioId: 'R02',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String),
+        results: [
+          {
+            scenarioId: 'R01',
+            wasteTrackingId,
+            status: 'Fail',
+            message: 'Multiple waste items provided'
+          },
+          {
+            scenarioId: 'R02',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 })
