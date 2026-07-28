@@ -32,20 +32,23 @@ describe('Production Approval Tests After Waste Movement Update', () => {
           ]
         )
       expect(patAfterCreate.statusCode).toBe(200)
-      expect(patAfterCreate.json).toEqual([
-        {
-          scenarioId: 'R01',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'R02',
-          wasteTrackingId,
-          status: 'Fail',
-          message: 'Expected more than 1 waste item for R02, found 1'
-        }
-      ])
+      expect(patAfterCreate.json).toEqual({
+        submissionId: expect.any(String),
+        results: [
+          {
+            scenarioId: 'R01',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'R02',
+            wasteTrackingId,
+            status: 'Fail',
+            message: 'Expected more than 1 waste item for R02, found 1'
+          }
+        ]
+      })
 
       const first = wasteReceiptData.wasteItems[0]
       const updatedData = generateBaseWasteReceiptData()
@@ -67,20 +70,23 @@ describe('Production Approval Tests After Waste Movement Update', () => {
           ]
         )
       expect(patAfterUpdate.statusCode).toBe(200)
-      expect(patAfterUpdate.json).toEqual([
-        {
-          scenarioId: 'R01',
-          wasteTrackingId,
-          status: 'Fail',
-          message: 'Multiple waste items provided'
-        },
-        {
-          scenarioId: 'R02',
-          wasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patAfterUpdate.json).toEqual({
+        submissionId: expect.any(String),
+        results: [
+          {
+            scenarioId: 'R01',
+            wasteTrackingId,
+            status: 'Fail',
+            message: 'Multiple waste items provided'
+          },
+          {
+            scenarioId: 'R02',
+            wasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 })

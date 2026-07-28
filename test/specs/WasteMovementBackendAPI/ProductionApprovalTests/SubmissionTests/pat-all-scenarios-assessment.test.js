@@ -194,80 +194,83 @@ describe('Production Approval Tests All Automated Scenarios', () => {
         )
 
       expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual([
-        {
-          scenarioId: 'R01',
-          wasteTrackingId: r01WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'R02',
-          wasteTrackingId: r02WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'R03',
-          wasteTrackingId: r03WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'R04',
-          wasteTrackingId: r04WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'R05',
-          wasteTrackingId: r05WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'R07',
-          wasteTrackingId: r07WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'C02',
-          wasteTrackingId: c02WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'B01',
-          wasteTrackingId: b01WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'P01',
-          wasteTrackingId: p01WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'H01',
-          wasteTrackingId: h01WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'H03',
-          wasteTrackingId: h03WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        },
-        {
-          scenarioId: 'X01',
-          wasteTrackingId: x01WasteTrackingId,
-          status: 'Pass',
-          message: ''
-        }
-      ])
+      expect(patResponse.json).toEqual({
+        submissionId: expect.any(String),
+        results: [
+          {
+            scenarioId: 'R01',
+            wasteTrackingId: r01WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'R02',
+            wasteTrackingId: r02WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'R03',
+            wasteTrackingId: r03WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'R04',
+            wasteTrackingId: r04WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'R05',
+            wasteTrackingId: r05WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'R07',
+            wasteTrackingId: r07WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'C02',
+            wasteTrackingId: c02WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'B01',
+            wasteTrackingId: b01WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'P01',
+            wasteTrackingId: p01WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'H01',
+            wasteTrackingId: h01WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'H03',
+            wasteTrackingId: h03WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          },
+          {
+            scenarioId: 'X01',
+            wasteTrackingId: x01WasteTrackingId,
+            status: 'Pass',
+            message: ''
+          }
+        ]
+      })
     })
   })
 })
