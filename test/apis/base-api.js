@@ -47,7 +47,12 @@ export class BaseAPI {
     if (globalThis.testConfig?.httpProxy && this.useProxyWhenAvailable) {
       this.agent = new ProxyAgent({
         uri: globalThis.testConfig.httpProxy,
-        ...baseOptions
+        ...baseOptions,
+        // ZAP MITMs HTTPS and presents its own Root CA. Accept that only on
+        // proxied calls (security-scan harness), not on direct Agent traffic.
+        requestTls: {
+          rejectUnauthorized: false
+        }
       })
       this.usingProxy = true
     } else {
