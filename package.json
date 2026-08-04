@@ -25,7 +25,7 @@
     "test:uat": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern \"(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication)\"",
     "test:zap-gate": "PROXY_MODE=off EXCLUDE_GLOBAL_SETUP=true NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern zap-gate",
     "test:smoke": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern \"@smoke\"",
-    "test:prod-smoke": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern \"@prod-smoke\"",
+    "test:prod-smoke": "REDACT_SENSITIVE_ALLURE_HEADERS=true NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern \"@prod-smoke\"",
     "test": "npm run test:${PROFILE:-uat}",
     "test-name-pattern": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern",
     "test-location-pattern": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern",

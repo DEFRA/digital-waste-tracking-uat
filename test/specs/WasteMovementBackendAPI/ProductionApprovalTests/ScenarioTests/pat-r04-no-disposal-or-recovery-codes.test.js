@@ -32,7 +32,7 @@ describe('Production Approval Test R04 - No Disposal or Recovery Codes', () => {
         )
       expect(patResponse.statusCode).toBe(200)
       expect(patResponse.json).toEqual({
-        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        submissionId: expect.any(String),
         results: [
           {
             scenarioId: 'R04',
@@ -61,7 +61,7 @@ describe('Production Approval Test R04 - No Disposal or Recovery Codes', () => {
         )
       expect(patResponse.statusCode).toBe(200)
       expect(patResponse.json).toEqual({
-        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        submissionId: expect.any(String),
         results: [
           {
             scenarioId: 'R04',
@@ -94,7 +94,7 @@ describe('Production Approval Test R04 - No Disposal or Recovery Codes', () => {
         )
       expect(patResponse.statusCode).toBe(200)
       expect(patResponse.json).toEqual({
-        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        submissionId: expect.any(String),
         results: [
           {
             scenarioId: 'R04',
