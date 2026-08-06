@@ -33,7 +33,7 @@ describe('Production Approval Test C02 - No Carrier Registration Number and Reas
         )
       expect(patResponse.statusCode).toBe(200)
       expect(patResponse.json).toEqual({
-        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        submissionId: expect.any(String),
         results: [
           {
             scenarioId: 'C02',
@@ -62,7 +62,7 @@ describe('Production Approval Test C02 - No Carrier Registration Number and Reas
         )
       expect(patResponse.statusCode).toBe(200)
       expect(patResponse.json).toEqual({
-        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        submissionId: expect.any(String),
         results: [
           {
             scenarioId: 'C02',
@@ -93,7 +93,7 @@ describe('Production Approval Test C02 - No Carrier Registration Number and Reas
         )
       expect(patResponse.statusCode).toBe(200)
       expect(patResponse.json).toEqual({
-        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        submissionId: expect.any(String),
         results: [
           {
             scenarioId: 'C02',
@@ -124,7 +124,7 @@ describe('Production Approval Test C02 - No Carrier Registration Number and Reas
         )
       expect(patResponse.statusCode).toBe(200)
       expect(patResponse.json).toEqual({
-        submissionId: expect.any(String), // Only testing for a string value for now as we'll need a GET PAT endpoint to fetch submissionId
+        submissionId: expect.any(String),
         results: [
           {
             scenarioId: 'C02',

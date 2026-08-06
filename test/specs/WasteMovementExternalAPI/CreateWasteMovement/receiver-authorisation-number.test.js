@@ -106,6 +106,21 @@ describe('Receiver Authorisation Number Validation', () => {
         expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
+
+    it(
+      'should accept waste movement when receiver authorisation is a 5 digit mobile deployment permit number' +
+        ' @allure.label.tag:DWTA-290',
+      async () => {
+        await addAllureLink('/DWTA-290', 'DWTA-290', 'jira')
+        wasteReceiptData.receiver.authorisationNumber = 'EPR/AB1234CD/D12345'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toHaveProperty('wasteTrackingId')
+      }
+    )
   })
 
   describe('Invalid Receiver Authorisation Number Scenarios', () => {

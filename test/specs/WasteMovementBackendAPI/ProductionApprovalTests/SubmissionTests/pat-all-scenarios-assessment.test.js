@@ -21,6 +21,7 @@ async function createMovementAndGetWasteTrackingId(wasteReceiptData) {
 describe('Production Approval Tests All Automated Scenarios', () => {
   beforeEach(async () => {
     await addAllureLink('/DWTA-177', 'DWTA-177', 'jira')
+    await addAllureLink('/DWTA-293', 'DWTA-293', 'jira')
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,
       globalThis.testConfig.cognitoClientSecret
