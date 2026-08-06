@@ -21,9 +21,9 @@ This test suite requires certain environment variables to be set for authenticat
 
 Global setup writes these into `process.env` before workers start. Do not set them in `env.sh`; worker processes read them via `test/support/jest/setup.js`.
 
-| Variable             | Set by            | Exposed in tests as           | Purpose                                                         |
-| -------------------- | ----------------- | ----------------------------- | --------------------------------------------------------------- |
-| `GENERATED_API_CODE` | `global-setup.js` | `globalThis.generatedApiCode` | API code for external API movement tests                        |
+| Variable             | Set by            | Exposed in tests as           | Purpose                                           |
+| -------------------- | ----------------- | ----------------------------- | ------------------------------------------------- |
+| `GENERATED_API_CODE` | `global-setup.js` | `globalThis.generatedApiCode` | API code for external API movement tests          |
 | `GENERATED_DEFRA_ID` | `global-setup.js` | `globalThis.generatedDefraId` | Organisation ID for backend bulk upload test data |
 
 ## Setting Up Environment Variables
