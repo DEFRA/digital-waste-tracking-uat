@@ -23,7 +23,7 @@ export default async function globalSetup() {
 
   try {
     let apiCode
-    let organisationId = randomUUID()
+    const organisationId = randomUUID()
 
     if (testConfig.apiCodeInGioOrgExcludeList === undefined) {
       const organisationResponse =
