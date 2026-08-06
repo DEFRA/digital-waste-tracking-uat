@@ -26,6 +26,7 @@ export default async function globalSetup() {
     const organisationId = randomUUID()
 
     if (testConfig.apiCodeInGioOrgExcludeList === undefined) {
+      // Create a new organisation and get the API code
       const organisationResponse =
         await apis.wasteOrganisationBackendAPI.createOrUpdateOrganisation(
           randomUUID(),
