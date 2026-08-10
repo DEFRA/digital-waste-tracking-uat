@@ -28,7 +28,12 @@ Generates a complete waste receipt data object with all required fields for the 
 - `acceptance`: Acceptance details
 - `receipt`: Receipt information with disposal/recovery codes
 
-> **Note (`apiCode`):** The value is sourced from `globalThis.generatedApiCode`, set once per test run in global setup. If `API_CODE_IN_GIO_ORG_EXCLUDE_LIST` is unset, setup creates a code via `createApiCodeForOrganisation`; otherwise it picks one from the list. Setup then calls `getOrganisationByApiCode` to resolve the defra organisation ID which is used by `generateBaseBulkUploadMovement()` when generating the bulk upload payloads.
+> **Note (`apiCode`):** Sourced from `globalThis.generatedApiCode` (set once per run in global setup). If `API_CODE_IN_GIO_ORG_EXCLUDE_LIST` is unset, setup creates an organisation via `createOrUpdateOrganisation` and reads its API code; otherwise it picks a code from the list. `globalThis.generatedDefraId` is the organisation ID used by `generateBaseBulkUploadMovement()`.
+
+## Helpers
+
+- `authenticateAndSetToken` (`helpers/auth.js`) — Cognito auth and sets the token on the external API
+- `createOrganisationAndGetApiCode(userId, organisationId, disabledAfter?)` (`helpers/organisation.js`) — creates/updates an organisation and returns its API code. Omit `disabledAfter` for a paid org (default: 1 year ahead); pass a past date for unpaid / `402` scenarios
 
 ### Example Usage
 

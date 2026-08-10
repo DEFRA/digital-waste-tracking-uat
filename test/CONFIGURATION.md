@@ -14,18 +14,17 @@ This test suite requires certain environment variables to be set for authenticat
 - `ENVIRONMENT`: The environment name (defaults to 'test')
 - `RESULTS_OUTPUT_S3_PATH`: S3 path for publishing test results (used in CI/CD)
 - `API_CODE_IN_GIO_ORG_EXCLUDE_LIST`: A comma-separated list of API codes for organisations excluded from GIO audit logging. These API codes will NOT send audit logs to S3, as they should be excluded by the waste-backend service, which has the corresponding org IDs for these API codes. Global setup behaviour:
-  - **Unset** — creates a new API code via `createApiCodeForOrganisation` for a random organisation ID
-  - **Set** — picks a random API code from the comma-separated list
-  - **Either way** — calls `getOrganisationByApiCode` to resolve `defraCustomerOrganisationId` for use in bulk upload test data
+  - **Unset** — creates an organisation via `createOrUpdateOrganisation`, then reads its API code via `getAllApiCodesForOrganisation` (`GENERATED_DEFRA_ID` = that organisation ID)
+  - **Set** — picks a random API code from the list, then resolves `GENERATED_DEFRA_ID` via `getOrganisationByApiCode`
 
 ### Runtime-Generated Variables (Read-Only)
 
 Global setup writes these into `process.env` before workers start. Do not set them in `env.sh`; worker processes read them via `test/support/jest/setup.js`.
 
-| Variable             | Set by            | Exposed in tests as           | Purpose                                                         |
-| -------------------- | ----------------- | ----------------------------- | --------------------------------------------------------------- |
-| `GENERATED_API_CODE` | `global-setup.js` | `globalThis.generatedApiCode` | API code for external API movement tests                        |
-| `GENERATED_DEFRA_ID` | `global-setup.js` | `globalThis.generatedDefraId` | `defraCustomerOrganisationId` for backend bulk upload test data |
+| Variable             | Set by            | Exposed in tests as           | Purpose                                           |
+| -------------------- | ----------------- | ----------------------------- | ------------------------------------------------- |
+| `GENERATED_API_CODE` | `global-setup.js` | `globalThis.generatedApiCode` | API code for external API movement tests          |
+| `GENERATED_DEFRA_ID` | `global-setup.js` | `globalThis.generatedDefraId` | Organisation ID for backend bulk upload test data |
 
 ## Setting Up Environment Variables
 

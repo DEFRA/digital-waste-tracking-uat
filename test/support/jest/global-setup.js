@@ -23,21 +23,29 @@ export default async function globalSetup() {
 
   try {
     let apiCode
+    const organisationId = randomUUID()
 
     if (testConfig.apiCodeInGioOrgExcludeList === undefined) {
-      const createCodeResponse =
-        await apis.wasteOrganisationBackendAPI.createApiCodeForOrganisation(
-          randomUUID()
+      // Create a new organisation and get the API code
+      const organisationResponse =
+        await apis.wasteOrganisationBackendAPI.createOrUpdateOrganisation(
+          randomUUID(),
+          organisationId
         )
       // TODO - Discuss with Lewis: globalSetup runs in a completely separate Node.js process before Jest initialises, so 'expect' is not available
+      assertOkResponse(organisationResponse, 'Failed to create organisation')
+
+      const apiCodeResponse =
+        await apis.wasteOrganisationBackendAPI.getAllApiCodesForOrganisation(
+          organisationId
+        )
+
       assertOkResponse(
-        createCodeResponse,
-        'Failed to create organisation API code'
+        apiCodeResponse,
+        'Failed to get API codes for organisation'
       )
-      // TODO - Discuss with Lewis: The workers cannot 'see' globalThis from this file, so we have to use process.env to share the generated API code.
-      // We can move this logic into the workers (setup.js) which will run before each test, but we will be creating new API codes via the organisation API for each test, which may be undesirable.
-      // For now, we will generate one API code for the entire test run and share it via an environment variable with the worker nodes.
-      apiCode = createCodeResponse.json.code
+
+      apiCode = apiCodeResponse.json.apiCodes[0].code
     } else {
       const apiCodes = testConfig.apiCodeInGioOrgExcludeList
         .split(',')
@@ -46,16 +54,24 @@ export default async function globalSetup() {
       apiCode = apiCodes[Math.floor(Math.random() * apiCodes.length)]
     }
 
+    // TODO - Discuss with Lewis: The workers cannot 'see' globalThis from this file, so we have to use process.env to share the generated API code.
+    // We can move this logic into the workers (setup.js) which will run before each test, but we will be creating new API codes via the organisation API for each test, which may be undesirable.
+    // For now, we will generate one API code for the entire test run and share it via an environment variable with the worker nodes.
     process.env.GENERATED_API_CODE = apiCode
 
-    const organisationResponse =
-      await apis.wasteOrganisationBackendAPI.getOrganisationByApiCode(apiCode)
-    assertOkResponse(
-      organisationResponse,
-      'Failed to get organisation by API code'
-    )
-    process.env.GENERATED_DEFRA_ID =
-      organisationResponse.json.defraCustomerOrganisationId
+    if (organisationId) {
+      process.env.GENERATED_DEFRA_ID = organisationId
+    } else {
+      const organisationResponse =
+        await apis.wasteOrganisationBackendAPI.getOrganisationByApiCode(apiCode)
+      assertOkResponse(
+        organisationResponse,
+        'Failed to get organisation by API code'
+      )
+
+      process.env.GENERATED_DEFRA_ID =
+        organisationResponse.json.defraCustomerOrganisationId
+    }
 
     if (testConfig.proxyMode === 'zap') {
       const sessionResponse = await apis.zapApi.newSession()

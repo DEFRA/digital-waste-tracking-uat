@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { randomUUID } from 'node:crypto'
 import { generateBaseWasteReceiptData } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
+import { createOrganisationAndGetApiCode } from '../../../support/helpers/organisation.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
 describe('@smoke - Waste Movement Update', () => {
@@ -58,12 +59,14 @@ describe('@smoke - Waste Movement Update', () => {
 
         // This organisation will have multiple API codes
         const orgWithMultipleApiCodes = randomUUID()
-        const orgApiCode1 =
-          await globalThis.apis.wasteOrganisationBackendAPI.createApiCodeForOrganisation(
-            orgWithMultipleApiCodes
-          )
-        wasteReceiptData.apiCode = orgApiCode1.json.code
-        // wasteReceiptData.apiCode = '75ff9140-8617-406e-9163-2ba4907e645b'
+
+        const apiCode1 = await createOrganisationAndGetApiCode(
+          randomUUID(),
+          orgWithMultipleApiCodes
+        )
+
+        wasteReceiptData.apiCode = apiCode1
+
         // Create a movement for the org with the first API code
         const createResponse =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
@@ -78,10 +81,10 @@ describe('@smoke - Waste Movement Update', () => {
           await globalThis.apis.wasteOrganisationBackendAPI.createApiCodeForOrganisation(
             orgWithMultipleApiCodes
           )
+
         // Update the movement with a different API code from the same org
         const updatedData = generateBaseWasteReceiptData()
         updatedData.apiCode = orgApiCode2.json.code
-        // updatedData.apiCode = '94d744a5-e6d0-4c71-82c8-db52405cbba5'
 
         const updateResponse =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
@@ -105,6 +108,39 @@ describe('@smoke - Waste Movement Update', () => {
         )
 
       expect(response.statusCode).toBe(404)
+    })
+
+    it('should fail to update movement when the organisation has not paid', async () => {
+      await addAllureLink('/DWTA-288', 'DWTA-288', 'jira')
+
+      const organisationId = randomUUID()
+      const disabledDate = new Date(
+        Date.now() - 1000 * 60 * 60 * 24 * 365 * 1
+      ).toISOString() // 1 year in the past
+
+      const apiCode = await createOrganisationAndGetApiCode(
+        randomUUID(),
+        organisationId,
+        disabledDate
+      )
+
+      wasteReceiptData.apiCode = apiCode
+
+      const updateResponse =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
+          '26K5LMSNF',
+          wasteReceiptData
+        )
+
+      expect(updateResponse.statusCode).toBe(402)
+      expect(updateResponse.headers['service-charge-expiry-date']).toBe(
+        'not available'
+      )
+      expect(updateResponse.json).toEqual({
+        statusCode: 402,
+        error: 'Payment Required',
+        message: 'Payment Required'
+      })
     })
 
     it(

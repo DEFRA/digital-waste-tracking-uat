@@ -16,22 +16,6 @@ describe('Organisation API ID Validation', () => {
     )
   })
 
-  describe('Valid Site IDs', () => {
-    it('should accept waste movement receipt for an valid organisation API ID', async () => {
-      wasteReceiptData.apiCode = 'c1611aa6-e1ae-487f-9768-cb2b5e5b8afb'
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-
-      expect(response.statusCode).toBe(201)
-      expect(response.json).toEqual({
-        wasteTrackingId: expect.any(String)
-      })
-    })
-  })
-
   describe('Invalid Organisation API IDs', () => {
     it('should reject waste movement receipt with missing organisation API ID', async () => {
       delete wasteReceiptData.apiCode

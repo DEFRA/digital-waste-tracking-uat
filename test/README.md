@@ -35,6 +35,7 @@ describe('Waste Movement API', () => {
 ### Available APIs
 
 - `globalThis.apis.wasteMovementExternalAPI` - Waste Movement API
+- `globalThis.apis.wasteOrganisationBackendAPI` - Organisation backend API (includes `createOrUpdateOrganisation`)
 - `globalThis.apis.cognitoOAuthApi` - OAuth2 Authentication API
 
 ### Key Benefits
@@ -143,6 +144,7 @@ The test framework uses an API factory pattern to provide fresh API instances fo
 ### Available API Instances
 
 - `globalThis.apis.wasteMovementExternalAPI` - Waste Movement API for managing waste movements
+- `globalThis.apis.wasteOrganisationBackendAPI` - Organisation backend API
 - `globalThis.apis.cognitoOAuthApi` - OAuth2 Authentication API for client credentials flow
 
 ### API Factory Implementation
@@ -181,10 +183,9 @@ The test suite validates that all required environment variables are present whe
 
 Before Jest workers start, `test/support/jest/global-setup.js` runs in a separate Node.js process and:
 
-1. Resolves an API code — creates one via `createApiCodeForOrganisation` when `API_CODE_IN_GIO_ORG_EXCLUDE_LIST` is unset, or picks a random code from the list when it is set
-2. Looks up the organisation via `getOrganisationByApiCode` and reads `defraCustomerOrganisationId`
-3. Sets `GENERATED_API_CODE` and `GENERATED_DEFRA_ID` on `process.env` for worker processes
-4. When `PROXY_MODE=zap`, initialises the ZAP session (see [ZAP security scan](#zap-security-scan-two-step))
+1. Resolves an API code — when `API_CODE_IN_GIO_ORG_EXCLUDE_LIST` is unset, creates an organisation via `createOrUpdateOrganisation` and reads its API code via `getAllApiCodesForOrganisation`; when set, picks a random code from the list
+2. Sets `GENERATED_API_CODE` and `GENERATED_DEFRA_ID` on `process.env` (created `organisationId` on the create path; otherwise resolved via `getOrganisationByApiCode`)
+3. When `PROXY_MODE=zap`, initialises the ZAP session (see [ZAP security scan](#zap-security-scan-two-step))
 
 Worker processes read these values in `test/support/jest/setup.js` as `globalThis.generatedApiCode` and `globalThis.generatedDefraId`. See `CONFIGURATION.md` for required environment variables and runtime-generated variable details.
 
