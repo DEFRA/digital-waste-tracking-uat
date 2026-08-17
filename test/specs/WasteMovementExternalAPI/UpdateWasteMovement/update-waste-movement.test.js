@@ -99,7 +99,7 @@ describe('@smoke - Waste Movement Update', () => {
   })
 
   describe('Failed Updates', () => {
-    it('should fail to update movement with non-existent ID', async () => {
+    it('should fail to update movement with a non-existent waste tracking ID', async () => {
       const nonExistentId = 'NONEXISTENT123'
       const response =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
@@ -144,12 +144,12 @@ describe('@smoke - Waste Movement Update', () => {
     })
 
     it(
-      'should reject waste movement update with api code that does not correspond to the orgId of the waste movement' +
+      'should fail to update movement when the API code does not exist' +
         ' @allure.label.tag:DWT-823',
       async () => {
         await addAllureLink('/DWT-823', 'DWT-823', 'jira')
 
-        // First create a movement
+        // Create a movement
         const createResponse =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
             wasteReceiptData
@@ -158,9 +158,9 @@ describe('@smoke - Waste Movement Update', () => {
 
         const wasteTrackingId = createResponse.json.wasteTrackingId
 
-        // Update the movement with different disposal codes
         const updatedData = generateBaseWasteReceiptData()
-        updatedData.apiCode = '5a6058cc-ac78-47e1-b1b3-37b5eca15cb2'
+        // Update the movement with a random API code that does not exist in the organisation backend
+        updatedData.apiCode = randomUUID()
 
         const updateResponse =
           await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
@@ -174,9 +174,54 @@ describe('@smoke - Waste Movement Update', () => {
             errors: [
               {
                 key: 'apiCode',
+                errorType: 'InvalidValue',
+                message: 'the API Code supplied is invalid'
+              }
+            ]
+          }
+        })
+      }
+    )
+
+    it(
+      'should fail to update movement when the API code is from a different organisation' +
+        ' @allure.label.tag:DWT-823',
+      async () => {
+        await addAllureLink('/DWT-823', 'DWT-823', 'jira')
+
+        // First create a movement
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(createResponse.statusCode).toBe(201)
+
+        const wasteTrackingId = createResponse.json.wasteTrackingId
+
+        const updatedData = generateBaseWasteReceiptData()
+        // Update the movement with a different API code
+        const apiCode2 = await createOrganisationAndGetApiCode(
+          randomUUID(),
+          randomUUID()
+        )
+
+        updatedData.apiCode = apiCode2
+
+        const updateResponse =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
+            wasteTrackingId,
+            updatedData
+          )
+
+        expect(updateResponse.statusCode).toBe(400)
+        expect(updateResponse.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'submittingOrganisation',
                 errorType: 'BusinessRuleViolation',
                 message:
-                  'the API Code supplied does not relate to the same Organisation as created the original waste item record'
+                  'the submitting organisation does not match the Organisation that created the original waste item record'
               }
             ]
           }
