@@ -19,7 +19,7 @@ describe('@smoke - Waste Movement Update', () => {
   })
 
   describe('Successful Updates', () => {
-    it('should successfully update an existing waste movement', async () => {
+    it('@prod-smoke should successfully update an existing waste movement', async () => {
       // First create a movement
       const createResponse =
         await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
