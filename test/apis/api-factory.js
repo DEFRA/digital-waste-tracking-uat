@@ -1,4 +1,4 @@
-import { WasteMovementExternalAPI } from './wasteMovementApi.js'
+import { WasteMovementExternalAPI } from './wasteMovementExternalApi.js'
 import { CognitoOAuthApi } from './cognitoOAuth.js'
 import { WasteMovementBackendAPI } from './wasteMovementBackendApi.js'
 import { WasteOrganisationBackendAPI } from './wasteOrganisationBackendApi.js'

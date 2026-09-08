@@ -2,24 +2,11 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
-
-/**
- * Create a movement and return its waste tracking id.
- * @param {Object} wasteReceiptData - Receipt payload for POST /movements/receive
- * @returns {Promise<string>}
- */
-async function createMovementAndGetWasteTrackingId(wasteReceiptData) {
-  const createResponse =
-    await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-      wasteReceiptData
-    )
-  expect(createResponse.statusCode).toBe(201)
-  expect(createResponse.json).toHaveProperty('wasteTrackingId')
-  return createResponse.json.wasteTrackingId
-}
+import { createMovementAndGetWasteTrackingId } from '~/test/support/helpers/waste-movement.js'
 
 describe('Production Approval Tests All Automated Scenarios', () => {
   beforeEach(async () => {
+    await addAllureLink('/DWTA-295', 'DWTA-295', 'jira')
     await addAllureLink('/DWTA-177', 'DWTA-177', 'jira')
     await addAllureLink('/DWTA-293', 'DWTA-293', 'jira')
     await authenticateAndSetToken(
@@ -29,7 +16,7 @@ describe('Production Approval Tests All Automated Scenarios', () => {
   })
 
   describe('Bulk assessment of passing movements', () => {
-    it('should pass all automated PAT scenarios when each waste tracking id satisfies its scenario', async () => {
+    it('should pass all automated PAT scenarios when each waste tracking id satisfies its scenario @allure.label.tag:DWTA-295', async () => {
       const r01Data = generateBaseWasteReceiptData()
       const r01WasteTrackingId =
         await createMovementAndGetWasteTrackingId(r01Data)
@@ -177,7 +164,7 @@ describe('Production Approval Tests All Automated Scenarios', () => {
         await createMovementAndGetWasteTrackingId(x01Data)
 
       const patResponse =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [
             { scenarioId: 'R01', wasteTrackingId: r01WasteTrackingId },
             { scenarioId: 'R02', wasteTrackingId: r02WasteTrackingId },

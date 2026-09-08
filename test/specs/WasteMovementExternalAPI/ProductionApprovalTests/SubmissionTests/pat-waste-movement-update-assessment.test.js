@@ -2,10 +2,13 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
-describe('Production Approval Tests With a Single Waste Tracking Id', () => {
+import { createMovementAndGetWasteTrackingId } from '~/test/support/helpers/waste-movement.js'
+
+describe('Production Approval Tests After Waste Movement Update', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
+    await addAllureLink('/DWTA-295', 'DWTA-295', 'jira')
     await addAllureLink('/DWTA-177', 'DWTA-177', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
     await authenticateAndSetToken(
@@ -14,25 +17,20 @@ describe('Production Approval Tests With a Single Waste Tracking Id', () => {
     )
   })
 
-  describe('Multiple scenarios assessed against one movement', () => {
-    it('should return mixed R01 and R02 results for a single waste item movement', async () => {
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-      expect(createResponse.statusCode).toBe(201)
-      expect(createResponse.json).toHaveProperty('wasteTrackingId')
-      const wasteTrackingId = createResponse.json.wasteTrackingId
+  describe('Assessment after updating waste item count', () => {
+    it('should assess R01 and R02 in one request after updating from one waste item to two @allure.label.tag:DWTA-295', async () => {
+      const wasteTrackingId =
+        await createMovementAndGetWasteTrackingId(wasteReceiptData)
 
-      const patResponse =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+      const patAfterCreate =
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [
             { scenarioId: 'R01', wasteTrackingId },
             { scenarioId: 'R02', wasteTrackingId }
           ]
         )
-      expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual({
+      expect(patAfterCreate.statusCode).toBe(200)
+      expect(patAfterCreate.json).toEqual({
         submissionId: expect.any(String),
         results: [
           {
@@ -49,29 +47,28 @@ describe('Production Approval Tests With a Single Waste Tracking Id', () => {
           }
         ]
       })
-    })
 
-    it('should return mixed R01 and R02 results for a multiple waste item movement', async () => {
       const first = wasteReceiptData.wasteItems[0]
-      wasteReceiptData.wasteItems = [first, { ...first }]
+      const updatedData = generateBaseWasteReceiptData()
+      updatedData.wasteItems = [first, { ...first }]
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
+      const updateResponse =
+        await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
+          wasteTrackingId,
+          updatedData
         )
-      expect(createResponse.statusCode).toBe(201)
-      expect(createResponse.json).toHaveProperty('wasteTrackingId')
-      const wasteTrackingId = createResponse.json.wasteTrackingId
+      expect(updateResponse.statusCode).toBe(200)
+      expect(updateResponse.json).toEqual({})
 
-      const patResponse =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+      const patAfterUpdate =
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [
             { scenarioId: 'R01', wasteTrackingId },
             { scenarioId: 'R02', wasteTrackingId }
           ]
         )
-      expect(patResponse.statusCode).toBe(200)
-      expect(patResponse.json).toEqual({
+      expect(patAfterUpdate.statusCode).toBe(200)
+      expect(patAfterUpdate.json).toEqual({
         submissionId: expect.any(String),
         results: [
           {

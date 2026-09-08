@@ -2,8 +2,11 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { createMovementAndGetWasteTrackingId } from '~/test/support/helpers/waste-movement.js'
+
 describe('Production Approval Tests Request Validation', () => {
   beforeEach(async () => {
+    await addAllureLink('/DWTA-295', 'DWTA-295', 'jira')
     await addAllureLink('/DWTA-177', 'DWTA-177', 'jira')
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,
@@ -12,9 +15,9 @@ describe('Production Approval Tests Request Validation', () => {
   })
 
   describe('Invalid request body', () => {
-    it('should reject an empty production approval tests array', async () => {
+    it('should reject an empty production approval tests array @allure.label.tag:DWTA-295', async () => {
       const response =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           []
         )
 
@@ -33,9 +36,9 @@ describe('Production Approval Tests Request Validation', () => {
       })
     })
 
-    it('should reject a blank waste tracking id', async () => {
+    it('should reject a blank waste tracking id @allure.label.tag:DWTA-295', async () => {
       const response =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [{ scenarioId: 'R01', wasteTrackingId: '' }]
         )
 
@@ -53,18 +56,45 @@ describe('Production Approval Tests Request Validation', () => {
       })
     })
 
-    it('should reject a scenario id that does not exist', async () => {
-      const wasteReceiptData = generateBaseWasteReceiptData()
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-      expect(createResponse.statusCode).toBe(201)
-      expect(createResponse.json).toHaveProperty('wasteTrackingId')
-      const wasteTrackingId = createResponse.json.wasteTrackingId
+    it('should reject non-existent waste tracking ids @allure.label.tag:DWTA-295', async () => {
+      const firstNonExistentWasteTrackingId = 'NONEXISTENT01'
+      const secondNonExistentWasteTrackingId = 'NONEXISTENT02'
 
       const response =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
+          [
+            {
+              scenarioId: 'R01',
+              wasteTrackingId: firstNonExistentWasteTrackingId
+            },
+            {
+              scenarioId: 'R02',
+              wasteTrackingId: secondNonExistentWasteTrackingId
+            }
+          ]
+        )
+
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toEqual({
+        validation: {
+          errors: [
+            {
+              key: 'wasteTrackingId',
+              errorType: 'InvalidValue',
+              message: `Could not find waste input(s) for the following id(s): ${firstNonExistentWasteTrackingId}, ${secondNonExistentWasteTrackingId}`
+            }
+          ]
+        }
+      })
+    })
+
+    it('should reject a scenario id that does not exist @allure.label.tag:DWTA-295', async () => {
+      const wasteReceiptData = generateBaseWasteReceiptData()
+      const wasteTrackingId =
+        await createMovementAndGetWasteTrackingId(wasteReceiptData)
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [{ scenarioId: 'R11', wasteTrackingId }]
         )
 
@@ -83,27 +113,17 @@ describe('Production Approval Tests Request Validation', () => {
       })
     })
 
-    it('should reject duplicate scenario ids in the same request', async () => {
+    it('should reject duplicate scenario ids in the same request @allure.label.tag:DWTA-295', async () => {
       const firstMovementData = generateBaseWasteReceiptData()
-      const firstCreateResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          firstMovementData
-        )
-      expect(firstCreateResponse.statusCode).toBe(201)
-      expect(firstCreateResponse.json).toHaveProperty('wasteTrackingId')
-      const firstWasteTrackingId = firstCreateResponse.json.wasteTrackingId
+      const firstWasteTrackingId =
+        await createMovementAndGetWasteTrackingId(firstMovementData)
 
       const secondMovementData = generateBaseWasteReceiptData()
-      const secondCreateResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          secondMovementData
-        )
-      expect(secondCreateResponse.statusCode).toBe(201)
-      expect(secondCreateResponse.json).toHaveProperty('wasteTrackingId')
-      const secondWasteTrackingId = secondCreateResponse.json.wasteTrackingId
+      const secondWasteTrackingId =
+        await createMovementAndGetWasteTrackingId(secondMovementData)
 
       const response =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [
             { scenarioId: 'R01', wasteTrackingId: firstWasteTrackingId },
             { scenarioId: 'R01', wasteTrackingId: secondWasteTrackingId }

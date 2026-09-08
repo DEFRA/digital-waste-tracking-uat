@@ -43,6 +43,22 @@ export class TestConfig {
     return process.env.COGNITO_CLIENT_SECRET
   }
 
+  /**
+   * Second Cognito client ID for cross-client ownership tests.
+   * @returns {string|undefined}
+   */
+  get cognitoClientId2() {
+    return process.env.COGNITO_CLIENT_ID_2
+  }
+
+  /**
+   * Second Cognito client secret for cross-client ownership tests.
+   * @returns {string|undefined}
+   */
+  get cognitoClientSecret2() {
+    return process.env.COGNITO_CLIENT_SECRET_2
+  }
+
   get cognitoOAuthBaseUrl() {
     return process.env.COGNITO_OAUTH_BASE_URL
   }

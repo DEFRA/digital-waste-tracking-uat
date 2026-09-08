@@ -2,11 +2,13 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { createMovementAndGetWasteTrackingId } from '~/test/support/helpers/waste-movement.js'
 
 describe('Production Approval Test H01 - Multiple Hazardous Components', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
+    await addAllureLink('/DWTA-295', 'DWTA-295', 'jira')
     await addAllureLink('/DWTA-179', 'DWTA-179', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
     await authenticateAndSetToken(
@@ -16,7 +18,7 @@ describe('Production Approval Test H01 - Multiple Hazardous Components', () => {
   })
 
   describe('Passed automated assessment for H01', () => {
-    it('should pass when a waste movement is supplied with multiple hazardous components', async () => {
+    it('should pass when a waste movement is supplied with multiple hazardous components @allure.label.tag:DWTA-295', async () => {
       wasteReceiptData.wasteItems[0].containsHazardous = true
       wasteReceiptData.wasteItems[0].hazardous = {
         hazCodes: ['HP_1', 'HP_3', 'HP_5'],
@@ -36,16 +38,11 @@ describe('Production Approval Test H01 - Multiple Hazardous Components', () => {
         wasteReceiptData.wasteItems[0].hazardous.components.length
       ).toBeGreaterThan(1)
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-      expect(createResponse.statusCode).toBe(201)
-      expect(createResponse.json).toHaveProperty('wasteTrackingId')
-      const wasteTrackingId = createResponse.json.wasteTrackingId
+      const wasteTrackingId =
+        await createMovementAndGetWasteTrackingId(wasteReceiptData)
 
       const patResponse =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [{ scenarioId: 'H01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
@@ -64,20 +61,15 @@ describe('Production Approval Test H01 - Multiple Hazardous Components', () => {
   })
 
   describe('Failed automated assessment for H01', () => {
-    it('should fail when a waste movement is supplied with no hazardous components', async () => {
+    it('should fail when a waste movement is supplied with no hazardous components @allure.label.tag:DWTA-295', async () => {
       expect(wasteReceiptData.wasteItems[0].containsHazardous).toBe(false)
       expect(wasteReceiptData.wasteItems[0]).not.toHaveProperty('hazardous')
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-      expect(createResponse.statusCode).toBe(201)
-      expect(createResponse.json).toHaveProperty('wasteTrackingId')
-      const wasteTrackingId = createResponse.json.wasteTrackingId
+      const wasteTrackingId =
+        await createMovementAndGetWasteTrackingId(wasteReceiptData)
 
       const patResponse =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [{ scenarioId: 'H01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
