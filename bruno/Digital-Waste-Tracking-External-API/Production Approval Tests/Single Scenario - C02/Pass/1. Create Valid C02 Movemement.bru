@@ -1,0 +1,79 @@
+meta {
+  name: 1. Create Valid C02 Movemement
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/movements/receive
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "apiCode": "{{apiCode}}",
+    "dateTimeReceived": "1230",
+    "wasteItems": [
+      {
+        "ewcCodes": [
+          "020101"
+        ],
+        "wasteDescription": "Basic mixed construction and demolition waste",
+        "physicalForm": "Mixed",
+        "numberOfContainers": 3,
+        "typeOfContainers": "SKI",
+        "weight": {
+          "metric": "Tonnes",
+          "amount": 2.5,
+          "isEstimate": false
+        },
+        "containsHazardous": false,
+        "containsPops": false,
+        "disposalOrRecoveryCodes": [
+          {
+            "code": "R1",
+            "weight": {
+              "metric": "Tonnes",
+              "amount": 0.75,
+              "isEstimate": false
+            }
+          }
+        ]
+      }
+    ],
+    "carrier": {
+      "organisationName": "Carrier Ltd",
+      "registrationNumber": null,
+      "meansOfTransport": "Rail",
+      "reasonForNoRegistrationNumber": "ON_SITE"
+    },
+    "receiver": {
+      "siteName": "Receiver Ltd",
+      "emailAddress": "receiver@test.com",
+      "authorisationNumber":"PPC/A/9999999"
+    },
+    "receipt": {
+      "address": {
+        "fullAddress": "123 Test Street, Test City",
+        "postcode": "TC1 2AB"
+      }
+    }
+  }
+}
+
+vars:post-response {
+  wasteTrackingId: res.body.wasteTrackingId
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}

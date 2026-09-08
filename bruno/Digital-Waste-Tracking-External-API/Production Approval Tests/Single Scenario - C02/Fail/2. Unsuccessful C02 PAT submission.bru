@@ -1,0 +1,27 @@
+meta {
+  name: 2. Unsuccessful C02 PAT submission
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/production-approval-tests
+  body: json
+  auth: inherit
+}
+
+body:json {
+  [
+    {
+      "scenarioId": "C02",
+      "wasteTrackingId": "{{wasteTrackingId}}"
+    }
+  ]  
+  
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  forwardAuthorizationHeader: false
+}

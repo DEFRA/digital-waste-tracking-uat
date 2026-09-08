@@ -62,6 +62,26 @@ export class WasteMovementExternalAPI extends BaseAPI {
   }
 
   /**
+   * POST /production-approval-tests — external API proxy to backend PAT.
+   * Auth uses the Cognito bearer token set via setAuthToken.
+   * @param {Array<{ scenarioId: string, wasteTrackingId: string }>} scenarios
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
+  async runProductionApprovalTests(scenarios) {
+    const { statusCode, headers, json } = await this.post(
+      '/production-approval-tests',
+      JSON.stringify(scenarios),
+      { 'Content-Type': 'application/json', 'x-cdp-request-id': randomUUID() }
+    )
+
+    return {
+      statusCode,
+      headers,
+      json
+    }
+  }
+
+  /**
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async getHealth() {

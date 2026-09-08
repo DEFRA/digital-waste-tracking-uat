@@ -11,6 +11,8 @@ This test suite requires certain environment variables to be set for authenticat
 
 ### Optional Environment Variables
 
+- `COGNITO_CLIENT_ID_2`: Second Cognito client ID for cross-client ownership tests (e.g. PAT)
+- `COGNITO_CLIENT_SECRET_2`: Second Cognito client secret for cross-client ownership tests
 - `ENVIRONMENT`: The environment name (defaults to 'test')
 - `RESULTS_OUTPUT_S3_PATH`: S3 path for publishing test results (used in CI/CD)
 - `API_CODE_IN_GIO_ORG_EXCLUDE_LIST`: A comma-separated list of API codes for organisations excluded from GIO audit logging. These API codes will NOT send audit logs to S3, as they should be excluded by the waste-backend service, which has the corresponding org IDs for these API codes. Global setup behaviour:

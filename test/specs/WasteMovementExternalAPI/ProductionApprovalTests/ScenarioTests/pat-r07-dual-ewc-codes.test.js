@@ -2,10 +2,13 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { createMovementAndGetWasteTrackingId } from '~/test/support/helpers/waste-movement.js'
+
 describe('Production Approval Test R07 - Dual EWC Codes', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
+    await addAllureLink('/DWTA-295', 'DWTA-295', 'jira')
     await addAllureLink('/DWTA-166', 'DWTA-166', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
     await authenticateAndSetToken(
@@ -15,19 +18,14 @@ describe('Production Approval Test R07 - Dual EWC Codes', () => {
   })
 
   describe('Passed automated assessment for R07', () => {
-    it('should pass when a waste movement is supplied with two EWC codes on a waste item', async () => {
+    it('should pass when a waste movement is supplied with two EWC codes on a waste item @allure.label.tag:DWTA-295', async () => {
       wasteReceiptData.wasteItems[0].ewcCodes = ['020101', '020102']
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-      expect(createResponse.statusCode).toBe(201)
-      expect(createResponse.json).toHaveProperty('wasteTrackingId')
-      const wasteTrackingId = createResponse.json.wasteTrackingId
+      const wasteTrackingId =
+        await createMovementAndGetWasteTrackingId(wasteReceiptData)
 
       const patResponse =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [{ scenarioId: 'R07', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
@@ -46,17 +44,12 @@ describe('Production Approval Test R07 - Dual EWC Codes', () => {
   })
 
   describe('Failed automated assessment for R07', () => {
-    it('should fail when a waste movement is supplied with only one EWC code on a waste item', async () => {
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-      expect(createResponse.statusCode).toBe(201)
-      expect(createResponse.json).toHaveProperty('wasteTrackingId')
-      const wasteTrackingId = createResponse.json.wasteTrackingId
+    it('should fail when a waste movement is supplied with only one EWC code on a waste item @allure.label.tag:DWTA-295', async () => {
+      const wasteTrackingId =
+        await createMovementAndGetWasteTrackingId(wasteReceiptData)
 
       const patResponse =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [{ scenarioId: 'R07', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)

@@ -2,11 +2,13 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { createMovementAndGetWasteTrackingId } from '~/test/support/helpers/waste-movement.js'
 
 describe('Production Approval Test P01 - POPs Components', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
+    await addAllureLink('/DWTA-295', 'DWTA-295', 'jira')
     await addAllureLink('/DWTA-178', 'DWTA-178', 'jira')
     wasteReceiptData = generateBaseWasteReceiptData()
     await authenticateAndSetToken(
@@ -16,7 +18,7 @@ describe('Production Approval Test P01 - POPs Components', () => {
   })
 
   describe('Passed automated assessment for P01', () => {
-    it('should pass when a waste movement is supplied with multiple POPs components', async () => {
+    it('should pass when a waste movement is supplied with multiple POPs components @allure.label.tag:DWTA-295', async () => {
       wasteReceiptData.wasteItems[0].containsPops = true
       wasteReceiptData.wasteItems[0].pops = {
         sourceOfComponents: 'OWN_TESTING',
@@ -35,16 +37,11 @@ describe('Production Approval Test P01 - POPs Components', () => {
         wasteReceiptData.wasteItems[0].pops.components.length
       ).toBeGreaterThan(1)
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-      expect(createResponse.statusCode).toBe(201)
-      expect(createResponse.json).toHaveProperty('wasteTrackingId')
-      const wasteTrackingId = createResponse.json.wasteTrackingId
+      const wasteTrackingId =
+        await createMovementAndGetWasteTrackingId(wasteReceiptData)
 
       const patResponse =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [{ scenarioId: 'P01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
@@ -63,20 +60,15 @@ describe('Production Approval Test P01 - POPs Components', () => {
   })
 
   describe('Failed automated assessment for P01', () => {
-    it('should fail when a waste movement is supplied with no POPs components', async () => {
+    it('should fail when a waste movement is supplied with no POPs components @allure.label.tag:DWTA-295', async () => {
       expect(wasteReceiptData.wasteItems[0].containsPops).toBe(false)
       expect(wasteReceiptData.wasteItems[0]).not.toHaveProperty('pops')
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-          wasteReceiptData
-        )
-      expect(createResponse.statusCode).toBe(201)
-      expect(createResponse.json).toHaveProperty('wasteTrackingId')
-      const wasteTrackingId = createResponse.json.wasteTrackingId
+      const wasteTrackingId =
+        await createMovementAndGetWasteTrackingId(wasteReceiptData)
 
       const patResponse =
-        await globalThis.apis.wasteMovementBackendAPI.runProductionApprovalTests(
+        await globalThis.apis.wasteMovementExternalAPI.runProductionApprovalTests(
           [{ scenarioId: 'P01', wasteTrackingId }]
         )
       expect(patResponse.statusCode).toBe(200)
