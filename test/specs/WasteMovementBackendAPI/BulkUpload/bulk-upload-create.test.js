@@ -128,7 +128,7 @@ describe('Bulk Upload Create', () => {
           movements
         )
 
-      await new Promise((resolve) => setTimeout(resolve, 100)) // 100 milliseconds delay between requests
+      await new Promise((resolve) => setTimeout(resolve, 10)) // 100 milliseconds delay between requests
 
       const response2 =
         await globalThis.apis.wasteMovementBackendAPI.bulkUploadCreate(
