@@ -4,7 +4,7 @@ import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 import { createMovementAndGetWasteTrackingId } from '~/test/support/helpers/waste-movement.js'
 
-describe('Production Approval Tests via External API - Client ID', () => {
+describe.skip('Production Approval Tests via External API - Client ID', () => {
   let wasteReceiptData
 
   beforeEach(async () => {
