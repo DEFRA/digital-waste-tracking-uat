@@ -1,0 +1,38 @@
+meta {
+  name: Create Receipt - With deliveryId
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/beta-1/deliveries/{{deliveryId}}/receipt
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "apiCode": "{{apiCode}}"
+  }
+}
+
+vars:pre-request {
+  movementId: 26UIN24MY
+  deliveryId: 26T0HVNKQ
+}
+
+vars:post-response {
+  ~wasteTrackingId: res.body.wasteTrackingId
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}
