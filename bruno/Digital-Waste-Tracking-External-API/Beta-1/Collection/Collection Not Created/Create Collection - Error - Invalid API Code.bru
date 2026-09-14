@@ -1,0 +1,29 @@
+meta {
+  name: Create Collection - Error - Invalid API Code
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/beta-1/movements/{{movementId}}/collection
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "apiCode": "401dd617-58c4-4c71-bf59-db04ad588c3d"
+  }
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}

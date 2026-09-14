@@ -1,0 +1,30 @@
+meta {
+  name: Create Delivery - Error - Movements Not Found
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/beta-1/deliveries
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "apiCode": "{{apiCode}}",
+    "movementIds": ["00NOTFND"]
+  }
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}
