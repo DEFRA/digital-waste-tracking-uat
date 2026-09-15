@@ -1,0 +1,34 @@
+meta {
+  name: Create Delivery - Error - Invalid field format
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/beta-1/deliveries
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "apiCode": "not-a-uuid",
+    "movementIds": {{movementIds}}
+  }
+}
+
+vars:pre-request {
+  ~movementIds: ["xxxx", "yyyy"]
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}

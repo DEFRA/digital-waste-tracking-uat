@@ -1,0 +1,38 @@
+meta {
+  name: Create Movement - Basic Required Fields Only
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/beta-1/movements
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "apiCode": "{{apiCode}}"
+  }
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}
+
+script:post-response {
+  const movementId = res.body.data.movementId;
+  bru.setVar('movementId', movementId);
+
+  const movementIds = Object.assign([], bru.getVar('movementIds') || []);
+  movementIds.push(movementId);
+  bru.setVar('movementIds', movementIds);
+}
