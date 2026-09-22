@@ -36,6 +36,8 @@ describe('Waste Movement API', () => {
 
 - `globalThis.apis.wasteMovementExternalAPI` - Waste Movement API
 - `globalThis.apis.wasteOrganisationBackendAPI` - Organisation backend API (includes `createOrUpdateOrganisation`)
+- `globalThis.apis.wasteMovementBackendAPI` - Waste Movement Backend API
+- `globalThis.apis.wasteMovementClientSyncAPI` - DWT client-sync API (`getClients`, `getClient`, `syncClients`)
 - `globalThis.apis.cognitoOAuthApi` - OAuth2 Authentication API
 
 ### Key Benefits
@@ -145,6 +147,8 @@ The test framework uses an API factory pattern to provide fresh API instances fo
 
 - `globalThis.apis.wasteMovementExternalAPI` - Waste Movement API for managing waste movements
 - `globalThis.apis.wasteOrganisationBackendAPI` - Organisation backend API
+- `globalThis.apis.wasteMovementBackendAPI` - Waste Movement Backend API
+- `globalThis.apis.wasteMovementClientSyncAPI` - DWT client-sync API (`getClients`, `getClient`, `syncClients`)
 - `globalThis.apis.cognitoOAuthApi` - OAuth2 Authentication API for client credentials flow
 
 ### API Factory Implementation
@@ -172,6 +176,8 @@ The test suite automatically validates required environment variables and provid
 // Access configuration globally
 const clientId = globalThis.testConfig.cognitoClientId
 const clientSecret = globalThis.testConfig.cognitoClientSecret
+const clientName = globalThis.testConfig.cognitoClientName
+const clientName2 = globalThis.testConfig.cognitoClientName2
 const environment = globalThis.testConfig.environment
 ```
 
