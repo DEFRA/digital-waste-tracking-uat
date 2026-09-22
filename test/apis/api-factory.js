@@ -2,6 +2,7 @@ import { WasteMovementExternalAPI } from './wasteMovementExternalApi.js'
 import { CognitoOAuthApi } from './cognitoOAuth.js'
 import { WasteMovementBackendAPI } from './wasteMovementBackendApi.js'
 import { WasteOrganisationBackendAPI } from './wasteOrganisationBackendApi.js'
+import { WasteMovementClientSyncAPI } from './wasteMovementClientSyncApi.js'
 import { ZapApi } from './zap-api.js'
 
 /**
@@ -10,6 +11,7 @@ import { ZapApi } from './zap-api.js'
  * @property {CognitoOAuthApi} cognitoOAuthApi - Cognito OAuth instance
  * @property {WasteMovementBackendAPI} wasteMovementBackendAPI - Waste Movement Backend API instance
  * @property {WasteOrganisationBackendAPI} wasteOrganisationBackendAPI - Waste Organisation Backend API instance
+ * @property {WasteMovementClientSyncAPI} wasteMovementClientSyncAPI - DWT client-sync API instance
  * @property {ZapApi} [zapApi] - ZAP REST API instance when PROXY_MODE=zap
  * @property {() => Promise<void>} close - Close all API connection pools
  */
@@ -44,6 +46,9 @@ export class ApiFactory {
       ),
       wasteMovementBackendAPI: new WasteMovementBackendAPI(proxyInternalCalls),
       wasteOrganisationBackendAPI: new WasteOrganisationBackendAPI(
+        proxyInternalCalls
+      ),
+      wasteMovementClientSyncAPI: new WasteMovementClientSyncAPI(
         proxyInternalCalls
       ),
 

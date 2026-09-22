@@ -20,8 +20,12 @@ alwaysApply: true
   # First unset all environment variables
   unset COGNITO_CLIENT_ID
   unset COGNITO_CLIENT_SECRET
+  unset COGNITO_CLIENT_NAME
+  unset COGNITO_CLIENT_NAME_2
   unset AUTH_DISABLED
   
   # Then set values for active environment
   export COGNITO_CLIENT_ID=value
+  export COGNITO_CLIENT_NAME="Test Client 1"
+  export COGNITO_CLIENT_NAME_2="Test Client 2"
   ```
