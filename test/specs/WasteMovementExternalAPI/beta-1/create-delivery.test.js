@@ -13,7 +13,50 @@ describe('Beta-1 Delivery Creation', () => {
 
   describe('Successful Creation', () => {
     it(
-      'should successfully record a delivery for collected movements and return delivery IDs' +
+      'should successfully record a delivery for a collected movement and return a delivery ID' +
+        ' @allure.label.tag:DWTC-119',
+      async () => {
+        await addAllureLink('/DWTC-119', 'DWTC-119', 'jira')
+
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+            beta1.generateBaseMovementData()
+          )
+        expect(createResponse.statusCode).toBe(201)
+        const movementId = createResponse.json.data.movementId
+
+        const collectionResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
+            movementId,
+            beta1.generateBaseCollectionData()
+          )
+        expect(collectionResponse.statusCode).toBe(201)
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
+            beta1.generateBaseDeliveryData([movementId])
+          )
+
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toEqual({
+          data: {
+            deliveries: [
+              {
+                deliveryId: expect.any(String),
+                movementIds: [movementId],
+                wasteType: 'NON_HAZARDOUS'
+              }
+            ]
+          },
+          validation: {
+            warnings: []
+          }
+        })
+      }
+    )
+
+    it(
+      'should successfully record a delivery for multiple collected movements and return delivery IDs' +
         ' @allure.label.tag:DWTC-119' +
         ' @allure.label.tag:DWTC-188',
       async () => {
@@ -48,14 +91,9 @@ describe('Beta-1 Delivery Creation', () => {
           )
         expect(secondCollectionResponse.statusCode).toBe(201)
 
-        const deliveryData = beta1.generateBaseDeliveryData([
-          firstMovementId,
-          secondMovementId
-        ])
-
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
-            deliveryData
+            beta1.generateBaseDeliveryData([firstMovementId, secondMovementId])
           )
 
         expect(response.statusCode).toBe(201)
@@ -82,6 +120,38 @@ describe('Beta-1 Delivery Creation', () => {
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
           beta1.generateBaseDeliveryData([beta1.unknownResourceId])
+        )
+
+      expect(response.statusCode).toBe(400)
+      expect(response.json).toEqual({
+        type: 'https://waste-tracking.service.gov.uk/problems/bad-request',
+        title: 'Bad Request',
+        detail: `No movement exists for movement ID(s): ${beta1.unknownResourceId}`,
+        instance: '/beta-1/deliveries'
+      })
+    })
+
+    it('should reject recording a delivery when one movement exists and another does not', async () => {
+      const createResponse =
+        await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+          beta1.generateBaseMovementData()
+        )
+      expect(createResponse.statusCode).toBe(201)
+      const movementId = createResponse.json.data.movementId
+
+      const collectionResponse =
+        await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
+          movementId,
+          beta1.generateBaseCollectionData()
+        )
+      expect(collectionResponse.statusCode).toBe(201)
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
+          beta1.generateBaseDeliveryData([
+            movementId,
+            beta1.unknownResourceId
+          ])
         )
 
       expect(response.statusCode).toBe(400)

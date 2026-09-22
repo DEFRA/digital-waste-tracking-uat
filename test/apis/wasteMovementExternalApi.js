@@ -10,105 +10,118 @@ export class WasteMovementExternalAPI extends BaseAPI {
       globalThis.testConfig.wasteMovementExternalApiBaseUrl,
       useProxyWhenAvailable
     )
-  }
 
-  beta1 = {
-    pathPrefix: 'beta-1',
+    this.beta1 = {
+      /**
+       * POST /beta-1/movements
+       * @param {Object} movementData
+       * @returns {Promise<import('./base-api.js').JsonResponse>}
+       */
+      createMovement: async (movementData) => {
+        const { statusCode, headers, json } = await this.post(
+          `/beta-1/movements`,
+          JSON.stringify(movementData),
+          {
+            'Content-Type': 'application/json',
+            'x-cdp-request-id': randomUUID()
+          }
+        )
 
-    /**
-     * POST /beta-1/movements
-     * @param {Object} movementData
-     * @returns {Promise<import('./base-api.js').JsonResponse>}
-     */
-    createMovement: async (movementData) => {
-      const { statusCode, headers, json } = await this.post(
-        `/${this.beta1.pathPrefix}/movements`,
-        JSON.stringify(movementData),
-        { 'Content-Type': 'application/json', 'x-cdp-request-id': randomUUID() }
-      )
+        return {
+          statusCode,
+          headers,
+          json
+        }
+      },
 
-      return {
-        statusCode,
-        headers,
-        json
-      }
-    },
+      /**
+       * POST /beta-1/movements/{movementId}/collection
+       * @param {string} movementId
+       * @param {Object} collectionData
+       * @returns {Promise<import('./base-api.js').JsonResponse>}
+       */
+      createCollection: async (movementId, collectionData) => {
+        const { statusCode, headers, json } = await this.post(
+          `/beta-1/movements/${movementId}/collection`,
+          JSON.stringify(collectionData),
+          {
+            'Content-Type': 'application/json',
+            'x-cdp-request-id': randomUUID()
+          }
+        )
 
-    /**
-     * POST /beta-1/movements/{movementId}/collection
-     * @param {string} movementId
-     * @param {Object} collectionData
-     * @returns {Promise<import('./base-api.js').JsonResponse>}
-     */
-    createCollection: async (movementId, collectionData) => {
-      const { statusCode, headers, json } = await this.post(
-        `/${this.beta1.pathPrefix}/movements/${movementId}/collection`,
-        JSON.stringify(collectionData),
-        { 'Content-Type': 'application/json', 'x-cdp-request-id': randomUUID() }
-      )
+        return {
+          statusCode,
+          headers,
+          json
+        }
+      },
 
-      return {
-        statusCode,
-        headers,
-        json
-      }
-    },
+      /**
+       * POST /beta-1/deliveries
+       * @param {Object} deliveryData
+       * @returns {Promise<import('./base-api.js').JsonResponse>}
+       */
+      createDelivery: async (deliveryData) => {
+        const { statusCode, headers, json } = await this.post(
+          `/beta-1/deliveries`,
+          JSON.stringify(deliveryData),
+          {
+            'Content-Type': 'application/json',
+            'x-cdp-request-id': randomUUID()
+          }
+        )
 
-    /**
-     * POST /beta-1/deliveries
-     * @param {Object} deliveryData
-     * @returns {Promise<import('./base-api.js').JsonResponse>}
-     */
-    createDelivery: async (deliveryData) => {
-      const { statusCode, headers, json } = await this.post(
-        `/${this.beta1.pathPrefix}/deliveries`,
-        JSON.stringify(deliveryData),
-        { 'Content-Type': 'application/json', 'x-cdp-request-id': randomUUID() }
-      )
+        return {
+          statusCode,
+          headers,
+          json
+        }
+      },
 
-      return {
-        statusCode,
-        headers,
-        json
-      }
-    },
+      /**
+       * POST /beta-1/deliveries/{deliveryId}/receipt
+       * @param {string} deliveryId
+       * @param {Object} receiptData
+       * @returns {Promise<import('./base-api.js').JsonResponse>}
+       */
+      createReceiptWithDeliveryId: async (deliveryId, receiptData) => {
+        const { statusCode, headers, json } = await this.post(
+          `/beta-1/deliveries/${deliveryId}/receipt`,
+          JSON.stringify(receiptData),
+          {
+            'Content-Type': 'application/json',
+            'x-cdp-request-id': randomUUID()
+          }
+        )
 
-    /**
-     * POST /beta-1/deliveries/{deliveryId}/receipt
-     * @param {string} deliveryId
-     * @param {Object} receiptData
-     * @returns {Promise<import('./base-api.js').JsonResponse>}
-     */
-    createReceiptWithDeliveryId: async (deliveryId, receiptData) => {
-      const { statusCode, headers, json } = await this.post(
-        `/${this.beta1.pathPrefix}/deliveries/${deliveryId}/receipt`,
-        JSON.stringify(receiptData),
-        { 'Content-Type': 'application/json', 'x-cdp-request-id': randomUUID() }
-      )
+        return {
+          statusCode,
+          headers,
+          json
+        }
+      },
 
-      return {
-        statusCode,
-        headers,
-        json
-      }
-    },
+      /**
+       * POST /beta-1/receipts
+       * @param {Object} receiptData
+       * @returns {Promise<import('./base-api.js').JsonResponse>}
+       */
+      createReceiptWithoutDeliveryId: async (receiptData) => {
+        const { statusCode, headers, json } = await this.post(
+          `/beta-1/receipts`,
+          JSON.stringify(receiptData),
+          {
+            'Content-Type': 'application/json',
+            'x-cdp-request-id': randomUUID()
+          }
+        )
 
-    /**
-     * POST /beta-1/receipts
-     * @param {Object} receiptData
-     * @returns {Promise<import('./base-api.js').JsonResponse>}
-     */
-    createReceiptWithoutDeliveryId: async (receiptData) => {
-      const { statusCode, headers, json } = await this.post(
-        `/${this.beta1.pathPrefix}/receipts`,
-        JSON.stringify(receiptData),
-        { 'Content-Type': 'application/json', 'x-cdp-request-id': randomUUID() }
-      )
-
-      return {
-        statusCode,
-        headers,
-        json
+        return {
+          statusCode,
+          headers,
+          json
+        }
       }
     }
   }
