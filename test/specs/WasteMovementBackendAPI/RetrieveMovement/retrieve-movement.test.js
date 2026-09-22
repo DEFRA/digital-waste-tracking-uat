@@ -33,7 +33,7 @@ describe('Retrieve movement (Functionality only in Pre Prod)', () => {
 
       expect(qaRetrieveStatus).toBe(200)
       expect(qaMovements).toHaveLength(1)
-      expect(qaMovements[0].client.clientId).toEqual(
+      expect(qaMovements[0].clientId).toEqual(
         globalThis.testConfig.cognitoClientId
       )
       const movement = qaMovements[0]
