@@ -35,4 +35,3 @@ describe('Beta-1 Movement Creation', () => {
     )
   })
 })
-

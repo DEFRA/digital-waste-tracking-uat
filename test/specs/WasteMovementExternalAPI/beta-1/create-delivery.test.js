@@ -148,10 +148,7 @@ describe('Beta-1 Delivery Creation', () => {
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
-          beta1.generateBaseDeliveryData([
-            movementId,
-            beta1.unknownResourceId
-          ])
+          beta1.generateBaseDeliveryData([movementId, beta1.unknownResourceId])
         )
 
       expect(response.statusCode).toBe(400)
