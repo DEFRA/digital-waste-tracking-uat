@@ -1,18 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es2020",
-    "baseUrl": "./",
-    "moduleResolution": "node",
+    "target": "es2024",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "checkJs": true,
     "allowJs": true,
     "strict": false,
     "noImplicitAny": false,
-    "skipLibCheck": true,
     "paths": {
-      "~/*": ["./*"],
-      "page-objects/*": ["./test/page-objects/*"],
-      "components/*": ["./test/components/*"]
+      "~/*": ["./*"]
     }
   },
-  "exclude": ["node_modules", "build", "docker"]
+  "include": [
+    "jest.config.js",
+    ".prettierrc.js",
+    ".eslintrc.cjs",
+    "test/**/*.js"
+  ]
 }

@@ -9,9 +9,7 @@
   "author": "Defra DDTS",
   "license": "OGL-UK-3.0",
   "aliases": {
-    "~": ".",
-    "page-objects": "test/page-objects",
-    "components": "test/components"
+    "~": "."
   },
   "scripts": {
     "postinstall": "npm run setup:husky",
@@ -21,15 +19,14 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "git:pre-commit-hook": "npm run format:check && npm run lint",
-    "test:integration": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern \"^.*(WasteMovementExternalAPI|WasteMovementBackendAPI).*$\" --testNamePattern \"^(?!.*@Authentication)\"",
-    "test:uat": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern \"(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication)\"",
-    "test:lewis": "jest --testPathPattern \"(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication)\"",
-    "test:zap-gate": "PROXY_MODE=off EXCLUDE_GLOBAL_SETUP=true NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern zap-gate",
-    "test:smoke": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern \"@smoke\"",
-    "test:prod-smoke": "REDACT_SENSITIVE_ALLURE_HEADERS=true NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern \"@prod-smoke\"",
+    "test:integration": "jest --testPathPattern \"^.*(WasteMovementExternalAPI|WasteMovementBackendAPI).*$\" --testNamePattern \"^(?!.*@Authentication)\"",
+    "test:uat": "jest --testPathPattern \"(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication)\"",
+    "test:zap-gate": "PROXY_MODE=off EXCLUDE_GLOBAL_SETUP=true jest --testPathPattern zap-gate",
+    "test:smoke": "jest --testNamePattern \"@smoke\"",
+    "test:prod-smoke": "REDACT_SENSITIVE_ALLURE_HEADERS=true jest --testNamePattern \"@prod-smoke\"",
     "test": "npm run test:${PROFILE:-uat}",
-    "test-name-pattern": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testNamePattern",
-    "test-location-pattern": "NODE_OPTIONS='--experimental-vm-modules --no-warnings --dns-result-order=ipv6first --no-network-family-autoselection' jest --testPathPattern",
+    "test-name-pattern": "jest --testNamePattern",
+    "test-location-pattern": "jest --testPathPattern",
     "report:generate": "allure generate allure-results --single-file --clean",
     "report:clean": "rm -rf allure-results && rm -rf allure-report && rm -rf zap-report",
     "report:open": "open ./allure-report/index.html",
