@@ -11,5 +11,10 @@
       "~/*": ["./*"]
     }
   },
-  "include": ["jest.config.js", ".prettierrc.js", ".eslintrc.cjs", "test/**/*.js"]
+  "include": [
+    "jest.config.js",
+    ".prettierrc.js",
+    ".eslintrc.cjs",
+    "test/**/*.js"
+  ]
 }
