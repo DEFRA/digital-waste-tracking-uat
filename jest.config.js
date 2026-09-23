@@ -14,9 +14,7 @@ export default {
   ],
   transform: {},
   moduleNameMapper: {
-    '^~/(.*)$': '<rootDir>/$1',
-    '^page-objects/(.*)$': '<rootDir>/test/page-objects/$1',
-    '^components/(.*)$': '<rootDir>/test/components/$1'
+    '^~/(.*)$': '<rootDir>/$1'
   },
   testMatch: ['**/test/specs/**/*.js'],
   verbose: true,

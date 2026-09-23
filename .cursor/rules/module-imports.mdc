@@ -7,6 +7,6 @@ alwaysApply: true
 # Module Imports & Path Aliases
 
 - **ES Module Imports**: Always use ES module syntax (`import`/`export`) instead of CommonJS
-- **Path Aliases**: Use configured path aliases (`~`, `page-objects`, `components`) for cleaner imports
+- **Path Aliases**: Use the `~` path alias (maps to the repo root) instead of deep relative imports
 - **Jest Globals Import**: Always import Jest functions explicitly: `import { describe, it, expect, beforeEach } from '@jest/globals'`
 - **Relative Import Depth**: Limit relative import depth to avoid `../../../` patterns
