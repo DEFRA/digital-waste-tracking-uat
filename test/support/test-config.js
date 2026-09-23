@@ -74,6 +74,16 @@ export class TestConfig {
       : undefined
   }
 
+  /**
+   * TODO: We are looking to ditch the ORG_API_CODES environment variable and use the actual Organisation API codes in the envs.
+   *       We should hold off merging this work until that is done and we can ammend this PR accordingly.
+   * API code defined in the environment's ORG_API_CODES environment variable.
+   * @returns {string} The API code for a given organisation.
+   */
+  get apiCodeStubbed() {
+    return process.env.API_CODE_STUBBED
+  }
+
   // Service auth password for the Waste Movement External API to connect to other services
   get serviceAuthPassword() {
     return process.env.SERVICE_AUTH_PASSWORD
