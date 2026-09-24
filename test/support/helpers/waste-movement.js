@@ -12,7 +12,10 @@ export async function createMovementAndGetWasteTrackingId(wasteReceiptData) {
     )
 
   expect(createResponse.statusCode).toBe(201)
-  expect(createResponse.json).toHaveProperty('wasteTrackingId',expect.any(String))
+  expect(createResponse.json).toHaveProperty(
+    'wasteTrackingId',
+    expect.any(String)
+  )
 
   return createResponse.json.wasteTrackingId
 }

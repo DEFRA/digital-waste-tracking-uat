@@ -29,7 +29,10 @@ async function createOrganisationAndGetApiCode(
     )
 
   expect(apiCodeResponse.statusCode).toBe(200)
-  expect(apiCodeResponse.json.apiCodes[0]).toHaveProperty('code', expect.any(String))
+  expect(apiCodeResponse.json.apiCodes[0]).toHaveProperty(
+    'code',
+    expect.any(String)
+  )
 
   return apiCodeResponse.json.apiCodes[0].code
 }
