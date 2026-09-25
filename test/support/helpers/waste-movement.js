@@ -1,3 +1,5 @@
+import { expect } from '@jest/globals'
+
 /**
  * Creates a waste movement via the external API and returns its waste tracking id.
  * @param {Object} wasteReceiptData - Receipt payload for POST /movements/receive
@@ -9,18 +11,11 @@ export async function createMovementAndGetWasteTrackingId(wasteReceiptData) {
       wasteReceiptData
     )
 
-  if (createResponse.statusCode !== 201) {
-    throw new Error(
-      `Failed to create waste movement: status ${createResponse.statusCode}`
-    )
-  }
+  expect(createResponse.statusCode).toBe(201)
+  expect(createResponse.json).toHaveProperty(
+    'wasteTrackingId',
+    expect.any(String)
+  )
 
-  const wasteTrackingId = createResponse.json?.wasteTrackingId
-  if (wasteTrackingId == null) {
-    throw new Error(
-      'Failed to create waste movement: response did not include wasteTrackingId'
-    )
-  }
-
-  return wasteTrackingId
+  return createResponse.json.wasteTrackingId
 }

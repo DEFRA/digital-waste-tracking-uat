@@ -1,3 +1,5 @@
+import { expect } from '@jest/globals'
+
 /**
  * Creates or updates an organisation, then returns its API code.
  * Allows the creation of an organisation with a disabled after date in the future or in the past.
@@ -19,22 +21,18 @@ async function createOrganisationAndGetApiCode(
       disabledAfter
     )
 
-  if (organisationResponse.statusCode !== 200) {
-    throw new Error(
-      `Failed to create organisation: status ${organisationResponse.statusCode}`
-    )
-  }
+  expect(organisationResponse.statusCode).toBe(200)
 
   const apiCodeResponse =
     await globalThis.apis.wasteOrganisationBackendAPI.getAllApiCodesForOrganisation(
       organisationId
     )
 
-  if (apiCodeResponse.statusCode !== 200) {
-    throw new Error(
-      `Failed to get API codes for organisation: status ${apiCodeResponse.statusCode}`
-    )
-  }
+  expect(apiCodeResponse.statusCode).toBe(200)
+  expect(apiCodeResponse.json.apiCodes[0]).toHaveProperty(
+    'code',
+    expect.any(String)
+  )
 
   return apiCodeResponse.json.apiCodes[0].code
 }
