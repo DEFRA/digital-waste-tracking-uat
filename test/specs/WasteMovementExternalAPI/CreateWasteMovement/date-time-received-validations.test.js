@@ -58,7 +58,8 @@ describe('Receiving date timestamp validation', () => {
             {
               key: 'dateTimeReceived',
               errorType: 'InvalidFormat',
-              message: '"dateTimeReceived" must be in ISO 8601 date format'
+              message:
+                '"dateTimeReceived" must be a valid UTC (2025-09-15T12:12:28Z) or BST (2025-09-15T13:12:28+01:00) ISO datetime'
             }
           ]
         }
