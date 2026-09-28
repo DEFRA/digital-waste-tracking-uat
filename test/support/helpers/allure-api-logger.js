@@ -7,14 +7,6 @@
 const REDACTED = '[REDACTED]'
 
 /**
- * Whether Allure attachments should redact sensitive values (prod-smoke runs).
- * @returns {boolean}
- */
-function shouldRedactSensitiveAllureData() {
-  return process.env.REDACT_SENSITIVE_ALLURE_HEADERS === 'true'
-}
-
-/**
  * Whether a header name should be redacted in Allure attachments.
  * @param {string} headerName - Header name
  * @returns {boolean}
@@ -31,7 +23,7 @@ function isSensitiveHeaderName(headerName) {
  * @returns {Object}
  */
 function sanitizeHeadersForAllure(headers) {
-  if (!shouldRedactSensitiveAllureData()) {
+  if (!globalThis.testConfig.redactSensitiveAllureHeaders) {
     return headers
   }
 
@@ -74,7 +66,7 @@ function redactAccessTokenDeep(value) {
  * @returns {string|Object|null}
  */
 function sanitizeBodyForAllure(body) {
-  if (!shouldRedactSensitiveAllureData() || body == null) {
+  if (!globalThis.testConfig.redactSensitiveAllureHeaders || body == null) {
     return body
   }
 

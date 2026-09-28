@@ -1,4 +1,3 @@
-import { testConfig } from '../support/test-config.js'
 import { BaseAPI } from './base-api.js'
 
 /**
@@ -6,8 +5,8 @@ import { BaseAPI } from './base-api.js'
  */
 export class ZapApi extends BaseAPI {
   constructor() {
-    super(testConfig.httpProxy, false)
-    this.apiKey = testConfig.zapApiKey
+    super(globalThis.testConfig.httpProxy, false)
+    this.apiKey = globalThis.testConfig.zapApiKey
   }
 
   /**

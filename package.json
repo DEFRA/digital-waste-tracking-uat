@@ -21,7 +21,7 @@
     "git:pre-commit-hook": "npm run format:check && npm run lint",
     "test:integration": "jest --testPathPattern \"^.*(WasteMovementExternalAPI|WasteMovementBackendAPI).*$\" --testNamePattern \"^(?!.*@Authentication)\"",
     "test:uat": "jest --testPathPattern \"(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication)\"",
-    "test:zap-gate": "PROXY_MODE=off EXCLUDE_GLOBAL_SETUP=true jest --testPathPattern zap-gate",
+    "test:zap-gate": "PROXY_MODE=off API_CODE=skipGlobalSetup ORGANISATION_ID=skipGlobalSetup jest --testPathPattern zap-gate",
     "test:smoke": "jest --testNamePattern \"@smoke\"",
     "test:prod-smoke": "REDACT_SENSITIVE_ALLURE_HEADERS=true jest --testNamePattern \"@prod-smoke\"",
     "test": "npm run test:${PROFILE:-uat}",
@@ -34,8 +34,8 @@
     "source:clean:test:integration:report": ". ./env.sh && npm run report:clean && npm run test:integration ; npm run report:generate && npm run report:open",
     "source:clean:test:integration-zap:report": ". ./env.sh && npm run report:clean && npm run test:integration ; npm run test:zap-gate ; npm run report:generate && npm run report:open",
     "source:clean:test:uat:report": ". ./env.sh && npm run report:clean && npm run test:uat ; npm run report:generate && npm run report:open",
-    "source:clean:test-name-pattern:report": "bash -c '. ./env.sh && npm run report:clean && npm run test-name-pattern -- \"$1\" ; npm run report:generate && npm run report:open' --",
-    "source:clean:test-location-pattern:report": "bash -c '. ./env.sh && npm run report:clean && npm run test-location-pattern -- \"$1\" ; npm run report:generate && npm run report:open' --"
+    "source:clean:test-name-pattern:report": "sh -c '. ./env.sh && npm run report:clean && npm run test-name-pattern -- \"$1\" ; npm run report:generate && npm run report:open' --",
+    "source:clean:test-location-pattern:report": "sh -c '. ./env.sh && npm run report:clean && npm run test-location-pattern -- \"$1\" ; npm run report:generate && npm run report:open' --"
   },
   "dependencies": {
     "allure-commandline": "2.32.0",

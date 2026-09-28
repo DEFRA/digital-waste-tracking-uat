@@ -139,7 +139,7 @@ it.each([[12.5], [500], [0]])(
 
 ## API Factory
 
-The test framework uses an API factory pattern to provide fresh API instances for each test. This ensures test isolation and prevents state leakage between tests.
+The test framework uses an API factory pattern. Each test gets a new set of API clients so request state, including the bearer token, does not carry over. Fresh payloads in each test keep tests independent.
 
 ### Available API Instances
 
@@ -149,20 +149,24 @@ The test framework uses an API factory pattern to provide fresh API instances fo
 
 ### API Factory Implementation
 
-The API factory creates fresh instances before each test and cleans them up afterward:
+`test/support/jest/setup.js` creates the clients before each test and closes them afterward:
 
 ```javascript
-// Before each test
+beforeAll(() => {
+  globalThis.testConfig = testConfig
+})
+
 beforeEach(() => {
   globalThis.apis = ApiFactory.create()
 })
 
-// After each test
 afterEach(async () => {
   await globalThis.apis?.close()
   delete globalThis.apis
 })
 ```
+
+`globalThis` in a worker is not the `globalThis` used by `global-setup.js` and `global-teardown.js`. Those two files share a parent process and their own API clients.
 
 ## Test Configuration
 
@@ -181,15 +185,15 @@ The test suite validates that all required environment variables are present whe
 
 ## Global Setup
 
-Before Jest workers start, `test/support/jest/global-setup.js` runs in a separate Node.js process and:
+Before Jest workers start, `test/support/jest/global-setup.js` runs in the parent process and:
 
-1. Resolves an API code — when `API_CODE_IN_GIO_ORG_EXCLUDE_LIST` is unset, creates an organisation via `createOrUpdateOrganisation` and reads its API code via `getAllApiCodesForOrganisation`; when set, picks a random code from the list
-2. Sets `GENERATED_API_CODE` and `GENERATED_DEFRA_ID` on `process.env` (created `organisationId` on the create path; otherwise resolved via `getOrganisationByApiCode`)
+1. Assigns `globalThis.testConfig` and creates `globalThis.apis` for that process
+2. When `API_CODE` or `ORGANISATION_ID` is unset, creates an organisation and writes both values to `process.env`. Production must already have both set
 3. When `PROXY_MODE=zap`, initialises the ZAP session (see [ZAP security scan](#zap-security-scan-two-step))
 
-Worker processes read these values in `test/support/jest/setup.js` as `globalThis.generatedApiCode` and `globalThis.generatedDefraId`. See `CONFIGURATION.md` for required environment variables and runtime-generated variable details.
+Workers inherit `process.env`. Tests read the identifiers as `globalThis.testConfig.apiCode` and `globalThis.testConfig.organisationId`. See `CONFIGURATION.md`.
 
-Global setup is skipped when `EXCLUDE_GLOBAL_SETUP=true` (used by `test:zap-gate`). Tests that depend on `generatedApiCode` or `generatedDefraId` will fail without global setup.
+Global setup always runs. `npm run test:zap-gate` sets `API_CODE` and `ORGANISATION_ID` so setup does not create an organisation, and sets `PROXY_MODE=off` so it does not open a ZAP session.
 
 ## Environment Configuration
 
@@ -233,7 +237,7 @@ Tests are organized into logical groups:
 - `npm run test:uat` - UAT profile including bulk upload and authentication
 - `npm run test:smoke` - Tests tagged `@smoke`
 - `npm run test:prod-smoke` - Tests tagged `@prod-smoke` (A small subset of tests to run after production releases)
-- `npm run test:zap-gate` - ZAP gate only (`PROXY_MODE=off`; requires scan artefacts)
+- `npm run test:zap-gate` - ZAP gate only (`PROXY_MODE=off`, with `API_CODE` and `ORGANISATION_ID` set so setup skips organisation creation; requires scan artefacts)
 - `jest` - Run Jest directly without report scripts
 - `jest --testPathPattern=test/specs/Authentication/` - Run specific test directories
 - `jest --testNamePattern="should authenticate successfully"` - Run tests matching a pattern
@@ -256,18 +260,20 @@ OWASP ZAP passive scanning is intended for **Docker Compose CI** (internal HTTP 
    - `test/support/jest/global-setup.js` — resolves API code and organisation ID, then `newSession` and disable passive scan rules listed in `zapPassiveScanRulesToDisable`
    - Tests execute through the proxy
    - `test/support/jest/global-teardown.js` — writes `zap-report/zap.json`, `zap.html`, and `alerts-summary.json`
-2. **Gate** — `PROXY_MODE=off`, `npm run test:zap-gate`:
+2. **Gate** — `npm run test:zap-gate` (`PROXY_MODE=off`, `API_CODE` and `ORGANISATION_ID` set):
    - `test/specs/Security/ZapGate/zap-gate.test.js` — asserts artefacts exist, attaches all three reports to Allure, fails when `alertsSummary.High !== 0`
 
 `npm run source:clean:test:integration-zap:report` runs `report:clean`, scan, gate, Allure generate, and opens the report (sources `env.sh` first).
 
 ### Environment variables
 
-| Variable      | Scan run                   | Gate run           |
-| ------------- | -------------------------- | ------------------ |
-| `PROXY_MODE`  | `zap`                      | `off`              |
-| `HTTP_PROXY`  | ZAP proxy and REST API URL | ignored when `off` |
-| `ZAP_API_KEY` | ZAP API key                | not used           |
+| Variable          | Scan run                   | Gate run                     |
+| ----------------- | -------------------------- | ---------------------------- |
+| `PROXY_MODE`      | `zap`                      | `off`                        |
+| `HTTP_PROXY`      | ZAP proxy and REST API URL | ignored when `off`           |
+| `ZAP_API_KEY`     | ZAP API key                | not used                     |
+| `API_CODE`        | created by setup if unset  | set, so setup skips creation |
+| `ORGANISATION_ID` | created by setup if unset  | set, so setup skips creation |
 
 `PROXY_MODE` also supports `cdp` (proxy external calls only, e.g. Cognito). See `test/support/test-config.js`.
 

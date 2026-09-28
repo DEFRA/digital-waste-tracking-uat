@@ -13,20 +13,25 @@ This test suite requires certain environment variables to be set for authenticat
 
 - `COGNITO_CLIENT_ID_2`: Second Cognito client ID for cross-client ownership tests (e.g. PAT)
 - `COGNITO_CLIENT_SECRET_2`: Second Cognito client secret for cross-client ownership tests
-- `ENVIRONMENT`: The environment name (defaults to 'test')
+- `ENVIRONMENT`: The environment name
 - `RESULTS_OUTPUT_S3_PATH`: S3 path for publishing test results (used in CI/CD)
-- `API_CODE_IN_GIO_ORG_EXCLUDE_LIST`: A comma-separated list of API codes for organisations excluded from GIO audit logging. These API codes will NOT send audit logs to S3, as they should be excluded by the waste-backend service, which has the corresponding org IDs for these API codes. Global setup behaviour:
-  - **Unset** — creates an organisation via `createOrUpdateOrganisation`, then reads its API code via `getAllApiCodesForOrganisation` (`GENERATED_DEFRA_ID` = that organisation ID)
-  - **Set** — picks a random API code from the list, then resolves `GENERATED_DEFRA_ID` via `getOrganisationByApiCode`
+- `API_CODE`: Organisation API code for movement payloads
+- `ORGANISATION_ID`: Defra customer organisation ID for bulk upload payloads
 
-### Runtime-Generated Variables (Read-Only)
+Set `API_CODE` and `ORGANISATION_ID` together. Global setup in `test/support/jest/global-setup.js` treats either value as missing when only one is set:
 
-Global setup writes these into `process.env` before workers start. Do not set them in `env.sh`; worker processes read them via `test/support/jest/setup.js`.
+- **Both set** — setup uses them and does not create an organisation. Both are required when `ENVIRONMENT=prod`.
+- **Either unset, and not production** — setup creates an organisation via `createOrUpdateOrganisation`, reads its API code via `getAllApiCodesForOrganisation`, and writes both values to `process.env`.
+- **Either unset and `ENVIRONMENT=prod`** — setup throws.
 
-| Variable             | Set by            | Exposed in tests as           | Purpose                                           |
-| -------------------- | ----------------- | ----------------------------- | ------------------------------------------------- |
-| `GENERATED_API_CODE` | `global-setup.js` | `globalThis.generatedApiCode` | API code for external API movement tests          |
-| `GENERATED_DEFRA_ID` | `global-setup.js` | `globalThis.generatedDefraId` | Organisation ID for backend bulk upload test data |
+### Run-Scoped Identifiers
+
+Tests read these through `globalThis.testConfig`. The getters read `process.env`, which workers inherit from global setup.
+
+| Variable          | Set by                           | Exposed in tests as                    | Purpose                                  |
+| ----------------- | -------------------------------- | -------------------------------------- | ---------------------------------------- |
+| `API_CODE`        | Environment or `global-setup.js` | `globalThis.testConfig.apiCode`        | API code for external API movement tests |
+| `ORGANISATION_ID` | Environment or `global-setup.js` | `globalThis.testConfig.organisationId` | Organisation ID for bulk upload payloads |
 
 ## Setting Up Environment Variables
 
@@ -77,6 +82,10 @@ const clientSecret = globalThis.testConfig.cognitoClientSecret
 
 // Access environment
 const env = globalThis.testConfig.environment
+
+// Organisation identifiers for this run
+const apiCode = globalThis.testConfig.apiCode
+const organisationId = globalThis.testConfig.organisationId
 ```
 
 ## Security Notes

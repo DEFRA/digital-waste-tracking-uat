@@ -28,6 +28,26 @@ export class TestConfig {
   }
 
   /**
+   * Get the API code from environment variables
+   * Mainly for use in production environments as the tests create a new API code for each run.
+   * This is set in the globalSetup.js file.
+   * @returns {string} The API code
+   */
+  get apiCode() {
+    return process.env.API_CODE
+  }
+
+  /**
+   * Get the organisation ID from environment variables
+   * Mainly for use in production environments as the tests create a new organisation for each run.
+   * This is set in the globalSetup.js file.
+   * @returns {string} The organisation ID
+   */
+  get organisationId() {
+    return process.env.ORGANISATION_ID
+  }
+
+  /**
    * Get the Cognito client ID from environment variables
    * @returns {string} The client ID
    */
@@ -61,17 +81,6 @@ export class TestConfig {
 
   get cognitoOAuthBaseUrl() {
     return process.env.COGNITO_OAUTH_BASE_URL
-  }
-
-  /**
-   * Organisation API code for testing GIO org exclude behaviour in pre-prod environments.
-   * This shouldn't be used in the production smoke tests.
-   * @returns {string} The API code
-   */
-  get apiCodeInGioOrgExcludeList() {
-    return process.env.API_CODE_IN_GIO_ORG_EXCLUDE_LIST
-      ? process.env.API_CODE_IN_GIO_ORG_EXCLUDE_LIST
-      : undefined
   }
 
   // Service auth password for the Waste Movement External API to connect to other services
@@ -175,6 +184,15 @@ export class TestConfig {
    */
   get isAdditionalLoggingEnabled() {
     return process.env.API_LOGGING === 'true'
+  }
+
+  /**
+   * Whether Allure attachments should redact sensitive header values.
+   * Set for production smoke runs.
+   * @returns {boolean}
+   */
+  get redactSensitiveAllureHeaders() {
+    return process.env.REDACT_SENSITIVE_ALLURE_HEADERS === 'true'
   }
 
   /**

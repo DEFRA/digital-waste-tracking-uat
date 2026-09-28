@@ -10,7 +10,8 @@
  * @returns {Object} Complete waste receipt data object
  */
 export const generateBaseWasteReceiptData = () => ({
-  apiCode: globalThis.generatedApiCode,
+  // API code is determined during global-setup
+  apiCode: globalThis.testConfig.apiCode,
   dateTimeReceived: new Date().toISOString(),
   wasteItems: [
     {
@@ -64,8 +65,8 @@ export const generateBaseWasteReceiptData = () => ({
  */
 export const generateBaseBulkUploadMovement = () => ({
   submittingOrganisation: {
-    // Defra org ID is determined during global-setup based on the API code being used
-    defraCustomerOrganisationId: globalThis.generatedDefraId
+    // Defra org ID is determined during global-setup
+    defraCustomerOrganisationId: globalThis.testConfig.organisationId
   },
   dateTimeReceived: new Date().toISOString(),
   wasteItems: [

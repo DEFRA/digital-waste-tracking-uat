@@ -41,7 +41,7 @@ describe('Retrieve movement (Functionality only in Pre Prod)', () => {
       expect(movement.revision).toEqual(expect.any(Number))
       expect(
         movement.submittingOrganisation.defraCustomerOrganisationId
-      ).toEqual(process.env.GENERATED_DEFRA_ID)
+      ).toEqual(globalThis.testConfig.organisationId)
       expect(movement.traceId).toEqual(expect.any(String))
     })
 
