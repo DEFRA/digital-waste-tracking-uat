@@ -2,6 +2,19 @@ import { ApiFactory } from '../../apis/api-factory.js'
 import { randomUUID } from 'crypto'
 import { testConfig } from '../test-config.js'
 
+
+/**
+ * @param {Object} response
+ * @param {number} response.statusCode
+ * @param {(response: Object) => boolean} assertionFunction
+ * @param {string} message
+ */
+function assertResponse(response, assertionFunction, message) {
+  if (assertionFunction(response)) {
+    throw new Error(`${message}: status ${response.statusCode}`)
+  }
+}
+
 /**
  * Runs once before all test workers.
  * ZAP session setup only executes when PROXY_MODE=zap. Clears the ZAP session and disables selected passive scan rules for the Docker Compose harness.
@@ -27,28 +40,26 @@ export default async function globalSetup() {
         randomUUID(),
         organisationId
       )
-    if (organisationResponse.statusCode !== 200) {
-      throw new Error(
-        `createOrUpdateOrganisation failed with status ${organisationResponse.statusCode}`
-      )
-    }
-
+    assertResponse(
+      organisationResponse,
+      (response) => response.statusCode !== 200,
+      'createOrUpdateOrganisation failed'
+    )
     const apiCodeResponse =
       await globalThis.apis.wasteOrganisationBackendAPI.getAllApiCodesForOrganisation(
         organisationId
       )
-    if (apiCodeResponse.statusCode !== 200) {
-      throw new Error(
-        `getAllApiCodesForOrganisation failed with status ${apiCodeResponse.statusCode}`
-      )
-    }
-    const apiCode = apiCodeResponse.json?.apiCodes?.[0]?.code
-    if (typeof apiCode !== 'string') {
-      throw new Error(
-        `getAllApiCodesForOrganisation returned an invalid api code`
-      )
-    }
-
+    assertResponse(
+      apiCodeResponse,
+      (response) => response.statusCode !== 200,
+      'getAllApiCodesForOrganisation failed'
+    )
+    assertResponse(
+      apiCodeResponse,
+      (response) => typeof response.json?.apiCodes?.[0]?.code !== 'string',
+      'getAllApiCodesForOrganisation returned an invalid api code'
+    )
+    const apiCode = apiCodeResponse.json.apiCodes[0].code
     process.env.API_CODE = apiCode
     process.env.ORGANISATION_ID = organisationId
     // eslint-disable-next-line no-console
@@ -59,14 +70,12 @@ export default async function globalSetup() {
 
   if (globalThis.testConfig.proxyMode === 'zap') {
     const sessionResponse = await globalThis.apis.zapApi.newSession()
-    if (
-      sessionResponse.statusCode !== 200 ||
-      sessionResponse.json?.Result !== 'OK'
-    ) {
-      throw new Error(
-        `ZAP newSession failed with status ${sessionResponse.statusCode} and result ${sessionResponse.json?.Result}`
-      )
-    }
+    assertResponse(
+      sessionResponse,
+      (response) =>
+        response.statusCode !== 200 || response.json?.Result !== 'OK',
+      `ZAP newSession failed with result ${sessionResponse.json?.Result}`
+    )
 
     // Docker Compose CI uses HTTP + Basic auth on the internal network; disable in ZAP for this harness only.
     const zapPassiveScanRulesToDisable = ['10105']
@@ -77,15 +86,12 @@ export default async function globalSetup() {
           pluginId,
           'OFF'
         )
-      if (
-        thresholdResponse.statusCode !== 200 ||
-        thresholdResponse.json?.Result !== 'OK'
-      ) {
-        throw new Error(
-          `ZAP setPassiveScannerAlertThreshold failed for plugin ${pluginId} ` +
-            `(status ${thresholdResponse.statusCode}, result ${thresholdResponse.json?.Result})`
-        )
-      }
+      assertResponse(
+        thresholdResponse,
+        (response) =>
+          response.statusCode !== 200 || response.json?.Result !== 'OK',
+        `ZAP setPassiveScannerAlertThreshold failed for plugin ${pluginId} with result ${thresholdResponse.json?.Result}`
+      )
     }
   }
 }
