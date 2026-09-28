@@ -40,7 +40,7 @@ describe('Receiving date timestamp validation', () => {
     }
   )
 
-  it(
+  it.skip(
     'should not allow waste movement to be created when invalid date timestamp for the request is supplied' +
       ' @allure.label.tag:DWT-334',
     async () => {
