@@ -2,7 +2,6 @@ import { ApiFactory } from '../../apis/api-factory.js'
 import { randomUUID } from 'crypto'
 import { testConfig } from '../test-config.js'
 
-
 /**
  * @param {Object} response
  * @param {number} response.statusCode
