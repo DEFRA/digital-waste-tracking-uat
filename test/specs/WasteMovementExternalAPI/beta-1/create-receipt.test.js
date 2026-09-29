@@ -89,11 +89,13 @@ describe('Beta-1 Receipt Creation', () => {
         )
 
       expect(response.statusCode).toBe(404)
+      expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
-        type: 'https://waste-tracking.service.gov.uk/problems/not-found',
+        type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/not-found',
         title: 'Not Found',
         detail: `No delivery exists with delivery ID: ${beta1.unknownResourceId}`,
-        instance: `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`
+        instance: `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+        requestId: response.headers['x-request-id']
       })
     })
   })

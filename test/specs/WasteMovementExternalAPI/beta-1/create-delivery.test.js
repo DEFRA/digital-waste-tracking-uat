@@ -123,11 +123,13 @@ describe('Beta-1 Delivery Creation', () => {
         )
 
       expect(response.statusCode).toBe(400)
+      expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
-        type: 'https://waste-tracking.service.gov.uk/problems/bad-request',
+        type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
         title: 'Bad Request',
         detail: `No movement exists for movement ID(s): ${beta1.unknownResourceId}`,
-        instance: '/beta-1/deliveries'
+        instance: '/beta-1/deliveries',
+        requestId: response.headers['x-request-id']
       })
     })
 
@@ -152,11 +154,13 @@ describe('Beta-1 Delivery Creation', () => {
         )
 
       expect(response.statusCode).toBe(400)
+      expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
-        type: 'https://waste-tracking.service.gov.uk/problems/bad-request',
+        type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
         title: 'Bad Request',
         detail: `No movement exists for movement ID(s): ${beta1.unknownResourceId}`,
-        instance: '/beta-1/deliveries'
+        instance: '/beta-1/deliveries',
+        requestId: response.headers['x-request-id']
       })
     })
   })

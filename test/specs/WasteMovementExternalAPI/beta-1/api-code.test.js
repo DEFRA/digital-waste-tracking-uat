@@ -22,11 +22,13 @@ describe('Beta-1 API Code', () => {
         )
 
       expect(response.statusCode).toBe(400)
+      expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
-        type: 'https://waste-tracking.service.gov.uk/problems/bad-request',
+        type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
         title: 'Bad Request',
         detail: 'the API Code supplied is invalid',
-        instance: '/beta-1/movements'
+        instance: '/beta-1/movements',
+        requestId: response.headers['x-request-id']
       })
     })
 
@@ -47,11 +49,13 @@ describe('Beta-1 API Code', () => {
         )
 
       expect(response.statusCode).toBe(400)
+      expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
-        type: 'https://waste-tracking.service.gov.uk/problems/bad-request',
+        type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
         title: 'Bad Request',
         detail: 'the API Code supplied is invalid',
-        instance: `/beta-1/movements/${movementId}/collection`
+        instance: `/beta-1/movements/${movementId}/collection`,
+        requestId: response.headers['x-request-id']
       })
     })
 
@@ -79,11 +83,13 @@ describe('Beta-1 API Code', () => {
         )
 
       expect(response.statusCode).toBe(400)
+      expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
-        type: 'https://waste-tracking.service.gov.uk/problems/bad-request',
+        type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
         title: 'Bad Request',
         detail: 'the API Code supplied is invalid',
-        instance: '/beta-1/deliveries'
+        instance: '/beta-1/deliveries',
+        requestId: response.headers['x-request-id']
       })
     })
 
@@ -119,11 +125,13 @@ describe('Beta-1 API Code', () => {
         )
 
       expect(response.statusCode).toBe(400)
+      expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
-        type: 'https://waste-tracking.service.gov.uk/problems/bad-request',
+        type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
         title: 'Bad Request',
         detail: 'the API Code supplied is invalid',
-        instance: `/beta-1/deliveries/${deliveryId}/receipt`
+        instance: `/beta-1/deliveries/${deliveryId}/receipt`,
+        requestId: response.headers['x-request-id']
       })
     })
 
@@ -137,11 +145,13 @@ describe('Beta-1 API Code', () => {
         )
 
       expect(response.statusCode).toBe(400)
+      expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
-        type: 'https://waste-tracking.service.gov.uk/problems/bad-request',
+        type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
         title: 'Bad Request',
         detail: 'the API Code supplied is invalid',
-        instance: '/beta-1/receipts'
+        instance: '/beta-1/receipts',
+        requestId: response.headers['x-request-id']
       })
     })
   })

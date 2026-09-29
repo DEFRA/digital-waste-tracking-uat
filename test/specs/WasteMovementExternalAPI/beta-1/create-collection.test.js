@@ -54,11 +54,13 @@ describe('Beta-1 Collection Creation', () => {
         )
 
       expect(response.statusCode).toBe(404)
+      expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
-        type: 'https://waste-tracking.service.gov.uk/problems/not-found',
+        type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/not-found',
         title: 'Not Found',
         detail: 'movementId not found',
-        instance: `/beta-1/movements/${beta1.unknownResourceId}/collection`
+        instance: `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+        requestId: response.headers['x-request-id']
       })
     })
   })
