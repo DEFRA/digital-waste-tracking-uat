@@ -6,37 +6,26 @@ alwaysApply: true
 
 # Jest Setup Patterns
 
-## Global Configuration Setup
+## Process boundaries
 
-- **Module Load Timing**: Set `globalThis.testConfig` at module load time (top-level), NOT in `beforeAll()` hooks
-- **Why**: Test files are parsed before hooks run, so conditional test skipping needs access to config at parse time
-- **Pattern**:
-  ```javascript
-  // test/support/jest/setup.js
-  import { testConfig } from '../../support/test-config.js'
-  
-  // Set testConfig globally at module load time (before tests are parsed)
-  // This is needed for conditional test skipping to work
-  globalThis.testConfig = testConfig
-  ```
+Jest uses two `globalThis` scopes:
 
-## API Instance Management
+- **Parent process**: `global-setup.js` and `global-teardown.js` share one `globalThis`. Teardown reuses `globalThis.testConfig` and `globalThis.apis` from setup. Leave those clients open in setup; teardown always closes them after any ZAP report writes.
+- **Each test worker**: `setup.js` and that worker's tests share a different `globalThis`. Workers cannot read the parent's `globalThis`.
 
-- **Fresh Instances**: Create fresh API instances in `beforeEach()` to ensure test isolation
-- **Cleanup**: Delete `globalThis.apis` in `afterEach()` to prevent state leakage
-- **Pattern**:
-  ```javascript
-  beforeEach(() => {
-    globalThis.apis = ApiFactory.create() // Fresh instance per test
-  })
-  
-  afterEach(() => {
-    delete globalThis.apis // Clean up after test
-  })
-  ```
+Share run-scoped values with workers through `process.env` (workers inherit it). `global-setup.js` sets `API_CODE` and `ORGANISATION_ID`. Tests read them through `globalThis.testConfig` getters. `globalSetup` always runs; do not gate it with an environment flag.
 
-## setupFilesAfterEnv Configuration
+## Configuration and API clients
 
-- **Use setupFilesAfterEnv**: Configure in `jest.config.js` to run setup before all tests
-- **Module-Level Code**: Code at module level in setup files runs before test files are parsed
-- **Hook-Level Code**: Hooks (`beforeAll`, `beforeEach`) run during test execution, after parsing
+Assign `globalThis.testConfig` and create `globalThis.apis` inside the process that uses them:
+
+- Parent: at the start of `globalSetup`.
+- Workers: assign `globalThis.testConfig` in `beforeAll` in `setup.js`. Create `globalThis.apis` in `beforeEach` and close it in `afterEach`.
+
+Create a new API client set for each test so request state, including the bearer token, does not carry over. API classes read `globalThis.testConfig`. Do not import `testConfig` from `test/apis/`.
+
+`globalThis.testConfig` is assigned in `beforeAll`, after test files are parsed. Do not branch `describe` or `it` on it at module scope. Skip auth-dependent behaviour at runtime inside helpers such as `authenticateAndSetToken()`.
+
+## Organisation and API code
+
+When `API_CODE` or `ORGANISATION_ID` is unset, `global-setup.js` creates an organisation, reads its API code, and stores both on `process.env`. Production must already have both set; setup throws if either is missing. Tests use `globalThis.testConfig.apiCode` and `globalThis.testConfig.organisationId`.

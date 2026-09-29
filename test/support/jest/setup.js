@@ -1,17 +1,15 @@
 import { ApiFactory } from '../../apis/api-factory.js'
-import { testConfig } from '../../support/test-config.js'
+import { testConfig } from '../test-config.js'
 
-// Set testConfig globally at module load time (before tests are parsed).
-globalThis.testConfig = testConfig
-globalThis.generatedApiCode = process.env.GENERATED_API_CODE
-globalThis.generatedDefraId = process.env.GENERATED_DEFRA_ID
-
-// Setup before each test
-beforeEach(async () => {
-  globalThis.apis = ApiFactory.create() // Fresh instance per test, each worker has its own instance
+// globalThis is only global within this process. Independent parallel runs, and the setup and teardown phases, each run in their own process.
+beforeAll(() => {
+  globalThis.testConfig = testConfig
 })
 
-// Cleanup after each test
+beforeEach(() => {
+  globalThis.apis = ApiFactory.create()
+})
+
 afterEach(async () => {
   await globalThis.apis?.close()
   delete globalThis.apis

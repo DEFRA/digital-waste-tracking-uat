@@ -1,13 +1,15 @@
 import { ApiFactory } from '../../apis/api-factory.js'
-import { testConfig } from '../test-config.js'
 import { randomUUID } from 'crypto'
+import { testConfig } from '../test-config.js'
 
 /**
- * @param {{ statusCode: number }} response
+ * @param {Object} response
+ * @param {number} response.statusCode
+ * @param {(response: Object) => boolean} assertionFunction
  * @param {string} message
  */
-function assertOkResponse(response, message) {
-  if (response.statusCode !== 200) {
+function assertResponse(response, assertionFunction, message) {
+  if (assertionFunction(response)) {
     throw new Error(`${message}: status ${response.statusCode}`)
   }
 }
@@ -18,91 +20,77 @@ function assertOkResponse(response, message) {
  * @returns {Promise<void>}
  */
 export default async function globalSetup() {
+  // globalThis is the same as the one in the globalTeardown.js file. But not the same as the one in the tests and the setup.js file.
   globalThis.testConfig = testConfig
-  const apis = ApiFactory.create()
+  globalThis.apis = ApiFactory.create()
 
-  try {
-    let apiCode
-    let organisationId
-
-    if (testConfig.apiCodeInGioOrgExcludeList === undefined) {
-      // Create a new organisation and get the API code
-      organisationId = randomUUID()
-      const organisationResponse =
-        await apis.wasteOrganisationBackendAPI.createOrUpdateOrganisation(
-          randomUUID(),
-          organisationId
-        )
-      // TODO - Discuss with Lewis: globalSetup runs in a completely separate Node.js process before Jest initialises, so 'expect' is not available
-      assertOkResponse(organisationResponse, 'Failed to create organisation')
-
-      const apiCodeResponse =
-        await apis.wasteOrganisationBackendAPI.getAllApiCodesForOrganisation(
-          organisationId
-        )
-
-      assertOkResponse(
-        apiCodeResponse,
-        'Failed to get API codes for organisation'
+  if (
+    globalThis.testConfig.apiCode === undefined ||
+    globalThis.testConfig.organisationId === undefined
+  ) {
+    if (globalThis.testConfig.environment === 'prod') {
+      throw new Error(
+        'API code and organisation ID must be set in the test config for production environments'
       )
-
-      apiCode = apiCodeResponse.json.apiCodes[0].code
-    } else {
-      const apiCodes = testConfig.apiCodeInGioOrgExcludeList
-        .split(',')
-        .map((code) => code.trim())
-        .filter(Boolean)
-      apiCode = apiCodes[Math.floor(Math.random() * apiCodes.length)]
     }
-
-    // TODO - Discuss with Lewis: The workers cannot 'see' globalThis from this file, so we have to use process.env to share the generated API code.
-    // We can move this logic into the workers (setup.js) which will run before each test, but we will be creating new API codes via the organisation API for each test, which may be undesirable.
-    // For now, we will generate one API code for the entire test run and share it via an environment variable with the worker nodes.
-    process.env.GENERATED_API_CODE = apiCode
-
-    if (organisationId) {
-      process.env.GENERATED_DEFRA_ID = organisationId
-    } else {
-      const organisationResponse =
-        await apis.wasteOrganisationBackendAPI.getOrganisationByApiCode(apiCode)
-      assertOkResponse(
-        organisationResponse,
-        'Failed to get organisation by API code'
+    const organisationId = randomUUID()
+    const organisationResponse =
+      await globalThis.apis.wasteOrganisationBackendAPI.createOrUpdateOrganisation(
+        randomUUID(),
+        organisationId
       )
+    assertResponse(
+      organisationResponse,
+      (response) => response.statusCode !== 200,
+      'createOrUpdateOrganisation failed'
+    )
+    const apiCodeResponse =
+      await globalThis.apis.wasteOrganisationBackendAPI.getAllApiCodesForOrganisation(
+        organisationId
+      )
+    assertResponse(
+      apiCodeResponse,
+      (response) => response.statusCode !== 200,
+      'getAllApiCodesForOrganisation failed'
+    )
+    assertResponse(
+      apiCodeResponse,
+      (response) => typeof response.json?.apiCodes?.[0]?.code !== 'string',
+      'getAllApiCodesForOrganisation returned an invalid api code'
+    )
+    const apiCode = apiCodeResponse.json.apiCodes[0].code
+    process.env.API_CODE = apiCode
+    process.env.ORGANISATION_ID = organisationId
+    // eslint-disable-next-line no-console
+    console.log(
+      `\n\nCreated Organisation and Api Code and set in environment variables process.env.API_CODE and process.env.ORGANISATION_ID.\n\n`
+    )
+  }
 
-      process.env.GENERATED_DEFRA_ID =
-        organisationResponse.json.defraCustomerOrganisationId
-    }
+  if (globalThis.testConfig.proxyMode === 'zap') {
+    const sessionResponse = await globalThis.apis.zapApi.newSession()
+    assertResponse(
+      sessionResponse,
+      (response) =>
+        response.statusCode !== 200 || response.json?.Result !== 'OK',
+      `ZAP newSession failed with result ${sessionResponse.json?.Result}`
+    )
 
-    if (testConfig.proxyMode === 'zap') {
-      const sessionResponse = await apis.zapApi.newSession()
-      if (
-        sessionResponse.statusCode !== 200 ||
-        sessionResponse.json?.Result !== 'OK'
-      ) {
-        throw new Error(
-          `ZAP newSession failed with status ${sessionResponse.statusCode} and result ${sessionResponse.json?.Result}`
+    // Docker Compose CI uses HTTP + Basic auth on the internal network; disable in ZAP for this harness only.
+    const zapPassiveScanRulesToDisable = ['10105']
+
+    for (const pluginId of zapPassiveScanRulesToDisable) {
+      const thresholdResponse =
+        await globalThis.apis.zapApi.setPassiveScannerAlertThreshold(
+          pluginId,
+          'OFF'
         )
-      }
-
-      // Docker Compose CI uses HTTP + Basic auth on the internal network; disable in ZAP for this harness only.
-      const zapPassiveScanRulesToDisable = ['10105']
-
-      for (const pluginId of zapPassiveScanRulesToDisable) {
-        const thresholdResponse =
-          await apis.zapApi.setPassiveScannerAlertThreshold(pluginId, 'OFF')
-        if (
-          thresholdResponse.statusCode !== 200 ||
-          thresholdResponse.json?.Result !== 'OK'
-        ) {
-          throw new Error(
-            `ZAP setPassiveScannerAlertThreshold failed for plugin ${pluginId} ` +
-              `(status ${thresholdResponse.statusCode}, result ${thresholdResponse.json?.Result})`
-          )
-        }
-      }
+      assertResponse(
+        thresholdResponse,
+        (response) =>
+          response.statusCode !== 200 || response.json?.Result !== 'OK',
+        `ZAP setPassiveScannerAlertThreshold failed for plugin ${pluginId} with result ${thresholdResponse.json?.Result}`
+      )
     }
-  } finally {
-    await apis.close()
   }
 }

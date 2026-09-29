@@ -8,7 +8,7 @@ alwaysApply: true
 
 - **Test Independence**: Each test should be independent and runnable in isolation
 - **Parallel-Safe**: Tests should be safe for parallel execution
-- **No Shared State**: Avoid global state that could affect other tests
+- **No Shared Test Data**: Do not share mutable payloads or results between tests. The run's organisation and API code are shared on purpose (see jest-setup.mdc)
 - **Fresh Test Data**: Each test should generate fresh test data in `beforeEach` (see test-data.mdc for details)
 - **Resource Cleanup**: Let Jest handle cleanup automatically
-- **Fresh API Instances**: Create fresh API instances in `beforeEach()` and cleanup in `afterEach()` (see jest-setup.mdc for details)
+- **API Clients**: Create `globalThis.apis` in `beforeEach()` and close it in `afterEach()` (see jest-setup.mdc)

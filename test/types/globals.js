@@ -25,22 +25,10 @@ globalThis.apis = null
  * Global test configuration
  * @type {import('../support/test-config.js').TestConfig}
  */
-globalThis.testConfig = null
+globalThis.testConfig = undefined
 
 /**
  * Allure reporter API provided by allure-jest during test execution
  * @type {Allure}
  */
 globalThis.allure = undefined
-
-/**
- * API code generated in global setup for the test run
- * @type {string|undefined}
- */
-globalThis.generatedApiCode = undefined
-
-/**
- * Defra customer organisation ID resolved from the generated API code in global setup
- * @type {string|undefined}
- */
-globalThis.generatedDefraId = undefined
