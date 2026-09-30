@@ -1,0 +1,39 @@
+meta {
+  name: 09 Collection movement not found
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{baseUrl}}/beta-1/movements/00NOTFND/collection
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "apiCode": "{{apiCode}}"
+  }
+}
+
+docs {
+  404 Not Found. No movement exists with id `00NOTFND`.
+
+  `detail` is `movementId not found`. Instance is `/beta-1/movements/00NOTFND/collection`.
+}
+
+tests {
+  test("status is 404", function() {
+    expect(res.getStatus()).to.equal(404);
+  });
+
+  test("collection movement is not found", function() {
+    expect(res.body.detail).to.equal("movementId not found");
+    expect(res.body.instance).to.equal("/beta-1/movements/00NOTFND/collection");
+  });
+}

@@ -1,0 +1,39 @@
+meta {
+  name: 04 Several validation errors
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/beta-1/movements
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "orgName": "not-allowed"
+  }
+}
+
+docs {
+  400 Bad Request. Two schema rules fail together: `apiCode` is missing, and `orgName` is not allowed.
+
+  `detail` is `2 validation errors occurred`. `errors` has two items. Their order is not fixed.
+}
+
+tests {
+  test("status is 400", function() {
+    expect(res.getStatus()).to.equal(400);
+  });
+
+  test("both field errors are returned", function() {
+    expect(res.body.detail).to.equal("2 validation errors occurred");
+    expect(res.body.errors).to.have.length(2);
+  });
+}

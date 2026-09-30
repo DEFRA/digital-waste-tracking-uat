@@ -1,0 +1,46 @@
+meta {
+  name: 12 Payload too large
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/beta-1/movements
+  body: text
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:text {
+x
+}
+
+script:pre-request {
+  req.setBody("x".repeat(1048577));
+}
+
+docs {
+  413 Request Entity Too Large. The body is one byte over the 1 MB limit (1048576).
+
+  `detail` is `Payload content length greater than maximum allowed: 1048576`.
+
+  Type: https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/request-entity-too-large
+
+  The pre-request script builds the oversized body so this file stays small.
+}
+
+tests {
+  test("status is 413", function() {
+    expect(res.getStatus()).to.equal(413);
+  });
+
+  test("payload limit is named", function() {
+    expect(res.body.title).to.equal("Request Entity Too Large");
+    expect(res.body.detail).to.equal("Payload content length greater than maximum allowed: 1048576");
+  });
+}

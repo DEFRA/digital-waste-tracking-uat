@@ -1,0 +1,46 @@
+meta {
+  name: 01 Missing required field
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/beta-1/movements
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+  }
+}
+
+docs {
+  400 Bad Request. The body is JSON, and `apiCode` is missing.
+
+  `detail` is `1 validation error occurred`. `errors` has one item: `"apiCode" is required`, pointer `/apiCode`, errorType `NotProvided`.
+
+  Type: https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request
+}
+
+tests {
+  test("status is 400", function() {
+    expect(res.getStatus()).to.equal(400);
+  });
+
+  test("content type is problem json", function() {
+    expect(res.getHeader("content-type")).to.include("application/problem+json");
+  });
+
+  test("missing apiCode is reported", function() {
+    expect(res.body.title).to.equal("Bad Request");
+    expect(res.body.detail).to.equal("1 validation error occurred");
+    expect(res.body.errors[0].errorType).to.equal("NotProvided");
+    expect(res.body.errors[0].pointer).to.equal("/apiCode");
+  });
+}

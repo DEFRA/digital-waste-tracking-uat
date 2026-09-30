@@ -1,0 +1,39 @@
+meta {
+  name: 03 Invalid field format
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/beta-1/movements
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "apiCode": "not-a-uuid"
+  }
+}
+
+docs {
+  400 Bad Request. `apiCode` is present and is not a UUID.
+
+  `errors` has one item: `must match format "uuid"`, pointer `/apiCode`, errorType `InvalidFormat`.
+}
+
+tests {
+  test("status is 400", function() {
+    expect(res.getStatus()).to.equal(400);
+  });
+
+  test("apiCode must be a uuid", function() {
+    expect(res.body.errors[0].errorType).to.equal("InvalidFormat");
+    expect(res.body.errors[0].message).to.equal('must match format "uuid"');
+  });
+}

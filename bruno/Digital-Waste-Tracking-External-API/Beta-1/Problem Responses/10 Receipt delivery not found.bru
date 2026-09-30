@@ -1,0 +1,38 @@
+meta {
+  name: 10 Receipt delivery not found
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{baseUrl}}/beta-1/deliveries/00NOTFND/receipt
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "apiCode": "{{apiCode}}"
+  }
+}
+
+docs {
+  404 Not Found. No delivery exists with id `00NOTFND`.
+
+  `detail` is `No delivery exists with delivery ID: 00NOTFND`. Instance is `/beta-1/deliveries/00NOTFND/receipt`.
+}
+
+tests {
+  test("status is 404", function() {
+    expect(res.getStatus()).to.equal(404);
+  });
+
+  test("receipt delivery is not found", function() {
+    expect(res.body.detail).to.equal("No delivery exists with delivery ID: 00NOTFND");
+  });
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Problem Responses
+  seq: 5
+}
+
+auth {
+  mode: inherit
+}
+
+docs {
+  Demo of the beta-1 problem responses (DWTC-183).
+
+  Run these in order. Each request is a failed call. The Docs tab on the request says what status, title, and body to expect.
+
+  Every problem response uses `Content-Type: application/problem+json` and includes `type`, `title`, `instance`, and `requestId`. `requestId` matches the `x-request-id` response header. The body has no `status` field.
+
+  - 400 with an `errors` array: the JSON is valid, but a field breaks the schema.
+  - 400 with no `errors` array: invalid JSON, an unrecognised API code, or a delivery movement id that does not exist.
+  - 404: unknown path, unknown collection movement, or unknown receipt delivery.
+  - 415: the content type is not JSON.
+  - 413: the body is larger than 1 MB.
+
+  Select a Beta-1 environment and set `apiCode` before sending. Authentication is inherited from the collection.
+}

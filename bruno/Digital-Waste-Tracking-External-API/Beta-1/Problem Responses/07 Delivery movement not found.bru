@@ -1,0 +1,40 @@
+meta {
+  name: 07 Delivery movement not found
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/beta-1/deliveries
+  body: json
+  auth: inherit
+}
+
+headers {
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "apiCode": "{{apiCode}}",
+    "movementIds": ["00NOTFND"]
+  }
+}
+
+docs {
+  400 Bad Request. The body is valid, and no movement exists for `00NOTFND`.
+
+  `detail` is `No movement exists for movement ID(s): 00NOTFND`. There is no `errors` array. An unknown delivery movement is 400, not 404.
+}
+
+tests {
+  test("status is 400", function() {
+    expect(res.getStatus()).to.equal(400);
+  });
+
+  test("missing movement is named in detail", function() {
+    expect(res.body.detail).to.equal("No movement exists for movement ID(s): 00NOTFND");
+    expect(res.body.errors).to.equal(undefined);
+  });
+}
