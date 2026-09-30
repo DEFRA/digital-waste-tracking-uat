@@ -40,7 +40,7 @@ Use the four-level hierarchy:
 | Level       | Where                 | Example                             |
 | ----------- | --------------------- | ----------------------------------- |
 | API         | Folder                | `WasteMovementExternalAPI/`         |
-| Feature     | Subfolder             | `CreateWasteMovement/`              |
+| Feature     | Subfolder             | `CreateWasteMovement/` or `beta-1/` |
 | Behavior    | describe block + file | `pops-source-of-components.test.js` |
 | Expectation | it block              | `should reject ... when ...`        |
 
@@ -60,7 +60,7 @@ For each scenario note:
 
 - describe/it name
 - API method (`globalThis.apis.*`)
-- test data changes (prefer `generateBaseWasteReceiptData()` and test-data-manager helpers)
+- test data changes (receipt: `generateBaseWasteReceiptData()`; beta-1 National Waste Movements: `beta1` generators in the test data manager)
 - expected status code and response shape
 - Jira tag: `@allure.label.tag:<TICKET>` and `addAllureLink('/<TICKET>', '<TICKET>', 'jira')`
 

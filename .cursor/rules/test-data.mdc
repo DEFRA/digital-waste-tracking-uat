@@ -6,7 +6,7 @@ alwaysApply: true
 
 # Test Data Management & Isolation
 
-- **Centralized Test Data**: Always use `generateBaseWasteReceiptData()` and similar functions from the test data manager for consistent test data generation
+- **Centralized Test Data**: Use generators from the test data manager. Receipt tests use `generateBaseWasteReceiptData()` and `generateBaseBulkUploadMovement()`. Beta-1 National Waste Movements tests use the `beta1` generators (`generateBaseMovementData`, `generateBaseCollectionData`, `generateBaseDeliveryData`, `generateBaseReceiptData`, `generateBaseReceiptWithoutDeliveryIdData`). See `beta-1-national-waste-movements.mdc`
 - **Run-Scoped Identifiers**: Movement payloads take `apiCode` and `organisationId` from `globalThis.testConfig`. Those values are set once per run in global setup (`API_CODE`, `ORGANISATION_ID`), not generated inside each test
 - **Data Isolation**: Each test should generate fresh test data in `beforeEach` to ensure test independence
 - **No Hardcoded Test Data**: Avoid inline test data creation in test files
