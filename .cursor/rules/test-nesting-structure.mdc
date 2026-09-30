@@ -12,8 +12,8 @@ Tests must follow a consistent four-level nesting structure that mirrors the bus
 
 ### Level 1: API (Folder Structure)
 - **Purpose**: Groups all tests for a specific API endpoint or service
-- **Implementation**: Folder level (e.g., `WasteRecievingAPI/`, `Authentication/`)
-- **Naming**: Use API/service name (e.g., `WasteRecievingAPI`, `Authentication`)
+- **Implementation**: Folder level (e.g., `WasteMovementExternalAPI/`, `Authentication/`)
+- **Naming**: Use API/service name (e.g., `WasteMovementExternalAPI`, `Authentication`)
 - **Scope**: Covers all operations for that API
 
 ### Level 2: Feature (File Structure)
@@ -52,12 +52,14 @@ test/specs/
 ### Folder/File Structure (Levels 1-2)
 ```
 test/specs/
-├── WasteRecievingAPI/                    # Level 1: API (Folder)
-│   └── CreateWasteMovement/              # Level 2: Feature (Folder)
-│       ├── ewc-codes.test.js            # Level 3: Behavior (File)
-│       └── hazardous-concentration.test.js
+├── WasteMovementExternalAPI/             # Level 1: API (Folder)
+│   ├── CreateWasteMovement/              # Level 2: Feature (Folder)
+│   │   ├── ewc-codes.test.js             # Level 3: Behavior (File)
+│   │   └── hazardous-concentration.test.js
+│   └── beta-1/                           # API version folder (kebab-case)
+│       └── create-collection.test.js
 └── Authentication/                       # Level 1: API (Folder)
-    └── oauth2-authentication.test.js    # Level 2: Feature (File)
+    └── oauth2-authentication.test.js     # Level 2: Feature (File)
 ```
 
 ### Code Structure (Levels 3-4)
@@ -88,7 +90,8 @@ describe('EWC Codes Validation', () => {                      // Level 3: Behavi
 ## File Naming in Nesting Structure
 
 - **Test Files**: Use kebab-case with behavior name (e.g., `ewc-codes.test.js`, `hazardous-concentration.test.js`)
-- **Directories**: Use PascalCase for API names and operations (e.g., `WasteRecievingAPI/CreateWasteMovement/`) to distinguish from file names
+- **Directories**: Use PascalCase for API names and operations (e.g., `WasteMovementExternalAPI/CreateWasteMovement/`) to distinguish from file names
+- **API version folders**: A version such as `beta-1` is kebab-case under the API folder. Behavior files live directly in that folder. See `beta-1-national-waste-movements.mdc`
 
 ## Benefits
 
