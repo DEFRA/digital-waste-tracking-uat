@@ -123,14 +123,12 @@ export const beta1 = {
    * Well-formed ID that does not exist.
    */
   unknownResourceId: '00NOTFND',
-
   /**
    * Generate base movement data with only required fields for POST /beta-1/movements.
    * @returns {Object} Movement payload containing apiCode
    */
   generateBaseMovementData: () => ({
-    // apiCode: globalThis.generatedApiCode
-    apiCode: testConfig.apiCode
+    apiCode: testConfig.apiCodeStubbed
   }),
 
   /**
@@ -138,7 +136,7 @@ export const beta1 = {
    * @returns {Object} Collection payload containing apiCode
    */
   generateBaseCollectionData: () => ({
-    apiCode: testConfig.apiCode
+    apiCode: testConfig.apiCodeStubbed
   }),
 
   /**
@@ -147,7 +145,7 @@ export const beta1 = {
    * @returns {Object} Delivery payload containing apiCode and movementIds
    */
   generateBaseDeliveryData: (movementIds) => ({
-    apiCode: testConfig.apiCode,
+    apiCode: testConfig.apiCodeStubbed,
     movementIds
   }),
 
@@ -156,7 +154,7 @@ export const beta1 = {
    * @returns {Object} Receipt payload containing apiCode
    */
   generateBaseReceiptData: () => ({
-    apiCode: testConfig.apiCode
+    apiCode: testConfig.apiCodeStubbed
   }),
 
   /**
@@ -164,7 +162,7 @@ export const beta1 = {
    * @returns {Object} Receipt payload containing apiCode and reason
    */
   generateBaseReceiptWithoutDeliveryIdData: () => ({
-    apiCode: testConfig.apiCode,
+    apiCode: testConfig.apiCodeStubbed,
     reason:
       'No delivery was recorded prior to receipt; waste received directly from the producer.'
   })
