@@ -38,41 +38,6 @@ describe('Beta-1 Movement Creation', () => {
 
   describe('Problem Responses', () => {
     it(
-      'should reject creating a movement when apiCode is missing' +
-        ' @allure.label.tag:DWTC-183',
-      async () => {
-        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
-
-        delete movementData.apiCode
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
-            movementData
-          )
-
-        expect(response.statusCode).toBe(400)
-        expect(response.headers['content-type']).toContain(
-          'application/problem+json'
-        )
-        expect(response.headers['x-request-id']).toEqual(expect.any(String))
-        expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
-          title: 'Bad Request',
-          detail: '1 validation error occurred',
-          instance: '/beta-1/movements',
-          requestId: response.headers['x-request-id'],
-          errors: [
-            {
-              message: '"apiCode" is required',
-              pointer: '/apiCode',
-              errorType: 'NotProvided'
-            }
-          ]
-        })
-      }
-    )
-
-    it(
       'should reject creating a movement when an unexpected field is supplied' +
         ' @allure.label.tag:DWTC-183',
       async () => {

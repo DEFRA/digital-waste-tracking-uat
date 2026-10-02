@@ -201,4 +201,190 @@ describe('Beta-1 API Code', () => {
       }
     )
   })
+
+  describe('Missing API Code', () => {
+    it(
+      'should reject creating a movement when apiCode is missing' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const movementData = beta1.generateBaseMovementData()
+        delete movementData.apiCode
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+            movementData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: '1 validation error occurred',
+          instance: '/beta-1/movements',
+          requestId: response.headers['x-request-id'],
+          errors: [
+            {
+              message: '"apiCode" is required',
+              pointer: '/apiCode',
+              errorType: 'NotProvided'
+            }
+          ]
+        })
+      }
+    )
+
+    it(
+      'should reject recording a collection when apiCode is missing' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const collectionData = beta1.generateBaseCollectionData()
+        delete collectionData.apiCode
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
+            beta1.unknownResourceId,
+            collectionData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: '1 validation error occurred',
+          instance: `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+          requestId: response.headers['x-request-id'],
+          errors: [
+            {
+              message: '"apiCode" is required',
+              pointer: '/apiCode',
+              errorType: 'NotProvided'
+            }
+          ]
+        })
+      }
+    )
+
+    it(
+      'should reject recording a delivery when apiCode is missing' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const deliveryData = beta1.generateBaseDeliveryData([
+          beta1.unknownResourceId
+        ])
+        delete deliveryData.apiCode
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
+            deliveryData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: '1 validation error occurred',
+          instance: '/beta-1/deliveries',
+          requestId: response.headers['x-request-id'],
+          errors: [
+            {
+              message: '"apiCode" is required',
+              pointer: '/apiCode',
+              errorType: 'NotProvided'
+            }
+          ]
+        })
+      }
+    )
+
+    it(
+      'should reject recording a receipt against a delivery when apiCode is missing' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const receiptData = beta1.generateBaseReceiptData()
+        delete receiptData.apiCode
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createReceiptWithDeliveryId(
+            beta1.unknownResourceId,
+            receiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: '1 validation error occurred',
+          instance: `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+          requestId: response.headers['x-request-id'],
+          errors: [
+            {
+              message: '"apiCode" is required',
+              pointer: '/apiCode',
+              errorType: 'NotProvided'
+            }
+          ]
+        })
+      }
+    )
+
+    it(
+      'should reject recording a receipt without a delivery ID when apiCode is missing' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const receiptData = beta1.generateBaseReceiptWithoutDeliveryIdData()
+        delete receiptData.apiCode
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createReceiptWithoutDeliveryId(
+            receiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: '1 validation error occurred',
+          instance: '/beta-1/receipts',
+          requestId: response.headers['x-request-id'],
+          errors: [
+            {
+              message: '"apiCode" is required',
+              pointer: '/apiCode',
+              errorType: 'NotProvided'
+            }
+          ]
+        })
+      }
+    )
+  })
 })

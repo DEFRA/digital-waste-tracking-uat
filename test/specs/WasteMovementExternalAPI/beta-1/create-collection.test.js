@@ -71,42 +71,6 @@ describe('Beta-1 Collection Creation', () => {
 
   describe('Problem Responses', () => {
     it(
-      'should reject recording a collection when apiCode is missing' +
-        ' @allure.label.tag:DWTC-183',
-      async () => {
-        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
-
-        delete collectionData.apiCode
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
-            beta1.unknownResourceId,
-            collectionData
-          )
-
-        expect(response.statusCode).toBe(400)
-        expect(response.headers['content-type']).toContain(
-          'application/problem+json'
-        )
-        expect(response.headers['x-request-id']).toEqual(expect.any(String))
-        expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
-          title: 'Bad Request',
-          detail: '1 validation error occurred',
-          instance: `/beta-1/movements/${beta1.unknownResourceId}/collection`,
-          requestId: response.headers['x-request-id'],
-          errors: [
-            {
-              message: '"apiCode" is required',
-              pointer: '/apiCode',
-              errorType: 'NotProvided'
-            }
-          ]
-        })
-      }
-    )
-
-    it(
       'should reject recording a collection when an unexpected field is supplied' +
         ' @allure.label.tag:DWTC-183',
       async () => {

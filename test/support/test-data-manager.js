@@ -128,7 +128,7 @@ export const beta1 = {
    * @returns {Object} Movement payload containing apiCode
    */
   generateBaseMovementData: () => ({
-    apiCode: testConfig.apiCodeStubbed
+    apiCode: testConfig.apiCode
   }),
 
   /**
@@ -136,7 +136,7 @@ export const beta1 = {
    * @returns {Object} Collection payload containing apiCode
    */
   generateBaseCollectionData: () => ({
-    apiCode: testConfig.apiCodeStubbed
+    apiCode: testConfig.apiCode
   }),
 
   /**
@@ -145,7 +145,7 @@ export const beta1 = {
    * @returns {Object} Delivery payload containing apiCode and movementIds
    */
   generateBaseDeliveryData: (movementIds) => ({
-    apiCode: testConfig.apiCodeStubbed,
+    apiCode: testConfig.apiCode,
     movementIds
   }),
 
@@ -154,7 +154,7 @@ export const beta1 = {
    * @returns {Object} Receipt payload containing apiCode
    */
   generateBaseReceiptData: () => ({
-    apiCode: testConfig.apiCodeStubbed
+    apiCode: testConfig.apiCode
   }),
 
   /**
@@ -162,7 +162,7 @@ export const beta1 = {
    * @returns {Object} Receipt payload containing apiCode and reason
    */
   generateBaseReceiptWithoutDeliveryIdData: () => ({
-    apiCode: testConfig.apiCodeStubbed,
+    apiCode: testConfig.apiCode,
     reason:
       'No delivery was recorded prior to receipt; waste received directly from the producer.'
   })

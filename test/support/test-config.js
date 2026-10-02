@@ -38,17 +38,6 @@ export class TestConfig {
   }
 
   /**
-   * API code listed in the Beta-1 service ORG_API_CODES.
-   * Global setup replaces API_CODE with a new organisation code, and Beta-1
-   * rejects that code. Set API_CODE_STUBBED in env.sh and source that file
-   * before the test run.
-   * @returns {string|undefined}
-   */
-  get apiCodeStubbed() {
-    return process.env.API_CODE_STUBBED
-  }
-
-  /**
    * Get the organisation ID from environment variables
    * Mainly for use in production environments as the tests create a new organisation for each run.
    * This is set in the globalSetup.js file.
