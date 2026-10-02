@@ -123,13 +123,11 @@ export const beta1 = {
    * Well-formed ID that does not exist.
    */
   unknownResourceId: '00NOTFND',
-
   /**
    * Generate base movement data with only required fields for POST /beta-1/movements.
    * @returns {Object} Movement payload containing apiCode
    */
   generateBaseMovementData: () => ({
-    // apiCode: globalThis.generatedApiCode
     apiCode: testConfig.apiCode
   }),
 

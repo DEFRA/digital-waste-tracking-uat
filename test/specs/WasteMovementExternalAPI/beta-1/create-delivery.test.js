@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto'
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { beta1 } from '../../../support/test-data-manager.js'
 import { authenticateAndSetToken } from '../../../support/helpers/auth.js'
@@ -123,6 +124,9 @@ describe('Beta-1 Delivery Creation', () => {
         )
 
       expect(response.statusCode).toBe(400)
+      expect(response.headers['content-type']).toContain(
+        'application/problem+json'
+      )
       expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
         type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
@@ -154,6 +158,9 @@ describe('Beta-1 Delivery Creation', () => {
         )
 
       expect(response.statusCode).toBe(400)
+      expect(response.headers['content-type']).toContain(
+        'application/problem+json'
+      )
       expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
         type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
@@ -163,5 +170,283 @@ describe('Beta-1 Delivery Creation', () => {
         requestId: response.headers['x-request-id']
       })
     })
+  })
+
+  describe('Problem Responses', () => {
+    it(
+      'should reject recording a delivery when apiCode and movementIds are not provided' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
+            {}
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: '2 validation errors occurred',
+          instance: '/beta-1/deliveries',
+          requestId: response.headers['x-request-id'],
+          errors: [
+            {
+              message: '"apiCode" is required',
+              pointer: '/apiCode',
+              errorType: 'NotProvided'
+            },
+            {
+              message: '"movementIds" is required',
+              pointer: '/movementIds',
+              errorType: 'NotProvided'
+            }
+          ]
+        })
+      }
+    )
+
+    it(
+      'should reject recording a delivery when movementIds is missing' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const deliveryData = beta1.generateBaseDeliveryData([
+          beta1.unknownResourceId
+        ])
+        delete deliveryData.movementIds
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
+            deliveryData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: '1 validation error occurred',
+          instance: '/beta-1/deliveries',
+          requestId: response.headers['x-request-id'],
+          errors: [
+            {
+              message: '"movementIds" is required',
+              pointer: '/movementIds',
+              errorType: 'NotProvided'
+            }
+          ]
+        })
+      }
+    )
+
+    it(
+      'should reject recording a delivery when movementIds is empty' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
+            beta1.generateBaseDeliveryData([])
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: '1 validation error occurred',
+          instance: '/beta-1/deliveries',
+          requestId: response.headers['x-request-id'],
+          errors: [
+            {
+              message: 'must NOT have fewer than 1 items',
+              pointer: '/movementIds',
+              errorType: 'OutOfRange'
+            }
+          ]
+        })
+      }
+    )
+
+    it(
+      'should reject recording a delivery when an unexpected field is supplied' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const deliveryData = beta1.generateBaseDeliveryData([
+          beta1.unknownResourceId
+        ])
+        deliveryData.orgName = 'not-allowed'
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
+            deliveryData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: '1 validation error occurred',
+          instance: '/beta-1/deliveries',
+          requestId: response.headers['x-request-id'],
+          errors: [
+            {
+              message: 'must NOT have additional properties',
+              pointer: '/orgName',
+              errorType: 'NotAllowed'
+            }
+          ]
+        })
+      }
+    )
+
+    it(
+      'should reject recording a delivery when apiCode is not a UUID' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const deliveryData = beta1.generateBaseDeliveryData([
+          beta1.unknownResourceId
+        ])
+        deliveryData.apiCode = 'not-a-uuid'
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
+            deliveryData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: '1 validation error occurred',
+          instance: '/beta-1/deliveries',
+          requestId: response.headers['x-request-id'],
+          errors: [
+            {
+              message: 'must match format "uuid"',
+              pointer: '/apiCode',
+              errorType: 'InvalidFormat'
+            }
+          ]
+        })
+      }
+    )
+
+    it(
+      'should reject recording a delivery when the body is not valid JSON' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const response = await globalThis.apis.wasteMovementExternalAPI.post(
+          '/beta-1/deliveries',
+          '{',
+          {
+            'Content-Type': 'application/json',
+            'x-cdp-request-id': randomUUID()
+          }
+        )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          title: 'Bad Request',
+          detail: 'Invalid request payload JSON format',
+          instance: '/beta-1/deliveries',
+          requestId: response.headers['x-request-id']
+        })
+      }
+    )
+
+    it(
+      'should reject recording a delivery when the content type is XML' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const response = await globalThis.apis.wasteMovementExternalAPI.post(
+          '/beta-1/deliveries',
+          '<delivery/>',
+          {
+            'Content-Type': 'application/xml',
+            'x-cdp-request-id': randomUUID()
+          }
+        )
+
+        expect(response.statusCode).toBe(415)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/unsupported-media-type',
+          title: 'Unsupported Media Type',
+          detail: 'Unsupported Media Type',
+          instance: '/beta-1/deliveries',
+          requestId: response.headers['x-request-id']
+        })
+      }
+    )
+
+    it(
+      'should reject recording a delivery when the body is larger than 1 MB' +
+        ' @allure.label.tag:DWTC-183',
+      async () => {
+        await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
+
+        const response = await globalThis.apis.wasteMovementExternalAPI.post(
+          '/beta-1/deliveries',
+          'x'.repeat(1048577),
+          {
+            'Content-Type': 'application/json',
+            'x-cdp-request-id': randomUUID()
+          }
+        )
+
+        expect(response.statusCode).toBe(413)
+        expect(response.headers['content-type']).toContain(
+          'application/problem+json'
+        )
+        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.json).toEqual({
+          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/request-entity-too-large',
+          title: 'Request Entity Too Large',
+          detail:
+            'Payload content length greater than maximum allowed: 1048576',
+          instance: '/beta-1/deliveries',
+          requestId: response.headers['x-request-id']
+        })
+      }
+    )
   })
 })
