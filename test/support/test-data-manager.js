@@ -167,3 +167,64 @@ export const beta1 = {
       'No delivery was recorded prior to receipt; waste received directly from the producer.'
   })
 }
+
+/**
+ * Beta-2 external API test data generators.
+ * Producer field rules follow the beta-2 create-movement schema.
+ */
+export const beta2 = {
+  /**
+   * POST /beta-2/movements with a Household producer.
+   * Household allows wasteSource only.
+   * @returns {Object}
+   */
+  generateHouseholdMovementData: () => ({
+    apiCode: testConfig.apiCode,
+    producer: {
+      wasteSource: 'Household'
+    }
+  }),
+
+  /**
+   * POST /beta-2/movements with a Commercial producer and an authorisation number.
+   * @returns {Object}
+   */
+  generateCommercialMovementData: () => ({
+    apiCode: testConfig.apiCode,
+    producer: {
+      wasteSource: 'Commercial',
+      organisationName: 'ACME Waste Producers Ltd',
+      authorisationNumber: 'EAS/P/123456',
+      sicCode: '38110',
+      address: {
+        fullAddress: '10 Industrial Way, Test City',
+        postcode: 'TE1 2PQ'
+      },
+      contactDetails: {
+        emailAddress: 'producer@example.com'
+      }
+    }
+  }),
+
+  /**
+   * POST /beta-2/movements with a Municipal producer and an authorisation number.
+   * sicCode is included here and is optional for Municipal.
+   * @returns {Object}
+   */
+  generateMunicipalMovementData: () => ({
+    apiCode: testConfig.apiCode,
+    producer: {
+      wasteSource: 'Municipal',
+      organisationName: 'Test Council',
+      authorisationNumber: 'EAS/P/123456',
+      sicCode: '38110',
+      address: {
+        fullAddress: 'Council Depot, Test City',
+        postcode: 'TE1 5CD'
+      },
+      contactDetails: {
+        emailAddress: 'waste.services@example.gov.uk'
+      }
+    }
+  })
+}
