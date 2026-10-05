@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Error - Broker Or Dealer Invalid Registration Number
+  name: Create Movement - Broker Or Dealer With Mandatory Fields
   type: http
-  seq: 4
+  seq: 1
 }
 
 post {
@@ -26,13 +26,9 @@ body:json {
       "items": [
         {
           "organisationName": "Broker Demo Ltd",
-          "registrationNumber": "WCR/R/123456",
+          "registrationNumber": "CBDU654321",
           "contactDetails": {
             "emailAddress": "broker@example.com"
-          },
-          "address": {
-            "fullAddress": "2 Broker Yard, Test City",
-            "postcode": "TE1 1ST"
           }
         }
       ]
@@ -47,18 +43,23 @@ script:pre-request {
   bru.setVar('timestamp', now.toISOString());
 }
 
+script:post-response {
+  const movementId = res.body.data.movementId;
+  bru.setVar('movementId', movementId);
+
+  const movementIds = Object.assign([], bru.getVar('movementIds') || []);
+  movementIds.push(movementId);
+  bru.setVar('movementIds', movementIds);
+}
+
 tests {
-  test("status is 400", function () {
-    expect(res.getStatus()).to.equal(400);
+  test("status is 201", function () {
+    expect(res.getStatus()).to.equal(201);
   });
-  test("content type includes application/problem+json", function () {
-    expect(res.getHeader("content-type")).to.include("application/problem+json");
+  test("content type includes application/json", function () {
+    expect(res.getHeader("content-type")).to.include("application/json");
   });
-  test("registration number format is invalid", function () {
-    const errors = res.body.errors || [];
-    const found = errors.some(function (error) {
-      return error.pointer === "/brokerOrDealer/items/0/registrationNumber" && error.errorType === "InvalidFormat";
-    });
-    expect(found).to.equal(true);
+  test("a movement id is returned", function () {
+    expect(res.body.data.movementId).to.be.a("string").and.not.empty;
   });
 }

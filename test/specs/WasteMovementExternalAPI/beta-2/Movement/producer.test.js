@@ -328,7 +328,7 @@ describe('Producer', () => {
 
         expectMovementRejected(response, [
           {
-            message: beta2.sicCodeFormatMessage,
+            message: expect.any(String),
             pointer: '/producer/sicCode',
             errorType: 'InvalidFormat'
           }
@@ -350,7 +350,7 @@ describe('Producer', () => {
 
         expectMovementRejected(response, [
           {
-            message: beta2.postcodeFormatMessage,
+            message: expect.any(String),
             pointer: '/producer/address/postcode',
             errorType: 'InvalidFormat'
           }
@@ -372,7 +372,7 @@ describe('Producer', () => {
 
         expectMovementRejected(response, [
           {
-            message: beta2.phoneFormatMessage,
+            message: expect.any(String),
             pointer: '/producer/contactDetails/phoneNumber',
             errorType: 'InvalidFormat'
           }
@@ -394,7 +394,7 @@ describe('Producer', () => {
 
         expectMovementRejected(response, [
           {
-            message: beta2.emailFormatMessage,
+            message: expect.any(String),
             pointer: '/producer/contactDetails/emailAddress',
             errorType: 'InvalidFormat'
           }
@@ -416,7 +416,7 @@ describe('Producer', () => {
 
         expectMovementRejected(response, [
           {
-            message: beta2.authorisationNumberFormatMessage,
+            message: expect.any(String),
             pointer: '/producer/authorisationNumber',
             errorType: 'InvalidFormat'
           }

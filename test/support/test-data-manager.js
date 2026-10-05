@@ -175,16 +175,6 @@ export const beta1 = {
 export const beta2 = {
   badRequestType:
     'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
-  sicCodeFormatMessage: 'must match pattern "^\\d{5}$"',
-  postcodeFormatMessage:
-    'must match pattern "^\\s*(?:(?:(([Gg][Ii][Rr] 0[Aa]{2})|((([A-Za-z]\\d{1,2})|(([A-Za-z][A-Ha-hJ-Yj-y]\\d{1,2})|(([A-Za-z]\\d[A-Za-z])|([A-Za-z][A-Ha-hJ-Yj-y]\\d?[A-Za-z])))) \\d[A-Za-z]{2})))|(?:(?:[Dd]6[Ww]|[AaC-Fc-fHhKkNnPpRrTtV-Yv-y]\\d{2}) ?[0-9AaC-Fc-fHhKkNnPpRrTtV-Yv-y]{4}))\\s*$"',
-  phoneFormatMessage:
-    'must match pattern "^\\s*(?=(?:\\D*\\d){7,15}\\D*$)\\+?[0-9()\\-\\s]+$"',
-  emailFormatMessage: 'must match format "email"',
-  authorisationNumberFormatMessage:
-    'must match pattern "^\\s*(?:(?:[A-Za-z]{2}\\d{4}[A-Za-z]{2})|(?:[A-Za-z]{2}\\d{4}[A-Za-z]{2}\\/[Dd]\\d{4,5})|(?:[Ee][Pp][Rr]\\/[A-Za-z]{2}\\d{4}[A-Za-z]{2})|(?:[Ee][Pp][Rr]\\/[A-Za-z]{2}\\d{4}[A-Za-z]{2}\\/[Dd]\\d{4,5})|(?:[Ee][Aa][Ww][Mm][Ll]\\d{5,6})|(?:[Ww][Mm][Ll]\\d{5,6})|(?:[Pp][Pp][Cc]\\/[AaWwEeNn]\\/\\d{7})|(?:[Ww][Mm][Ll]\\/[LlWwEeNn]\\/\\d{7})|(?:[Ww][Mm][Ll]\\/[LlWwEeNn]\\/\\d{7}\\/\\d{2})|(?:[Pp][Pp][Cc]\\/[Aa]\\/[Ss][Ee][Pp][Aa]\\d{4}-\\d{4})|(?:[Ww][Mm][Ll]\\/[Ll]\\/[Ss][Ee][Pp][Aa]\\d{4}-\\d{4})|(?:[Ee][Aa][Ss]\\/[Pp]\\/\\d{6})|(?:[Pp]\\d{4}\\/\\d{2}[A-Za-z])|(?:[Pp]\\d{4}\\/\\d{2}[A-Za-z]\\/[Vv]\\d+)|(?:[Ww][Pp][Pp][Cc] \\d{2}\\/\\d{2})|(?:[Ww][Pp][Pp][Cc] \\d{2}\\/\\d{2}\\/[Vv]\\d+)|(?:[Ww][Mm][Ll] \\d{2}\\/\\d+(\\/[Tt])? [Ll][Nn]\\/\\d{2}\\/\\d+(\\/([MmTtCcNn]|[Vv]\\d+))*)|(?:[Ww][Mm][Ll] \\d{2}\\/\\d+ [Pp][Aa][Cc]\\/\\d{4}\\/[Ww][Cc][Ll]\\d{3}))\\s*$"',
-  registrationNumberFormatMessage:
-    'must match pattern "^\\s*(?:[Cc][Bb][Dd][LlUu]\\d{3,}|[Ww][Cc][Rr]/[Rr]/\\d{7}|(?:[Ss][Cc][Oo]|[Ss][Ee][Aa]|[Ss][Nn][Oo]|[Ss][Ww][Ee]|[Ww][Cc][Rr])/\\d{6}|[Pp][Cc][Tt]-[A-Za-z]-\\d{3,7}|[Rr][Oo][Cc]\\W*[UuLl][Tt]\\W*\\d{1,5})\\s*$"',
   /**
    * Postcodes accepted by the address schema.
    * UK postcodes and Irish Eircodes are case-insensitive, and surrounding spaces are allowed.
@@ -198,12 +188,12 @@ export const beta2 = {
 
   /**
    * Postcodes rejected by the address schema.
-   * A UK postcode must include the space before the inward code.
+   * Valid: SW1A 1AA. Invalid: SW1, SW1A1AA, SW1A 1A.
    */
   rejectedPostcodes: [
-    ['too short', 'ZZ'],
+    ['too short', 'SW1'],
     ['a UK postcode without the required space', 'SW1A1AA'],
-    ['malformed', 'NOTAPOSTCODE']
+    ['malformed', 'SW1A 1A']
   ],
 
   /**
@@ -219,12 +209,12 @@ export const beta2 = {
 
   /**
    * Phone numbers rejected by the contact-details schema.
-   * Fewer than 7 digits and more than 15 digits fail the length check.
+   * Valid: 020 7946 0958. Invalid: 020 794, 020 7946 0958 09999, 020 7946 095A.
    */
   rejectedPhoneNumbers: [
-    ['fewer than 7 digits', '123456'],
-    ['more than 15 digits', '1234567890123456'],
-    ['digits mixed with letters', '01234abc678']
+    ['fewer than 7 digits', '020 794'],
+    ['more than 15 digits', '020 7946 0958 09999'],
+    ['digits mixed with letters', '020 7946 095A']
   ],
 
   /**
@@ -243,7 +233,26 @@ export const beta2 = {
 
   /**
    * Authorisation numbers accepted by the producer schema, besides EAS/P/123456.
-   * The pattern allows UK permit and exemption numbers and is case-insensitive.
+   * The value must match one of these UK permit shapes. Letters can be upper or
+   * lower case, and spaces around the value are allowed.
+   * AB1234CD
+   * AB1234CD/D1234
+   * EPR/AB1234CD
+   * EPR/AB1234CD/D1234
+   * EAWML123456
+   * WML123456
+   * PPC/A/1234567
+   * WML/L/1234567
+   * WML/L/1234567/01
+   * PPC/A/SEPA1234-5678
+   * WML/L/SEPA1234-5678
+   * EAS/P/123456
+   * P1234/12A
+   * P1234/12A/V1
+   * WPPC 12/34
+   * WPPC 12/34/V1
+   * WML 12/3 LN/01/02
+   * WML 12/3 PAC/1234/WCL123
    */
   acceptedAuthorisationNumbers: [
     ['an exemption number', 'AB1234CD'],
@@ -253,9 +262,11 @@ export const beta2 = {
 
   /**
    * Authorisation numbers rejected by the producer schema.
+   * These do not match one of the UK permit shapes above.
+   * EA/P/123456, EAS/P/12345, NOT-A-PERMIT.
    */
   rejectedAuthorisationNumbers: [
-    ['not a permit or exemption number', 'NOT-A-PERMIT'],
+    ['not a permit or exemption number', 'EA/P/123456'],
     ['an environmental permit number with too few digits', 'EAS/P/12345']
   ],
 

@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Error - Commercial Invalid Postcode
+  name: Create Movement - Error - Commercial Invalid Phone Number
   type: http
-  seq: 8
+  seq: 9
 }
 
 post {
@@ -25,10 +25,10 @@ body:json {
       "sicCode": "38110",
       "address": {
         "fullAddress": "10 Industrial Way, Test City",
-        "postcode": "SW1A1AA"
+        "postcode": "TE1 2PQ"
       },
       "contactDetails": {
-        "emailAddress": "producer@example.com"
+        "phoneNumber": "020 794"
       }
     }
   }
@@ -47,10 +47,10 @@ tests {
   test("content type includes application/problem+json", function () {
     expect(res.getHeader("content-type")).to.include("application/problem+json");
   });
-  test("postcode format is invalid", function () {
+  test("phone number format is invalid", function () {
     const errors = res.body.errors || [];
     const found = errors.some(function (error) {
-      return error.pointer === "/producer/address/postcode" && error.errorType === "InvalidFormat";
+      return error.pointer === "/producer/contactDetails/phoneNumber" && error.errorType === "InvalidFormat";
     });
     expect(found).to.equal(true);
   });

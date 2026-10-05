@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Error - Commercial Invalid Postcode
+  name: Create Movement - Error - Commercial Invalid Authorisation Number
   type: http
-  seq: 8
+  seq: 11
 }
 
 post {
@@ -21,11 +21,11 @@ body:json {
     "producer": {
       "wasteSource": "Commercial",
       "organisationName": "ACME Waste Producers Ltd",
-      "authorisationNumber": "EAS/P/123456",
+      "authorisationNumber": "EA/P/123456",
       "sicCode": "38110",
       "address": {
         "fullAddress": "10 Industrial Way, Test City",
-        "postcode": "SW1A1AA"
+        "postcode": "TE1 2PQ"
       },
       "contactDetails": {
         "emailAddress": "producer@example.com"
@@ -40,6 +40,7 @@ script:pre-request {
   // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
   bru.setVar('timestamp', now.toISOString());
 }
+
 tests {
   test("status is 400", function () {
     expect(res.getStatus()).to.equal(400);
@@ -47,10 +48,10 @@ tests {
   test("content type includes application/problem+json", function () {
     expect(res.getHeader("content-type")).to.include("application/problem+json");
   });
-  test("postcode format is invalid", function () {
+  test("authorisation number format is invalid", function () {
     const errors = res.body.errors || [];
     const found = errors.some(function (error) {
-      return error.pointer === "/producer/address/postcode" && error.errorType === "InvalidFormat";
+      return error.pointer === "/producer/authorisationNumber" && error.errorType === "InvalidFormat";
     });
     expect(found).to.equal(true);
   });

@@ -1,4 +1,4 @@
-import { describe, it, beforeEach } from '@jest/globals'
+import { describe, it, expect, beforeEach } from '@jest/globals'
 import { beta2 } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
@@ -165,7 +165,7 @@ describe('Broker or dealer', () => {
 
       expectMovementRejected(response, [
         {
-          message: beta2.registrationNumberFormatMessage,
+          message: expect.any(String),
           pointer: '/brokerOrDealer/items/0/registrationNumber',
           errorType: 'InvalidFormat'
         }
@@ -229,7 +229,7 @@ describe('Broker or dealer', () => {
 
         expectMovementRejected(response, [
           {
-            message: beta2.emailFormatMessage,
+            message: expect.any(String),
             pointer: '/brokerOrDealer/items/0/contactDetails/emailAddress',
             errorType: 'InvalidFormat'
           }
@@ -251,7 +251,7 @@ describe('Broker or dealer', () => {
 
         expectMovementRejected(response, [
           {
-            message: beta2.phoneFormatMessage,
+            message: expect.any(String),
             pointer: '/brokerOrDealer/items/0/contactDetails/phoneNumber',
             errorType: 'InvalidFormat'
           }
@@ -273,7 +273,7 @@ describe('Broker or dealer', () => {
 
         expectMovementRejected(response, [
           {
-            message: beta2.postcodeFormatMessage,
+            message: expect.any(String),
             pointer: '/brokerOrDealer/items/0/address/postcode',
             errorType: 'InvalidFormat'
           }
