@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Household Producer
+  name: Create Movement - Commercial Producer With Valid Email Address
   type: http
-  seq: 4
+  seq: 22
 }
 
 post {
@@ -19,7 +19,17 @@ body:json {
   {
     "apiCode": "{{apiCode}}",
     "producer": {
-      "wasteSource": "Household"
+      "wasteSource": "Commercial",
+      "organisationName": "ACME Waste Producers Ltd",
+      "authorisationNumber": "EAS/P/123456",
+      "sicCode": "38110",
+      "address": {
+        "fullAddress": "10 Industrial Way, Test City",
+        "postcode": "TE1 2PQ"
+      },
+      "contactDetails": {
+        "emailAddress": "producer@example.com"
+      }
     }
   }
 }
@@ -39,6 +49,7 @@ script:post-response {
   movementIds.push(movementId);
   bru.setVar('movementIds', movementIds);
 }
+
 tests {
   test("status is 201", function () {
     expect(res.getStatus()).to.equal(201);

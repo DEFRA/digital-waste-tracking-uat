@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Municipal Producer With Mandatory Fields
+  name: Create Movement - Municipal Producer With All Fields
   type: http
-  seq: 7
+  seq: 3
 }
 
 post {
@@ -22,13 +22,47 @@ body:json {
       "wasteSource": "Municipal",
       "organisationName": "Test Council",
       "authorisationNumber": "EAS/P/123456",
+      "sicCode": "38110",
       "address": {
+        "fullAddress": "Council Depot, Test City",
         "postcode": "TE1 5CD"
       },
       "contactDetails": {
-        "emailAddress": "waste.services@example.gov.uk"
+        "emailAddress": "waste.services@example.gov.uk",
+        "phoneNumber": "01234567890"
       }
-    }
+    },
+    "brokerOrDealer": {
+      "isPresent": true,
+      "items": [
+        {
+          "organisationName": "Broker Demo Ltd",
+          "registrationNumber": "CBDU654321",
+          "contactDetails": {
+            "emailAddress": "broker@example.com"
+          },
+          "address": {
+            "fullAddress": "2 Broker Yard, Test City",
+            "postcode": "TE1 1ST"
+          }
+        }
+      ]
+    },
+    "supportingReferences": [
+      {
+        "label": "PO Number",
+        "reference": "PO-48213"
+      },
+      {
+        "label": "Job Number",
+        "reference": "JB-9931"
+      },
+      {
+        "label": "Weighbridge Number",
+        "reference": "WB-9931"
+      }
+    ],
+    "specialHandlingRequirements": "Handle with care and keep upright."
   }
 }
 
@@ -47,6 +81,7 @@ script:post-response {
   movementIds.push(movementId);
   bru.setVar('movementIds', movementIds);
 }
+
 tests {
   test("status is 201", function () {
     expect(res.getStatus()).to.equal(201);

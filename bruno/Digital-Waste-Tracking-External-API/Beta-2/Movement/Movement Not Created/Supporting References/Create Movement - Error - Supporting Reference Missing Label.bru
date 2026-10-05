@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Error - Commercial Invalid Phone Number
+  name: Create Movement - Error - Supporting Reference Missing Label
   type: http
-  seq: 9
+  seq: 1
 }
 
 post {
@@ -19,18 +19,13 @@ body:json {
   {
     "apiCode": "{{apiCode}}",
     "producer": {
-      "wasteSource": "Commercial",
-      "organisationName": "ACME Waste Producers Ltd",
-      "authorisationNumber": "EAS/P/123456",
-      "sicCode": "38110",
-      "address": {
-        "fullAddress": "10 Industrial Way, Test City",
-        "postcode": "TE1 2PQ"
-      },
-      "contactDetails": {
-        "phoneNumber": "not-a-number"
+      "wasteSource": "Household"
+    },
+    "supportingReferences": [
+      {
+        "reference": "PO-48213"
       }
-    }
+    ]
   }
 }
 
@@ -40,6 +35,7 @@ script:pre-request {
   // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
   bru.setVar('timestamp', now.toISOString());
 }
+
 tests {
   test("status is 400", function () {
     expect(res.getStatus()).to.equal(400);
@@ -47,10 +43,10 @@ tests {
   test("content type includes application/problem+json", function () {
     expect(res.getHeader("content-type")).to.include("application/problem+json");
   });
-  test("phone number format is invalid", function () {
+  test("label is required", function () {
     const errors = res.body.errors || [];
     const found = errors.some(function (error) {
-      return error.pointer === "/producer/contactDetails/phoneNumber" && error.errorType === "InvalidFormat";
+      return error.pointer === "/supportingReferences/0/label" && error.errorType === "NotProvided";
     });
     expect(found).to.equal(true);
   });

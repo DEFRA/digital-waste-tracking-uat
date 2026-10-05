@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Error - Commercial Invalid Email Address
+  name: Create Movement - Error - Broker Or Dealer Invalid Registration Number
   type: http
-  seq: 10
+  seq: 4
 }
 
 post {
@@ -19,17 +19,23 @@ body:json {
   {
     "apiCode": "{{apiCode}}",
     "producer": {
-      "wasteSource": "Commercial",
-      "organisationName": "ACME Waste Producers Ltd",
-      "authorisationNumber": "EAS/P/123456",
-      "sicCode": "38110",
-      "address": {
-        "fullAddress": "10 Industrial Way, Test City",
-        "postcode": "TE1 2PQ"
-      },
-      "contactDetails": {
-        "emailAddress": "not-an-email"
-      }
+      "wasteSource": "Household"
+    },
+    "brokerOrDealer": {
+      "isPresent": true,
+      "items": [
+        {
+          "organisationName": "Broker Demo Ltd",
+          "registrationNumber": "NOT-A-REGISTRATION",
+          "contactDetails": {
+            "emailAddress": "broker@example.com"
+          },
+          "address": {
+            "fullAddress": "2 Broker Yard, Test City",
+            "postcode": "TE1 1ST"
+          }
+        }
+      ]
     }
   }
 }
@@ -40,6 +46,7 @@ script:pre-request {
   // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
   bru.setVar('timestamp', now.toISOString());
 }
+
 tests {
   test("status is 400", function () {
     expect(res.getStatus()).to.equal(400);
@@ -47,10 +54,10 @@ tests {
   test("content type includes application/problem+json", function () {
     expect(res.getHeader("content-type")).to.include("application/problem+json");
   });
-  test("email address format is invalid", function () {
+  test("registration number format is invalid", function () {
     const errors = res.body.errors || [];
     const found = errors.some(function (error) {
-      return error.pointer === "/producer/contactDetails/emailAddress" && error.errorType === "InvalidFormat";
+      return error.pointer === "/brokerOrDealer/items/0/registrationNumber" && error.errorType === "InvalidFormat";
     });
     expect(found).to.equal(true);
   });

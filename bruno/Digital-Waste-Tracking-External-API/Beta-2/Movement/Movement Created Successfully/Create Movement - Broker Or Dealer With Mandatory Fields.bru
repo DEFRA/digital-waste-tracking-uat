@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Household Producer
+  name: Create Movement - Broker Or Dealer With Mandatory Fields
   type: http
-  seq: 4
+  seq: 9
 }
 
 post {
@@ -20,6 +20,18 @@ body:json {
     "apiCode": "{{apiCode}}",
     "producer": {
       "wasteSource": "Household"
+    },
+    "brokerOrDealer": {
+      "isPresent": true,
+      "items": [
+        {
+          "organisationName": "Broker Demo Ltd",
+          "registrationNumber": "CBDU654321",
+          "contactDetails": {
+            "emailAddress": "broker@example.com"
+          }
+        }
+      ]
     }
   }
 }
@@ -39,6 +51,7 @@ script:post-response {
   movementIds.push(movementId);
   bru.setVar('movementIds', movementIds);
 }
+
 tests {
   test("status is 201", function () {
     expect(res.getStatus()).to.equal(201);

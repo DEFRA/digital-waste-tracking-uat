@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Commercial Producer With Mandatory Fields
+  name: Create Movement - Error - Commercial Email Address With No Domain
   type: http
-  seq: 5
+  seq: 15
 }
 
 post {
@@ -24,10 +24,11 @@ body:json {
       "authorisationNumber": "EAS/P/123456",
       "sicCode": "38110",
       "address": {
+        "fullAddress": "10 Industrial Way, Test City",
         "postcode": "TE1 2PQ"
       },
       "contactDetails": {
-        "emailAddress": "producer@example.com"
+        "emailAddress": "producer@"
       }
     }
   }
@@ -40,22 +41,18 @@ script:pre-request {
   bru.setVar('timestamp', now.toISOString());
 }
 
-script:post-response {
-  const movementId = res.body.data.movementId;
-  bru.setVar('movementId', movementId);
-
-  const movementIds = Object.assign([], bru.getVar('movementIds') || []);
-  movementIds.push(movementId);
-  bru.setVar('movementIds', movementIds);
-}
 tests {
-  test("status is 201", function () {
-    expect(res.getStatus()).to.equal(201);
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
   });
-  test("content type includes application/json", function () {
-    expect(res.getHeader("content-type")).to.include("application/json");
+  test("content type includes application/problem+json", function () {
+    expect(res.getHeader("content-type")).to.include("application/problem+json");
   });
-  test("a movement id is returned", function () {
-    expect(res.body.data.movementId).to.be.a("string").and.not.empty;
+  test("email address format is invalid", function () {
+    const errors = res.body.errors || [];
+    const found = errors.some(function (error) {
+      return error.pointer === "/producer/contactDetails/emailAddress" && error.errorType === "InvalidFormat";
+    });
+    expect(found).to.equal(true);
   });
 }

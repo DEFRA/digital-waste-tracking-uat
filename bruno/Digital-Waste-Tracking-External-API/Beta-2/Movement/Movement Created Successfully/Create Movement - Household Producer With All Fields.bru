@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Household Producer
+  name: Create Movement - Household Producer With All Fields
   type: http
-  seq: 4
+  seq: 1
 }
 
 post {
@@ -20,7 +20,38 @@ body:json {
     "apiCode": "{{apiCode}}",
     "producer": {
       "wasteSource": "Household"
-    }
+    },
+    "brokerOrDealer": {
+      "isPresent": true,
+      "items": [
+        {
+          "organisationName": "Broker Demo Ltd",
+          "registrationNumber": "CBDU654321",
+          "contactDetails": {
+            "emailAddress": "broker@example.com"
+          },
+          "address": {
+            "fullAddress": "2 Broker Yard, Test City",
+            "postcode": "TE1 1ST"
+          }
+        }
+      ]
+    },
+    "supportingReferences": [
+      {
+        "label": "PO Number",
+        "reference": "PO-48213"
+      },
+      {
+        "label": "Job Number",
+        "reference": "JB-9931"
+      },
+      {
+        "label": "Weighbridge Number",
+        "reference": "WB-9931"
+      }
+    ],
+    "specialHandlingRequirements": "Handle with care and keep upright."
   }
 }
 
@@ -39,6 +70,7 @@ script:post-response {
   movementIds.push(movementId);
   bru.setVar('movementIds', movementIds);
 }
+
 tests {
   test("status is 201", function () {
     expect(res.getStatus()).to.equal(201);

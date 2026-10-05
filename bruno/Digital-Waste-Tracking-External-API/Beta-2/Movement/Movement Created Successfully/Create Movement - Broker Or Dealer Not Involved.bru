@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Household Producer
+  name: Create Movement - Broker Or Dealer Not Involved
   type: http
-  seq: 4
+  seq: 13
 }
 
 post {
@@ -20,6 +20,9 @@ body:json {
     "apiCode": "{{apiCode}}",
     "producer": {
       "wasteSource": "Household"
+    },
+    "brokerOrDealer": {
+      "isPresent": false
     }
   }
 }
@@ -39,6 +42,7 @@ script:post-response {
   movementIds.push(movementId);
   bru.setVar('movementIds', movementIds);
 }
+
 tests {
   test("status is 201", function () {
     expect(res.getStatus()).to.equal(201);
