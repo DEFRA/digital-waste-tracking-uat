@@ -182,21 +182,23 @@ describe('Beta-1 Movement Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const requestId = randomUUID()
         const response = await globalThis.apis.wasteMovementExternalAPI.get(
-          '/beta-1/does-not-exist'
+          '/beta-1/does-not-exist',
+          { 'x-cdp-request-id': requestId }
         )
 
         expect(response.statusCode).toBe(404)
         expect(response.headers['content-type']).toContain(
           'application/problem+json'
         )
-        expect(response.headers['x-request-id']).toEqual(expect.any(String))
+        expect(response.headers['x-request-id']).toBe(requestId)
         expect(response.json).toEqual({
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/not-found',
           title: 'Not Found',
           detail: 'Not Found',
           instance: '/beta-1/does-not-exist',
-          requestId: response.headers['x-request-id']
+          requestId
         })
       }
     )
