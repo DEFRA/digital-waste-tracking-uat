@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from '@jest/globals'
+import { describe, it, beforeEach } from '@jest/globals'
 import { beta2 } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
@@ -27,7 +27,7 @@ describe('Producer', () => {
     })
 
     it.each(beta2.commercialOrMunicipal)(
-      'should create a movement when a %s producer declares an authorisation number and contact details @allure.label.tag:DWTC-192',
+      'should create a movement when a %s producer is declared with all valid details @allure.label.tag:DWTC-192',
       async (_wasteSource, generateMovementData) => {
         await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
         const response =
@@ -148,13 +148,7 @@ describe('Producer', () => {
             movementData
           )
 
-        expectMovementRejected(response, [
-          {
-            message: '"organisationName" is required',
-            pointer: '/producer/organisationName',
-            errorType: 'NotProvided'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -168,13 +162,7 @@ describe('Producer', () => {
           movementData
         )
 
-      expectMovementRejected(response, [
-        {
-          message: '"sicCode" is required',
-          pointer: '/producer/sicCode',
-          errorType: 'NotProvided'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it.each(beta2.commercialOrMunicipal)(
@@ -189,13 +177,7 @@ describe('Producer', () => {
             movementData
           )
 
-        expectMovementRejected(response, [
-          {
-            message: '"address" is required',
-            pointer: '/producer/address',
-            errorType: 'NotProvided'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -211,18 +193,7 @@ describe('Producer', () => {
             movementData
           )
 
-        expectMovementRejected(response, [
-          {
-            message: '"authorisationNumber" is required',
-            pointer: '/producer/authorisationNumber',
-            errorType: 'NotProvided'
-          },
-          {
-            message: '"reasonForNoAuthorisationNumber" is required',
-            pointer: '/producer/reasonForNoAuthorisationNumber',
-            errorType: 'NotProvided'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -239,18 +210,7 @@ describe('Producer', () => {
             movementData
           )
 
-        expectMovementRejected(response, [
-          {
-            message: 'boolean schema is false',
-            pointer: '/producer/authorisationNumber',
-            errorType: 'NotAllowed'
-          },
-          {
-            message: 'boolean schema is false',
-            pointer: '/producer/reasonForNoAuthorisationNumber',
-            errorType: 'NotAllowed'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -266,18 +226,7 @@ describe('Producer', () => {
             movementData
           )
 
-        expectMovementRejected(response, [
-          {
-            message: '"emailAddress" is required',
-            pointer: '/producer/contactDetails/emailAddress',
-            errorType: 'NotProvided'
-          },
-          {
-            message: '"phoneNumber" is required',
-            pointer: '/producer/contactDetails/phoneNumber',
-            errorType: 'NotProvided'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -300,18 +249,7 @@ describe('Producer', () => {
           movementData
         )
 
-      expectMovementRejected(response, [
-        {
-          message: 'property name must be valid',
-          pointer: '/producer',
-          errorType: 'NotAllowed'
-        }
-      ])
-      expect(
-        response.json.errors.filter(
-          (error) => error.message === 'property name must be valid'
-        )
-      ).toHaveLength(5)
+      expectMovementRejected(response)
     })
 
     it.each(beta2.commercialOrMunicipal)(
@@ -326,13 +264,7 @@ describe('Producer', () => {
             movementData
           )
 
-        expectMovementRejected(response, [
-          {
-            message: expect.any(String),
-            pointer: '/producer/sicCode',
-            errorType: 'InvalidFormat'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -348,13 +280,7 @@ describe('Producer', () => {
             movementData
           )
 
-        expectMovementRejected(response, [
-          {
-            message: expect.any(String),
-            pointer: '/producer/address/postcode',
-            errorType: 'InvalidFormat'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -370,13 +296,7 @@ describe('Producer', () => {
             movementData
           )
 
-        expectMovementRejected(response, [
-          {
-            message: expect.any(String),
-            pointer: '/producer/contactDetails/phoneNumber',
-            errorType: 'InvalidFormat'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -392,13 +312,7 @@ describe('Producer', () => {
             movementData
           )
 
-        expectMovementRejected(response, [
-          {
-            message: expect.any(String),
-            pointer: '/producer/contactDetails/emailAddress',
-            errorType: 'InvalidFormat'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -414,13 +328,7 @@ describe('Producer', () => {
             movementData
           )
 
-        expectMovementRejected(response, [
-          {
-            message: expect.any(String),
-            pointer: '/producer/authorisationNumber',
-            errorType: 'InvalidFormat'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
   })

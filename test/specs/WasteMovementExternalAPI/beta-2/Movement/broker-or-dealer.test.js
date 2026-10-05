@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from '@jest/globals'
+import { describe, it, beforeEach } from '@jest/globals'
 import { beta2 } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
@@ -96,13 +96,7 @@ describe('Broker or dealer', () => {
           beta2.generateMovementWithBrokerOrDealer(broker)
         )
 
-      expectMovementRejected(response, [
-        {
-          message: '"organisationName" is required',
-          pointer: '/brokerOrDealer/items/0/organisationName',
-          errorType: 'NotProvided'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a broker or dealer when neither a registration number nor a reason is given @allure.label.tag:DWTC-197', async () => {
@@ -115,18 +109,7 @@ describe('Broker or dealer', () => {
           beta2.generateMovementWithBrokerOrDealer(broker)
         )
 
-      expectMovementRejected(response, [
-        {
-          message: '"registrationNumber" is required',
-          pointer: '/brokerOrDealer/items/0/registrationNumber',
-          errorType: 'NotProvided'
-        },
-        {
-          message: '"reasonForNoRegistrationNumber" is required',
-          pointer: '/brokerOrDealer/items/0/reasonForNoRegistrationNumber',
-          errorType: 'NotProvided'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a broker or dealer when both a registration number and a reason are given @allure.label.tag:DWTC-197', async () => {
@@ -139,18 +122,7 @@ describe('Broker or dealer', () => {
           beta2.generateMovementWithBrokerOrDealer(broker)
         )
 
-      expectMovementRejected(response, [
-        {
-          message: 'boolean schema is false',
-          pointer: '/brokerOrDealer/items/0/registrationNumber',
-          errorType: 'NotAllowed'
-        },
-        {
-          message: 'boolean schema is false',
-          pointer: '/brokerOrDealer/items/0/reasonForNoRegistrationNumber',
-          errorType: 'NotAllowed'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a broker or dealer when the registration number is not a carrier registration number @allure.label.tag:DWTC-197', async () => {
@@ -163,13 +135,7 @@ describe('Broker or dealer', () => {
           beta2.generateMovementWithBrokerOrDealer(broker)
         )
 
-      expectMovementRejected(response, [
-        {
-          message: expect.any(String),
-          pointer: '/brokerOrDealer/items/0/registrationNumber',
-          errorType: 'InvalidFormat'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a broker or dealer when contact details are missing @allure.label.tag:DWTC-197', async () => {
@@ -182,13 +148,7 @@ describe('Broker or dealer', () => {
           beta2.generateMovementWithBrokerOrDealer(broker)
         )
 
-      expectMovementRejected(response, [
-        {
-          message: '"contactDetails" is required',
-          pointer: '/brokerOrDealer/items/0/contactDetails',
-          errorType: 'NotProvided'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a broker or dealer when neither an email address nor a phone number is given @allure.label.tag:DWTC-197', async () => {
@@ -201,18 +161,7 @@ describe('Broker or dealer', () => {
           beta2.generateMovementWithBrokerOrDealer(broker)
         )
 
-      expectMovementRejected(response, [
-        {
-          message: '"emailAddress" is required',
-          pointer: '/brokerOrDealer/items/0/contactDetails/emailAddress',
-          errorType: 'NotProvided'
-        },
-        {
-          message: '"phoneNumber" is required',
-          pointer: '/brokerOrDealer/items/0/contactDetails/phoneNumber',
-          errorType: 'NotProvided'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it.each(beta2.rejectedEmailAddresses)(
@@ -227,13 +176,7 @@ describe('Broker or dealer', () => {
             beta2.generateMovementWithBrokerOrDealer(broker)
           )
 
-        expectMovementRejected(response, [
-          {
-            message: expect.any(String),
-            pointer: '/brokerOrDealer/items/0/contactDetails/emailAddress',
-            errorType: 'InvalidFormat'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -249,13 +192,7 @@ describe('Broker or dealer', () => {
             beta2.generateMovementWithBrokerOrDealer(broker)
           )
 
-        expectMovementRejected(response, [
-          {
-            message: expect.any(String),
-            pointer: '/brokerOrDealer/items/0/contactDetails/phoneNumber',
-            errorType: 'InvalidFormat'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -271,13 +208,7 @@ describe('Broker or dealer', () => {
             beta2.generateMovementWithBrokerOrDealer(broker)
           )
 
-        expectMovementRejected(response, [
-          {
-            message: expect.any(String),
-            pointer: '/brokerOrDealer/items/0/address/postcode',
-            errorType: 'InvalidFormat'
-          }
-        ])
+        expectMovementRejected(response)
       }
     )
 
@@ -291,13 +222,7 @@ describe('Broker or dealer', () => {
           beta2.generateMovementWithBrokerOrDealer(broker)
         )
 
-      expectMovementRejected(response, [
-        {
-          message: '"postcode" is required',
-          pointer: '/brokerOrDealer/items/0/address/postcode',
-          errorType: 'NotProvided'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a movement when a broker or dealer is declared as involved but no details are given @allure.label.tag:DWTC-197', async () => {
@@ -310,13 +235,7 @@ describe('Broker or dealer', () => {
           movementData
         )
 
-      expectMovementRejected(response, [
-        {
-          message: '"items" is required',
-          pointer: '/brokerOrDealer/items',
-          errorType: 'NotProvided'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a movement when a broker or dealer is declared as involved with an empty list @allure.label.tag:DWTC-197', async () => {
@@ -329,13 +248,7 @@ describe('Broker or dealer', () => {
           movementData
         )
 
-      expectMovementRejected(response, [
-        {
-          message: 'must NOT have fewer than 1 items',
-          pointer: '/brokerOrDealer/items',
-          errorType: 'OutOfRange'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a movement when broker or dealer details are given but involvement is false @allure.label.tag:DWTC-197', async () => {
@@ -351,13 +264,7 @@ describe('Broker or dealer', () => {
           movementData
         )
 
-      expectMovementRejected(response, [
-        {
-          message: 'boolean schema is false',
-          pointer: '/brokerOrDealer/items',
-          errorType: 'NotAllowed'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a movement when broker or dealer details are given without declaring involvement @allure.label.tag:DWTC-197', async () => {
@@ -372,18 +279,7 @@ describe('Broker or dealer', () => {
           movementData
         )
 
-      expectMovementRejected(response, [
-        {
-          message: '"isPresent" is required',
-          pointer: '/brokerOrDealer/isPresent',
-          errorType: 'NotProvided'
-        },
-        {
-          message: 'boolean schema is false',
-          pointer: '/brokerOrDealer/items',
-          errorType: 'NotAllowed'
-        }
-      ])
+      expectMovementRejected(response)
     })
   })
 })

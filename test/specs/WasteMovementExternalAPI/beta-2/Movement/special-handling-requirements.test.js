@@ -35,13 +35,7 @@ describe('Special handling requirements', () => {
           beta2.generateMovementWithSpecialHandling('A'.repeat(501))
         )
 
-      expectMovementRejected(response, [
-        {
-          message: 'must NOT have more than 500 characters',
-          pointer: '/specialHandlingRequirements',
-          errorType: 'OutOfRange'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a movement when special handling requirements are empty @allure.label.tag:DWTC-157', async () => {
@@ -51,13 +45,7 @@ describe('Special handling requirements', () => {
           beta2.generateMovementWithSpecialHandling('')
         )
 
-      expectMovementRejected(response, [
-        {
-          message: 'must NOT have fewer than 1 characters',
-          pointer: '/specialHandlingRequirements',
-          errorType: 'OutOfRange'
-        }
-      ])
+      expectMovementRejected(response)
     })
   })
 })

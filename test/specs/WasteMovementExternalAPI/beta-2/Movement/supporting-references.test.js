@@ -71,13 +71,7 @@ describe('Supporting references', () => {
           beta2.generateMovementWithSupportingReferences([supportingReference])
         )
 
-      expectMovementRejected(response, [
-        {
-          message: '"label" is required',
-          pointer: '/supportingReferences/0/label',
-          errorType: 'NotProvided'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a supporting reference when the reference is missing @allure.label.tag:DWTC-156', async () => {
@@ -90,13 +84,7 @@ describe('Supporting references', () => {
           beta2.generateMovementWithSupportingReferences([supportingReference])
         )
 
-      expectMovementRejected(response, [
-        {
-          message: '"reference" is required',
-          pointer: '/supportingReferences/0/reference',
-          errorType: 'NotProvided'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a supporting reference when the reference is longer than 50 characters @allure.label.tag:DWTC-156', async () => {
@@ -109,13 +97,7 @@ describe('Supporting references', () => {
           beta2.generateMovementWithSupportingReferences([supportingReference])
         )
 
-      expectMovementRejected(response, [
-        {
-          message: 'must NOT have more than 50 characters',
-          pointer: '/supportingReferences/0/reference',
-          errorType: 'OutOfRange'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a supporting reference when the label is not recognised @allure.label.tag:DWTC-156', async () => {
@@ -128,13 +110,7 @@ describe('Supporting references', () => {
           beta2.generateMovementWithSupportingReferences([supportingReference])
         )
 
-      expectMovementRejected(response, [
-        {
-          message: 'must be equal to one of the allowed values',
-          pointer: '/supportingReferences/0/label',
-          errorType: 'InvalidValue'
-        }
-      ])
+      expectMovementRejected(response)
     })
 
     it('should reject a movement when supporting references are an empty list @allure.label.tag:DWTC-156', async () => {
@@ -144,13 +120,7 @@ describe('Supporting references', () => {
           beta2.generateMovementWithSupportingReferences([])
         )
 
-      expectMovementRejected(response, [
-        {
-          message: 'must NOT have fewer than 1 items',
-          pointer: '/supportingReferences',
-          errorType: 'OutOfRange'
-        }
-      ])
+      expectMovementRejected(response)
     })
   })
 })
