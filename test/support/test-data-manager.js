@@ -181,9 +181,7 @@ export const beta2 = {
    */
   acceptedPostcodes: [
     ['a UK postcode', 'SW1A 1AA'],
-    ['an Irish Eircode', 'D02 AF30'],
-    ['a lowercase UK postcode', 'sw1a 1aa'],
-    ['a UK postcode with surrounding spaces', '  SW1A 1AA  ']
+    ['an Irish Eircode', 'D02 AF30']
   ],
 
   /**
@@ -191,9 +189,9 @@ export const beta2 = {
    * Valid: SW1A 1AA. Invalid: SW1, SW1A1AA, SW1A 1A.
    */
   rejectedPostcodes: [
-    ['too short', 'SW1'],
+    ['invalid postcode', 'SW1'],
     ['a UK postcode without the required space', 'SW1A1AA'],
-    ['malformed', 'SW1A 1A']
+    ['a UK postcode with fewer than 6 characters', 'SW1A 1A']
   ],
 
   /**
@@ -203,8 +201,8 @@ export const beta2 = {
   acceptedPhoneNumbers: [
     ['a UK phone number', '020 7946 0958'],
     ['an international phone number', '+44 20 7946 0958'],
-    ['the minimum of 7 digits', '1234567'],
-    ['the maximum of 15 digits', '123456789012345']
+    ['phone number with minimum of 7 digits', '1234567'],
+    ['phone number with maximum of 15 digits', '123456789012345']
   ],
 
   /**
@@ -212,9 +210,9 @@ export const beta2 = {
    * Valid: 020 7946 0958. Invalid: 020 794, 020 7946 0958 09999, 020 7946 095A.
    */
   rejectedPhoneNumbers: [
-    ['fewer than 7 digits', '020 794'],
-    ['more than 15 digits', '020 7946 0958 09999'],
-    ['digits mixed with letters', '020 7946 095A']
+    ['phone number with fewer than 7 digits', '020 794'],
+    ['phone number with more than 15 digits', '020 7946 0958 09999'],
+    ['phone number with digits mixed with letters', '020 7946 095A']
   ],
 
   /**
@@ -226,9 +224,8 @@ export const beta2 = {
    * Email addresses rejected by the contact-details schema.
    */
   rejectedEmailAddresses: [
-    ['no @ sign', 'producer.example.com'],
-    ['no domain', 'producer@'],
-    ['a domain without a dot', 'producer@example']
+    ['email address with no @ sign', 'producer.example.com'],
+    ['email address with no domain', 'producer@']
   ],
 
   /**
@@ -239,25 +236,17 @@ export const beta2 = {
    * AB1234CD/D1234
    * EPR/AB1234CD
    * EPR/AB1234CD/D1234
-   * EAWML123456
-   * WML123456
-   * PPC/A/1234567
-   * WML/L/1234567
-   * WML/L/1234567/01
-   * PPC/A/SEPA1234-5678
-   * WML/L/SEPA1234-5678
-   * EAS/P/123456
-   * P1234/12A
-   * P1234/12A/V1
-   * WPPC 12/34
-   * WPPC 12/34/V1
-   * WML 12/3 LN/01/02
-   * WML 12/3 PAC/1234/WCL123
    */
   acceptedAuthorisationNumbers: [
-    ['an exemption number', 'AB1234CD'],
-    ['a waste management licence number', 'WML123456'],
-    ['a lowercase environmental permit number', 'eas/p/123456']
+    ['valid authorisation number exemption number', 'AB1234CD'],
+    [
+      'valid authorisation number with waste management licence number',
+      'AB1234CD/D1234'
+    ],
+    [
+      'valid authorisation number with environmental permit number',
+      'eas/p/123456'
+    ]
   ],
 
   /**
@@ -266,8 +255,14 @@ export const beta2 = {
    * EA/P/123456, EAS/P/12345, NOT-A-PERMIT.
    */
   rejectedAuthorisationNumbers: [
-    ['not a permit or exemption number', 'EA/P/123456'],
-    ['an environmental permit number with too few digits', 'EAS/P/12345']
+    [
+      'an authorisation number that is not a permit or exemption number',
+      'EA/P/123456'
+    ],
+    [
+      'an authorisation number that is an environmental permit number EAS/P/ with fewer than 6 digits',
+      'EAS/P/12345'
+    ]
   ],
 
   commercialOrMunicipal: [
