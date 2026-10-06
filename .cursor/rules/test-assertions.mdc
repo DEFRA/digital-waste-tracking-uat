@@ -17,5 +17,5 @@ alwaysApply: true
 
 - **Exact Error Matching**: For error cases, use `toEqual()` with exact expected structure
 - **Receipt validation errors**: `/movements/receive` errors use `key`, `errorType`, and `message`
-- **Beta-1 problem details**: `/beta-1` errors use `type`, `title`, `detail`, `instance`, and `requestId`. Assert `response.headers['x-request-id']` with `expect.any(String)`, then set `requestId` to that header. See `beta-1-national-waste-movements.mdc`
+- **Collections beta problem details**: `/beta-1`, `/beta-2`, `/beta-3`, and later versions use `type`, `title`, `detail`, `instance`, and `requestId`. Assert `response.headers['x-request-id']` with `expect.any(String)`, then set `requestId` to that header. See `collections-beta.mdc`
 - **Exact Return Body**: For error case tests, verify the exact return body structure

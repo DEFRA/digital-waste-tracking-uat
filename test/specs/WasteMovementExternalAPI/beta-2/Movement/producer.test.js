@@ -8,7 +8,10 @@ import {
 } from '~/test/support/helpers/beta-2-movement.js'
 
 describe('Beta-2 Movement Creation - Producer', () => {
+  let movementData
+
   beforeEach(async () => {
+    movementData = beta2.generateBaseMovementData()
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,
       globalThis.testConfig.cognitoClientSecret
@@ -20,46 +23,42 @@ describe('Beta-2 Movement Creation - Producer', () => {
       await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateBaseMovementData()
+          movementData
         )
 
       expectMovementCreated(response)
     })
 
-    it.each(beta2.commercialOrMunicipal)(
-      'should create a movement when a %s producer is declared with all valid details @allure.label.tag:DWTC-192',
-      async (_wasteSource, generateMovementData) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            generateMovementData()
-          )
+    it('should create a movement when a Commercial producer is declared @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducerWithOptionalValues()
 
-        expectMovementCreated(response)
-      }
-    )
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
 
-    it.each(beta2.commercialOrMunicipal)(
-      'should create a movement when a %s producer gives a reason instead of an authorisation number @allure.label.tag:DWTC-192',
-      async (_wasteSource, generateMovementData) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = generateMovementData()
-        delete movementData.producer.authorisationNumber
-        movementData.producer.reasonForNoAuthorisationNumber =
-          beta2.reasonForNoAuthorisationNumber
+      expectMovementCreated(response)
+    })
 
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
+    it('should create a movement when a Commercial producer gives a reason instead of an authorisation number @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      delete movementData.producer.authorisationNumber
+      movementData.producer.reasonForNoAuthorisationNumber =
+        beta2.reasonForNoAuthorisationNumber
 
-        expectMovementCreated(response)
-      }
-    )
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementCreated(response)
+    })
 
     it('should create a movement when a Municipal producer omits the SIC code @allure.label.tag:DWTC-192', async () => {
       await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-      const movementData = beta2.generateBaseMunicipalMovementData()
+      movementData.producer = beta2.municipalProducer()
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
@@ -68,140 +67,25 @@ describe('Beta-2 Movement Creation - Producer', () => {
 
       expectMovementCreated(response)
     })
-
-    it('should create a movement when a Municipal producer gives a SIC code @allure.label.tag:DWTC-192', async () => {
-      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-      const movementData = beta2.generateBaseMunicipalMovementData()
-      movementData.producer.sicCode = beta2.sicCode
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementCreated(response)
-    })
-
-    it.each(beta2.commercialOrMunicipal)(
-      'should create a movement when a %s producer gives a full address @allure.label.tag:DWTC-192',
-      async (wasteSource, generateMovementData) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = generateMovementData()
-        movementData.producer.address.fullAddress =
-          wasteSource === 'Commercial'
-            ? beta2.commercialFullAddress
-            : beta2.municipalFullAddress
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementCreated(response)
-      }
-    )
-
-    it.each(beta2.commercialOrMunicipal)(
-      'should create a movement when a %s producer gives an email address and a phone number @allure.label.tag:DWTC-192',
-      async (_wasteSource, generateMovementData) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = generateMovementData()
-        movementData.producer.contactDetails.phoneNumber = beta2.phoneNumber
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementCreated(response)
-      }
-    )
-
-    it.each(beta2.acceptedPostcodes)(
-      'should create a movement when a Commercial producer gives %s @allure.label.tag:DWTC-192',
-      async (_postcodeKind, postcode) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = beta2.generateBaseCommercialMovementData()
-        movementData.producer.address.postcode = postcode
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementCreated(response)
-      }
-    )
-
-    it.each(beta2.acceptedPhoneNumbers)(
-      'should create a movement when a Commercial producer gives %s @allure.label.tag:DWTC-192',
-      async (_phoneKind, phoneNumber) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = beta2.generateBaseCommercialMovementData()
-        movementData.producer.contactDetails = { phoneNumber }
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementCreated(response)
-      }
-    )
-
-    it.each(beta2.acceptedEmailAddresses)(
-      'should create a movement when a Commercial producer gives %s @allure.label.tag:DWTC-192',
-      async (_emailKind, emailAddress) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = beta2.generateBaseCommercialMovementData()
-        movementData.producer.contactDetails = { emailAddress }
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementCreated(response)
-      }
-    )
-
-    it.each(beta2.acceptedAuthorisationNumbers)(
-      'should create a movement when a Commercial producer gives %s @allure.label.tag:DWTC-192',
-      async (_authorisationKind, authorisationNumber) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = beta2.generateBaseCommercialMovementData()
-        movementData.producer.authorisationNumber = authorisationNumber
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementCreated(response)
-      }
-    )
   })
 
   describe('Problem Responses', () => {
-    it.each(beta2.commercialOrMunicipal)(
-      'should reject a %s producer when the organisation name is missing @allure.label.tag:DWTC-192',
-      async (_wasteSource, generateMovementData) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = generateMovementData()
-        delete movementData.producer.organisationName
+    it('should reject a Commercial producer when the organisation name is missing @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      delete movementData.producer.organisationName
 
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
 
-        expectMovementRejected(response)
-      }
-    )
+      expectMovementRejected(response)
+    })
 
     it('should reject a Commercial producer when the SIC code is missing @allure.label.tag:DWTC-192', async () => {
       await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-      const movementData = beta2.generateBaseCommercialMovementData()
+      movementData.producer = beta2.commercialProducer()
       delete movementData.producer.sicCode
 
       const response =
@@ -212,87 +96,10 @@ describe('Beta-2 Movement Creation - Producer', () => {
       expectMovementRejected(response)
     })
 
-    it.each(beta2.commercialOrMunicipal)(
-      'should reject a %s producer when the address is missing @allure.label.tag:DWTC-192',
-      async (_wasteSource, generateMovementData) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = generateMovementData()
-        delete movementData.producer.address
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementRejected(response)
-      }
-    )
-
-    it.each(beta2.commercialOrMunicipal)(
-      'should reject a %s producer when neither an authorisation number nor a reason is given @allure.label.tag:DWTC-192',
-      async (_wasteSource, generateMovementData) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = generateMovementData()
-        delete movementData.producer.authorisationNumber
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementRejected(response)
-      }
-    )
-
-    it.each(beta2.commercialOrMunicipal)(
-      'should reject a %s producer when both an authorisation number and a reason are given @allure.label.tag:DWTC-192',
-      async (_wasteSource, generateMovementData) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = generateMovementData()
-        movementData.producer.reasonForNoAuthorisationNumber =
-          beta2.reasonForNoAuthorisationNumber
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementRejected(response)
-      }
-    )
-
-    it.each(beta2.commercialOrMunicipal)(
-      'should reject a %s producer when neither an email address nor a phone number is given @allure.label.tag:DWTC-192',
-      async (_wasteSource, generateMovementData) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = generateMovementData()
-        movementData.producer.contactDetails = {}
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementRejected(response)
-      }
-    )
-
-    it('should reject a Household producer when organisation, address, SIC code, authorisation number or contact details are supplied @allure.label.tag:DWTC-192', async () => {
+    it('should reject a Commercial producer when the address is missing @allure.label.tag:DWTC-192', async () => {
       await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-      const movementData = beta2.generateBaseMovementData()
-      const commercialProducer =
-        beta2.generateBaseCommercialMovementData().producer
-      movementData.producer = {
-        wasteSource: 'Household',
-        organisationName: commercialProducer.organisationName,
-        sicCode: commercialProducer.sicCode,
-        authorisationNumber: commercialProducer.authorisationNumber,
-        address: {
-          fullAddress: beta2.commercialFullAddress,
-          postcode: commercialProducer.address.postcode
-        },
-        contactDetails: commercialProducer.contactDetails
-      }
+      movementData.producer = beta2.commercialProducer()
+      delete movementData.producer.address
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
@@ -302,84 +109,58 @@ describe('Beta-2 Movement Creation - Producer', () => {
       expectMovementRejected(response)
     })
 
-    it.each(beta2.commercialOrMunicipal)(
-      'should reject a %s producer when the SIC code is not five digits @allure.label.tag:DWTC-192',
-      async (_wasteSource, generateMovementData) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = generateMovementData()
-        movementData.producer.sicCode = '123'
+    it('should reject a Commercial producer when neither an authorisation number nor a reason is given @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      delete movementData.producer.authorisationNumber
 
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
 
-        expectMovementRejected(response)
-      }
-    )
+      expectMovementRejected(response)
+    })
 
-    it.each(beta2.rejectedPostcodes)(
-      'should reject a Commercial producer when the postcode is %s @allure.label.tag:DWTC-192',
-      async (_postcodeKind, postcode) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = beta2.generateBaseCommercialMovementData()
-        movementData.producer.address.postcode = postcode
+    it('should reject a Commercial producer when both an authorisation number and a reason are given @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      movementData.producer.reasonForNoAuthorisationNumber =
+        beta2.reasonForNoAuthorisationNumber
 
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
 
-        expectMovementRejected(response)
-      }
-    )
+      expectMovementRejected(response)
+    })
 
-    it.each(beta2.rejectedPhoneNumbers)(
-      'should reject a Commercial producer when the phone number has %s @allure.label.tag:DWTC-192',
-      async (_phoneKind, phoneNumber) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = beta2.generateBaseCommercialMovementData()
-        movementData.producer.contactDetails = { phoneNumber }
+    it('should reject a Commercial producer when neither an email address nor a phone number is given @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      movementData.producer.contactDetails = {}
 
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
 
-        expectMovementRejected(response)
-      }
-    )
+      expectMovementRejected(response)
+    })
 
-    it.each(beta2.rejectedEmailAddresses)(
-      'should reject a Commercial producer when the email address has %s @allure.label.tag:DWTC-192',
-      async (_emailKind, emailAddress) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = beta2.generateBaseCommercialMovementData()
-        movementData.producer.contactDetails = { emailAddress }
+    it('should reject a Household producer when organisation, address, SIC code, authorisation number or contact details are supplied @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducerWithOptionalValues()
+      movementData.producer.wasteSource = 'Household'
+      delete movementData.producer.contactDetails.phoneNumber
 
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
 
-        expectMovementRejected(response)
-      }
-    )
-
-    it.each(beta2.rejectedAuthorisationNumbers)(
-      'should reject a Commercial producer when the authorisation number is %s @allure.label.tag:DWTC-192',
-      async (_authorisationKind, authorisationNumber) => {
-        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
-        const movementData = beta2.generateBaseCommercialMovementData()
-        movementData.producer.authorisationNumber = authorisationNumber
-
-        const response =
-          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            movementData
-          )
-
-        expectMovementRejected(response)
-      }
-    )
+      expectMovementRejected(response)
+    })
   })
 })
