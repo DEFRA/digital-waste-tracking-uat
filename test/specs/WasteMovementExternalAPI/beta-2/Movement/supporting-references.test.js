@@ -18,11 +18,14 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
   describe('Successful Creation', () => {
     it('should create a movement when one supporting reference is provided @allure.label.tag:DWTC-156', async () => {
       await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
+      const movementData = beta2.generateBaseMovementData()
+      movementData.supportingReferences = [
+        beta2.generateBaseSupportingReference()
+      ]
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithSupportingReferences([
-            beta2.generateSupportingReference()
-          ])
+          movementData
         )
 
       expectMovementCreated(response)
@@ -32,14 +35,14 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
       'should create a movement when a supporting reference uses the label %s @allure.label.tag:DWTC-156',
       async (label) => {
         await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
-        const supportingReference = beta2.generateSupportingReference()
+        const supportingReference = beta2.generateBaseSupportingReference()
         supportingReference.label = label
+        const movementData = beta2.generateBaseMovementData()
+        movementData.supportingReferences = [supportingReference]
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            beta2.generateMovementWithSupportingReferences([
-              supportingReference
-            ])
+            movementData
           )
 
         expectMovementCreated(response)
@@ -48,12 +51,14 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
 
     it('should create a movement when a supporting reference is exactly 50 characters @allure.label.tag:DWTC-156', async () => {
       await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
-      const supportingReference = beta2.generateSupportingReference()
+      const supportingReference = beta2.generateBaseSupportingReference()
       supportingReference.reference = 'A'.repeat(50)
+      const movementData = beta2.generateBaseMovementData()
+      movementData.supportingReferences = [supportingReference]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithSupportingReferences([supportingReference])
+          movementData
         )
 
       expectMovementCreated(response)
@@ -63,12 +68,14 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
   describe('Problem Responses', () => {
     it('should reject a supporting reference when the label is missing @allure.label.tag:DWTC-156', async () => {
       await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
-      const supportingReference = beta2.generateSupportingReference()
+      const supportingReference = beta2.generateBaseSupportingReference()
       delete supportingReference.label
+      const movementData = beta2.generateBaseMovementData()
+      movementData.supportingReferences = [supportingReference]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithSupportingReferences([supportingReference])
+          movementData
         )
 
       expectMovementRejected(response)
@@ -76,12 +83,14 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
 
     it('should reject a supporting reference when the reference is missing @allure.label.tag:DWTC-156', async () => {
       await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
-      const supportingReference = beta2.generateSupportingReference()
+      const supportingReference = beta2.generateBaseSupportingReference()
       delete supportingReference.reference
+      const movementData = beta2.generateBaseMovementData()
+      movementData.supportingReferences = [supportingReference]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithSupportingReferences([supportingReference])
+          movementData
         )
 
       expectMovementRejected(response)
@@ -89,12 +98,14 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
 
     it('should reject a supporting reference when the reference is longer than 50 characters @allure.label.tag:DWTC-156', async () => {
       await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
-      const supportingReference = beta2.generateSupportingReference()
+      const supportingReference = beta2.generateBaseSupportingReference()
       supportingReference.reference = 'A'.repeat(51)
+      const movementData = beta2.generateBaseMovementData()
+      movementData.supportingReferences = [supportingReference]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithSupportingReferences([supportingReference])
+          movementData
         )
 
       expectMovementRejected(response)
@@ -102,12 +113,14 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
 
     it('should reject a supporting reference when the label is not recognised @allure.label.tag:DWTC-156', async () => {
       await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
-      const supportingReference = beta2.generateSupportingReference()
+      const supportingReference = beta2.generateBaseSupportingReference()
       supportingReference.label = 'Purchase order'
+      const movementData = beta2.generateBaseMovementData()
+      movementData.supportingReferences = [supportingReference]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithSupportingReferences([supportingReference])
+          movementData
         )
 
       expectMovementRejected(response)
@@ -115,9 +128,12 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
 
     it('should reject a movement when supporting references are an empty list @allure.label.tag:DWTC-156', async () => {
       await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
+      const movementData = beta2.generateBaseMovementData()
+      movementData.supportingReferences = []
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithSupportingReferences([])
+          movementData
         )
 
       expectMovementRejected(response)

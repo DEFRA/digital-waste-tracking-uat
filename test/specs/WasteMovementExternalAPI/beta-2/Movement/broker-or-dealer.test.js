@@ -18,9 +18,12 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
   describe('Successful Creation', () => {
     it('should create a movement when broker or dealer involvement is declared as false @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: false }
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealerNotInvolved()
+          movementData
         )
 
       expectMovementCreated(response)
@@ -28,17 +31,18 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should create a movement when more than one broker or dealer is declared @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const secondBroker = beta2.generateBrokerOrDealerEntry()
-      secondBroker.organisationName = 'Second Broker Ltd'
-      secondBroker.registrationNumber = 'ROC UT 9999'
-      secondBroker.contactDetails = { phoneNumber: '01112223333' }
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = {
+        isPresent: true,
+        items: [
+          beta2.generateBaseBrokerOrDealer(),
+          beta2.generateSecondBrokerOrDealer()
+        ]
+      }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(
-            beta2.generateBrokerOrDealerEntry(),
-            secondBroker
-          )
+          movementData
         )
 
       expectMovementCreated(response)
@@ -46,12 +50,15 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should create a movement when a broker or dealer is declared without an address @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const broker = beta2.generateBrokerOrDealerEntry()
-      delete broker.address
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = {
+        isPresent: true,
+        items: [beta2.generateBaseBrokerOrDealer()]
+      }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(broker)
+          movementData
         )
 
       expectMovementCreated(response)
@@ -59,13 +66,16 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should create a movement when a broker or dealer gives a reason instead of a registration number @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const broker = beta2.generateBrokerOrDealerEntry()
+      const broker = beta2.generateBaseBrokerOrDealer()
       delete broker.registrationNumber
-      broker.reasonForNoRegistrationNumber = 'One-off arrangement'
+      broker.reasonForNoRegistrationNumber =
+        beta2.reasonForNoRegistrationNumber
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(broker)
+          movementData
         )
 
       expectMovementCreated(response)
@@ -73,12 +83,14 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should create a movement when a broker or dealer gives only a phone number as contact @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const broker = beta2.generateBrokerOrDealerEntry()
-      broker.contactDetails = { phoneNumber: '01112223333' }
+      const broker = beta2.generateBaseBrokerOrDealer()
+      broker.contactDetails = { phoneNumber: beta2.brokerPhoneNumber }
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(broker)
+          movementData
         )
 
       expectMovementCreated(response)
@@ -88,12 +100,14 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
   describe('Problem Responses', () => {
     it('should reject a broker or dealer when the organisation name is missing @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const broker = beta2.generateBrokerOrDealerEntry()
+      const broker = beta2.generateBaseBrokerOrDealer()
       delete broker.organisationName
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(broker)
+          movementData
         )
 
       expectMovementRejected(response)
@@ -101,12 +115,14 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should reject a broker or dealer when neither a registration number nor a reason is given @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const broker = beta2.generateBrokerOrDealerEntry()
+      const broker = beta2.generateBaseBrokerOrDealer()
       delete broker.registrationNumber
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(broker)
+          movementData
         )
 
       expectMovementRejected(response)
@@ -114,12 +130,15 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should reject a broker or dealer when both a registration number and a reason are given @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const broker = beta2.generateBrokerOrDealerEntry()
-      broker.reasonForNoRegistrationNumber = 'One-off arrangement'
+      const broker = beta2.generateBaseBrokerOrDealer()
+      broker.reasonForNoRegistrationNumber =
+        beta2.reasonForNoRegistrationNumber
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(broker)
+          movementData
         )
 
       expectMovementRejected(response)
@@ -127,12 +146,14 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should reject a broker or dealer when the registration number is not a carrier registration number @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const broker = beta2.generateBrokerOrDealerEntry()
+      const broker = beta2.generateBaseBrokerOrDealer()
       broker.registrationNumber = 'NOT-A-REGISTRATION'
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(broker)
+          movementData
         )
 
       expectMovementRejected(response)
@@ -140,12 +161,14 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should reject a broker or dealer when contact details are missing @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const broker = beta2.generateBrokerOrDealerEntry()
+      const broker = beta2.generateBaseBrokerOrDealer()
       delete broker.contactDetails
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(broker)
+          movementData
         )
 
       expectMovementRejected(response)
@@ -153,12 +176,14 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should reject a broker or dealer when neither an email address nor a phone number is given @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const broker = beta2.generateBrokerOrDealerEntry()
+      const broker = beta2.generateBaseBrokerOrDealer()
       broker.contactDetails = {}
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(broker)
+          movementData
         )
 
       expectMovementRejected(response)
@@ -168,12 +193,14 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
       'should reject a broker or dealer when the email address has %s @allure.label.tag:DWTC-197',
       async (_emailKind, emailAddress) => {
         await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-        const broker = beta2.generateBrokerOrDealerEntry()
+        const broker = beta2.generateBaseBrokerOrDealer()
         broker.contactDetails = { emailAddress }
+        const movementData = beta2.generateBaseMovementData()
+        movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            beta2.generateMovementWithBrokerOrDealer(broker)
+            movementData
           )
 
         expectMovementRejected(response)
@@ -184,12 +211,14 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
       'should reject a broker or dealer when the phone number has %s @allure.label.tag:DWTC-197',
       async (_phoneKind, phoneNumber) => {
         await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-        const broker = beta2.generateBrokerOrDealerEntry()
+        const broker = beta2.generateBaseBrokerOrDealer()
         broker.contactDetails = { phoneNumber }
+        const movementData = beta2.generateBaseMovementData()
+        movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            beta2.generateMovementWithBrokerOrDealer(broker)
+            movementData
           )
 
         expectMovementRejected(response)
@@ -200,12 +229,15 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
       'should reject a broker or dealer when the postcode is %s @allure.label.tag:DWTC-197',
       async (_postcodeKind, postcode) => {
         await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-        const broker = beta2.generateBrokerOrDealerEntry()
+        const broker = beta2.generateBaseBrokerOrDealer()
+        broker.address = beta2.generateBrokerAddress()
         broker.address.postcode = postcode
+        const movementData = beta2.generateBaseMovementData()
+        movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-            beta2.generateMovementWithBrokerOrDealer(broker)
+            movementData
           )
 
         expectMovementRejected(response)
@@ -214,12 +246,15 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should reject a broker or dealer when an address is given without a postcode @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const broker = beta2.generateBrokerOrDealerEntry()
+      const broker = beta2.generateBaseBrokerOrDealer()
+      broker.address = beta2.generateBrokerAddress()
       delete broker.address.postcode
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithBrokerOrDealer(broker)
+          movementData
         )
 
       expectMovementRejected(response)
@@ -227,7 +262,7 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should reject a movement when a broker or dealer is declared as involved but no details are given @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const movementData = beta2.generateHouseholdMovementData()
+      const movementData = beta2.generateBaseMovementData()
       movementData.brokerOrDealer = { isPresent: true }
 
       const response =
@@ -240,7 +275,7 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should reject a movement when a broker or dealer is declared as involved with an empty list @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const movementData = beta2.generateHouseholdMovementData()
+      const movementData = beta2.generateBaseMovementData()
       movementData.brokerOrDealer = { isPresent: true, items: [] }
 
       const response =
@@ -253,10 +288,10 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should reject a movement when broker or dealer details are given but involvement is false @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const movementData = beta2.generateHouseholdMovementData()
+      const movementData = beta2.generateBaseMovementData()
       movementData.brokerOrDealer = {
         isPresent: false,
-        items: [beta2.generateBrokerOrDealerEntry()]
+        items: [beta2.generateBaseBrokerOrDealer()]
       }
 
       const response =
@@ -269,9 +304,9 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
 
     it('should reject a movement when broker or dealer details are given without declaring involvement @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
-      const movementData = beta2.generateHouseholdMovementData()
+      const movementData = beta2.generateBaseMovementData()
       movementData.brokerOrDealer = {
-        items: [beta2.generateBrokerOrDealerEntry()]
+        items: [beta2.generateBaseBrokerOrDealer()]
       }
 
       const response =

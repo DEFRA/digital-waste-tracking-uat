@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Municipal Producer With Mandatory Fields
+  name: Create Movement - Commercial Producer With All Fields
   type: http
-  seq: 1
+  seq: 2
 }
 
 post {
@@ -19,16 +19,50 @@ body:json {
   {
     "apiCode": "{{apiCode}}",
     "producer": {
-      "wasteSource": "Municipal",
-      "organisationName": "Test Council",
+      "wasteSource": "Commercial",
+      "organisationName": "ACME Waste Producers Ltd",
       "authorisationNumber": "EAS/P/123456",
+      "sicCode": "38110",
       "address": {
-        "postcode": "TE1 5CD"
+        "fullAddress": "10 Industrial Way, Test City",
+        "postcode": "TE1 2PQ"
       },
       "contactDetails": {
-        "emailAddress": "waste.services@example.gov.uk"
+        "emailAddress": "producer@example.com",
+        "phoneNumber": "01234567890"
       }
-    }
+    },
+    "brokerOrDealer": {
+      "isPresent": true,
+      "items": [
+        {
+          "organisationName": "Broker Demo Ltd",
+          "registrationNumber": "CBDU654321",
+          "contactDetails": {
+            "emailAddress": "broker@example.com"
+          },
+          "address": {
+            "fullAddress": "2 Broker Yard, Test City",
+            "postcode": "TE1 1ST"
+          }
+        }
+      ]
+    },
+    "supportingReferences": [
+      {
+        "label": "PO Number",
+        "reference": "PO-48213"
+      },
+      {
+        "label": "Job Number",
+        "reference": "JB-9931"
+      },
+      {
+        "label": "Weighbridge Number",
+        "reference": "WB-9931"
+      }
+    ],
+    "specialHandlingRequirements": "Handle with care and keep upright."
   }
 }
 
@@ -47,6 +81,7 @@ script:post-response {
   movementIds.push(movementId);
   bru.setVar('movementIds', movementIds);
 }
+
 tests {
   test("status is 201", function () {
     expect(res.getStatus()).to.equal(201);

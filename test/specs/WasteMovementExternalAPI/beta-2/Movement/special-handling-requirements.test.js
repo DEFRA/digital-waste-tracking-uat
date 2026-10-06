@@ -18,9 +18,12 @@ describe('Beta-2 Movement Creation - Special handling requirements', () => {
   describe('Successful Creation', () => {
     it('should create a movement when special handling requirements are exactly 500 characters @allure.label.tag:DWTC-157', async () => {
       await addAllureLink('/DWTC-157', 'DWTC-157', 'jira')
+      const movementData = beta2.generateBaseMovementData()
+      movementData.specialHandlingRequirements = 'A'.repeat(500)
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithSpecialHandling('A'.repeat(500))
+          movementData
         )
 
       expectMovementCreated(response)
@@ -30,9 +33,12 @@ describe('Beta-2 Movement Creation - Special handling requirements', () => {
   describe('Problem Responses', () => {
     it('should reject a movement when special handling requirements are longer than 500 characters @allure.label.tag:DWTC-157', async () => {
       await addAllureLink('/DWTC-157', 'DWTC-157', 'jira')
+      const movementData = beta2.generateBaseMovementData()
+      movementData.specialHandlingRequirements = 'A'.repeat(501)
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithSpecialHandling('A'.repeat(501))
+          movementData
         )
 
       expectMovementRejected(response)
@@ -40,9 +46,12 @@ describe('Beta-2 Movement Creation - Special handling requirements', () => {
 
     it('should reject a movement when special handling requirements are empty @allure.label.tag:DWTC-157', async () => {
       await addAllureLink('/DWTC-157', 'DWTC-157', 'jira')
+      const movementData = beta2.generateBaseMovementData()
+      movementData.specialHandlingRequirements = ''
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateMovementWithSpecialHandling('')
+          movementData
         )
 
       expectMovementRejected(response)
