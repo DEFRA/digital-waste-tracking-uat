@@ -68,8 +68,7 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
       const broker = beta2.generateBaseBrokerOrDealer()
       delete broker.registrationNumber
-      broker.reasonForNoRegistrationNumber =
-        beta2.reasonForNoRegistrationNumber
+      broker.reasonForNoRegistrationNumber = beta2.reasonForNoRegistrationNumber
       const movementData = beta2.generateBaseMovementData()
       movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 
@@ -131,8 +130,7 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
     it('should reject a broker or dealer when both a registration number and a reason are given @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
       const broker = beta2.generateBaseBrokerOrDealer()
-      broker.reasonForNoRegistrationNumber =
-        beta2.reasonForNoRegistrationNumber
+      broker.reasonForNoRegistrationNumber = beta2.reasonForNoRegistrationNumber
       const movementData = beta2.generateBaseMovementData()
       movementData.brokerOrDealer = { isPresent: true, items: [broker] }
 

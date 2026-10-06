@@ -36,8 +36,7 @@ describe('Beta-2 Movement Creation - All fields', () => {
 
         if (wasteSource === 'Municipal') {
           movementData.producer.sicCode = beta2.sicCode
-          movementData.producer.address.fullAddress =
-            beta2.municipalFullAddress
+          movementData.producer.address.fullAddress = beta2.municipalFullAddress
           movementData.producer.contactDetails.phoneNumber = beta2.phoneNumber
         }
 
