@@ -31,6 +31,19 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
       expectMovementCreated(response)
     })
 
+    it('should create a movement when more than one supporting reference is provided @allure.label.tag:DWTC-156', async () => {
+      await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
+      const movementData = beta2.generateBaseMovementData()
+      movementData.supportingReferences = beta2.generateSupportingReferences()
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementCreated(response)
+    })
+
     it.each(beta2.supportingReferenceLabels)(
       'should create a movement when a supporting reference uses the label %s @allure.label.tag:DWTC-156',
       async (label) => {

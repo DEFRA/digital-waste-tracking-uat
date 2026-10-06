@@ -69,6 +69,54 @@ describe('Beta-2 Movement Creation - Producer', () => {
       expectMovementCreated(response)
     })
 
+    it('should create a movement when a Municipal producer gives a SIC code @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      const movementData = beta2.generateBaseMunicipalMovementData()
+      movementData.producer.sicCode = beta2.sicCode
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementCreated(response)
+    })
+
+    it.each(beta2.commercialOrMunicipal)(
+      'should create a movement when a %s producer gives a full address @allure.label.tag:DWTC-192',
+      async (wasteSource, generateMovementData) => {
+        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+        const movementData = generateMovementData()
+        movementData.producer.address.fullAddress =
+          wasteSource === 'Commercial'
+            ? beta2.commercialFullAddress
+            : beta2.municipalFullAddress
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+            movementData
+          )
+
+        expectMovementCreated(response)
+      }
+    )
+
+    it.each(beta2.commercialOrMunicipal)(
+      'should create a movement when a %s producer gives an email address and a phone number @allure.label.tag:DWTC-192',
+      async (_wasteSource, generateMovementData) => {
+        await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+        const movementData = generateMovementData()
+        movementData.producer.contactDetails.phoneNumber = beta2.phoneNumber
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+            movementData
+          )
+
+        expectMovementCreated(response)
+      }
+    )
+
     it.each(beta2.acceptedPostcodes)(
       'should create a movement when a Commercial producer gives %s @allure.label.tag:DWTC-192',
       async (_postcodeKind, postcode) => {

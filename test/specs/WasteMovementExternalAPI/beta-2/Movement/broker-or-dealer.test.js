@@ -64,6 +64,21 @@ describe('Beta-2 Movement Creation - Broker or dealer', () => {
       expectMovementCreated(response)
     })
 
+    it('should create a movement when a broker or dealer gives an address @allure.label.tag:DWTC-197', async () => {
+      await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
+      const broker = beta2.generateBaseBrokerOrDealer()
+      broker.address = beta2.generateBrokerAddress()
+      const movementData = beta2.generateBaseMovementData()
+      movementData.brokerOrDealer = { isPresent: true, items: [broker] }
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementCreated(response)
+    })
+
     it('should create a movement when a broker or dealer gives a reason instead of a registration number @allure.label.tag:DWTC-197', async () => {
       await addAllureLink('/DWTC-197', 'DWTC-197', 'jira')
       const broker = beta2.generateBaseBrokerOrDealer()
