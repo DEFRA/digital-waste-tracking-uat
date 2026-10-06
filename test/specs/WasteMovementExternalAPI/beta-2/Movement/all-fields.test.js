@@ -4,7 +4,7 @@ import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 import { expectMovementCreated } from '~/test/support/helpers/beta-2-movement.js'
 
-describe('All fields', () => {
+describe('Beta-2 Movement Creation - All fields', () => {
   beforeEach(async () => {
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,

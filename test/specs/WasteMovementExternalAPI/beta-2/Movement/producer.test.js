@@ -7,7 +7,7 @@ import {
   expectMovementRejected
 } from '~/test/support/helpers/beta-2-movement.js'
 
-describe('Producer', () => {
+describe('Beta-2 Movement Creation - Producer', () => {
   beforeEach(async () => {
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,

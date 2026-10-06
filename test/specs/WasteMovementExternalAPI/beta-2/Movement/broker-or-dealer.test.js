@@ -7,7 +7,7 @@ import {
   expectMovementRejected
 } from '~/test/support/helpers/beta-2-movement.js'
 
-describe('Broker or dealer', () => {
+describe('Beta-2 Movement Creation - Broker or dealer', () => {
   beforeEach(async () => {
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,
