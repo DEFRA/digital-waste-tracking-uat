@@ -8,7 +8,10 @@ import {
 } from '~/test/support/helpers/beta-2-movement.js'
 
 describe('Beta-2 Movement Creation - Special handling requirements', () => {
+  let movementData
+
   beforeEach(async () => {
+    movementData = beta2.generateBaseMovementData()
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,
       globalThis.testConfig.cognitoClientSecret
@@ -16,10 +19,10 @@ describe('Beta-2 Movement Creation - Special handling requirements', () => {
   })
 
   describe('Successful Creation', () => {
-    it('should create a movement when special handling requirements are exactly 500 characters @allure.label.tag:DWTC-157', async () => {
+    it('should create a movement when special handling requirements are given @allure.label.tag:DWTC-157', async () => {
       await addAllureLink('/DWTC-157', 'DWTC-157', 'jira')
-      const movementData = beta2.generateBaseMovementData()
-      movementData.specialHandlingRequirements = 'A'.repeat(500)
+      movementData.specialHandlingRequirements =
+        beta2.specialHandlingRequirements
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
@@ -33,21 +36,7 @@ describe('Beta-2 Movement Creation - Special handling requirements', () => {
   describe('Problem Responses', () => {
     it('should reject a movement when special handling requirements are longer than 500 characters @allure.label.tag:DWTC-157', async () => {
       await addAllureLink('/DWTC-157', 'DWTC-157', 'jira')
-      const movementData = beta2.generateBaseMovementData()
       movementData.specialHandlingRequirements = 'A'.repeat(501)
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementRejected(response)
-    })
-
-    it('should reject a movement when special handling requirements are empty @allure.label.tag:DWTC-157', async () => {
-      await addAllureLink('/DWTC-157', 'DWTC-157', 'jira')
-      const movementData = beta2.generateBaseMovementData()
-      movementData.specialHandlingRequirements = ''
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(

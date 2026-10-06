@@ -19,7 +19,6 @@ export function expectMovementCreated(response) {
 
 /**
  * Asserts that POST /beta-2/movements rejected the payload.
- * The error list is not checked while the validation messages are still changing.
  * @param {Object} response - API response
  */
 export function expectMovementRejected(response) {
@@ -29,9 +28,11 @@ export function expectMovementRejected(response) {
   expect(response.json).toEqual({
     type: beta2.badRequestType,
     title: 'Bad Request',
+      // TODO: Expect a 'detail' value once this is completed: https://eaflood.atlassian.net/browse/DWTC-221
     detail: expect.stringMatching(/^\d+ validation errors? occurred$/),
     instance: '/beta-2/movements',
     requestId: response.headers['x-request-id'],
+    // TODO: Expect a specic set of 'errors' once this is completed: https://eaflood.atlassian.net/browse/DWTC-221
     errors: expect.any(Array)
   })
 }
