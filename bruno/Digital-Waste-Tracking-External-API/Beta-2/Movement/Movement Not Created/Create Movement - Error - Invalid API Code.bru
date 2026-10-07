@@ -11,13 +11,13 @@ post {
 }
 
 headers {
+  x-api-code: 401dd617-58c4-4c71-bf59-db04ad588c3d
   ~x-cdp-request-id: {{$randomUUID}}
   ~Authorization: {{ManuallyObtainedAccessToken}}
 }
 
 body:json {
   {
-    "apiCode": "401dd617-58c4-4c71-bf59-db04ad588c3d",
     "producer": {
       "wasteSource": "Household"
     }

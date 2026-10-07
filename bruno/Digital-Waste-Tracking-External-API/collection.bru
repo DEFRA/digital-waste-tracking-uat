@@ -125,7 +125,7 @@ docs {
   3. **Set Values**: Enter your actual values for each secret variable
   4. **Save**: The secrets will be stored securely and used by all requests in that environment
 
-  **Note**: The `apiCode` is automatically used in all request bodies, so you don't need to manually update individual requests.
+  **Note**: Phase 1 and beta-1 requests include `apiCode` in the body. Beta-2 requests send it as the `x-api-code` header and do not include it in the body.
 
   ## 📊 Expected Response Codes
 
