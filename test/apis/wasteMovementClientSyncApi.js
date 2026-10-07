@@ -21,7 +21,7 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async getClients(tenantServiceName) {
-    const credentials = `waste-movement-backend:${globalThis.testConfig.serviceAuthPasswordClientSync}`
+    const credentials = `waste-movement-external-api:${globalThis.testConfig.serviceAuthPassword}`
     const base64Credentials = Buffer.from(credentials).toString('base64')
     const requestHeaders = {
       Authorization: `Basic ${base64Credentials}`,
@@ -44,7 +44,7 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async getClient(tenantServiceName, clientId) {
-    const credentials = `waste-movement-backend:${globalThis.testConfig.serviceAuthPasswordClientSync}`
+    const credentials = `waste-movement-external-api:${globalThis.testConfig.serviceAuthPassword}`
     const base64Credentials = Buffer.from(credentials).toString('base64')
     const requestHeaders = {
       Authorization: `Basic ${base64Credentials}`,
@@ -65,7 +65,7 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async syncClients() {
-    const credentials = `waste-movement-backend:${globalThis.testConfig.serviceAuthPasswordClientSync}`
+    const credentials = `waste-movement-external-api:${globalThis.testConfig.serviceAuthPassword}`
     const base64Credentials = Buffer.from(credentials).toString('base64')
     const requestHeaders = {
       Authorization: `Basic ${base64Credentials}`,

@@ -16,7 +16,6 @@ This test suite requires certain environment variables to be set for authenticat
 - `COGNITO_CLIENT_SECRET_2`: Second Cognito client secret for cross-client ownership tests
 - `COGNITO_CLIENT_NAME_2`: Display name for the second Cognito client (default: `Test Client 2`; set per environment in `env.sh`)
 - `WASTE_MOVEMENT_CLIENT_SYNC_API_BASE_URL`: Base URL for the DWT client-sync service (e.g. `…/dwt-client-sync`)
-- `SERVICE_AUTH_PASSWORD_CLIENT_SYNC`: Basic auth password for client-sync (`waste-movement-backend:<password>`)
 - `ENVIRONMENT`: The environment name (defaults to 'test')
 - `RESULTS_OUTPUT_S3_PATH`: S3 path for publishing test results (used in CI/CD)
 - `API_CODE`: Organisation API code for movement payloads

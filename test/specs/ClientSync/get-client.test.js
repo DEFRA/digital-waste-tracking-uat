@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
 describe('Get a single client from DWT Client Sync Service', () => {
-  const tenantServiceName = 'waste-movement-backend'
+  const tenantServiceName = 'waste-movement-external-api'
 
   beforeEach(async () => {
     await addAllureLink('/DWTA-333', 'DWTA-333', 'jira')
