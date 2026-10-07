@@ -136,7 +136,7 @@ export class WasteMovementExternalAPI extends BaseAPI {
         movementData,
         apiCode = globalThis.testConfig.apiCode
       ) => {
-        let requestHeaders = {
+        const requestHeaders = {
           'Content-Type': 'application/json',
           'x-cdp-request-id': randomUUID()
         }
