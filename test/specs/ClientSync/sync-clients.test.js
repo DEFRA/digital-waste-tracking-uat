@@ -13,7 +13,7 @@ describe('Sync clients from DWT Client Sync Service', () => {
       async () => {
         const { statusCode } =
           await globalThis.apis.wasteMovementClientSyncAPI.syncClients()
-
+        // Unable to test anything other than the status code as the CDP cognito service is a blackbox
         expect(statusCode).toBe(200)
       }
     )

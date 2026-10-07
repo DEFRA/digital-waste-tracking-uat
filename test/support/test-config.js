@@ -109,14 +109,6 @@ export class TestConfig {
     return process.env.SERVICE_AUTH_PASSWORD_WASTE_ORGANISATION_BACKEND
   }
 
-  /**
-   * Basic auth password for DWT client-sync (user waste-movement-backend).
-   * @returns {string|undefined}
-   */
-  get serviceAuthPasswordClientSync() {
-    return process.env.SERVICE_AUTH_PASSWORD_CLIENT_SYNC
-  }
-
   get cdpDevApiKey() {
     return process.env.CDP_DEV_API_KEY
   }
