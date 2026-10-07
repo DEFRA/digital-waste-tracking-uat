@@ -233,7 +233,7 @@ Tests are organized into logical groups:
 ## Running Tests
 
 - `npm test` - Run UAT profile tests (`test:uat` by default)
-- `npm run test:integration` - Integration API tests (excludes `@Authentication`)
+- `npm run test:integration` - Integration API tests (excludes `@Authentication` and `beta-2`). Omitting `beta-2` is an agreed temporary measure so those tests do not hold up pull requests while developers make the initial breaking changes to that API.
 - `npm run test:uat` - UAT profile including bulk upload and authentication
 - `npm run test:smoke` - Tests tagged `@smoke`
 - `npm run test:prod-smoke` - Tests tagged `@prod-smoke` (A small subset of tests to run after production releases)
