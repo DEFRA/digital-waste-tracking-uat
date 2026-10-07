@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Error - Invalid field format
+  name: Create Movement - Error - Missing API Code Header
   type: http
-  seq: 2
+  seq: 4
 }
 
 post {
@@ -17,7 +17,6 @@ headers {
 
 body:json {
   {
-    "apiCode": "not-a-uuid",
     "producer": {
       "wasteSource": "Household"
     }
@@ -37,11 +36,7 @@ tests {
   test("content type includes application/problem+json", function () {
     expect(res.getHeader("content-type")).to.include("application/problem+json");
   });
-  test("apiCode must be a UUID", function () {
-    const errors = res.body.errors || [];
-    const found = errors.some(function (error) {
-      return error.pointer === "/apiCode" && error.errorType === "InvalidFormat";
-    });
-    expect(found).to.equal(true);
+  test("the API code supplied is invalid", function () {
+    expect(res.body.detail).to.equal("the API Code supplied is invalid");
   });
 }

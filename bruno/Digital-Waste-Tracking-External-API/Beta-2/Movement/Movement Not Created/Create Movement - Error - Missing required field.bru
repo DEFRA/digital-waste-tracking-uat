@@ -11,6 +11,7 @@ post {
 }
 
 headers {
+  x-api-code: {{apiCode}}
   ~x-cdp-request-id: {{$randomUUID}}
   ~Authorization: {{ManuallyObtainedAccessToken}}
 }
@@ -31,13 +32,6 @@ tests {
   });
   test("content type includes application/problem+json", function () {
     expect(res.getHeader("content-type")).to.include("application/problem+json");
-  });
-  test("apiCode is required", function () {
-    const errors = res.body.errors || [];
-    const found = errors.some(function (error) {
-      return error.pointer === "/apiCode" && error.errorType === "NotProvided";
-    });
-    expect(found).to.equal(true);
   });
   test("producer is required", function () {
     const errors = res.body.errors || [];

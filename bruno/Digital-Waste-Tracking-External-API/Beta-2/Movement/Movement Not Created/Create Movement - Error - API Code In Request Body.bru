@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Error - Supporting Reference Unrecognised Label
+  name: Create Movement - Error - API Code In Request Body
   type: http
-  seq: 1
+  seq: 2
 }
 
 post {
@@ -18,15 +18,10 @@ headers {
 
 body:json {
   {
+    "apiCode": "{{apiCode}}",
     "producer": {
       "wasteSource": "Household"
-    },
-    "supportingReferences": [
-      {
-        "label": "Purchase order",
-        "reference": "PO-48213"
-      }
-    ]
+    }
   }
 }
 
@@ -36,7 +31,6 @@ script:pre-request {
   // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
   bru.setVar('timestamp', now.toISOString());
 }
-
 tests {
   test("status is 400", function () {
     expect(res.getStatus()).to.equal(400);
@@ -44,10 +38,10 @@ tests {
   test("content type includes application/problem+json", function () {
     expect(res.getHeader("content-type")).to.include("application/problem+json");
   });
-  test("label is not recognised", function () {
+  test("apiCode is not allowed in the body", function () {
     const errors = res.body.errors || [];
     const found = errors.some(function (error) {
-      return error.pointer === "/supportingReferences/0/label" && error.errorType === "InvalidValue";
+      return error.pointer === "/apiCode" && error.errorType === "NotAllowed";
     });
     expect(found).to.equal(true);
   });

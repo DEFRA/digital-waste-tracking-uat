@@ -1,5 +1,3 @@
-import { testConfig } from '../test-config.js'
-
 /**
  * Beta-2 test data.
  * Each endpoint has a base of required fields. Other values are objects assigned onto that base.
@@ -18,7 +16,6 @@ export const beta2 = {
    * @returns {Object}
    */
   generateBaseMovementData: () => ({
-    apiCode: testConfig.apiCode,
     producer: {
       wasteSource: 'Household'
     }

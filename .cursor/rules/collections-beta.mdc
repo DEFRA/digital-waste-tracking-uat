@@ -19,7 +19,7 @@ The collections API (National Waste Movements) is versioned `beta-1`, `beta-2`, 
 - Call `globalThis.apis.wasteMovementExternalAPI.beta<n>` with no hyphen (`beta1`, `beta2`).
 - Build payloads from the matching `beta<n>` object in `test/support/test-data-manager.js`.
 - A base holds the required fields for that endpoint. Assign further objects onto it. Delete or update fields for the scenario under test.
-- Payloads include the run-scoped `apiCode` (`API_CODE` from global setup, exposed as `globalThis.testConfig.apiCode`). Do not invent an API code inside a test.
+- Beta-1 payloads include the run-scoped `apiCode` in the body (`API_CODE` from global setup, exposed as `globalThis.testConfig.apiCode`). From beta-2, the client sends that value as the `x-api-code` header and payloads must not include `apiCode`. A body that still contains it is rejected (`NotAllowed`, pointer `/apiCode`). A missing or unrecognised header is rejected with `detail` `the API Code supplied is invalid` and no `errors` array. Do not invent an API code inside a test, except an unrecognised code for that scenario. Pass `null` as the `apiCode` argument to omit the header.
 
 ## Beta-1 lifecycle
 

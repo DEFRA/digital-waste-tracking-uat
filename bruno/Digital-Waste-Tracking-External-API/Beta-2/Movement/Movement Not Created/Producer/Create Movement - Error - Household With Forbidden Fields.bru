@@ -11,13 +11,13 @@ post {
 }
 
 headers {
+  x-api-code: {{apiCode}}
   ~x-cdp-request-id: {{$randomUUID}}
   ~Authorization: {{ManuallyObtainedAccessToken}}
 }
 
 body:json {
   {
-    "apiCode": "{{apiCode}}",
     "producer": {
       "wasteSource": "Household",
       "organisationName": "Acme",
