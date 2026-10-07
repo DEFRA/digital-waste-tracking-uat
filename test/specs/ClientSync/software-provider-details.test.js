@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { generateBaseWasteReceiptData } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { createMovementAndGetWasteTrackingId } from '~/test/support/helpers/waste-movement.js'
 
 describe('Software provider data persisted in waste movement', () => {
   let wasteReceiptData
@@ -20,17 +21,12 @@ describe('Software provider data persisted in waste movement', () => {
       'should save softwareProvider id and name from the authenticated Cognito client' +
         ' @allure.label.tag:DWTA-380',
       async () => {
-        const { statusCode: createStatus, json: createBody } =
-          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-            wasteReceiptData
-          )
-
-        expect(createStatus).toBe(201)
-        expect(createBody).toHaveProperty('wasteTrackingId', expect.any(String))
+        const wasteTrackingId =
+          await createMovementAndGetWasteTrackingId(wasteReceiptData)
 
         const { statusCode: retrieveStatus, json: movements } =
           await globalThis.apis.wasteMovementBackendAPI.qaRetrieveMovementsByWasteTrackingId(
-            createBody.wasteTrackingId
+            wasteTrackingId
           )
 
         expect(retrieveStatus).toBe(200)
@@ -49,13 +45,8 @@ describe('Software provider data persisted in waste movement', () => {
       'should retain softwareProvider id and name after updating a movement' +
         ' @allure.label.tag:DWTA-380',
       async () => {
-        const { statusCode: createStatus, json: createBody } =
-          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
-            wasteReceiptData
-          )
-
-        expect(createStatus).toBe(201)
-        const wasteTrackingId = createBody.wasteTrackingId
+        const wasteTrackingId =
+          await createMovementAndGetWasteTrackingId(wasteReceiptData)
 
         const updatedData = generateBaseWasteReceiptData()
         updatedData.wasteItems[0].disposalOrRecoveryCodes = [

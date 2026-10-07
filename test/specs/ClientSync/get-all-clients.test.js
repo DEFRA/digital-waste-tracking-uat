@@ -8,7 +8,7 @@ describe('Get all clients from DWT Client Sync Service', () => {
 
   describe('Valid tenant service name', () => {
     it(
-      'should return at least the two UAT Cognito clients for waste-movement-backend' +
+      'should return at least the primary and secondary Cognito clients' +
         ' @allure.label.tag:DWTA-334',
       async () => {
         const tenantServiceName = 'waste-movement-external-api'
