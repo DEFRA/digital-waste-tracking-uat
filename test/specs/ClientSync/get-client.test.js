@@ -10,7 +10,7 @@ describe('Get a single client from DWT Client Sync Service', () => {
 
   describe('Valid client ID', () => {
     it(
-      'should return the primary UAT Cognito client for waste-movement-backend' +
+      'should return the primary Cognito client' +
         ' @allure.label.tag:DWTA-333',
       async () => {
         const { statusCode, json: client } =
@@ -51,7 +51,7 @@ describe('Get a single client from DWT Client Sync Service', () => {
     )
   })
 
-  describe('Unknown tenant service name', () => {
+  describe('Valid clientId but unknown tenant service name', () => {
     it(
       'should return 404 when tenantServiceName is not found, but clientId is valid' +
         ' @allure.label.tag:DWTA-333',
