@@ -124,6 +124,30 @@ export class WasteMovementExternalAPI extends BaseAPI {
         }
       }
     }
+
+    this.beta2 = {
+      /**
+       * POST /beta-2/movements
+       * @param {Object} movementData
+       * @returns {Promise<import('./base-api.js').JsonResponse>}
+       */
+      createMovement: async (movementData) => {
+        const { statusCode, headers, json } = await this.post(
+          `/beta-2/movements`,
+          JSON.stringify(movementData),
+          {
+            'Content-Type': 'application/json',
+            'x-cdp-request-id': randomUUID()
+          }
+        )
+
+        return {
+          statusCode,
+          headers,
+          json
+        }
+      }
+    }
   }
 
   /**

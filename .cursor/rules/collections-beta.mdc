@@ -1,0 +1,45 @@
+---
+description: Collections beta (beta-1, beta-2, beta-3, ...) test conventions for National Waste Movements
+globs: ["**/*.test.js", "**/test/**/*.js", "**/specs/**/*.js", "**/test-data-manager.js", "**/wasteMovementExternalApi.js"]
+alwaysApply: true
+---
+
+# Collections beta
+
+The collections API (National Waste Movements) is versioned `beta-1`, `beta-2`, `beta-3`, and later versions the same way. Each version has its own client, generators, and test folder.
+
+## Layout
+
+- Tests live in `test/specs/WasteMovementExternalAPI/beta-<n>/`. The version folder is kebab-case.
+- A feature folder under the version is PascalCase (`beta-2/Movement/producer.test.js`).
+- A version with no feature folders keeps behavior files directly in the version folder (`beta-1/create-collection.test.js`).
+
+## Client and data
+
+- Call `globalThis.apis.wasteMovementExternalAPI.beta<n>` with no hyphen (`beta1`, `beta2`).
+- Build payloads from the matching `beta<n>` object in `test/support/test-data-manager.js`.
+- A base holds the required fields for that endpoint. Assign further objects onto it. Delete or update fields for the scenario under test.
+- Payloads include the run-scoped `apiCode` (`API_CODE` from global setup, exposed as `globalThis.testConfig.apiCode`). Do not invent an API code inside a test.
+
+## Beta-1 lifecycle
+
+`beta1` generators: `generateBaseMovementData`, `generateBaseCollectionData`, `generateBaseDeliveryData`, `generateBaseReceiptData`, `generateBaseReceiptWithoutDeliveryIdData`. Use `beta1.unknownResourceId` for a well-formed ID that does not exist.
+
+A later step needs the IDs from earlier steps in the same test:
+
+1. Create a movement and read `movementId`
+2. Record a collection against that movement
+3. Record a delivery with those movement IDs and read `deliveryId`
+4. Record a receipt against the delivery, or a receipt without a delivery ID
+
+## Problem responses
+
+Same shape on every collections beta version. Assert the status code first. Assert `response.headers['x-request-id']` with `expect.any(String)`. Then `toEqual()` the problem body:
+
+- `type`: `https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/` plus `bad-request` or `not-found`
+- `title`, `detail`, `instance`
+- `requestId`: `response.headers['x-request-id']`
+
+Receipt validation errors (`key`, `errorType`, `message`) do not apply to these endpoints.
+
+Beta-2 create-movement rejections leave `detail` and `errors` unchecked until DWTC-221.

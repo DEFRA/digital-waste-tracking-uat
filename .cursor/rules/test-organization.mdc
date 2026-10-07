@@ -18,5 +18,5 @@ alwaysApply: true
 - **Test Files**: Use `.test.js` extension for test files
 - **Support Files**: Keep test utilities in `test/support/` directory
 - **Group by Feature**: Organize tests by business domain, not technical implementation
-- **API versions**: Place National Waste Movements (beta-1) tests in `test/specs/WasteMovementExternalAPI/beta-1/`. See `beta-1-national-waste-movements.mdc`
+- **API versions**: Place collections beta tests in `test/specs/WasteMovementExternalAPI/beta-<n>/` (`beta-1`, `beta-2`, `beta-3`, ...). See `collections-beta.mdc`
 - **Test Categories**: Use consistent describe block naming for test organization

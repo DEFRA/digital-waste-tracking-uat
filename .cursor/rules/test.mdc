@@ -23,7 +23,7 @@ This is the main index for test development rules. Individual rule categories ar
 ## Assertions & API
 - **test-assertions.mdc** - Test assertions, error handling, and assertion priority
 - **api-usage.mdc** - API usage, configuration access, and authentication patterns
-- **beta-1-national-waste-movements.mdc** - Beta-1 National Waste Movements (collections) client, payloads, lifecycle, and problem responses
+- **collections-beta.mdc** - Collections beta (`beta-1`, `beta-2`, `beta-3`, ...) client, payloads, lifecycle, and problem responses
 
 ## Organization & Quality
 - **test-organization.mdc** - File naming and organization
