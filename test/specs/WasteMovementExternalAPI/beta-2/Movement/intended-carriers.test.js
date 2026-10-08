@@ -23,7 +23,8 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
     it('should create a movement when an intended carrier with all valid details is declared @allure.label.tag:DWTC-199', async () => {
       await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
       movementData.intendedCarriers[0].address = beta2.intendedCarrierAddress()
-      movementData.intendedCarriers[0].contactDetails.phoneNumber = '01234567890'
+      movementData.intendedCarriers[0].contactDetails.phoneNumber =
+        '01234567890'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
