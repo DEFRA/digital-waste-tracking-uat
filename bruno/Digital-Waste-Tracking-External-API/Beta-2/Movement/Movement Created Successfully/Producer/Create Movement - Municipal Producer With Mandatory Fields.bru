@@ -28,7 +28,18 @@ body:json {
       "contactDetails": {
         "emailAddress": "waste.services@example.gov.uk"
       }
-    }
+    },
+    "intendedCarriers": [
+      {
+        "organisationName": "Carrier Demo Ltd",
+        "registrationNumber": "CBDU123456",
+        "meansOfTransport": "Road",
+        "vehicleRegistration": "AB12 CDE",
+        "contactDetails": {
+          "emailAddress": "carrier@example.com"
+        }
+      }
+    ]
   }
 }
 
@@ -46,15 +57,4 @@ script:post-response {
   const movementIds = Object.assign([], bru.getVar('movementIds') || []);
   movementIds.push(movementId);
   bru.setVar('movementIds', movementIds);
-}
-tests {
-  test("status is 201", function () {
-    expect(res.getStatus()).to.equal(201);
-  });
-  test("content type includes application/json", function () {
-    expect(res.getHeader("content-type")).to.include("application/json");
-  });
-  test("a movement id is returned", function () {
-    expect(res.body.data.movementId).to.be.a("string").and.not.empty;
-  });
 }

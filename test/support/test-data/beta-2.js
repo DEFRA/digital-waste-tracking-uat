@@ -11,16 +11,55 @@ export const beta2 = {
 
   reasonForNoAuthorisationNumber: 'Exemption pending renewal',
   reasonForNoRegistrationNumber: 'One-off arrangement',
+  reasonForNoCarrierRegistrationNumber: 'ONE_OFF',
   specialHandlingRequirements: 'Handle with care and keep upright.',
 
   /**
    * POST /beta-2/movements required fields. A Household producer needs only wasteSource.
+   * At least one intended carrier is required.
    * @returns {Object}
    */
   generateBaseMovementData: () => ({
     producer: {
       wasteSource: 'Household'
+    },
+    intendedCarriers: [beta2.intendedCarrier()]
+  }),
+
+  /**
+   * Intended carrier with its required fields. Address is optional.
+   * @returns {Object}
+   */
+  intendedCarrier: () => ({
+    organisationName: 'Carrier Demo Ltd',
+    registrationNumber: 'CBDU123456',
+    meansOfTransport: 'Road',
+    vehicleRegistration: 'AB12 CDE',
+    contactDetails: {
+      emailAddress: 'carrier@example.com'
     }
+  }),
+
+  /**
+   * A second intended carrier with its required fields.
+   * @returns {Object}
+   */
+  secondIntendedCarrier: () => ({
+    organisationName: 'Second Carrier Ltd',
+    registrationNumber: 'ROC UT 9999',
+    meansOfTransport: 'Rail',
+    contactDetails: {
+      phoneNumber: '01112223333'
+    }
+  }),
+
+  /**
+   * Optional intended carrier address.
+   * @returns {Object}
+   */
+  intendedCarrierAddress: () => ({
+    fullAddress: '4 Carrier Lane, Test City',
+    postcode: 'TE1 4CR'
   }),
 
   /**

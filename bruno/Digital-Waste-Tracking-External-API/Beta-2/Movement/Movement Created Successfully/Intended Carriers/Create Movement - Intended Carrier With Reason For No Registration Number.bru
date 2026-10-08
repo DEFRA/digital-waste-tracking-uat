@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Error - Supporting Reference Unrecognised Label
+  name: Create Movement - Intended Carrier With Reason For No Registration Number
   type: http
-  seq: 1
+  seq: 3
 }
 
 post {
@@ -24,26 +24,13 @@ body:json {
     "intendedCarriers": [
       {
         "organisationName": "Carrier Demo Ltd",
-        "registrationNumber": "CBDU123456",
+        "reasonForNoRegistrationNumber": "ONE_OFF",
         "meansOfTransport": "Road",
         "vehicleRegistration": "AB12 CDE",
         "contactDetails": {
           "emailAddress": "carrier@example.com"
         }
       }
-    ],
-    "supportingReferences": [
-      {
-        "label": "Purchase order",
-        "reference": "PO-48213"
-      }
     ]
   }
-}
-
-script:pre-request {
-  const now = new Date();
-  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
-  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
-  bru.setVar('timestamp', now.toISOString());
 }

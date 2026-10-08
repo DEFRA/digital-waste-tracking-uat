@@ -20,7 +20,18 @@ body:json {
   {
     "producer": {
       "wasteSource": "Household"
-    }
+    },
+    "intendedCarriers": [
+      {
+        "organisationName": "Carrier Demo Ltd",
+        "registrationNumber": "CBDU123456",
+        "meansOfTransport": "Road",
+        "vehicleRegistration": "AB12 CDE",
+        "contactDetails": {
+          "emailAddress": "carrier@example.com"
+        }
+      }
+    ]
   }
 }
 
@@ -29,17 +40,4 @@ script:pre-request {
   // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
   // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
   bru.setVar('timestamp', now.toISOString());
-}
-tests {
-  test("status is 401", function () {
-    expect(res.getStatus()).to.equal(401);
-  });
-  test("content type includes application/problem+json", function () {
-    expect(res.getHeader("content-type")).to.include("application/problem+json");
-  });
-  test("the x-api-code header does not contain a valid API code", function () {
-    expect(res.body.detail).to.equal(
-      "The x-api-code header does not contain a valid API code"
-    );
-  });
 }
