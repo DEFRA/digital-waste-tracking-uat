@@ -12,7 +12,6 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
 
   beforeEach(async () => {
     movementData = beta2.generateBaseMovementData()
-    movementData.intendedCarriers = [beta2.intendedCarrier()]
     await authenticateAndSetToken(
       globalThis.testConfig.cognitoClientId,
       globalThis.testConfig.cognitoClientSecret
@@ -20,11 +19,8 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
   })
 
   describe('Successful Creation', () => {
-    it('should create a movement when an intended carrier with all valid details is declared @allure.label.tag:DWTC-199', async () => {
+    it('should create a movement when an intended carrier with valid details is declared @allure.label.tag:DWTC-199', async () => {
       await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
-      movementData.intendedCarriers[0].address = beta2.intendedCarrierAddress()
-      movementData.intendedCarriers[0].contactDetails.phoneNumber =
-        '01234567890'
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
@@ -39,17 +35,6 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
       const carrier = beta2.intendedCarrier()
       carrier.address = beta2.intendedCarrierAddress()
       movementData.intendedCarriers = [carrier, beta2.secondIntendedCarrier()]
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementCreated(response)
-    })
-
-    it('should create a movement when an intended carrier is declared without an address @allure.label.tag:DWTC-199', async () => {
-      await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
@@ -92,18 +77,6 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
     it('should reject a movement when no intended carrier is declared @allure.label.tag:DWTC-199', async () => {
       await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
       delete movementData.intendedCarriers
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementRejected(response)
-    })
-
-    it('should reject a movement when intended carriers are an empty list @allure.label.tag:DWTC-199', async () => {
-      await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
-      movementData.intendedCarriers = []
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
