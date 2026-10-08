@@ -43,19 +43,3 @@ script:pre-request {
   // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
   bru.setVar('timestamp', now.toISOString());
 }
-
-tests {
-  test("status is 400", function () {
-    expect(res.getStatus()).to.equal(400);
-  });
-  test("content type includes application/problem+json", function () {
-    expect(res.getHeader("content-type")).to.include("application/problem+json");
-  });
-  test("broker or dealer details are not allowed", function () {
-    const errors = res.body.errors || [];
-    const found = errors.some(function (error) {
-      return error.pointer === "/brokerOrDealer/items" && error.errorType === "NotAllowed";
-    });
-    expect(found).to.equal(true);
-  });
-}

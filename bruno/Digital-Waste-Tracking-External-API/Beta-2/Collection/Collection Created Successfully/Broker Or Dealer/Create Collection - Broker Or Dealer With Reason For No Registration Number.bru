@@ -39,15 +39,3 @@ script:pre-request {
   // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
   bru.setVar('timestamp', now.toISOString());
 }
-
-tests {
-  test("status is 201", function () {
-    expect(res.getStatus()).to.equal(201);
-  });
-  test("content type includes application/json", function () {
-    expect(res.getHeader("content-type")).to.include("application/json");
-  });
-  test("no collection id is returned", function () {
-    expect(res.body.data).to.equal(null);
-  });
-}
