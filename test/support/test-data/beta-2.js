@@ -48,7 +48,6 @@ export const beta2 = {
   }),
 
   /**
-<<<<<<< HEAD
    * A second intended carrier with its required fields.
    * @returns {Object}
    */
@@ -69,12 +68,12 @@ export const beta2 = {
     fullAddress: '4 Carrier Lane, Test City',
     postcode: 'TE1 4CR'
   }),
-=======
+
+  /**
    * POST /beta-2/movements/{movementId}/collection required fields. None are required.
    * @returns {Object}
    */
   generateBaseCollectionData: () => ({}),
->>>>>>> f929bce (dwtc-211 collection broker or dealer tests)
 
   /**
    * POST /beta-2/deliveries required fields.
