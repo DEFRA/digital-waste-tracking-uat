@@ -6,6 +6,8 @@
 export const beta2 = {
   badRequestType:
     'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+  unauthorizedType:
+    'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/unauthorized',
 
   reasonForNoAuthorisationNumber: 'Exemption pending renewal',
   reasonForNoRegistrationNumber: 'One-off arrangement',

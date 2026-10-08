@@ -62,15 +62,15 @@ describe('Beta-2 Movement Creation - API Code', () => {
             null
           )
 
-        expect(response.statusCode).toBe(400)
+        expect(response.statusCode).toBe(401)
         expect(response.headers['content-type']).toContain(
           'application/problem+json'
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: beta2.badRequestType,
-          title: 'Bad Request',
-          detail: 'the API Code supplied is invalid',
+          type: beta2.unauthorizedType,
+          title: 'Unauthorized',
+          detail: 'The x-api-code header is required',
           instance: '/beta-2/movements',
           requestId: response.headers['x-request-id']
         })
@@ -89,15 +89,15 @@ describe('Beta-2 Movement Creation - API Code', () => {
             randomUUID()
           )
 
-        expect(response.statusCode).toBe(400)
+        expect(response.statusCode).toBe(401)
         expect(response.headers['content-type']).toContain(
           'application/problem+json'
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: beta2.badRequestType,
-          title: 'Bad Request',
-          detail: 'the API Code supplied is invalid',
+          type: beta2.unauthorizedType,
+          title: 'Unauthorized',
+          detail: 'The x-api-code header does not contain a valid API code',
           instance: '/beta-2/movements',
           requestId: response.headers['x-request-id']
         })
