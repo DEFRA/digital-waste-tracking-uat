@@ -9,13 +9,12 @@ This test suite requires certain environment variables to be set for authenticat
 - `COGNITO_CLIENT_ID`: Your Cognito client ID for OAuth2 client credentials flow
 - `COGNITO_CLIENT_SECRET`: Your Cognito client secret for OAuth2 client credentials flow
 - `COGNITO_CLIENT_NAME`: Display name for the primary Cognito client (default: `Test Client 1`; set per environment in `env.sh`)
-
-### Optional Environment Variables
-
 - `COGNITO_CLIENT_ID_2`: Second Cognito client ID for cross-client ownership tests (e.g. PAT)
 - `COGNITO_CLIENT_SECRET_2`: Second Cognito client secret for cross-client ownership tests
 - `COGNITO_CLIENT_NAME_2`: Display name for the second Cognito client (default: `Test Client 2`; set per environment in `env.sh`)
-- `WASTE_MOVEMENT_CLIENT_SYNC_API_BASE_URL`: Base URL for the DWT client-sync service (e.g. `…/dwt-client-sync`)
+
+### Optional Environment Variables
+
 - `ENVIRONMENT`: The environment name (defaults to 'test')
 - `RESULTS_OUTPUT_S3_PATH`: S3 path for publishing test results (used in CI/CD)
 - `API_CODE`: Organisation API code for movement payloads
@@ -55,10 +54,10 @@ npm test
 ```bash
 export COGNITO_CLIENT_ID=<your_cognito_client_id>
 export COGNITO_CLIENT_SECRET=<your_cognito_client_secret>
-export COGNITO_CLIENT_NAME="Test Client 1"
+export COGNITO_CLIENT_NAME=<your_cognito_client_name>
 export COGNITO_CLIENT_ID_2=<your_second_cognito_client_id>
 export COGNITO_CLIENT_SECRET_2=<your_second_cognito_client_secret>
-export COGNITO_CLIENT_NAME_2="Test Client 2"
+export COGNITO_CLIENT_NAME_2=<your_second_cognito_client_name>
 export COGNITO_OAUTH_BASE_URL=<your_cognito_oauth_base_url>
 export ENVIRONMENT=test
 ```
@@ -70,10 +69,10 @@ Set these environment variables in your CI/CD pipeline:
 ```bash
 export COGNITO_CLIENT_ID="<your_cognito_client_id>"
 export COGNITO_CLIENT_SECRET="<your_cognito_client_secret>"
-export COGNITO_CLIENT_NAME="Test Client 1"
+export COGNITO_CLIENT_NAME="<your_cognito_client_name>"
 export COGNITO_CLIENT_ID_2="<your_second_cognito_client_id>"
 export COGNITO_CLIENT_SECRET_2="<your_second_cognito_client_secret>"
-export COGNITO_CLIENT_NAME_2="Test Client 2"
+export COGNITO_CLIENT_NAME_2="<your_second_cognito_client_name>"
 export COGNITO_OAUTH_BASE_URL="<your_cognito_oauth_base_url>"
 export ENVIRONMENT="test"
 ```
