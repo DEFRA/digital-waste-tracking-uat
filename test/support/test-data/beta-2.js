@@ -4,10 +4,17 @@
  * Tests delete or update fields on the result for the scenario under test.
  */
 export const beta2 = {
+  /**
+   * Well-formed ID that does not exist.
+   */
+  unknownResourceId: '00NOTFND',
+
   badRequestType:
     'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
   unauthorizedType:
     'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/unauthorized',
+  notFoundType:
+    'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/not-found',
 
   reasonForNoAuthorisationNumber: 'Exemption pending renewal',
   reasonForNoRegistrationNumber: 'One-off arrangement',
@@ -41,6 +48,7 @@ export const beta2 = {
   }),
 
   /**
+<<<<<<< HEAD
    * A second intended carrier with its required fields.
    * @returns {Object}
    */
@@ -61,6 +69,12 @@ export const beta2 = {
     fullAddress: '4 Carrier Lane, Test City',
     postcode: 'TE1 4CR'
   }),
+=======
+   * POST /beta-2/movements/{movementId}/collection required fields. None are required.
+   * @returns {Object}
+   */
+  generateBaseCollectionData: () => ({}),
+>>>>>>> f929bce (dwtc-211 collection broker or dealer tests)
 
   /**
    * Commercial producer required fields. Assign to movement.producer.
