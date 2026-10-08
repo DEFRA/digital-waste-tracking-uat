@@ -1,0 +1,51 @@
+meta {
+  name: Create Collection - Error - Supporting Reference Unrecognised Label
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/beta-2/movements/{{movementId}}/collection
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-code: {{apiCode}}
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "supportingReferences": [
+      {
+        "label": "Purchase order",
+        "reference": "PO-48213"
+      }
+    ]
+  }
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}
+
+tests {
+  test("status is 400", function () {
+    expect(res.getStatus()).to.equal(400);
+  });
+  test("content type includes application/problem+json", function () {
+    expect(res.getHeader("content-type")).to.include("application/problem+json");
+  });
+  test("label is not recognised", function () {
+    const errors = res.body.errors || [];
+    const found = errors.some(function (error) {
+      return error.pointer === "/supportingReferences/0/label" && error.errorType === "InvalidValue";
+    });
+    expect(found).to.equal(true);
+  });
+}
