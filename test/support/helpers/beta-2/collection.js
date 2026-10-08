@@ -1,5 +1,5 @@
 import { expect } from '@jest/globals'
-import { beta2 } from '../test-data-manager.js'
+import { beta2 } from '../../test-data-manager.js'
 
 /**
  * Asserts that POST /beta-2/movements/{movementId}/collection recorded a collection.

@@ -1,0 +1,41 @@
+meta {
+  name: Create Receipt - Broker Or Dealer With Reason For No Registration Number
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/beta-2/deliveries/{{deliveryId}}/receipt
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-code: {{apiCode}}
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "brokerOrDealer": {
+      "isPresent": true,
+      "items": [
+        {
+          "organisationName": "Broker Demo Ltd",
+          "reasonForNoRegistrationNumber": "One-off arrangement",
+          "contactDetails": {
+            "emailAddress": "broker@example.com"
+          }
+        }
+      ]
+    }
+  }
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}

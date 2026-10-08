@@ -77,6 +77,30 @@ export const beta2 = {
 >>>>>>> f929bce (dwtc-211 collection broker or dealer tests)
 
   /**
+   * POST /beta-2/deliveries required fields.
+   * @param {string[]} movementIds - Movement IDs from prior create submissions
+   * @returns {Object}
+   */
+  generateBaseDeliveryData: (movementIds) => ({
+    movementIds
+  }),
+
+  /**
+   * POST /beta-2/deliveries/{deliveryId}/receipt required fields. None are required.
+   * @returns {Object}
+   */
+  generateBaseReceiptData: () => ({}),
+
+  /**
+   * POST /beta-2/receipts required fields.
+   * @returns {Object}
+   */
+  generateBaseReceiptWithoutDeliveryIdData: () => ({
+    reason:
+      'No delivery was recorded prior to receipt; waste received directly from the producer.'
+  }),
+
+  /**
    * Commercial producer required fields. Assign to movement.producer.
    * @returns {Object}
    */

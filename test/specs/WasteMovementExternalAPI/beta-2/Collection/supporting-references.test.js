@@ -2,11 +2,11 @@ import { describe, it, beforeEach } from '@jest/globals'
 import { beta2 } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
-import { expectMovementCreated } from '~/test/support/helpers/beta-2-movement.js'
+import { expectMovementCreated } from '~/test/support/helpers/beta-2/movement.js'
 import {
   expectCollectionCreated,
   expectCollectionRejected
-} from '~/test/support/helpers/beta-2-collection.js'
+} from '~/test/support/helpers/beta-2/collection.js'
 
 describe('Beta-2 Collection Creation - Supporting references', () => {
   let collectionData
