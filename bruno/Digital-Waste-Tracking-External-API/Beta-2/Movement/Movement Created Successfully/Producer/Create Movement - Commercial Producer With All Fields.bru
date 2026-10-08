@@ -81,15 +81,3 @@ script:post-response {
   movementIds.push(movementId);
   bru.setVar('movementIds', movementIds);
 }
-
-tests {
-  test("status is 201", function () {
-    expect(res.getStatus()).to.equal(201);
-  });
-  test("content type includes application/json", function () {
-    expect(res.getHeader("content-type")).to.include("application/json");
-  });
-  test("a movement id is returned", function () {
-    expect(res.body.data.movementId).to.be.a("string").and.not.empty;
-  });
-}

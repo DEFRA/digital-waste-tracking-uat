@@ -1,0 +1,48 @@
+meta {
+  name: Create Movement - Intended Carriers More Than One
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/beta-2/movements
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-code: {{apiCode}}
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "producer": {
+      "wasteSource": "Household"
+    },
+    "intendedCarriers": [
+      {
+        "organisationName": "Carrier Demo Ltd",
+        "registrationNumber": "CBDU123456",
+        "meansOfTransport": "Road",
+        "vehicleRegistration": "AB12 CDE",
+        "contactDetails": {
+          "emailAddress": "carrier@example.com"
+        },
+        "address": {
+          "fullAddress": "4 Carrier Lane, Test City",
+          "postcode": "TE1 4CR"
+        }
+      },
+      {
+        "organisationName": "Second Carrier Ltd",
+        "registrationNumber": "ROC UT 9999",
+        "meansOfTransport": "Rail",
+        "contactDetails": {
+          "phoneNumber": "01112223333"
+        }
+      }
+    ]
+  }
+}

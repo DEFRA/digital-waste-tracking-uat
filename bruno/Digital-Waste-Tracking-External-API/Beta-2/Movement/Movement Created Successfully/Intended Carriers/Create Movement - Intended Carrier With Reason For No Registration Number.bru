@@ -1,0 +1,36 @@
+meta {
+  name: Create Movement - Intended Carrier With Reason For No Registration Number
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/beta-2/movements
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-code: {{apiCode}}
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "producer": {
+      "wasteSource": "Household"
+    },
+    "intendedCarriers": [
+      {
+        "organisationName": "Carrier Demo Ltd",
+        "reasonForNoRegistrationNumber": "ONE_OFF",
+        "meansOfTransport": "Road",
+        "vehicleRegistration": "AB12 CDE",
+        "contactDetails": {
+          "emailAddress": "carrier@example.com"
+        }
+      }
+    ]
+  }
+}
