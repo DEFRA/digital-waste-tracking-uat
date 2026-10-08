@@ -1,11 +1,11 @@
 meta {
-  name: Create Receipt Without Delivery Id - Broker Or Dealer Not Involved
+  name: Create Collection - Duty Of Care Confirmed False
   type: http
-  seq: 4
+  seq: 2
 }
 
 post {
-  url: {{baseUrl}}/beta-2/receipts
+  url: {{baseUrl}}/beta-2/movements/{{movementId}}/collection
   body: json
   auth: inherit
 }
@@ -18,10 +18,16 @@ headers {
 
 body:json {
   {
-    "reason": "No delivery was recorded prior to receipt; waste received directly from the producer.",
-    "brokerOrDealer": {
-      "isPresent": false
-    }
+    "carrier": {
+      "organisationName": "Carrier Demo Ltd",
+      "registrationNumber": "CBDU123456",
+      "meansOfTransport": "Road",
+      "vehicleRegistration": "AB12 CDE",
+      "contactDetails": {
+        "emailAddress": "carrier@example.com"
+      }
+    },
+    "dutyOfCareConfirmed": false
   }
 }
 

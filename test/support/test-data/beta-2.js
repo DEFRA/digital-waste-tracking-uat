@@ -70,10 +70,21 @@ export const beta2 = {
   }),
 
   /**
-   * POST /beta-2/movements/{movementId}/collection required fields. None are required.
+   * Carrier with its required fields. Same shape as intendedCarrier; used on
+   * collection, delivery and receipt. Address is optional.
    * @returns {Object}
    */
-  generateBaseCollectionData: () => ({}),
+  carrier: () => beta2.intendedCarrier(),
+
+  /**
+   * POST /beta-2/movements/{movementId}/collection required fields.
+   * carrier is required. dutyOfCareConfirmed is required; true and false are both accepted.
+   * @returns {Object}
+   */
+  generateBaseCollectionData: () => ({
+    carrier: beta2.carrier(),
+    dutyOfCareConfirmed: true
+  }),
 
   /**
    * POST /beta-2/deliveries required fields.
@@ -81,14 +92,17 @@ export const beta2 = {
    * @returns {Object}
    */
   generateBaseDeliveryData: (movementIds) => ({
-    movementIds
+    movementIds,
+    carrier: beta2.carrier()
   }),
 
   /**
-   * POST /beta-2/deliveries/{deliveryId}/receipt required fields. None are required.
+   * POST /beta-2/deliveries/{deliveryId}/receipt required fields.
    * @returns {Object}
    */
-  generateBaseReceiptData: () => ({}),
+  generateBaseReceiptData: () => ({
+    carrier: beta2.carrier()
+  }),
 
   /**
    * POST /beta-2/receipts required fields.
@@ -96,7 +110,8 @@ export const beta2 = {
    */
   generateBaseReceiptWithoutDeliveryIdData: () => ({
     reason:
-      'No delivery was recorded prior to receipt; waste received directly from the producer.'
+      'No delivery was recorded prior to receipt; waste received directly from the producer.',
+    carrier: beta2.carrier()
   }),
 
   /**
