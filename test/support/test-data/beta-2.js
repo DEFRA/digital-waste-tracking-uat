@@ -78,12 +78,11 @@ export const beta2 = {
 
   /**
    * POST /beta-2/movements/{movementId}/collection required fields.
-   * carrier is required. dutyOfCareConfirmed is required; true and false are both accepted.
+   * carrier is required. dutyOfCareConfirmed excluded until DWTC-232 is enabled.
    * @returns {Object}
    */
   generateBaseCollectionData: () => ({
-    carrier: beta2.carrier(),
-    dutyOfCareConfirmed: true
+    carrier: beta2.carrier()
   }),
 
   /**
