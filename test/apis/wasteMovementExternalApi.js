@@ -156,6 +156,138 @@ export class WasteMovementExternalAPI extends BaseAPI {
           headers,
           json
         }
+      },
+
+      /**
+       * POST /beta-2/movements/{movementId}/collection. apiCode is the x-api-code header, not part of the body.
+       * @param {string} movementId
+       * @param {Object} collectionData
+       * @param {string|null} [apiCode] - Header value. Defaults to the run API code. A falsy value omits the header.
+       * @returns {Promise<import('./base-api.js').JsonResponse>}
+       */
+      createCollection: async (
+        movementId,
+        collectionData,
+        apiCode = globalThis.testConfig.apiCode
+      ) => {
+        const requestHeaders = {
+          'Content-Type': 'application/json',
+          'x-cdp-request-id': randomUUID()
+        }
+
+        if (apiCode) {
+          requestHeaders['x-api-code'] = apiCode
+        }
+
+        const { statusCode, headers, json } = await this.post(
+          `/beta-2/movements/${movementId}/collection`,
+          JSON.stringify(collectionData),
+          requestHeaders
+        )
+
+        return {
+          statusCode,
+          headers,
+          json
+        }
+      },
+
+      /**
+       * POST /beta-2/deliveries. apiCode is the x-api-code header, not part of the body.
+       * @param {Object} deliveryData
+       * @param {string|null} [apiCode] - Header value. Defaults to the run API code. A falsy value omits the header.
+       * @returns {Promise<import('./base-api.js').JsonResponse>}
+       */
+      createDelivery: async (
+        deliveryData,
+        apiCode = globalThis.testConfig.apiCode
+      ) => {
+        const requestHeaders = {
+          'Content-Type': 'application/json',
+          'x-cdp-request-id': randomUUID()
+        }
+
+        if (apiCode) {
+          requestHeaders['x-api-code'] = apiCode
+        }
+
+        const { statusCode, headers, json } = await this.post(
+          `/beta-2/deliveries`,
+          JSON.stringify(deliveryData),
+          requestHeaders
+        )
+
+        return {
+          statusCode,
+          headers,
+          json
+        }
+      },
+
+      /**
+       * POST /beta-2/deliveries/{deliveryId}/receipt. apiCode is the x-api-code header, not part of the body.
+       * @param {string} deliveryId
+       * @param {Object} receiptData
+       * @param {string|null} [apiCode] - Header value. Defaults to the run API code. A falsy value omits the header.
+       * @returns {Promise<import('./base-api.js').JsonResponse>}
+       */
+      createReceiptWithDeliveryId: async (
+        deliveryId,
+        receiptData,
+        apiCode = globalThis.testConfig.apiCode
+      ) => {
+        const requestHeaders = {
+          'Content-Type': 'application/json',
+          'x-cdp-request-id': randomUUID()
+        }
+
+        if (apiCode) {
+          requestHeaders['x-api-code'] = apiCode
+        }
+
+        const { statusCode, headers, json } = await this.post(
+          `/beta-2/deliveries/${deliveryId}/receipt`,
+          JSON.stringify(receiptData),
+          requestHeaders
+        )
+
+        return {
+          statusCode,
+          headers,
+          json
+        }
+      },
+
+      /**
+       * POST /beta-2/receipts. apiCode is the x-api-code header, not part of the body.
+       * @param {Object} receiptData
+       * @param {string|null} [apiCode] - Header value. Defaults to the run API code. A falsy value omits the header.
+       * @returns {Promise<import('./base-api.js').JsonResponse>}
+       */
+      createReceiptWithoutDeliveryId: async (
+        receiptData,
+        apiCode = globalThis.testConfig.apiCode
+      ) => {
+        const requestHeaders = {
+          'Content-Type': 'application/json',
+          'x-cdp-request-id': randomUUID()
+        }
+
+        if (apiCode) {
+          requestHeaders['x-api-code'] = apiCode
+        }
+
+        const { statusCode, headers, json } = await this.post(
+          `/beta-2/receipts`,
+          JSON.stringify(receiptData),
+          requestHeaders
+        )
+
+        return {
+          statusCode,
+          headers,
+          json
+        }
       }
     }
   }

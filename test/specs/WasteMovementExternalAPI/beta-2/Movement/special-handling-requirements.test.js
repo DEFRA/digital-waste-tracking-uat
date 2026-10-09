@@ -5,7 +5,7 @@ import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 import {
   expectMovementCreated,
   expectMovementRejected
-} from '~/test/support/helpers/beta-2-movement.js'
+} from '~/test/support/helpers/beta-2/movement.js'
 
 describe('Beta-2 Movement Creation - Special handling requirements', () => {
   let movementData

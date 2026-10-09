@@ -4,10 +4,17 @@
  * Tests delete or update fields on the result for the scenario under test.
  */
 export const beta2 = {
+  /**
+   * Well-formed ID that does not exist.
+   */
+  unknownResourceId: '00NOTFND',
+
   badRequestType:
     'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
   unauthorizedType:
     'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/unauthorized',
+  notFoundType:
+    'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/not-found',
 
   reasonForNoAuthorisationNumber: 'Exemption pending renewal',
   reasonForNoRegistrationNumber: 'One-off arrangement',
@@ -60,6 +67,50 @@ export const beta2 = {
   intendedCarrierAddress: () => ({
     fullAddress: '4 Carrier Lane, Test City',
     postcode: 'TE1 4CR'
+  }),
+
+  /**
+   * Carrier with its required fields. Same shape as intendedCarrier; used on
+   * collection, delivery and receipt. Address is optional.
+   * @returns {Object}
+   */
+  carrier: () => beta2.intendedCarrier(),
+
+  /**
+   * POST /beta-2/movements/{movementId}/collection required fields.
+   * carrier is required. dutyOfCareConfirmed excluded until DWTC-232 is enabled.
+   * @returns {Object}
+   */
+  generateBaseCollectionData: () => ({
+    carrier: beta2.carrier()
+  }),
+
+  /**
+   * POST /beta-2/deliveries required fields.
+   * @param {string[]} movementIds - Movement IDs from prior create submissions
+   * @returns {Object}
+   */
+  generateBaseDeliveryData: (movementIds) => ({
+    movementIds,
+    carrier: beta2.carrier()
+  }),
+
+  /**
+   * POST /beta-2/deliveries/{deliveryId}/receipt required fields.
+   * @returns {Object}
+   */
+  generateBaseReceiptData: () => ({
+    carrier: beta2.carrier()
+  }),
+
+  /**
+   * POST /beta-2/receipts required fields.
+   * @returns {Object}
+   */
+  generateBaseReceiptWithoutDeliveryIdData: () => ({
+    reason:
+      'No delivery was recorded prior to receipt; waste received directly from the producer.',
+    carrier: beta2.carrier()
   }),
 
   /**

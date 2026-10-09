@@ -1,0 +1,62 @@
+meta {
+  name: Create Receipt - Broker Or Dealer More Than One
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/beta-2/deliveries/{{deliveryId}}/receipt
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-code: {{apiCode}}
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "carrier": {
+      "organisationName": "Carrier Demo Ltd",
+      "registrationNumber": "CBDU123456",
+      "meansOfTransport": "Road",
+      "vehicleRegistration": "AB12 CDE",
+      "contactDetails": {
+        "emailAddress": "carrier@example.com"
+      }
+    },
+    "brokerOrDealer": {
+      "isPresent": true,
+      "items": [
+        {
+          "organisationName": "Broker Demo Ltd",
+          "registrationNumber": "CBDU654321",
+          "contactDetails": {
+            "emailAddress": "broker@example.com",
+            "phoneNumber": "01112223333"
+          },
+          "address": {
+            "fullAddress": "2 Broker Yard, Test City",
+            "postcode": "TE1 1ST"
+          }
+        },
+        {
+          "organisationName": "Second Broker Ltd",
+          "registrationNumber": "ROC UT 9999",
+          "contactDetails": {
+            "phoneNumber": "01112223333"
+          }
+        }
+      ]
+    }
+  }
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}
