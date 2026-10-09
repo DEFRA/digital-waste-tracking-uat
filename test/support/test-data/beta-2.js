@@ -23,14 +23,16 @@ export const beta2 = {
 
   /**
    * POST /beta-2/movements required fields. A Household producer needs only wasteSource.
-   * At least one intended carrier is required.
+   * At least one intended carrier, one intended receiver, and one waste item are required.
    * @returns {Object}
    */
   generateBaseMovementData: () => ({
     producer: {
       wasteSource: 'Household'
     },
-    intendedCarriers: [beta2.intendedCarrier()]
+    intendedCarriers: [beta2.intendedCarrier()],
+    intendedReceivers: [beta2.intendedReceiver()],
+    wasteItems: [beta2.wasteItem()]
   }),
 
   /**
@@ -77,12 +79,50 @@ export const beta2 = {
   carrier: () => beta2.intendedCarrier(),
 
   /**
+   * Intended receiver with its required fields. fullAddress on receiptAddress is optional.
+   * @returns {Object}
+   */
+  intendedReceiver: () => ({
+    siteName: 'Receiver Site Ltd',
+    authorisationNumber: 'EAS/P/123456',
+    receiptAddress: {
+      postcode: 'TE1 3RC'
+    },
+    contactDetails: {
+      emailAddress: 'receiver@example.com'
+    }
+  }),
+
+  /**
+   * Physical form, containers and total weight. Required on a waste item and on a receipt.
+   * @returns {Object}
+   */
+  physicalDetails: () => ({
+    form: 'SOLID',
+    containerType: 'DRU',
+    containerCount: 4,
+    totalWeight: {
+      amount: 250.5,
+      unit: 'KILOGRAMS',
+      isEstimate: false
+    }
+  }),
+
+  /**
+   * A waste item with its required fields.
+   * @returns {Object}
+   */
+  wasteItem: () => ({
+    physicalDetails: beta2.physicalDetails()
+  }),
+
+  /**
    * POST /beta-2/movements/{movementId}/collection required fields.
-   * carrier is required. dutyOfCareConfirmed excluded until DWTC-232 is enabled.
    * @returns {Object}
    */
   generateBaseCollectionData: () => ({
-    carrier: beta2.carrier()
+    carrier: beta2.carrier(),
+    dutyOfCareConfirmed: true
   }),
 
   /**
@@ -100,7 +140,9 @@ export const beta2 = {
    * @returns {Object}
    */
   generateBaseReceiptData: () => ({
-    carrier: beta2.carrier()
+    carrier: beta2.carrier(),
+    receiver: beta2.intendedReceiver(),
+    physicalDetails: beta2.physicalDetails()
   }),
 
   /**
@@ -110,7 +152,9 @@ export const beta2 = {
   generateBaseReceiptWithoutDeliveryIdData: () => ({
     reason:
       'No delivery was recorded prior to receipt; waste received directly from the producer.',
-    carrier: beta2.carrier()
+    carrier: beta2.carrier(),
+    receiver: beta2.intendedReceiver(),
+    wasteItems: [beta2.wasteItem()]
   }),
 
   /**
