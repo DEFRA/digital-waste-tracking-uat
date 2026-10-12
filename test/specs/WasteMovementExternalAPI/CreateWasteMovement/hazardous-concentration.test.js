@@ -45,6 +45,36 @@ describe('Hazardous Component Concentration Validation', () => {
         })
       }
     )
+
+    it(
+      'should accept waste with concentrationOperator set to greater-than' +
+        ' @allure.label.tag:DWTA-362',
+      async () => {
+        await addAllureLink('/DWTA-362', 'DWTA-362', 'jira')
+        wasteReceiptData.wasteItems[0].containsHazardous = true
+        wasteReceiptData.wasteItems[0].hazardous = {
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
+          components: [
+            {
+              name: 'Mercury',
+              concentration: 5.5,
+              concentrationOperator: '>'
+            }
+          ]
+        }
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toEqual({
+          wasteTrackingId: expect.any(String)
+        })
+      }
+    )
   })
 
   describe('Invalid Concentration Values', () => {
@@ -227,6 +257,94 @@ describe('Hazardous Component Concentration Validation', () => {
                 errorType: 'BusinessRuleViolation',
                 message:
                   '"wasteItems[0].hazardous.components" must not be provided when containsHazardous is false'
+              }
+            ]
+          }
+        })
+      }
+    )
+
+    it(
+      'should reject waste with concentrationOperator set to less-than' +
+        ' @allure.label.tag:DWTA-362',
+      async () => {
+        await addAllureLink('/DWTA-362', 'DWTA-362', 'jira')
+        wasteReceiptData.wasteItems[0].containsHazardous = true
+        wasteReceiptData.wasteItems[0].hazardous = {
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
+          components: [
+            {
+              name: 'Mercury',
+              concentration: 5.5,
+              concentrationOperator: '<'
+            }
+          ]
+        }
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.hazardous.components.0.concentrationOperator',
+                errorType: 'InvalidValue',
+                message:
+                  '"wasteItems[0].hazardous.components[0].concentrationOperator" must be [>]'
+              }
+            ]
+          }
+        })
+      }
+    )
+
+    it(
+      'should reject waste with empty concentrationOperator' +
+        ' @allure.label.tag:DWTA-362',
+      async () => {
+        await addAllureLink('/DWTA-362', 'DWTA-362', 'jira')
+        wasteReceiptData.wasteItems[0].containsHazardous = true
+        wasteReceiptData.wasteItems[0].hazardous = {
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
+          components: [
+            {
+              name: 'Mercury',
+              concentration: 5.5
+            },
+            {
+              name: 'Lead',
+              concentration: 5.5,
+              concentrationOperator: ''
+            }
+          ]
+        }
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.hazardous.components.1.concentrationOperator',
+                errorType: 'InvalidValue',
+                message:
+                  '"wasteItems[0].hazardous.components[1].concentrationOperator" must be [>]'
+              },
+              {
+                key: 'wasteItems.0.hazardous.components.1.concentrationOperator',
+                errorType: 'InvalidValue',
+                message:
+                  '"wasteItems[0].hazardous.components[1].concentrationOperator" is not allowed to be empty'
               }
             ]
           }
