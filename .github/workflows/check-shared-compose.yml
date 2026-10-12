@@ -1,0 +1,22 @@
+name: Check Shared Compose
+
+# Runs the full suite against shared-compose/ (every service from its published
+# image) when it or the shared integration test workflow changes, so a broken
+# change is caught here rather than in every service repo at once.
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'shared-compose/**'
+      - '.github/workflows/integration-tests.yml'
+      - '.github/workflows/check-shared-compose.yml'
+
+jobs:
+  integration-tests:
+    name: Run Integration Tests
+    uses: ./.github/workflows/integration-tests.yml
+    with:
+      compose-file: shared-compose/compose.yml
+      uat-ref: ${{ github.event.pull_request.head.sha }}

@@ -1,0 +1,121 @@
+name: Integration Tests
+
+# Runs this test suite against the services' full stack. Each service repo
+# calls it from its PR workflow, with its compose file including
+# shared-compose/compose.yml and building its own service from the PR - see
+# shared-compose/README.md.
+#
+# All the values below are made-up local-only credentials for that throwaway
+# stack, matching shared-compose/compose.yml, so no secrets are needed.
+
+on:
+  workflow_call:
+    inputs:
+      test-script:
+        description: The npm script to run, e.g. test or test:uat:client-sync
+        type: string
+        default: test
+      compose-file:
+        description: The calling repo's compose file for the stack
+        type: string
+        default: compose.yml
+      uat-ref:
+        description: The ref of this repo to test with. Override it to try out a branch
+        type: string
+        default: main
+
+jobs:
+  integration-tests:
+    name: Run Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Start Docker Compose Services
+        id: start-docker-compose-services
+        run: |
+          docker compose -f ${{ inputs.compose-file }} up -d --build --wait
+          docker compose -f ${{ inputs.compose-file }} ps
+
+      - name: Checkout UAT Repository as Integration Test Suite
+        uses: actions/checkout@v4
+        with:
+          repository: DEFRA/digital-waste-tracking-uat
+          ref: ${{ inputs.uat-ref }}
+          path: integration-tests
+
+      - name: Setup Node.js for Integration Test Suite
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: integration-tests/.nvmrc
+          cache: npm
+          cache-dependency-path: integration-tests/package-lock.json
+
+      - name: Install Integration Test Dependencies
+        working-directory: integration-tests
+        run: npm ci --ignore-scripts
+
+      - name: Run Integration Tests
+        id: integration-tests
+        working-directory: integration-tests
+        env:
+          WASTE_MOVEMENT_EXTERNAL_API_BASE_URL: http://waste-tracking-external-api:3001
+          WASTE_MOVEMENT_BACKEND_API_BASE_URL: http://waste-movement-backend:3001
+          WASTE_ORGANISATION_BACKEND_API_BASE_URL: http://waste-organisation-backend:3001
+          WASTE_MOVEMENT_CLIENT_SYNC_API_BASE_URL: http://dwt-client-sync:3001
+          HTTP_PROXY: http://localhost:8080
+          PROXY_MODE: zap
+          ZAP_API_KEY: local-zap-key
+          AUTH_DISABLED: false
+          # The Floci user pool in shared-compose; these are the seeded local test clients
+          COGNITO_CLIENT_ID: '1234567890abcdef1234567890'
+          COGNITO_CLIENT_NAME: 'Test Client 1'
+          COGNITO_CLIENT_SECRET: local
+          COGNITO_CLIENT_ID_2: '0987654321fedcba0987654321'
+          COGNITO_CLIENT_NAME_2: 'Test Client 2'
+          COGNITO_CLIENT_SECRET_2: local
+          COGNITO_OAUTH_BASE_URL: http://floci:4566/cognito-idp
+          ENVIRONMENT: dev
+          API_LOGGING: true
+          JIRA_BASE_URL: https://eaflood.atlassian.net/browse
+          PROFILE: integration
+          SERVICE_AUTH_PASSWORD: local-external-api
+          SERVICE_AUTH_PASSWORD_WASTE_ORGANISATION_BACKEND: local-organisation-backend
+          AUTH_PASSWORD_QA_NON_PROD: local-qa-non-prod
+          AUTH_PASSWORD_PRODUCTION_APPROVAL_TESTS: local-production-approval-tests
+        run: |
+          npm run ${{ inputs.test-script }}
+          npm run test:zap-gate
+
+      - name: Generate Test Report
+        if: always()
+        id: generate-report
+        working-directory: integration-tests
+        run: npm run report:generate
+
+      - name: Upload Test Report
+        if: always() && steps.generate-report.outcome == 'success'
+        id: upload-report
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-report
+          path: integration-tests/allure-report/
+          retention-days: 30
+
+      - name: Comment Test Report Link on PR
+        if: always() && steps.upload-report.outcome == 'success' && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const statusEmoji = '${{ steps.integration-tests.outcome }}' === 'success' ? '✅' : '❌';
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## 📊 Integration Test Report ${statusEmoji}\n\nThe test report has been generated and is available as an artifact.\n\n📥 [Download Test Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/${{ steps.upload-report.outputs.artifact-id }})`
+            })
+
+      - name: Stop Docker Compose Services
+        if: always() && steps.start-docker-compose-services.outcome == 'success'
+        run: docker compose -f ${{ inputs.compose-file }} down
