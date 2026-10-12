@@ -19,6 +19,7 @@ export const beta2 = {
   reasonForNoAuthorisationNumber: 'Exemption pending renewal',
   reasonForNoRegistrationNumber: 'One-off arrangement',
   reasonForNoCarrierRegistrationNumber: 'ONE_OFF',
+  otherMeansOfTransport: 'Horse and cart',
   specialHandlingRequirements: 'Handle with care and keep upright.',
 
   /**
