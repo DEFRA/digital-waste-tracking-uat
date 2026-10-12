@@ -44,6 +44,36 @@ describe('POPs Component Concentration Validation', () => {
         })
       }
     )
+
+    it(
+      'should accept waste with pops concentrationOperator set to greater-than and less-than' +
+        ' @allure.label.tag:DWTA-362',
+      async () => {
+        await addAllureLink('/DWTA-362', 'DWTA-362', 'jira')
+        wasteReceiptData.wasteItems[0].pops.components = [
+          {
+            code: 'ALD',
+            concentration: 5.5,
+            concentrationOperator: '>'
+          },
+          {
+            code: 'CHL',
+            concentration: 5.5,
+            concentrationOperator: '<'
+          }
+        ]
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toEqual({
+          wasteTrackingId: expect.any(String)
+        })
+      }
+    )
   })
 
   describe('Invalid Concentration Values', () => {
@@ -185,6 +215,39 @@ describe('POPs Component Concentration Validation', () => {
                 errorType: 'BusinessRuleViolation',
                 message:
                   '"wasteItems[0].pops.components" must not be provided when containsPops is false'
+              }
+            ]
+          }
+        })
+      }
+    )
+
+    it(
+      'should reject waste with concentrationOperator when concentration is missing' +
+        ' @allure.label.tag:DWTA-362',
+      async () => {
+        await addAllureLink('/DWTA-362', 'DWTA-362', 'jira')
+        wasteReceiptData.wasteItems[0].pops.components = [
+          {
+            code: 'ALD',
+            concentrationOperator: '>'
+          }
+        ]
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'wasteItems.0.pops.components.0.concentration',
+                errorType: 'NotProvided',
+                message:
+                  '"wasteItems[0].pops.components[0].concentration" is required'
               }
             ]
           }
