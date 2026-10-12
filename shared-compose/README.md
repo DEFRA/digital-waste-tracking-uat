@@ -13,21 +13,34 @@ are for running the test suite itself.
 
 ## Using it from a service repo
 
-A service repo's compose file includes this one, and overrides its own service
-to build from the repo's code. Every other service runs from its published image.
+A service repo's compose file includes this one, along with an override file
+that changes its own service to build from the repo's code. Every other service
+runs from its published image.
 
 ```yaml
+# compose.yml
 include:
-  - ${SHARED_COMPOSE:-https://github.com/DEFRA/digital-waste-tracking-uat.git#main:shared-compose/compose.yml}
+  - path:
+      - ${SHARED_COMPOSE:-https://github.com/DEFRA/digital-waste-tracking-uat.git#main:shared-compose/compose.yml}
+      - compose.override-shared.yml
+```
 
+```yaml
+# compose.override-shared.yml
 services:
   dwt-client-sync:
     # A local name, so the build doesn't replace your pulled published image
     image: dwt-client-sync:local
     build:
-      context: .
+      # Paths here resolve against the shared file's folder, so build from
+      # where compose is run: the repo's root
+      context: ${PWD}
       target: production
 ```
+
+The override has to be in the `include` list, not under `services:` in the
+including file: Compose before v5 (including GitHub's runners) rejects
+redefining an included service.
 
 Anything else under the service's name (such as a new environment variable) is
 merged over the shared definition, so config for the repo's own service can
