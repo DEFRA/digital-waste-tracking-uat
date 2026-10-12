@@ -39,8 +39,8 @@ services:
 ```
 
 The override has to be in the `include` list, not under `services:` in the
-including file: Compose before v5 (including GitHub's runners) rejects
-redefining an included service.
+including file: older Compose versions, such as v2.38 on GitHub's runners,
+reject redefining an included service.
 
 Anything else under the service's name (such as a new environment variable) is
 merged over the shared definition, so config for the repo's own service can
