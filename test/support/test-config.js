@@ -64,6 +64,14 @@ export class TestConfig {
   }
 
   /**
+   * Display name for the primary Cognito client (e.g. client.clientName on retrieve).
+   * @returns {string|undefined}
+   */
+  get cognitoClientName() {
+    return process.env.COGNITO_CLIENT_NAME
+  }
+
+  /**
    * Second Cognito client ID for cross-client ownership tests.
    * @returns {string|undefined}
    */
@@ -77,6 +85,14 @@ export class TestConfig {
    */
   get cognitoClientSecret2() {
     return process.env.COGNITO_CLIENT_SECRET_2
+  }
+
+  /**
+   * Display name for the second Cognito client.
+   * @returns {string|undefined}
+   */
+  get cognitoClientName2() {
+    return process.env.COGNITO_CLIENT_NAME_2
   }
 
   get cognitoOAuthBaseUrl() {
@@ -176,6 +192,14 @@ export class TestConfig {
 
   get wasteOrganisationBackendApiBaseUrl() {
     return process.env.WASTE_ORGANISATION_BACKEND_API_BASE_URL
+  }
+
+  /**
+   * Base URL for the DWT client-sync service.
+   * @returns {string|undefined}
+   */
+  get wasteMovementClientSyncApiBaseUrl() {
+    return process.env.WASTE_MOVEMENT_CLIENT_SYNC_API_BASE_URL
   }
 
   /**

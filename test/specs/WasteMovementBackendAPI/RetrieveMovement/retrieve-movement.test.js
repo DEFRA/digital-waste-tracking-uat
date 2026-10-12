@@ -33,10 +33,12 @@ describe('Retrieve movement (Functionality only in Pre Prod)', () => {
 
       expect(qaRetrieveStatus).toBe(200)
       expect(qaMovements).toHaveLength(1)
-      expect(qaMovements[0].clientId).toEqual(
-        globalThis.testConfig.cognitoClientId
-      )
       const movement = qaMovements[0]
+      expect(movement.clientId).toEqual(globalThis.testConfig.cognitoClientId)
+      expect(movement.receipt.movement.softwareProvider).toEqual({
+        id: globalThis.testConfig.cognitoClientId,
+        name: globalThis.testConfig.cognitoClientName
+      })
       expect(movement.wasteTrackingId).toBe(wasteTrackingId)
       expect(movement.revision).toEqual(expect.any(Number))
       expect(
