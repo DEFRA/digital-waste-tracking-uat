@@ -78,9 +78,16 @@ describe('Beta-1 Collection Creation', () => {
 
         collectionData.orgName = 'not-allowed'
 
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+            beta1.generateBaseMovementData()
+          )
+        expect(createResponse.statusCode).toBe(201)
+        const movementId = createResponse.json.data.movementId
+
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
-            beta1.unknownResourceId,
+            movementId,
             collectionData
           )
 
@@ -93,7 +100,7 @@ describe('Beta-1 Collection Creation', () => {
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
-          instance: `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+          instance: `/beta-1/movements/${movementId}/collection`,
           requestId: response.headers['x-request-id'],
           errors: [
             {
@@ -114,9 +121,16 @@ describe('Beta-1 Collection Creation', () => {
 
         collectionData.apiCode = 'not-a-uuid'
 
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+            beta1.generateBaseMovementData()
+          )
+        expect(createResponse.statusCode).toBe(201)
+        const movementId = createResponse.json.data.movementId
+
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
-            beta1.unknownResourceId,
+            movementId,
             collectionData
           )
 
@@ -129,7 +143,7 @@ describe('Beta-1 Collection Creation', () => {
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
-          instance: `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+          instance: `/beta-1/movements/${movementId}/collection`,
           requestId: response.headers['x-request-id'],
           errors: [
             {
@@ -148,8 +162,15 @@ describe('Beta-1 Collection Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+            beta1.generateBaseMovementData()
+          )
+        expect(createResponse.statusCode).toBe(201)
+        const movementId = createResponse.json.data.movementId
+
         const response = await globalThis.apis.wasteMovementExternalAPI.post(
-          `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+          `/beta-1/movements/${movementId}/collection`,
           '{',
           {
             'Content-Type': 'application/json',
@@ -166,7 +187,7 @@ describe('Beta-1 Collection Creation', () => {
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
           title: 'Bad Request',
           detail: 'Invalid request payload JSON format',
-          instance: `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+          instance: `/beta-1/movements/${movementId}/collection`,
           requestId: response.headers['x-request-id']
         })
       }
@@ -178,8 +199,15 @@ describe('Beta-1 Collection Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+            beta1.generateBaseMovementData()
+          )
+        expect(createResponse.statusCode).toBe(201)
+        const movementId = createResponse.json.data.movementId
+
         const response = await globalThis.apis.wasteMovementExternalAPI.post(
-          `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+          `/beta-1/movements/${movementId}/collection`,
           '<collection/>',
           {
             'Content-Type': 'application/xml',
@@ -196,7 +224,7 @@ describe('Beta-1 Collection Creation', () => {
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/unsupported-media-type',
           title: 'Unsupported Media Type',
           detail: 'Unsupported Media Type',
-          instance: `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+          instance: `/beta-1/movements/${movementId}/collection`,
           requestId: response.headers['x-request-id']
         })
       }
@@ -208,8 +236,15 @@ describe('Beta-1 Collection Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+            beta1.generateBaseMovementData()
+          )
+        expect(createResponse.statusCode).toBe(201)
+        const movementId = createResponse.json.data.movementId
+
         const response = await globalThis.apis.wasteMovementExternalAPI.post(
-          `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+          `/beta-1/movements/${movementId}/collection`,
           'x'.repeat(1048577),
           {
             'Content-Type': 'application/json',
@@ -227,7 +262,7 @@ describe('Beta-1 Collection Creation', () => {
           title: 'Request Entity Too Large',
           detail:
             'Payload content length greater than maximum allowed: 1048576',
-          instance: `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+          instance: `/beta-1/movements/${movementId}/collection`,
           requestId: response.headers['x-request-id']
         })
       }

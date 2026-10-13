@@ -118,6 +118,20 @@ export const beta2 = {
   }),
 
   /**
+   * A disposal or recovery treatment with its required fields.
+   * Required on receipts (top-level treatments, or per waste item without a delivery).
+   * @returns {Object}
+   */
+  treatment: () => ({
+    disposalOrRecoveryCode: 'R3',
+    weight: {
+      amount: 250.5,
+      unit: 'KILOGRAMS',
+      isEstimate: false
+    }
+  }),
+
+  /**
    * POST /beta-2/movements/{movementId}/collection required fields.
    * @returns {Object}
    */
@@ -143,7 +157,8 @@ export const beta2 = {
   generateBaseReceiptData: () => ({
     carrier: beta2.carrier(),
     receiver: beta2.intendedReceiver(),
-    physicalDetails: beta2.physicalDetails()
+    physicalDetails: beta2.physicalDetails(),
+    treatments: [beta2.treatment()]
   }),
 
   /**
@@ -155,7 +170,12 @@ export const beta2 = {
       'No delivery was recorded prior to receipt; waste received directly from the producer.',
     carrier: beta2.carrier(),
     receiver: beta2.intendedReceiver(),
-    wasteItems: [beta2.wasteItem()]
+    wasteItems: [
+      {
+        ...beta2.wasteItem(),
+        treatments: [beta2.treatment()]
+      }
+    ]
   }),
 
   /**

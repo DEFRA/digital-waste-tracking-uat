@@ -12,6 +12,24 @@ describe('Beta-1 Delivery Creation', () => {
     )
   })
 
+  async function createMovementWithCollection() {
+    const createResponse =
+      await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+        beta1.generateBaseMovementData()
+      )
+    expect(createResponse.statusCode).toBe(201)
+    const movementId = createResponse.json.data.movementId
+
+    const collectionResponse =
+      await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
+        movementId,
+        beta1.generateBaseCollectionData()
+      )
+    expect(collectionResponse.statusCode).toBe(201)
+
+    return movementId
+  }
+
   describe('Successful Creation', () => {
     it(
       'should successfully record a delivery for a collected movement and return a delivery ID' +
@@ -19,19 +37,7 @@ describe('Beta-1 Delivery Creation', () => {
       async () => {
         await addAllureLink('/DWTC-119', 'DWTC-119', 'jira')
 
-        const createResponse =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
-            beta1.generateBaseMovementData()
-          )
-        expect(createResponse.statusCode).toBe(201)
-        const movementId = createResponse.json.data.movementId
-
-        const collectionResponse =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
-            movementId,
-            beta1.generateBaseCollectionData()
-          )
-        expect(collectionResponse.statusCode).toBe(201)
+        const movementId = await createMovementWithCollection()
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
@@ -64,33 +70,8 @@ describe('Beta-1 Delivery Creation', () => {
         await addAllureLink('/DWTC-119', 'DWTC-119', 'jira')
         await addAllureLink('/DWTC-188', 'DWTC-188', 'jira')
 
-        const firstCreateResponse =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
-            beta1.generateBaseMovementData()
-          )
-        expect(firstCreateResponse.statusCode).toBe(201)
-        const firstMovementId = firstCreateResponse.json.data.movementId
-
-        const secondCreateResponse =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
-            beta1.generateBaseMovementData()
-          )
-        expect(secondCreateResponse.statusCode).toBe(201)
-        const secondMovementId = secondCreateResponse.json.data.movementId
-
-        const firstCollectionResponse =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
-            firstMovementId,
-            beta1.generateBaseCollectionData()
-          )
-        expect(firstCollectionResponse.statusCode).toBe(201)
-
-        const secondCollectionResponse =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
-            secondMovementId,
-            beta1.generateBaseCollectionData()
-          )
-        expect(secondCollectionResponse.statusCode).toBe(201)
+        const firstMovementId = await createMovementWithCollection()
+        const secondMovementId = await createMovementWithCollection()
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
@@ -138,19 +119,7 @@ describe('Beta-1 Delivery Creation', () => {
     })
 
     it('should reject recording a delivery when one movement exists and another does not', async () => {
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
-          beta1.generateBaseMovementData()
-        )
-      expect(createResponse.statusCode).toBe(201)
-      const movementId = createResponse.json.data.movementId
-
-      const collectionResponse =
-        await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
-          movementId,
-          beta1.generateBaseCollectionData()
-        )
-      expect(collectionResponse.statusCode).toBe(201)
+      const movementId = await createMovementWithCollection()
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
@@ -217,9 +186,8 @@ describe('Beta-1 Delivery Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
-        const deliveryData = beta1.generateBaseDeliveryData([
-          beta1.unknownResourceId
-        ])
+        const movementId = await createMovementWithCollection()
+        const deliveryData = beta1.generateBaseDeliveryData([movementId])
         delete deliveryData.movementIds
 
         const response =
@@ -288,9 +256,8 @@ describe('Beta-1 Delivery Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
-        const deliveryData = beta1.generateBaseDeliveryData([
-          beta1.unknownResourceId
-        ])
+        const movementId = await createMovementWithCollection()
+        const deliveryData = beta1.generateBaseDeliveryData([movementId])
         deliveryData.orgName = 'not-allowed'
 
         const response =
@@ -326,9 +293,8 @@ describe('Beta-1 Delivery Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
-        const deliveryData = beta1.generateBaseDeliveryData([
-          beta1.unknownResourceId
-        ])
+        const movementId = await createMovementWithCollection()
+        const deliveryData = beta1.generateBaseDeliveryData([movementId])
         deliveryData.apiCode = 'not-a-uuid'
 
         const response =

@@ -19,16 +19,20 @@ describe('Beta-2 Collection Creation - Duty of care confirmation', () => {
     )
   })
 
+  async function createMovement() {
+    const createResponse =
+      await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+        beta2.generateBaseMovementData()
+      )
+    expectMovementCreated(createResponse)
+    return createResponse.json.data.movementId
+  }
+
   describe('Successful Creation', () => {
     it('should create a collection when a carrier confirms duty of care @allure.label.tag:DWTC-232', async () => {
       await addAllureLink('/DWTC-232', 'DWTC-232', 'jira')
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateBaseMovementData()
-        )
-      expectMovementCreated(createResponse)
-      const movementId = createResponse.json.data.movementId
+      const movementId = await createMovement()
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
@@ -43,12 +47,7 @@ describe('Beta-2 Collection Creation - Duty of care confirmation', () => {
       await addAllureLink('/DWTC-232', 'DWTC-232', 'jira')
       collectionData.dutyOfCareConfirmed = false
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateBaseMovementData()
-        )
-      expectMovementCreated(createResponse)
-      const movementId = createResponse.json.data.movementId
+      const movementId = await createMovement()
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
@@ -65,13 +64,15 @@ describe('Beta-2 Collection Creation - Duty of care confirmation', () => {
       await addAllureLink('/DWTC-232', 'DWTC-232', 'jira')
       delete collectionData.dutyOfCareConfirmed
 
+      const movementId = await createMovement()
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          beta2.unknownResourceId,
+          movementId,
           collectionData
         )
 
-      expectCollectionRejected(response, beta2.unknownResourceId)
+      expectCollectionRejected(response, movementId)
     })
   })
 })
