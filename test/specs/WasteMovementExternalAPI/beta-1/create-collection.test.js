@@ -133,7 +133,7 @@ describe('Beta-1 Collection Creation', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: 'must match format "uuid"',
+              message: "must match format 'uuid'",
               pointer: '/apiCode',
               errorType: 'InvalidFormat'
             }

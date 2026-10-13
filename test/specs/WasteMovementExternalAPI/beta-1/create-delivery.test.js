@@ -197,12 +197,12 @@ describe('Beta-1 Delivery Creation', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: '"apiCode" is required',
+              message: "'apiCode' is required",
               pointer: '/apiCode',
               errorType: 'NotProvided'
             },
             {
-              message: '"movementIds" is required',
+              message: "'movementIds' is required",
               pointer: '/movementIds',
               errorType: 'NotProvided'
             }
@@ -240,7 +240,7 @@ describe('Beta-1 Delivery Creation', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: '"movementIds" is required',
+              message: "'movementIds' is required",
               pointer: '/movementIds',
               errorType: 'NotProvided'
             }
@@ -349,7 +349,7 @@ describe('Beta-1 Delivery Creation', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: 'must match format "uuid"',
+              message: "must match format 'uuid'",
               pointer: '/apiCode',
               errorType: 'InvalidFormat'
             }
