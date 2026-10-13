@@ -230,7 +230,7 @@ describe('Beta-1 API Code', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: "'apiCode' is required",
+              message: '"apiCode" is required',
               pointer: '/apiCode',
               errorType: 'NotProvided'
             }
@@ -267,7 +267,7 @@ describe('Beta-1 API Code', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: "'apiCode' is required",
+              message: '"apiCode" is required',
               pointer: '/apiCode',
               errorType: 'NotProvided'
             }
@@ -305,7 +305,7 @@ describe('Beta-1 API Code', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: "'apiCode' is required",
+              message: '"apiCode" is required',
               pointer: '/apiCode',
               errorType: 'NotProvided'
             }
@@ -342,7 +342,7 @@ describe('Beta-1 API Code', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: "'apiCode' is required",
+              message: '"apiCode" is required',
               pointer: '/apiCode',
               errorType: 'NotProvided'
             }
@@ -378,7 +378,7 @@ describe('Beta-1 API Code', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: "'apiCode' is required",
+              message: '"apiCode" is required',
               pointer: '/apiCode',
               errorType: 'NotProvided'
             }

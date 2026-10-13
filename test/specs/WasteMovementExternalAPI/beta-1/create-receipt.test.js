@@ -168,7 +168,7 @@ describe('Beta-1 Receipt Creation', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: "'reason' is required",
+              message: '"reason" is required',
               pointer: '/reason',
               errorType: 'NotProvided'
             }
@@ -240,7 +240,7 @@ describe('Beta-1 Receipt Creation', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: "must match format 'uuid'",
+              message: 'must match format "uuid"',
               pointer: '/apiCode',
               errorType: 'InvalidFormat'
             }
@@ -314,7 +314,7 @@ describe('Beta-1 Receipt Creation', () => {
           requestId: response.headers['x-request-id'],
           errors: [
             {
-              message: "must match format 'uuid'",
+              message: 'must match format "uuid"',
               pointer: '/apiCode',
               errorType: 'InvalidFormat'
             }
