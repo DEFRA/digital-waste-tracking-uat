@@ -19,16 +19,20 @@ describe('Beta-2 Collection Creation - Special handling requirements', () => {
     )
   })
 
+  async function createMovement() {
+    const createResponse =
+      await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+        beta2.generateBaseMovementData()
+      )
+    expectMovementCreated(createResponse)
+    return createResponse.json.data.movementId
+  }
+
   describe('Successful Creation', () => {
     it('should create a collection when special handling requirements are given @allure.label.tag:DWTC-212', async () => {
       await addAllureLink('/DWTC-212', 'DWTC-212', 'jira')
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateBaseMovementData()
-        )
-      expectMovementCreated(createResponse)
-      const movementId = createResponse.json.data.movementId
+      const movementId = await createMovement()
 
       collectionData.specialHandlingRequirements =
         beta2.specialHandlingRequirements
@@ -48,13 +52,15 @@ describe('Beta-2 Collection Creation - Special handling requirements', () => {
       await addAllureLink('/DWTC-212', 'DWTC-212', 'jira')
       collectionData.specialHandlingRequirements = 'A'.repeat(501)
 
+      const movementId = await createMovement()
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          beta2.unknownResourceId,
+          movementId,
           collectionData
         )
 
-      expectCollectionRejected(response, beta2.unknownResourceId)
+      expectCollectionRejected(response, movementId)
     })
   })
 })

@@ -245,12 +245,18 @@ describe('Beta-1 API Code', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+            beta1.generateBaseMovementData()
+          )
+        expect(createResponse.statusCode).toBe(201)
+        const movementId = createResponse.json.data.movementId
         const collectionData = beta1.generateBaseCollectionData()
         delete collectionData.apiCode
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
-            beta1.unknownResourceId,
+            movementId,
             collectionData
           )
 
@@ -263,7 +269,7 @@ describe('Beta-1 API Code', () => {
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
-          instance: `/beta-1/movements/${beta1.unknownResourceId}/collection`,
+          instance: `/beta-1/movements/${movementId}/collection`,
           requestId: response.headers['x-request-id'],
           errors: [
             {
@@ -282,9 +288,21 @@ describe('Beta-1 API Code', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
-        const deliveryData = beta1.generateBaseDeliveryData([
-          beta1.unknownResourceId
-        ])
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+            beta1.generateBaseMovementData()
+          )
+        expect(createResponse.statusCode).toBe(201)
+        const movementId = createResponse.json.data.movementId
+
+        const collectionResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
+            movementId,
+            beta1.generateBaseCollectionData()
+          )
+        expect(collectionResponse.statusCode).toBe(201)
+
+        const deliveryData = beta1.generateBaseDeliveryData([movementId])
         delete deliveryData.apiCode
 
         const response =
@@ -320,12 +338,33 @@ describe('Beta-1 API Code', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+            beta1.generateBaseMovementData()
+          )
+        expect(createResponse.statusCode).toBe(201)
+        const movementId = createResponse.json.data.movementId
+
+        const collectionResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
+            movementId,
+            beta1.generateBaseCollectionData()
+          )
+        expect(collectionResponse.statusCode).toBe(201)
+
+        const deliveryResponse =
+          await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
+            beta1.generateBaseDeliveryData([movementId])
+          )
+        expect(deliveryResponse.statusCode).toBe(201)
+        const deliveryId = deliveryResponse.json.data.deliveries[0].deliveryId
+
         const receiptData = beta1.generateBaseReceiptData()
         delete receiptData.apiCode
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta1.createReceiptWithDeliveryId(
-            beta1.unknownResourceId,
+            deliveryId,
             receiptData
           )
 
@@ -338,7 +377,7 @@ describe('Beta-1 API Code', () => {
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
-          instance: `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+          instance: `/beta-1/deliveries/${deliveryId}/receipt`,
           requestId: response.headers['x-request-id'],
           errors: [
             {

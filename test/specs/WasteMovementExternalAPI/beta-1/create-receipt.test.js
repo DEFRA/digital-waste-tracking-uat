@@ -12,6 +12,30 @@ describe('Beta-1 Receipt Creation', () => {
     )
   })
 
+  async function createDeliveryForReceipt() {
+    const createResponse =
+      await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
+        beta1.generateBaseMovementData()
+      )
+    expect(createResponse.statusCode).toBe(201)
+    const movementId = createResponse.json.data.movementId
+
+    const collectionResponse =
+      await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
+        movementId,
+        beta1.generateBaseCollectionData()
+      )
+    expect(collectionResponse.statusCode).toBe(201)
+
+    const deliveryResponse =
+      await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
+        beta1.generateBaseDeliveryData([movementId])
+      )
+    expect(deliveryResponse.statusCode).toBe(201)
+
+    return deliveryResponse.json.data.deliveries[0].deliveryId
+  }
+
   describe('Successful Creation', () => {
     it(
       'should successfully record a receipt against an existing delivery' +
@@ -19,26 +43,7 @@ describe('Beta-1 Receipt Creation', () => {
       async () => {
         await addAllureLink('/DWTC-140', 'DWTC-140', 'jira')
 
-        const createResponse =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createMovement(
-            beta1.generateBaseMovementData()
-          )
-        expect(createResponse.statusCode).toBe(201)
-        const movementId = createResponse.json.data.movementId
-
-        const collectionResponse =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createCollection(
-            movementId,
-            beta1.generateBaseCollectionData()
-          )
-        expect(collectionResponse.statusCode).toBe(201)
-
-        const deliveryResponse =
-          await globalThis.apis.wasteMovementExternalAPI.beta1.createDelivery(
-            beta1.generateBaseDeliveryData([movementId])
-          )
-        expect(deliveryResponse.statusCode).toBe(201)
-        const deliveryId = deliveryResponse.json.data.deliveries[0].deliveryId
+        const deliveryId = await createDeliveryForReceipt()
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta1.createReceiptWithDeliveryId(
@@ -255,12 +260,13 @@ describe('Beta-1 Receipt Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const deliveryId = await createDeliveryForReceipt()
         const receiptData = beta1.generateBaseReceiptData()
         receiptData.orgName = 'not-allowed'
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta1.createReceiptWithDeliveryId(
-            beta1.unknownResourceId,
+            deliveryId,
             receiptData
           )
 
@@ -273,7 +279,7 @@ describe('Beta-1 Receipt Creation', () => {
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
-          instance: `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+          instance: `/beta-1/deliveries/${deliveryId}/receipt`,
           requestId: response.headers['x-request-id'],
           errors: [
             {
@@ -292,12 +298,13 @@ describe('Beta-1 Receipt Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const deliveryId = await createDeliveryForReceipt()
         const receiptData = beta1.generateBaseReceiptData()
         receiptData.apiCode = 'not-a-uuid'
 
         const response =
           await globalThis.apis.wasteMovementExternalAPI.beta1.createReceiptWithDeliveryId(
-            beta1.unknownResourceId,
+            deliveryId,
             receiptData
           )
 
@@ -310,7 +317,7 @@ describe('Beta-1 Receipt Creation', () => {
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
-          instance: `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+          instance: `/beta-1/deliveries/${deliveryId}/receipt`,
           requestId: response.headers['x-request-id'],
           errors: [
             {
@@ -359,8 +366,10 @@ describe('Beta-1 Receipt Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const deliveryId = await createDeliveryForReceipt()
+
         const response = await globalThis.apis.wasteMovementExternalAPI.post(
-          `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+          `/beta-1/deliveries/${deliveryId}/receipt`,
           '{',
           {
             'Content-Type': 'application/json',
@@ -377,7 +386,7 @@ describe('Beta-1 Receipt Creation', () => {
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
           title: 'Bad Request',
           detail: 'Invalid request payload JSON format',
-          instance: `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+          instance: `/beta-1/deliveries/${deliveryId}/receipt`,
           requestId: response.headers['x-request-id']
         })
       }
@@ -419,8 +428,10 @@ describe('Beta-1 Receipt Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const deliveryId = await createDeliveryForReceipt()
+
         const response = await globalThis.apis.wasteMovementExternalAPI.post(
-          `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+          `/beta-1/deliveries/${deliveryId}/receipt`,
           '<receipt/>',
           {
             'Content-Type': 'application/xml',
@@ -437,7 +448,7 @@ describe('Beta-1 Receipt Creation', () => {
           type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/unsupported-media-type',
           title: 'Unsupported Media Type',
           detail: 'Unsupported Media Type',
-          instance: `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+          instance: `/beta-1/deliveries/${deliveryId}/receipt`,
           requestId: response.headers['x-request-id']
         })
       }
@@ -480,8 +491,10 @@ describe('Beta-1 Receipt Creation', () => {
       async () => {
         await addAllureLink('/DWTC-183', 'DWTC-183', 'jira')
 
+        const deliveryId = await createDeliveryForReceipt()
+
         const response = await globalThis.apis.wasteMovementExternalAPI.post(
-          `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+          `/beta-1/deliveries/${deliveryId}/receipt`,
           'x'.repeat(1048577),
           {
             'Content-Type': 'application/json',
@@ -499,7 +512,7 @@ describe('Beta-1 Receipt Creation', () => {
           title: 'Request Entity Too Large',
           detail:
             'Payload content length greater than maximum allowed: 1048576',
-          instance: `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
+          instance: `/beta-1/deliveries/${deliveryId}/receipt`,
           requestId: response.headers['x-request-id']
         })
       }

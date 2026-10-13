@@ -19,16 +19,20 @@ describe('Beta-2 Collection Creation - Broker or dealer', () => {
     )
   })
 
+  async function createMovement() {
+    const createResponse =
+      await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+        beta2.generateBaseMovementData()
+      )
+    expectMovementCreated(createResponse)
+    return createResponse.json.data.movementId
+  }
+
   describe('Successful Creation', () => {
     it('should create a collection when no broker or dealer details are submitted @allure.label.tag:DWTC-211', async () => {
       await addAllureLink('/DWTC-211', 'DWTC-211', 'jira')
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateBaseMovementData()
-        )
-      expectMovementCreated(createResponse)
-      const movementId = createResponse.json.data.movementId
+      const movementId = await createMovement()
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
@@ -42,12 +46,7 @@ describe('Beta-2 Collection Creation - Broker or dealer', () => {
     it('should create a collection when broker or dealer involvement is declared as false @allure.label.tag:DWTC-211', async () => {
       await addAllureLink('/DWTC-211', 'DWTC-211', 'jira')
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateBaseMovementData()
-        )
-      expectMovementCreated(createResponse)
-      const movementId = createResponse.json.data.movementId
+      const movementId = await createMovement()
 
       collectionData.brokerOrDealer = { isPresent: false }
 
@@ -63,12 +62,7 @@ describe('Beta-2 Collection Creation - Broker or dealer', () => {
     it('should create a collection when more than one broker or dealer is declared @allure.label.tag:DWTC-211', async () => {
       await addAllureLink('/DWTC-211', 'DWTC-211', 'jira')
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateBaseMovementData()
-        )
-      expectMovementCreated(createResponse)
-      const movementId = createResponse.json.data.movementId
+      const movementId = await createMovement()
 
       const broker = beta2.brokerOrDealer()
       broker.address = beta2.brokerOrDealerAddress()
@@ -89,12 +83,7 @@ describe('Beta-2 Collection Creation - Broker or dealer', () => {
     it('should create a collection when a broker or dealer gives a reason instead of a registration number @allure.label.tag:DWTC-211', async () => {
       await addAllureLink('/DWTC-211', 'DWTC-211', 'jira')
 
-      const createResponse =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          beta2.generateBaseMovementData()
-        )
-      expectMovementCreated(createResponse)
-      const movementId = createResponse.json.data.movementId
+      const movementId = await createMovement()
 
       const broker = beta2.brokerOrDealer()
       delete broker.registrationNumber
@@ -118,13 +107,15 @@ describe('Beta-2 Collection Creation - Broker or dealer', () => {
       delete broker.organisationName
       collectionData.brokerOrDealer = { isPresent: true, items: [broker] }
 
+      const movementId = await createMovement()
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          beta2.unknownResourceId,
+          movementId,
           collectionData
         )
 
-      expectCollectionRejected(response, beta2.unknownResourceId)
+      expectCollectionRejected(response, movementId)
     })
 
     it('should reject a broker or dealer when neither a registration number nor a reason is given @allure.label.tag:DWTC-211', async () => {
@@ -133,13 +124,15 @@ describe('Beta-2 Collection Creation - Broker or dealer', () => {
       delete broker.registrationNumber
       collectionData.brokerOrDealer = { isPresent: true, items: [broker] }
 
+      const movementId = await createMovement()
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          beta2.unknownResourceId,
+          movementId,
           collectionData
         )
 
-      expectCollectionRejected(response, beta2.unknownResourceId)
+      expectCollectionRejected(response, movementId)
     })
 
     it('should reject a broker or dealer when both a registration number and a reason are given @allure.label.tag:DWTC-211', async () => {
@@ -148,13 +141,15 @@ describe('Beta-2 Collection Creation - Broker or dealer', () => {
       broker.reasonForNoRegistrationNumber = beta2.reasonForNoRegistrationNumber
       collectionData.brokerOrDealer = { isPresent: true, items: [broker] }
 
+      const movementId = await createMovement()
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          beta2.unknownResourceId,
+          movementId,
           collectionData
         )
 
-      expectCollectionRejected(response, beta2.unknownResourceId)
+      expectCollectionRejected(response, movementId)
     })
 
     it('should reject a broker or dealer when neither an email address nor a phone number is given @allure.label.tag:DWTC-211', async () => {
@@ -163,26 +158,30 @@ describe('Beta-2 Collection Creation - Broker or dealer', () => {
       broker.contactDetails = {}
       collectionData.brokerOrDealer = { isPresent: true, items: [broker] }
 
+      const movementId = await createMovement()
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          beta2.unknownResourceId,
+          movementId,
           collectionData
         )
 
-      expectCollectionRejected(response, beta2.unknownResourceId)
+      expectCollectionRejected(response, movementId)
     })
 
     it('should reject a collection when a broker or dealer is declared as involved but no details are given @allure.label.tag:DWTC-211', async () => {
       await addAllureLink('/DWTC-211', 'DWTC-211', 'jira')
       collectionData.brokerOrDealer = { isPresent: true }
 
+      const movementId = await createMovement()
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          beta2.unknownResourceId,
+          movementId,
           collectionData
         )
 
-      expectCollectionRejected(response, beta2.unknownResourceId)
+      expectCollectionRejected(response, movementId)
     })
 
     it('should reject a collection when broker or dealer details are given but involvement is false @allure.label.tag:DWTC-211', async () => {
@@ -192,13 +191,15 @@ describe('Beta-2 Collection Creation - Broker or dealer', () => {
         items: [beta2.brokerOrDealer()]
       }
 
+      const movementId = await createMovement()
+
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          beta2.unknownResourceId,
+          movementId,
           collectionData
         )
 
-      expectCollectionRejected(response, beta2.unknownResourceId)
+      expectCollectionRejected(response, movementId)
     })
   })
 })

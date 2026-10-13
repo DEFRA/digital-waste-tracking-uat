@@ -1,0 +1,58 @@
+meta {
+  name: Create Receipt - Carrier With Reason For No Registration Number
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/beta-2/deliveries/{{deliveryId}}/receipt
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-code: {{apiCode}}
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "carrier": {
+      "organisationName": "Carrier Demo Ltd",
+      "reasonForNoRegistrationNumber": "ONE_OFF",
+      "meansOfTransport": "Road",
+      "vehicleRegistration": "AB12 CDE",
+      "contactDetails": {
+        "emailAddress": "carrier@example.com"
+      }
+    },
+    "receiver": {
+      "siteName": "Receiver Site Ltd",
+      "authorisationNumber": "EAS/P/123456",
+      "receiptAddress": {
+        "postcode": "TE1 3RC"
+      },
+      "contactDetails": {
+        "emailAddress": "receiver@example.com"
+      }
+    },
+    "physicalDetails": {
+      "form": "SOLID",
+      "containerType": "DRU",
+      "containerCount": 4,
+      "totalWeight": {
+        "amount": 250.5,
+        "unit": "KILOGRAMS",
+        "isEstimate": false
+      }
+    }
+  }
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}
