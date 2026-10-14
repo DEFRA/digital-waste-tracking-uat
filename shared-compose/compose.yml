@@ -93,6 +93,8 @@ services:
       MONGO_URI: mongodb://mongodb:27017/?replicaSet=rs0&directConnection=true
       MONGO_READ_PREFERENCE: primary
       WASTE_CLIENT_AUTH_WASTE_MOVEMENT_EXTERNAL_API: local-external-api
+      # For the admin UI's Reporting page
+      WASTE_CLIENT_AUTH_ADMIN_UI: local-admin-ui
       S3_ENDPOINT: http://localstack:4566
       SQS_ENDPOINT: http://localstack:4566
       AWS_S3_FORCE_PATH_STYLE: true
@@ -163,6 +165,8 @@ services:
       CDP_BASE_API_URL: mockserver:1080
       MONGO_URI: mongodb://mongodb:27017/?replicaSet=rs0&directConnection=true
       ACCESS_CRED_WASTE_MOVEMENT_EXTERNAL_API: d2FzdGUtbW92ZW1lbnQtZXh0ZXJuYWwtYXBpPWxvY2FsLWV4dGVybmFsLWFwaQ==
+      # For the admin UI's Software providers page
+      ACCESS_CRED_DIGITAL_WASTE_TRACKING_ADMIN_UI: ZGlnaXRhbC13YXN0ZS10cmFja2luZy1hZG1pbi11aT1sb2NhbC1hZG1pbi11aQ==
     networks:
       - cdp-tenant
 
