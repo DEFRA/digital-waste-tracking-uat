@@ -79,6 +79,11 @@ so none of them are secrets. Each password must match the `ACCESS_CRED_*` that
 accepts it (base64 of `<service>=<password>`), and the values
 `.github/workflows/integration-tests.yml` passes to the tests.
 
+The admin UI (digital-waste-tracking-admin-ui) isn't part of the stack, but the
+organisation backend and client sync accept it, so it can run against them. It
+logs in as `digital-waste-tracking-admin-ui` with the password `local-admin-ui`
+(the organisation backend only checks the password, but client sync checks both).
+
 ## Trying out a change
 
 PRs that change this folder or the shared workflow run the full suite against
