@@ -60,5 +60,22 @@ describe('Beta-2 Movement Creation - Intended receivers', () => {
 
       expectMovementRejected(response)
     })
+
+    it('should reject a movement when any one of several intended receivers has missing details @allure.label.tag:DWTC-198', async () => {
+      await addAllureLink('/DWTC-198', 'DWTC-198', 'jira')
+      const invalidReceiver = beta2.secondIntendedReceiver()
+      delete invalidReceiver.siteName
+      movementData.intendedReceivers = [
+        beta2.intendedReceiver(),
+        invalidReceiver
+      ]
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
   })
 })

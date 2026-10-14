@@ -44,9 +44,51 @@ describe('Beta-2 Receipt Without Delivery ID - Supporting references', () => {
   })
 
   describe('Problem Responses', () => {
+    it('should reject a supporting reference without a delivery ID when the label and reference are not both given @allure.label.tag:DWTC-216', async () => {
+      await addAllureLink('/DWTC-216', 'DWTC-216', 'jira')
+      const supportingReference = beta2.supportingReference()
+      delete supportingReference.label
+      receiptData.supportingReferences = [supportingReference]
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(
+          receiptData
+        )
+
+      expectReceiptRejected(response)
+    })
+
+    it('should reject a supporting reference without a delivery ID when the reference is longer than 50 characters @allure.label.tag:DWTC-216', async () => {
+      await addAllureLink('/DWTC-216', 'DWTC-216', 'jira')
+      const supportingReference = beta2.supportingReference()
+      supportingReference.reference = 'A'.repeat(51)
+      receiptData.supportingReferences = [supportingReference]
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(
+          receiptData
+        )
+
+      expectReceiptRejected(response)
+    })
+
     it('should reject a receipt without a delivery ID when supporting references are an empty list @allure.label.tag:DWTC-216', async () => {
       await addAllureLink('/DWTC-216', 'DWTC-216', 'jira')
       receiptData.supportingReferences = []
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(
+          receiptData
+        )
+
+      expectReceiptRejected(response)
+    })
+
+    it('should reject a supporting reference without a delivery ID when the label is not recognised @allure.label.tag:DWTC-216', async () => {
+      await addAllureLink('/DWTC-216', 'DWTC-216', 'jira')
+      const supportingReference = beta2.supportingReference()
+      supportingReference.label = 'Purchase order'
+      receiptData.supportingReferences = [supportingReference]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(

@@ -30,23 +30,54 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
 
       expectMovementCreated(response)
     })
+  })
 
-    it('should create a movement when no supporting references are provided @allure.label.tag:DWTC-156', async () => {
+  describe('Problem Responses', () => {
+    it('should reject a supporting reference when the label and reference are not both given @allure.label.tag:DWTC-156', async () => {
       await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
+      const supportingReference = beta2.supportingReference()
+      delete supportingReference.label
+      movementData.supportingReferences = [supportingReference]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
           movementData
         )
 
-      expectMovementCreated(response)
+      expectMovementRejected(response)
     })
-  })
 
-  describe('Problem Responses', () => {
+    it('should reject a supporting reference when the reference is longer than 50 characters @allure.label.tag:DWTC-156', async () => {
+      await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
+      const supportingReference = beta2.supportingReference()
+      supportingReference.reference = 'A'.repeat(51)
+      movementData.supportingReferences = [supportingReference]
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
     it('should reject a movement when supporting references are an empty list @allure.label.tag:DWTC-156', async () => {
       await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
       movementData.supportingReferences = []
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject a supporting reference when the label is not recognised @allure.label.tag:DWTC-156', async () => {
+      await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
+      const supportingReference = beta2.supportingReference()
+      supportingReference.label = 'Purchase order'
+      movementData.supportingReferences = [supportingReference]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(

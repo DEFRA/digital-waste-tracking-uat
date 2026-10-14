@@ -57,12 +57,113 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
 
       expectMovementCreated(response)
     })
+
+    it('should create a movement when an intended carrier transports by other means with a description @allure.label.tag:DWTC-199', async () => {
+      await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
+      movementData.intendedCarriers[0].meansOfTransport = 'Other'
+      delete movementData.intendedCarriers[0].vehicleRegistration
+      movementData.intendedCarriers[0].otherMeansOfTransport = 'Horse and cart'
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementCreated(response)
+    })
   })
 
   describe('Problem Responses', () => {
     it('should reject a movement when no intended carrier is declared @allure.label.tag:DWTC-199', async () => {
       await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
       delete movementData.intendedCarriers
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject an intended carrier when the organisation name is missing @allure.label.tag:DWTC-199', async () => {
+      await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
+      delete movementData.intendedCarriers[0].organisationName
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject an intended carrier when the means of transport is missing @allure.label.tag:DWTC-199', async () => {
+      await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
+      delete movementData.intendedCarriers[0].meansOfTransport
+      delete movementData.intendedCarriers[0].vehicleRegistration
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject an intended carrier when neither a registration number nor a reason is given @allure.label.tag:DWTC-199', async () => {
+      await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
+      delete movementData.intendedCarriers[0].registrationNumber
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject an intended carrier when both a registration number and a reason are given @allure.label.tag:DWTC-199', async () => {
+      await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
+      movementData.intendedCarriers[0].reasonForNoRegistrationNumber =
+        beta2.reasonForNoCarrierRegistrationNumber
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject an intended carrier transporting by road without a vehicle registration @allure.label.tag:DWTC-199', async () => {
+      await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
+      delete movementData.intendedCarriers[0].vehicleRegistration
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject an intended carrier transporting by other means without a description @allure.label.tag:DWTC-199', async () => {
+      await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
+      movementData.intendedCarriers[0].meansOfTransport = 'Other'
+      delete movementData.intendedCarriers[0].vehicleRegistration
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject an intended carrier when neither an email address nor a phone number is given @allure.label.tag:DWTC-199', async () => {
+      await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
+      movementData.intendedCarriers[0].contactDetails = {}
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(

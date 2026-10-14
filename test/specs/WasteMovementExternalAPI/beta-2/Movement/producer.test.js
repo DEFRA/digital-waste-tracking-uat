@@ -70,6 +70,85 @@ describe('Beta-2 Movement Creation - Producer', () => {
   })
 
   describe('Problem Responses', () => {
+    it('should reject a Commercial producer when the organisation name is missing @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      delete movementData.producer.organisationName
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject a Commercial producer when the SIC code is missing @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      delete movementData.producer.sicCode
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject a Commercial producer when the address is missing @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      delete movementData.producer.address
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject a Commercial producer when neither an authorisation number nor a reason is given @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      delete movementData.producer.authorisationNumber
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject a Commercial producer when both an authorisation number and a reason are given @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      movementData.producer.reasonForNoAuthorisationNumber =
+        beta2.reasonForNoAuthorisationNumber
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
+    it('should reject a Commercial producer when neither an email address nor a phone number is given @allure.label.tag:DWTC-192', async () => {
+      await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
+      movementData.producer = beta2.commercialProducer()
+      movementData.producer.contactDetails = {}
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
+
     it('should reject a Household producer when organisation, address, SIC code, authorisation number or contact details are supplied @allure.label.tag:DWTC-192', async () => {
       await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
       movementData.producer = beta2.commercialProducerWithOptionalValues()
