@@ -95,6 +95,28 @@ export const beta2 = {
   }),
 
   /**
+   * A second intended receiver with its required fields.
+   * @returns {Object}
+   */
+  secondIntendedReceiver: () => ({
+    siteName: 'Second Receiver Site Ltd',
+    authorisationNumber: 'EAS/P/654321',
+    receiptAddress: {
+      postcode: 'TE1 2PQ'
+    },
+    contactDetails: {
+      phoneNumber: '01112223333'
+    }
+  }),
+
+  /**
+   * Optional intended receiver full address line.
+   * Assign onto intendedReceiver().receiptAddress.fullAddress.
+   * @returns {string}
+   */
+  intendedReceiverFullAddress: () => '3 Receiver Road, Test City',
+
+  /**
    * Physical form, containers and total weight. Required on a waste item and on a receipt.
    * @returns {Object}
    */
