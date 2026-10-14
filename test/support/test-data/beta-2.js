@@ -110,11 +110,14 @@ export const beta2 = {
   }),
 
   /**
-   * Optional intended receiver full address line.
-   * Assign onto intendedReceiver().receiptAddress.fullAddress.
-   * @returns {string}
+   * Optional intended receiver receipt address with fullAddress.
+   * Assign onto intendedReceiver().receiptAddress.
+   * @returns {Object}
    */
-  intendedReceiverFullAddress: () => '3 Receiver Road, Test City',
+  intendedReceiverReceiptAddress: () => ({
+    fullAddress: '3 Receiver Road, Test City',
+    postcode: 'TE1 3RC'
+  }),
 
   /**
    * Physical form, containers and total weight. Required on a waste item and on a receipt.
