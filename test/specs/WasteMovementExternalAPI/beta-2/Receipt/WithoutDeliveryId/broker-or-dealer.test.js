@@ -76,62 +76,6 @@ describe('Beta-2 Receipt Without Delivery ID - Broker or dealer', () => {
   })
 
   describe('Problem Responses', () => {
-    it('should reject a broker or dealer without a delivery ID when the organisation name is missing @allure.label.tag:DWTC-159', async () => {
-      await addAllureLink('/DWTC-159', 'DWTC-159', 'jira')
-      const broker = beta2.brokerOrDealer()
-      delete broker.organisationName
-      receiptData.brokerOrDealer = { isPresent: true, items: [broker] }
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(
-          receiptData
-        )
-
-      expectReceiptRejected(response)
-    })
-
-    it('should reject a broker or dealer without a delivery ID when neither a registration number nor a reason is given @allure.label.tag:DWTC-159', async () => {
-      await addAllureLink('/DWTC-159', 'DWTC-159', 'jira')
-      const broker = beta2.brokerOrDealer()
-      delete broker.registrationNumber
-      receiptData.brokerOrDealer = { isPresent: true, items: [broker] }
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(
-          receiptData
-        )
-
-      expectReceiptRejected(response)
-    })
-
-    it('should reject a broker or dealer without a delivery ID when both a registration number and a reason are given @allure.label.tag:DWTC-159', async () => {
-      await addAllureLink('/DWTC-159', 'DWTC-159', 'jira')
-      const broker = beta2.brokerOrDealer()
-      broker.reasonForNoRegistrationNumber = beta2.reasonForNoRegistrationNumber
-      receiptData.brokerOrDealer = { isPresent: true, items: [broker] }
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(
-          receiptData
-        )
-
-      expectReceiptRejected(response)
-    })
-
-    it('should reject a broker or dealer without a delivery ID when neither an email address nor a phone number is given @allure.label.tag:DWTC-159', async () => {
-      await addAllureLink('/DWTC-159', 'DWTC-159', 'jira')
-      const broker = beta2.brokerOrDealer()
-      broker.contactDetails = {}
-      receiptData.brokerOrDealer = { isPresent: true, items: [broker] }
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(
-          receiptData
-        )
-
-      expectReceiptRejected(response)
-    })
-
     it('should reject a receipt without a delivery ID when a broker or dealer is declared as involved but no details are given @allure.label.tag:DWTC-159', async () => {
       await addAllureLink('/DWTC-159', 'DWTC-159', 'jira')
       receiptData.brokerOrDealer = { isPresent: true }

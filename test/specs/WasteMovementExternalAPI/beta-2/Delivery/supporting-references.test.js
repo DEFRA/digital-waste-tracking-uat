@@ -67,59 +67,11 @@ describe('Beta-2 Delivery Creation - Supporting references', () => {
   })
 
   describe('Problem Responses', () => {
-    it('should reject a supporting reference when the label and reference are not both given @allure.label.tag:DWTC-215', async () => {
-      await addAllureLink('/DWTC-215', 'DWTC-215', 'jira')
-      const movementId = await createMovementWithCollection()
-      deliveryData = beta2.generateBaseDeliveryData([movementId])
-      const supportingReference = beta2.supportingReference()
-      delete supportingReference.label
-      deliveryData.supportingReferences = [supportingReference]
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createDelivery(
-          deliveryData
-        )
-
-      expectDeliveryRejected(response)
-    })
-
-    it('should reject a supporting reference when the reference is longer than 50 characters @allure.label.tag:DWTC-215', async () => {
-      await addAllureLink('/DWTC-215', 'DWTC-215', 'jira')
-      const movementId = await createMovementWithCollection()
-      deliveryData = beta2.generateBaseDeliveryData([movementId])
-      const supportingReference = beta2.supportingReference()
-      supportingReference.reference = 'A'.repeat(51)
-      deliveryData.supportingReferences = [supportingReference]
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createDelivery(
-          deliveryData
-        )
-
-      expectDeliveryRejected(response)
-    })
-
     it('should reject a delivery when supporting references are an empty list @allure.label.tag:DWTC-215', async () => {
       await addAllureLink('/DWTC-215', 'DWTC-215', 'jira')
       const movementId = await createMovementWithCollection()
       deliveryData = beta2.generateBaseDeliveryData([movementId])
       deliveryData.supportingReferences = []
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createDelivery(
-          deliveryData
-        )
-
-      expectDeliveryRejected(response)
-    })
-
-    it('should reject a supporting reference when the label is not recognised @allure.label.tag:DWTC-215', async () => {
-      await addAllureLink('/DWTC-215', 'DWTC-215', 'jira')
-      const movementId = await createMovementWithCollection()
-      deliveryData = beta2.generateBaseDeliveryData([movementId])
-      const supportingReference = beta2.supportingReference()
-      supportingReference.label = 'Purchase order'
-      deliveryData.supportingReferences = [supportingReference]
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createDelivery(

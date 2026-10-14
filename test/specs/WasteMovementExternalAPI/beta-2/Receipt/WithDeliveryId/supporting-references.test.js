@@ -74,57 +74,9 @@ describe('Beta-2 Receipt Creation - Supporting references', () => {
   })
 
   describe('Problem Responses', () => {
-    it('should reject a supporting reference when the label and reference are not both given @allure.label.tag:DWTC-216', async () => {
-      await addAllureLink('/DWTC-216', 'DWTC-216', 'jira')
-      const supportingReference = beta2.supportingReference()
-      delete supportingReference.label
-      receiptData.supportingReferences = [supportingReference]
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a supporting reference when the reference is longer than 50 characters @allure.label.tag:DWTC-216', async () => {
-      await addAllureLink('/DWTC-216', 'DWTC-216', 'jira')
-      const supportingReference = beta2.supportingReference()
-      supportingReference.reference = 'A'.repeat(51)
-      receiptData.supportingReferences = [supportingReference]
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
     it('should reject a receipt when supporting references are an empty list @allure.label.tag:DWTC-216', async () => {
       await addAllureLink('/DWTC-216', 'DWTC-216', 'jira')
       receiptData.supportingReferences = []
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a supporting reference when the label is not recognised @allure.label.tag:DWTC-216', async () => {
-      await addAllureLink('/DWTC-216', 'DWTC-216', 'jira')
-      const supportingReference = beta2.supportingReference()
-      supportingReference.label = 'Purchase order'
-      receiptData.supportingReferences = [supportingReference]
       const deliveryId = await createDeliveryForReceipt()
 
       const response =

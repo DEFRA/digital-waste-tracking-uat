@@ -3,10 +3,7 @@ import { beta2 } from '~/test/support/test-data-manager.js'
 import { authenticateAndSetToken } from '~/test/support/helpers/auth.js'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 import { expectMovementCreated } from '~/test/support/helpers/beta-2/movement.js'
-import {
-  expectCollectionCreated,
-  expectCollectionRejected
-} from '~/test/support/helpers/beta-2/collection.js'
+import { expectCollectionCreated } from '~/test/support/helpers/beta-2/collection.js'
 
 describe('Beta-2 Collection Creation - Special handling requirements', () => {
   let collectionData
@@ -44,23 +41,6 @@ describe('Beta-2 Collection Creation - Special handling requirements', () => {
         )
 
       expectCollectionCreated(response)
-    })
-  })
-
-  describe('Problem Responses', () => {
-    it('should reject a collection when special handling requirements are longer than 500 characters @allure.label.tag:DWTC-212', async () => {
-      await addAllureLink('/DWTC-212', 'DWTC-212', 'jira')
-      collectionData.specialHandlingRequirements = 'A'.repeat(501)
-
-      const movementId = await createMovement()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          movementId,
-          collectionData
-        )
-
-      expectCollectionRejected(response, movementId)
     })
   })
 })

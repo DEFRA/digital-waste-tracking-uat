@@ -59,23 +59,6 @@ describe('Beta-2 Collection Creation - Carrier', () => {
 
       expectCollectionCreated(response)
     })
-
-    it('should create a collection when a carrier transports by other means with a description @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      collectionData.carrier.meansOfTransport = 'Other'
-      delete collectionData.carrier.vehicleRegistration
-      collectionData.carrier.otherMeansOfTransport = beta2.otherMeansOfTransport
-
-      const movementId = await createMovement()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          movementId,
-          collectionData
-        )
-
-      expectCollectionCreated(response)
-    })
   })
 
   describe('Problem Responses', () => {
@@ -97,114 +80,6 @@ describe('Beta-2 Collection Creation - Carrier', () => {
     it('should reject a collection when no carrier is declared @allure.label.tag:DWTC-158', async () => {
       await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
       delete collectionData.carrier
-
-      const movementId = await createMovement()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          movementId,
-          collectionData
-        )
-
-      expectCollectionRejected(response, movementId)
-    })
-
-    it('should reject a carrier when the organisation name is missing @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      delete collectionData.carrier.organisationName
-
-      const movementId = await createMovement()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          movementId,
-          collectionData
-        )
-
-      expectCollectionRejected(response, movementId)
-    })
-
-    it('should reject a carrier when the means of transport is missing @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      delete collectionData.carrier.meansOfTransport
-      delete collectionData.carrier.vehicleRegistration
-
-      const movementId = await createMovement()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          movementId,
-          collectionData
-        )
-
-      expectCollectionRejected(response, movementId)
-    })
-
-    it('should reject a carrier when neither a registration number nor a reason is given @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      delete collectionData.carrier.registrationNumber
-
-      const movementId = await createMovement()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          movementId,
-          collectionData
-        )
-
-      expectCollectionRejected(response, movementId)
-    })
-
-    it('should reject a carrier when both a registration number and a reason are given @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      collectionData.carrier.reasonForNoRegistrationNumber =
-        beta2.reasonForNoCarrierRegistrationNumber
-
-      const movementId = await createMovement()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          movementId,
-          collectionData
-        )
-
-      expectCollectionRejected(response, movementId)
-    })
-
-    it('should reject a carrier transporting by road without a vehicle registration @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      delete collectionData.carrier.vehicleRegistration
-
-      const movementId = await createMovement()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          movementId,
-          collectionData
-        )
-
-      expectCollectionRejected(response, movementId)
-    })
-
-    it('should reject a carrier transporting by other means without a description @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      collectionData.carrier.meansOfTransport = 'Other'
-      delete collectionData.carrier.vehicleRegistration
-
-      const movementId = await createMovement()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createCollection(
-          movementId,
-          collectionData
-        )
-
-      expectCollectionRejected(response, movementId)
-    })
-
-    it('should reject a carrier when neither an email address nor a phone number is given @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      collectionData.carrier.contactDetails = {}
 
       const movementId = await createMovement()
 

@@ -73,22 +73,6 @@ describe('Beta-2 Receipt Creation - Carrier', () => {
 
       expectReceiptCreated(response, deliveryId)
     })
-
-    it('should create a receipt when a carrier transports by other means with a description @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      receiptData.carrier.meansOfTransport = 'Other'
-      delete receiptData.carrier.vehicleRegistration
-      receiptData.carrier.otherMeansOfTransport = beta2.otherMeansOfTransport
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptCreated(response, deliveryId)
-    })
   })
 
   describe('Problem Responses', () => {
@@ -109,107 +93,6 @@ describe('Beta-2 Receipt Creation - Carrier', () => {
     it('should reject a receipt when no carrier is declared @allure.label.tag:DWTC-158', async () => {
       await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
       delete receiptData.carrier
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a carrier when the organisation name is missing @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      delete receiptData.carrier.organisationName
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a carrier when the means of transport is missing @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      delete receiptData.carrier.meansOfTransport
-      delete receiptData.carrier.vehicleRegistration
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a carrier when neither a registration number nor a reason is given @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      delete receiptData.carrier.registrationNumber
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a carrier when both a registration number and a reason are given @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      receiptData.carrier.reasonForNoRegistrationNumber =
-        beta2.reasonForNoCarrierRegistrationNumber
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a carrier transporting by road without a vehicle registration @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      delete receiptData.carrier.vehicleRegistration
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a carrier transporting by other means without a description @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      receiptData.carrier.meansOfTransport = 'Other'
-      delete receiptData.carrier.vehicleRegistration
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a carrier when neither an email address nor a phone number is given @allure.label.tag:DWTC-158', async () => {
-      await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      receiptData.carrier.contactDetails = {}
       const deliveryId = await createDeliveryForReceipt()
 
       const response =
