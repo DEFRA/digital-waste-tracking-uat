@@ -77,5 +77,24 @@ describe('Beta-2 Movement Creation - Intended receivers', () => {
 
       expectMovementRejected(response)
     })
+
+    // Optional-only payload so required-field error assertions can be rewritten.
+    it('should reject a movement when an intended receiver is missing all required fields @allure.label.tag:DWTC-198', async () => {
+      await addAllureLink('/DWTC-198', 'DWTC-198', 'jira')
+      movementData.intendedReceivers = [
+        {
+          receiptAddress: {
+            fullAddress: beta2.intendedReceiverReceiptAddress().fullAddress
+          }
+        }
+      ]
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementRejected(response)
+    })
   })
 })

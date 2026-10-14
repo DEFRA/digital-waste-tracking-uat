@@ -90,5 +90,24 @@ describe('Beta-2 Receipt Creation - Receiver', () => {
 
       expectReceiptRejected(response, deliveryId)
     })
+
+    // Optional-only payload so required-field error assertions can be rewritten.
+    it('should reject a receipt when a receiver is missing all required fields @allure.label.tag:DWTC-233', async () => {
+      await addAllureLink('/DWTC-233', 'DWTC-233', 'jira')
+      receiptData.receiver = {
+        receiptAddress: {
+          fullAddress: beta2.intendedReceiverReceiptAddress().fullAddress
+        }
+      }
+      const deliveryId = await createDeliveryForReceipt()
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
+          deliveryId,
+          receiptData
+        )
+
+      expectReceiptRejected(response, deliveryId)
+    })
   })
 })
