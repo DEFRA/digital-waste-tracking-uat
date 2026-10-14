@@ -1,11 +1,11 @@
 meta {
-  name: Create Receipt - Receiver With Only Phone Number
+  name: Create Receipt Without Delivery ID - Receiver Valid Details
   type: http
-  seq: 2
+  seq: 1
 }
 
 post {
-  url: {{baseUrl}}/beta-2/deliveries/{{deliveryId}}/receipt
+  url: {{baseUrl}}/beta-2/receipts
   body: json
   auth: inherit
 }
@@ -18,6 +18,7 @@ headers {
 
 body:json {
   {
+    "reason": "No delivery was recorded prior to receipt; waste received directly from the producer.",
     "carrier": {
       "organisationName": "Carrier Demo Ltd",
       "registrationNumber": "CBDU123456",
@@ -34,19 +35,33 @@ body:json {
         "postcode": "TE1 3RC"
       },
       "contactDetails": {
-        "phoneNumber": "01112223333"
+        "emailAddress": "receiver@example.com"
       }
     },
-    "physicalDetails": {
-      "form": "SOLID",
-      "containerType": "DRU",
-      "containerCount": 4,
-      "totalWeight": {
-        "amount": 250.5,
-        "unit": "KILOGRAMS",
-        "isEstimate": false
+    "wasteItems": [
+      {
+        "physicalDetails": {
+          "form": "SOLID",
+          "containerType": "DRU",
+          "containerCount": 4,
+          "totalWeight": {
+            "amount": 250.5,
+            "unit": "KILOGRAMS",
+            "isEstimate": false
+          }
+        },
+        "treatments": [
+          {
+            "disposalOrRecoveryCode": "R3",
+            "weight": {
+              "amount": 250.5,
+              "unit": "KILOGRAMS",
+              "isEstimate": false
+            }
+          }
+        ]
       }
-    }
+    ]
   }
 }
 

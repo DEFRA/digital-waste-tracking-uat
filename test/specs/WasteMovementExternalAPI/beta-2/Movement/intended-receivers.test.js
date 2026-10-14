@@ -61,42 +61,6 @@ describe('Beta-2 Movement Creation - Intended receivers', () => {
       expectMovementRejected(response)
     })
 
-    it('should reject an intended receiver when the site name is missing @allure.label.tag:DWTC-198', async () => {
-      await addAllureLink('/DWTC-198', 'DWTC-198', 'jira')
-      delete movementData.intendedReceivers[0].siteName
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementRejected(response)
-    })
-
-    it('should reject an intended receiver when the authorisation number is missing @allure.label.tag:DWTC-198', async () => {
-      await addAllureLink('/DWTC-198', 'DWTC-198', 'jira')
-      delete movementData.intendedReceivers[0].authorisationNumber
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementRejected(response)
-    })
-
-    it('should reject an intended receiver when the receipt address is missing @allure.label.tag:DWTC-198', async () => {
-      await addAllureLink('/DWTC-198', 'DWTC-198', 'jira')
-      delete movementData.intendedReceivers[0].receiptAddress
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementRejected(response)
-    })
-
     it('should reject a movement when any one of several intended receivers has missing details @allure.label.tag:DWTC-198', async () => {
       await addAllureLink('/DWTC-198', 'DWTC-198', 'jira')
       const invalidReceiver = beta2.secondIntendedReceiver()

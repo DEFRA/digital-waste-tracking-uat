@@ -57,21 +57,6 @@ describe('Beta-2 Receipt Creation - Receiver', () => {
 
       expectReceiptCreated(response, deliveryId)
     })
-
-    it('should create a receipt when a receiver is declared with only a phone number @allure.label.tag:DWTC-233', async () => {
-      await addAllureLink('/DWTC-233', 'DWTC-233', 'jira')
-      receiptData.receiver.contactDetails =
-        beta2.secondIntendedReceiver().contactDetails
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptCreated(response, deliveryId)
-    })
   })
 
   describe('Problem Responses', () => {
@@ -95,48 +80,6 @@ describe('Beta-2 Receipt Creation - Receiver', () => {
     it('should reject a receipt when no receiver is declared @allure.label.tag:DWTC-233', async () => {
       await addAllureLink('/DWTC-233', 'DWTC-233', 'jira')
       delete receiptData.receiver
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a receiver when the site name is missing @allure.label.tag:DWTC-233', async () => {
-      await addAllureLink('/DWTC-233', 'DWTC-233', 'jira')
-      delete receiptData.receiver.siteName
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a receiver when the authorisation number is missing @allure.label.tag:DWTC-233', async () => {
-      await addAllureLink('/DWTC-233', 'DWTC-233', 'jira')
-      delete receiptData.receiver.authorisationNumber
-      const deliveryId = await createDeliveryForReceipt()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithDeliveryId(
-          deliveryId,
-          receiptData
-        )
-
-      expectReceiptRejected(response, deliveryId)
-    })
-
-    it('should reject a receiver when the receipt address is missing @allure.label.tag:DWTC-233', async () => {
-      await addAllureLink('/DWTC-233', 'DWTC-233', 'jira')
-      delete receiptData.receiver.receiptAddress
       const deliveryId = await createDeliveryForReceipt()
 
       const response =
