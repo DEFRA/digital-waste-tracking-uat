@@ -22,7 +22,7 @@
     "test:integration": "jest --testPathPattern \"^(?!.*beta-2/).*(WasteMovementExternalAPI|WasteMovementBackendAPI|ClientSync).*$\" --testNamePattern \"^(?!.*@Authentication)\"",
     "test:uat": "jest --testPathPattern \"(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication|ClientSync)\"",
     "test:uat:release": "jest --testPathPattern \"^(?!.*(beta-1|beta-2)/).*(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication|ClientSync).*$\"",
-    "test:uat:client-sync": "jest --testPathPattern \"ClientSync\"",
+    "test:uat:client-sync": "jest --runInBand --testPathPattern \"ClientSync\"",
     "test:uat:beta-1": "jest --testPathPattern \"beta-1\"",
     "test:uat:beta-2": "jest --testPathPattern \"beta-2\"",
     "test:zap-gate": "PROXY_MODE=off API_CODE=skipGlobalSetup ORGANISATION_ID=skipGlobalSetup jest --testPathPattern zap-gate",

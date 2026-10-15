@@ -11,10 +11,16 @@ describe('Sync clients from DWT Client Sync Service', () => {
       'should return 200 when clients are synced' +
         ' @allure.label.tag:DWTA-335',
       async () => {
-        const { statusCode } =
+        const { statusCode, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.syncClients()
-        // Unable to test anything other than the status code as the CDP cognito service is a blackbox
+
         expect(statusCode).toBe(200)
+        expect(json.result).toEqual(
+          expect.objectContaining({
+            totalServicesProcessed: expect.any(Number),
+            services: expect.any(Array)
+          })
+        )
       }
     )
   })

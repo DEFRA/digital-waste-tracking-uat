@@ -309,15 +309,20 @@ export class BaseAPI {
       dispatcher: this.agent
     })
 
+    const bodyText = await response.body.text()
+    let json = null
+    if (bodyText) {
+      json = JSON.parse(bodyText)
+    }
+
     // Log response to Allure
     await logAllureResponse(
       'DELETE',
       endpoint,
       response.statusCode,
-      response.headers
+      response.headers,
+      json
     )
-
-    const json = await response.body.json()
 
     return {
       statusCode: response.statusCode,
