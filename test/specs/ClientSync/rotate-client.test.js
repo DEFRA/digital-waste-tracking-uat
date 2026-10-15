@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
-import { ensureClientExistsAfterSync } from '~/test/support/helpers/client-sync.js'
 
 describe('Rotate a client secret in DWT Client Sync Service', () => {
   let createdClientId
@@ -32,7 +31,6 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
         expect(createStatus).toBe(200)
         createdClientId = created.clientId
         const originalSecret = created.clientSecret
-        await ensureClientExistsAfterSync(createdClientId)
 
         const {
           statusCode,
@@ -64,6 +62,60 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
             originalSecret
           )
         expect(oldAuthStatus).toBe(200)
+      }
+    )
+
+    it(
+      'should invalidate the original secret after rotating twice' +
+        ' @allure.label.tag:DWTA-445',
+      async () => {
+        const clientName = `UAT_RotateTwice_${Date.now()}`
+        const { statusCode: createStatus, json: created } =
+          await globalThis.apis.wasteMovementClientSyncAPI.createClient(
+            clientName
+          )
+
+        expect(createStatus).toBe(200)
+        createdClientId = created.clientId
+        const originalSecret = created.clientSecret
+
+        const { statusCode: firstRotateStatus, json: firstRotated } =
+          await globalThis.apis.wasteMovementClientSyncAPI.rotateClientSecret(
+            createdClientId
+          )
+
+        expect(firstRotateStatus).toBe(200)
+        expect(firstRotated.clientSecret).not.toBe(originalSecret)
+
+        const { statusCode: secondRotateStatus, json: secondRotated } =
+          await globalThis.apis.wasteMovementClientSyncAPI.rotateClientSecret(
+            createdClientId
+          )
+
+        expect(secondRotateStatus).toBe(200)
+        expect(secondRotated.clientSecret).not.toBe(originalSecret)
+        expect(secondRotated.clientSecret).not.toBe(firstRotated.clientSecret)
+
+        const { statusCode: originalAuthStatus } =
+          await globalThis.apis.cognitoOAuthApi.authenticate(
+            createdClientId,
+            originalSecret
+          )
+        expect(originalAuthStatus).toBe(400)
+
+        const { statusCode: firstRotatedAuthStatus } =
+          await globalThis.apis.cognitoOAuthApi.authenticate(
+            createdClientId,
+            firstRotated.clientSecret
+          )
+        expect(firstRotatedAuthStatus).toBe(200)
+
+        const { statusCode: secondRotatedAuthStatus } =
+          await globalThis.apis.cognitoOAuthApi.authenticate(
+            createdClientId,
+            secondRotated.clientSecret
+          )
+        expect(secondRotatedAuthStatus).toBe(200)
       }
     )
   })

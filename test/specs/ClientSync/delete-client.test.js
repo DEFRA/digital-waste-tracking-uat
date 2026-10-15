@@ -56,6 +56,40 @@ describe('Delete a client from DWT Client Sync Service', () => {
         await ensureClientDoesNotExistAfterSync(clientId)
       }
     )
+
+    it(
+      'should not allow authentication after the client is deleted' +
+        ' @allure.label.tag:DWTA-444',
+      async () => {
+        const { statusCode: createStatus, json: created } =
+          await globalThis.apis.wasteMovementClientSyncAPI.createClient(
+            `UAT_Delete_Auth_${Date.now()}`
+          )
+
+        expect(createStatus).toBe(200)
+        const { clientId, clientSecret } = created
+
+        const { statusCode: authBeforeDelete } =
+          await globalThis.apis.cognitoOAuthApi.authenticate(
+            clientId,
+            clientSecret
+          )
+        expect(authBeforeDelete).toBe(200)
+
+        const { statusCode: deleteStatus } =
+          await globalThis.apis.wasteMovementClientSyncAPI.deleteClient(
+            clientId
+          )
+        expect(deleteStatus).toBe(204)
+
+        const { statusCode: authAfterDelete } =
+          await globalThis.apis.cognitoOAuthApi.authenticate(
+            clientId,
+            clientSecret
+          )
+        expect(authAfterDelete).toBe(400)
+      }
+    )
   })
 
   describe('Invalid client deletion', () => {

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { DEFAULT_TENANT_SERVICE_NAME } from '~/test/apis/wasteMovementClientSyncApi.js'
 
 // Client sync names the service and client in these 404s from DWTA-465.
 // Accept 'Not Found' until that's deployed everywhere, then drop it
@@ -13,8 +14,6 @@ const unknownClientMessages = (tenantServiceName, clientId) => [
 ]
 
 describe('Get a single client from DWT Client Sync Service', () => {
-  const tenantServiceName = 'waste-movement-external-api'
-
   beforeEach(async () => {
     await addAllureLink('/DWTA-333', 'DWTA-333', 'jira')
   })
@@ -26,7 +25,6 @@ describe('Get a single client from DWT Client Sync Service', () => {
       async () => {
         const { statusCode, json: client } =
           await globalThis.apis.wasteMovementClientSyncAPI.getClient(
-            tenantServiceName,
             globalThis.testConfig.cognitoClientId
           )
 
@@ -35,7 +33,7 @@ describe('Get a single client from DWT Client Sync Service', () => {
         expect(client).toEqual({
           clientName: globalThis.testConfig.cognitoClientName,
           clientId: globalThis.testConfig.cognitoClientId,
-          tenantServiceName
+          tenantServiceName: DEFAULT_TENANT_SERVICE_NAME
         })
       }
     )
@@ -48,10 +46,7 @@ describe('Get a single client from DWT Client Sync Service', () => {
       async () => {
         const clientId = 'unknown-client-id'
         const { statusCode, json } =
-          await globalThis.apis.wasteMovementClientSyncAPI.getClient(
-            tenantServiceName,
-            clientId
-          )
+          await globalThis.apis.wasteMovementClientSyncAPI.getClient(clientId)
 
         expect(statusCode).toBe(404)
         expect(json).toEqual({
@@ -59,9 +54,9 @@ describe('Get a single client from DWT Client Sync Service', () => {
           error: 'Not Found',
           message: expect.any(String)
         })
-        expect(unknownClientMessages(tenantServiceName, clientId)).toContain(
-          json.message
-        )
+        expect(
+          unknownClientMessages(DEFAULT_TENANT_SERVICE_NAME, clientId)
+        ).toContain(json.message)
       }
     )
   })
@@ -74,8 +69,8 @@ describe('Get a single client from DWT Client Sync Service', () => {
         const unknownTenantServiceName = 'unknown-tenant-service'
         const { statusCode, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.getClient(
-            unknownTenantServiceName,
-            globalThis.testConfig.cognitoClientId
+            globalThis.testConfig.cognitoClientId,
+            unknownTenantServiceName
           )
 
         expect(statusCode).toBe(404)
