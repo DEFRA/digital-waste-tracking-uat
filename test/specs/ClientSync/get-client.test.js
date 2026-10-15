@@ -1,6 +1,13 @@
 import { describe, it, expect, beforeEach } from '@jest/globals'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 
+// Client sync names the service in this 404 from DWTA-465. Accept 'Not Found'
+// until that's deployed everywhere, then drop it
+const unknownTenantMessages = (tenantServiceName) => [
+  'Not Found',
+  `Tenant service '${tenantServiceName}' is not managed by dwt-client-sync`
+]
+
 describe('Get a single client from DWT Client Sync Service', () => {
   const tenantServiceName = 'waste-movement-external-api'
 
@@ -56,18 +63,22 @@ describe('Get a single client from DWT Client Sync Service', () => {
       'should return 404 when tenantServiceName is not found, but clientId is valid' +
         ' @allure.label.tag:DWTA-333',
       async () => {
+        const unknownTenantServiceName = 'unknown-tenant-service'
         const { statusCode, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.getClient(
-            'unknown-tenant-service',
+            unknownTenantServiceName,
             globalThis.testConfig.cognitoClientId
           )
 
         expect(statusCode).toBe(404)
-        // The message names the service once client sync checks it (DWTA-465)
-        expect(json).toMatchObject({
+        expect(json).toEqual({
           statusCode: 404,
-          error: 'Not Found'
+          error: 'Not Found',
+          message: expect.any(String)
         })
+        expect(unknownTenantMessages(unknownTenantServiceName)).toContain(
+          json.message
+        )
       }
     )
   })
