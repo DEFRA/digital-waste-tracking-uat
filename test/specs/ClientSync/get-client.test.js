@@ -63,10 +63,10 @@ describe('Get a single client from DWT Client Sync Service', () => {
           )
 
         expect(statusCode).toBe(404)
-        expect(json).toEqual({
+        // The message names the service once client sync checks it (DWTA-465)
+        expect(json).toMatchObject({
           statusCode: 404,
-          error: 'Not Found',
-          message: 'Not Found'
+          error: 'Not Found'
         })
       }
     )
