@@ -2,7 +2,7 @@
 
 The full stack the waste movement services' integration tests run against: the
 external API, backend, tracking ID backend, organisation backend and client sync,
-plus Mongo, Floci (Cognito), mockserver (the CDP API), LocalStack and ZAP.
+plus Mongo, Floci (Cognito), a fake of CDP's credentials API, LocalStack and ZAP.
 
 It lives here so the service repos don't each keep a copy of it. A change to the
 shared parts (another service's config, the Mongo seeding, the Floci user pool)
@@ -83,6 +83,24 @@ The admin UI (digital-waste-tracking-admin-ui) isn't part of the stack, but the
 organisation backend and client sync accept it, so it can run against them. It
 logs in as `digital-waste-tracking-admin-ui` with the password `local-admin-ui`
 (the organisation backend only checks the password, but client sync checks both).
+
+## The CDP credentials API
+
+`fake-cdp/server.js` stands in for CDP's credentials API, which client sync
+calls to list, create, rotate and delete Cognito clients. It follows
+[CDP's documented behaviour](https://github.com/DEFRA/cdp-documentation/blob/main/how-to/managing_cognito_credentials.md)
+and keeps clients and secrets in memory, so a client a test creates is listed
+until it's deleted, and everything resets when the stack restarts.
+
+- It starts with five clients for `waste-movement-external-api`, including the
+  seeded test clients `Test Client 1` and `Test Client 2`.
+- `Skipped_By_Cdp` is skipped on create as if it already exists, and
+  `Refused_By_Cdp` is refused with a 403.
+- It doesn't check request signatures, and its secrets don't work with any
+  Cognito (including Floci's), so tests that sign in with a returned secret
+  need a real CDP environment.
+
+Its tests run with `npm run test:fake-cdp`.
 
 ## Trying out a change
 
