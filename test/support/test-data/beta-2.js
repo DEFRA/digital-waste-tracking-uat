@@ -10,11 +10,11 @@ export const beta2 = {
   unknownResourceId: '00NOTFND',
 
   badRequestType:
-    'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+    'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
   unauthorizedType:
-    'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/unauthorized',
+    'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/unauthorized',
   notFoundType:
-    'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/not-found',
+    'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/not-found',
 
   reasonForNoAuthorisationNumber: 'Exemption pending renewal',
   reasonForNoRegistrationNumber: 'One-off arrangement',
