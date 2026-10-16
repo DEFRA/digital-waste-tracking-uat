@@ -157,6 +157,19 @@ export const beta2 = {
   }),
 
   /**
+   * A second treatment with a different disposal or recovery code.
+   * @returns {Object}
+   */
+  secondTreatment: () => ({
+    disposalOrRecoveryCode: 'D10',
+    weight: {
+      amount: 100,
+      unit: 'KILOGRAMS',
+      isEstimate: false
+    }
+  }),
+
+  /**
    * POST /beta-2/movements/{movementId}/collection required fields.
    * @returns {Object}
    */
