@@ -25,10 +25,13 @@ describe('Create a client in DWT Client Sync Service', () => {
         ' @allure.label.tag:DWTA-443',
       async () => {
         const clientName = `UAT_Create_${Date.now()}`
-        const { statusCode, json: created } =
-          await globalThis.apis.wasteMovementClientSyncAPI.createClient(
-            clientName
-          )
+        const {
+          statusCode,
+          json: created,
+          headers
+        } = await globalThis.apis.wasteMovementClientSyncAPI.createClient(
+          clientName
+        )
 
         expect(statusCode).toBe(200)
         expect(created).toEqual({
@@ -36,7 +39,7 @@ describe('Create a client in DWT Client Sync Service', () => {
           clientId: expect.any(String),
           clientSecret: expect.any(String)
         })
-        //  expect(headers['cache-control']).toBe('no-cache') -- TO BE FIXED
+        expect(headers['cache-control']).toBe('no-store')
         createdClientId = created.clientId
 
         const expectedClient = {
@@ -160,21 +163,22 @@ describe('Create a client in DWT Client Sync Service', () => {
       }
     )
 
-    it.skip(
-      'should return 400 when tenantServiceName is unknown' +
+    it(
+      'should return 404 when tenantServiceName is unknown' +
         ' @allure.label.tag:DWTA-443',
       async () => {
+        const unknownTenantServiceName = `unknown-tenant-${Date.now()}`
         const { statusCode, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.createClient(
             `UAT_UnknownTenant`,
-            `unknown-tenant-${Date.now()}`
+            unknownTenantServiceName
           )
 
-        expect(statusCode).toBe(400)
+        expect(statusCode).toBe(404)
         expect(json).toEqual({
-          statusCode: 400,
-          error: 'Bad Request',
-          message: 'TODO: replace with actual error message'
+          statusCode: 404,
+          error: 'Not Found',
+          message: `Tenant service '${unknownTenantServiceName}' is not managed by dwt-client-sync`
         })
       }
     )
