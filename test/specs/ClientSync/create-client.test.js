@@ -63,7 +63,7 @@ describe('Create a client in DWT Client Sync Service', () => {
 
     it(
       'should create a client and authenticate successfully with the returned credentials' +
-        ' @allure.label.tag:DWTA-443',
+        ' @allure.label.tag:DWTA-443 @Authentication',
       async () => {
         const { statusCode, json: created } =
           await globalThis.apis.wasteMovementClientSyncAPI.createClient(

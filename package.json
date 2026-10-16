@@ -23,6 +23,7 @@
     "test:uat": "sh -c 'jest --testPathPattern \"(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication)\"; s1=$?; npm run test:uat:client-sync; s2=$?; exit $((s1 | s2))'",
     "test:uat:release": "sh -c 'jest --testPathPattern \"^(?!.*(beta-1|beta-2)/).*(WasteMovementExternalAPI|WasteMovementBackendAPI/BulkUpload|Authentication).*$\"; s1=$?; npm run test:uat:client-sync; s2=$?; exit $((s1 | s2))'",
     "test:uat:client-sync": "jest --runInBand --testPathPattern \"ClientSync\"",
+    "test:integration:client-sync": "jest --runInBand --testPathPattern \"ClientSync\" --testNamePattern \"^(?!.*@Authentication)\"",
     "test:uat:beta-1": "jest --testPathPattern \"beta-1\"",
     "test:uat:beta-2": "jest --testPathPattern \"beta-2\"",
     "test:zap-gate": "PROXY_MODE=off API_CODE=skipGlobalSetup ORGANISATION_ID=skipGlobalSetup jest --testPathPattern zap-gate",

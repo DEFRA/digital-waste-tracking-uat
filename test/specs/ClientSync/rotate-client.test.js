@@ -21,7 +21,7 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
   describe('Valid secret rotation', () => {
     it(
       'should rotate the client secret and allow authentication with the new secret' +
-        ' @allure.label.tag:DWTA-445',
+        ' @allure.label.tag:DWTA-445 @Authentication',
       async () => {
         const clientName = `UAT_Rotate_${Date.now()}`
         const { statusCode: createStatus, json: created } =
@@ -68,7 +68,7 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
 
     it(
       'should invalidate the original secret after rotating twice' +
-        ' @allure.label.tag:DWTA-445',
+        ' @allure.label.tag:DWTA-445 @Authentication',
       async () => {
         const clientName = `UAT_RotateTwice_${Date.now()}`
         const { statusCode: createStatus, json: created } =

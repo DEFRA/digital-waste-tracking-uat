@@ -60,7 +60,7 @@ describe('Delete a client from DWT Client Sync Service', () => {
 
     it(
       'should not allow authentication after the client is deleted' +
-        ' @allure.label.tag:DWTA-444',
+        ' @allure.label.tag:DWTA-444 @Authentication',
       async () => {
         const { statusCode: createStatus, json: created } =
           await globalThis.apis.wasteMovementClientSyncAPI.createClient(
