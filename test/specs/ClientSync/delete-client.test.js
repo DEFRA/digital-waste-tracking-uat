@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { DEFAULT_TENANT_SERVICE_NAME } from '~/test/apis/wasteMovementClientSyncApi.js'
 import { ensureClientDoesNotExistAfterSync } from '~/test/support/helpers/client-sync.js'
 
 describe('Delete a client from DWT Client Sync Service', () => {
@@ -50,7 +51,7 @@ describe('Delete a client from DWT Client Sync Service', () => {
         expect(json).toEqual({
           statusCode: 404,
           error: 'Not Found',
-          message: 'Not Found'
+          message: `Client '${clientId}' not found for tenant service '${DEFAULT_TENANT_SERVICE_NAME}'`
         })
 
         await ensureClientDoesNotExistAfterSync(clientId)
@@ -97,16 +98,17 @@ describe('Delete a client from DWT Client Sync Service', () => {
       'should return 404 when clientId is not found' +
         ' @allure.label.tag:DWTA-444',
       async () => {
+        const clientId = 'unknownclientid123'
         const { statusCode, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.deleteClient(
-            'unknownclientid123'
+            clientId
           )
 
         expect(statusCode).toBe(404)
         expect(json).toEqual({
           statusCode: 404,
           error: 'Not Found',
-          message: 'Not Found'
+          message: `Client '${clientId}' not found for tenant service '${DEFAULT_TENANT_SERVICE_NAME}'`
         })
       }
     )
@@ -123,17 +125,18 @@ describe('Delete a client from DWT Client Sync Service', () => {
         expect(createStatus).toBe(200)
         createdClientId = created.clientId
 
+        const unknownTenantServiceName = 'unknown-tenant-service'
         const { statusCode, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.deleteClient(
             createdClientId,
-            'unknown-tenant-service'
+            unknownTenantServiceName
           )
 
         expect(statusCode).toBe(404)
         expect(json).toEqual({
           statusCode: 404,
           error: 'Not Found',
-          message: 'Not Found'
+          message: `Tenant service '${unknownTenantServiceName}' is not managed by dwt-client-sync`
         })
       }
     )

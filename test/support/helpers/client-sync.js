@@ -46,6 +46,6 @@ export async function ensureClientDoesNotExistAfterSync(
   expect(json).toEqual({
     statusCode: 404,
     error: 'Not Found',
-    message: 'Not Found'
+    message: `Client '${clientId}' not found for tenant service '${tenantServiceName}'`
   })
 }

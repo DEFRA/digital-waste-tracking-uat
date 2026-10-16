@@ -2,13 +2,6 @@ import { describe, it, expect, beforeEach } from '@jest/globals'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
 import { DEFAULT_TENANT_SERVICE_NAME } from '~/test/apis/wasteMovementClientSyncApi.js'
 
-// Client sync names the service in this 404 from DWTA-465. Accept 'Not Found'
-// until that's deployed everywhere, then drop it
-const unknownTenantMessages = (tenantServiceName) => [
-  'Not Found',
-  `Tenant service '${tenantServiceName}' is not managed by dwt-client-sync`
-]
-
 describe('Get all clients from DWT Client Sync Service', () => {
   beforeEach(async () => {
     await addAllureLink('/DWTA-334', 'DWTA-334', 'jira')
@@ -70,9 +63,8 @@ describe('Get all clients from DWT Client Sync Service', () => {
         expect(json).toEqual({
           statusCode: 404,
           error: 'Not Found',
-          message: expect.any(String)
+          message: `Tenant service '${tenantServiceName}' is not managed by dwt-client-sync`
         })
-        expect(unknownTenantMessages(tenantServiceName)).toContain(json.message)
       }
     )
   })
@@ -110,9 +102,8 @@ describe('Get all clients from DWT Client Sync Service', () => {
         expect(json).toEqual({
           statusCode: 404,
           error: 'Not Found',
-          message: expect.any(String)
+          message: `Tenant service '${tenantServiceName}' is not managed by dwt-client-sync`
         })
-        expect(unknownTenantMessages(tenantServiceName)).toContain(json.message)
       }
     )
   })

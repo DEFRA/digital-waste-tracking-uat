@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { DEFAULT_TENANT_SERVICE_NAME } from '~/test/apis/wasteMovementClientSyncApi.js'
 
 describe('Rotate a client secret in DWT Client Sync Service', () => {
   let createdClientId
@@ -125,16 +126,17 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
       'should return 404 when clientId is not found' +
         ' @allure.label.tag:DWTA-445',
       async () => {
+        const clientId = 'unknownclientid123'
         const { statusCode, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.rotateClientSecret(
-            'unknownclientid123'
+            clientId
           )
 
         expect(statusCode).toBe(404)
         expect(json).toEqual({
           statusCode: 404,
           error: 'Not Found',
-          message: 'Not Found'
+          message: `Client '${clientId}' not found for tenant service '${DEFAULT_TENANT_SERVICE_NAME}'`
         })
       }
     )
