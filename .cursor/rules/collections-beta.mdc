@@ -36,7 +36,7 @@ A later step needs the IDs from earlier steps in the same test:
 
 Same shape on every collections beta version. Assert the status code first. Assert `response.headers['x-request-id']` with `expect.any(String)`. Then `toEqual()` the problem body:
 
-- `type`: `https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/` plus `bad-request` or `not-found`
+- `type`: `https://defra.github.io/digital-waste-tracking-api-site/preview/problems/` plus `bad-request` or `not-found`
 - `title`, `detail`, `instance`
 - `requestId`: `response.headers['x-request-id']`
 

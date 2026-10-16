@@ -33,7 +33,7 @@ describe('Beta-1 API Code', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: 'the API Code supplied is invalid',
           instance: '/beta-1/movements',
@@ -69,7 +69,7 @@ describe('Beta-1 API Code', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: 'the API Code supplied is invalid',
           instance: `/beta-1/movements/${movementId}/collection`,
@@ -112,7 +112,7 @@ describe('Beta-1 API Code', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: 'the API Code supplied is invalid',
           instance: '/beta-1/deliveries',
@@ -163,7 +163,7 @@ describe('Beta-1 API Code', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: 'the API Code supplied is invalid',
           instance: `/beta-1/deliveries/${deliveryId}/receipt`,
@@ -192,7 +192,7 @@ describe('Beta-1 API Code', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: 'the API Code supplied is invalid',
           instance: '/beta-1/receipts',
@@ -223,7 +223,7 @@ describe('Beta-1 API Code', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: '/beta-1/movements',
@@ -266,7 +266,7 @@ describe('Beta-1 API Code', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: `/beta-1/movements/${movementId}/collection`,
@@ -316,7 +316,7 @@ describe('Beta-1 API Code', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: '/beta-1/deliveries',
@@ -374,7 +374,7 @@ describe('Beta-1 API Code', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: `/beta-1/deliveries/${deliveryId}/receipt`,
@@ -410,7 +410,7 @@ describe('Beta-1 API Code', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: '/beta-1/receipts',

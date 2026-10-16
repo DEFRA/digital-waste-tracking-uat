@@ -100,7 +100,7 @@ describe('Beta-1 Receipt Creation', () => {
       )
       expect(response.headers['x-request-id']).toEqual(expect.any(String))
       expect(response.json).toEqual({
-        type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/not-found',
+        type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/not-found',
         title: 'Not Found',
         detail: `No delivery exists with delivery ID: ${beta1.unknownResourceId}`,
         instance: `/beta-1/deliveries/${beta1.unknownResourceId}/receipt`,
@@ -130,7 +130,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: '/beta-1/receipts',
@@ -166,7 +166,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: '/beta-1/receipts',
@@ -202,7 +202,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: '/beta-1/receipts',
@@ -238,7 +238,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: '/beta-1/receipts',
@@ -276,7 +276,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: `/beta-1/deliveries/${deliveryId}/receipt`,
@@ -314,7 +314,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: '1 validation error occurred',
           instance: `/beta-1/deliveries/${deliveryId}/receipt`,
@@ -351,7 +351,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: 'Invalid request payload JSON format',
           instance: '/beta-1/receipts',
@@ -383,7 +383,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/bad-request',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/bad-request',
           title: 'Bad Request',
           detail: 'Invalid request payload JSON format',
           instance: `/beta-1/deliveries/${deliveryId}/receipt`,
@@ -413,7 +413,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/unsupported-media-type',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/unsupported-media-type',
           title: 'Unsupported Media Type',
           detail: 'Unsupported Media Type',
           instance: '/beta-1/receipts',
@@ -445,7 +445,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/unsupported-media-type',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/unsupported-media-type',
           title: 'Unsupported Media Type',
           detail: 'Unsupported Media Type',
           instance: `/beta-1/deliveries/${deliveryId}/receipt`,
@@ -475,7 +475,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/request-entity-too-large',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/request-entity-too-large',
           title: 'Request Entity Too Large',
           detail:
             'Payload content length greater than maximum allowed: 1048576',
@@ -508,7 +508,7 @@ describe('Beta-1 Receipt Creation', () => {
         )
         expect(response.headers['x-request-id']).toEqual(expect.any(String))
         expect(response.json).toEqual({
-          type: 'https://defra.github.io/digital-waste-tracking-api-docs/preview/problems/request-entity-too-large',
+          type: 'https://defra.github.io/digital-waste-tracking-api-site/preview/problems/request-entity-too-large',
           title: 'Request Entity Too Large',
           detail:
             'Payload content length greater than maximum allowed: 1048576',
