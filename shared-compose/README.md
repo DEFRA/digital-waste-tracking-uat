@@ -84,6 +84,20 @@ organisation backend and client sync accept it, so it can run against them. It
 logs in as `digital-waste-tracking-admin-ui` with the password `local-admin-ui`
 (the organisation backend only checks the password, but client sync checks both).
 
+## The CDP credentials API
+
+mockserver stands in for CDP's credentials API (`mockInitializer.json`), for
+`waste-movement-external-api`'s user pool only. It has fixed responses, so
+nothing persists: a created client never appears in the list.
+
+- List: five clients, including the seeded test clients `Test Client 1` and
+  `Test Client 2`.
+- Create: any name is created, with a new client ID and secret, except
+  `Skipped_By_Cdp`, which CDP skips as if it already exists, and
+  `Refused_By_Cdp`, which CDP refuses with a 403.
+- Rotate: a new secret for any listed client. CDP skips any other name.
+- Delete: always succeeds.
+
 ## Trying out a change
 
 PRs that change this folder or the shared workflow run the full suite against

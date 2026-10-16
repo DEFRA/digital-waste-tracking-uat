@@ -37,5 +37,253 @@
         ]
       }
     }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/tenants/services/waste-movement-external-api/user-pool/rotate-client-credentials",
+      "body": {
+        "type": "JSON",
+        "json": {
+          "client_names": ["Acme Waste Software"]
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "cognito_user_pool_id": "eu-west-2_EXAMPLE01",
+        "request_id": "7ac6090a4a02401d9ed283f651e2074c",
+        "tenant_service_name": "waste-movement-external-api",
+        "client_details": [
+          {
+            "client_name": "Acme Waste Software",
+            "client_id": "1a2b3c4d5e6f7g8h9i0j009988",
+            "client_secret": "local-rotated-secret"
+          }
+        ]
+      }
+    },
+    "priority": 10
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/tenants/services/waste-movement-external-api/user-pool/rotate-client-credentials",
+      "body": {
+        "type": "JSON",
+        "json": {
+          "client_names": ["Beta Tracking Ltd"]
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "cognito_user_pool_id": "eu-west-2_EXAMPLE01",
+        "request_id": "7ac6090a4a02401d9ed283f651e2074c",
+        "tenant_service_name": "waste-movement-external-api",
+        "client_details": [
+          {
+            "client_name": "Beta Tracking Ltd",
+            "client_id": "9z8y7x6w5v4u3t2s1r0q5rt43e",
+            "client_secret": "local-rotated-secret"
+          }
+        ]
+      }
+    },
+    "priority": 10
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/tenants/services/waste-movement-external-api/user-pool/rotate-client-credentials",
+      "body": {
+        "type": "JSON",
+        "json": {
+          "client_names": ["Test Client 1"]
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "cognito_user_pool_id": "eu-west-2_EXAMPLE01",
+        "request_id": "7ac6090a4a02401d9ed283f651e2074c",
+        "tenant_service_name": "waste-movement-external-api",
+        "client_details": [
+          {
+            "client_name": "Test Client 1",
+            "client_id": "1234567890abcdef1234567890",
+            "client_secret": "local-rotated-secret"
+          }
+        ]
+      }
+    },
+    "priority": 10
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/tenants/services/waste-movement-external-api/user-pool/rotate-client-credentials",
+      "body": {
+        "type": "JSON",
+        "json": {
+          "client_names": ["Test Client 2"]
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "cognito_user_pool_id": "eu-west-2_EXAMPLE01",
+        "request_id": "7ac6090a4a02401d9ed283f651e2074c",
+        "tenant_service_name": "waste-movement-external-api",
+        "client_details": [
+          {
+            "client_name": "Test Client 2",
+            "client_id": "0987654321fedcba0987654321",
+            "client_secret": "local-rotated-secret"
+          }
+        ]
+      }
+    },
+    "priority": 10
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/tenants/services/waste-movement-external-api/user-pool/rotate-client-credentials",
+      "body": {
+        "type": "JSON",
+        "json": {
+          "client_names": ["Test Client 3"]
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "cognito_user_pool_id": "eu-west-2_EXAMPLE01",
+        "request_id": "7ac6090a4a02401d9ed283f651e2074c",
+        "tenant_service_name": "waste-movement-external-api",
+        "client_details": [
+          {
+            "client_name": "Test Client 3",
+            "client_id": "abcdefghijklmnopqrstuvwxyz",
+            "client_secret": "local-rotated-secret"
+          }
+        ]
+      }
+    },
+    "priority": 10
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/tenants/services/waste-movement-external-api/user-pool/rotate-client-credentials"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "cognito_user_pool_id": "eu-west-2_EXAMPLE01",
+        "request_id": "7ac6090a4a02401d9ed283f651e2074c",
+        "tenant_service_name": "waste-movement-external-api",
+        "client_details": []
+      }
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/tenants/services/waste-movement-external-api/user-pool/create-clients",
+      "body": {
+        "type": "JSON",
+        "json": {
+          "client_names": ["Skipped_By_Cdp"]
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "cognito_user_pool_id": "eu-west-2_EXAMPLE01",
+        "request_id": "7ac6090a4a02401d9ed283f651e2074c",
+        "tenant_service_name": "waste-movement-external-api",
+        "client_details": []
+      }
+    },
+    "priority": 10
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/tenants/services/waste-movement-external-api/user-pool/create-clients",
+      "body": {
+        "type": "JSON",
+        "json": {
+          "client_names": ["Refused_By_Cdp"]
+        }
+      }
+    },
+    "httpResponse": {
+      "statusCode": 403,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "message": "Forbidden"
+      }
+    },
+    "priority": 10
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/tenants/services/waste-movement-external-api/user-pool/create-clients"
+    },
+    "httpResponseTemplate": {
+      "templateType": "MUSTACHE",
+      "template": "{ \"statusCode\": 200, \"headers\": { \"Content-Type\": [\"application/json\"] }, \"body\": { \"cognito_user_pool_id\": \"eu-west-2_EXAMPLE01\", \"request_id\": \"7ac6090a4a02401d9ed283f651e2074c\", \"tenant_service_name\": \"waste-movement-external-api\", \"client_details\": [ { \"client_name\": \"{{#jsonPath}}$.client_names[0]{{/jsonPath}}{{jsonPathResult}}\", \"client_id\": \"local{{ now_epoch }}\", \"client_secret\": \"{{ uuid }}\" } ] } }"
+    }
+  },
+  {
+    "httpRequest": {
+      "method": "POST",
+      "path": "/tenants/services/waste-movement-external-api/user-pool/delete-clients"
+    },
+    "httpResponse": {
+      "statusCode": 200,
+      "headers": {
+        "Content-Type": ["application/json"]
+      },
+      "body": {
+        "cognito_user_pool_id": "eu-west-2_EXAMPLE01",
+        "request_id": "7ac6090a4a02401d9ed283f651e2074c",
+        "tenant_service_name": "waste-movement-external-api",
+        "client_details": []
+      }
+    }
   }
 ]
