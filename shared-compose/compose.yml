@@ -136,16 +136,20 @@ services:
     networks:
       - cdp-tenant
 
-  mockserver:
-    image: mockserver/mockserver:8.0.0
+  # A fake of CDP's credentials API, which keeps clients and secrets in memory
+  # (see fake-cdp/server.js)
+  fake-cdp:
+    image: node:22-alpine
+    command: ['node', '/fake-cdp/server.js']
     ports:
       - 1080:1080
-    environment:
-      - MOCKSERVER_MAX_EXPECTATIONS=100
-      - MOCKSERVER_MAX_HEADER_SIZE=8192
-      - MOCKSERVER_INITIALIZATION_JSON_PATH=/config/mockInitializer.json
     volumes:
-      - ./mockInitializer.json:/config/mockInitializer.json
+      - ./fake-cdp:/fake-cdp:ro
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-O', '-', 'http://localhost:1080/health']
+      interval: 5s
+      timeout: 3s
+      retries: 10
     networks:
       - cdp-tenant
 
@@ -156,13 +160,15 @@ services:
     depends_on:
       mongodb:
         condition: service_healthy
+      fake-cdp:
+        condition: service_healthy
     env_file:
       - 'aws.env'
     environment:
       PORT: 3001
       NODE_ENV: development
       ENVIRONMENT: local
-      CDP_BASE_API_URL: mockserver:1080
+      CDP_BASE_API_URL: fake-cdp:1080
       MONGO_URI: mongodb://mongodb:27017/?replicaSet=rs0&directConnection=true
       ACCESS_CRED_WASTE_MOVEMENT_EXTERNAL_API: d2FzdGUtbW92ZW1lbnQtZXh0ZXJuYWwtYXBpPWxvY2FsLWV4dGVybmFsLWFwaQ==
       # For the admin UI's Software providers page

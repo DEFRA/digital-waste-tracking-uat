@@ -1,0 +1,5 @@
+{
+  "name": "fake-cdp",
+  "private": true,
+  "type": "module"
+}
