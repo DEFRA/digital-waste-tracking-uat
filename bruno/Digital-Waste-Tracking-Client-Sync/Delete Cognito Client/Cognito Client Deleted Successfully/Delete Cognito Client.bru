@@ -1,11 +1,11 @@
 meta {
-  name: Cognito Client Sync
+  name: Delete Cognito Client
   type: http
-  seq: 3
+  seq: 1
 }
 
-post {
-  url: {{baseUrl}}/clients/sync
+delete {
+  url: {{baseUrl}}/clients/{{tenantServiceName}}/{{clientId}}
   body: none
   auth: inherit
 }

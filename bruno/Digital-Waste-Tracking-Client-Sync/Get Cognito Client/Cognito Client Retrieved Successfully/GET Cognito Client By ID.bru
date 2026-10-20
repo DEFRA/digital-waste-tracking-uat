@@ -1,11 +1,11 @@
 meta {
-  name: Rotate Cognito Client Secret
+  name: GET Cognito Client By ID
   type: http
-  seq: 6
+  seq: 1
 }
 
-post {
-  url: {{baseUrl}}/clients/{{tenantServiceName}}/{{clientId}}/rotate
+get {
+  url: {{baseUrl}}/clients/{{tenantServiceName}}/{{clientId}}
   body: none
   auth: inherit
 }

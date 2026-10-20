@@ -1,11 +1,11 @@
 meta {
-  name: GET Cognito Client By ID
+  name: Cognito Client Sync
   type: http
-  seq: 2
+  seq: 1
 }
 
-get {
-  url: {{baseUrl}}/clients/{{tenantServiceName}}/{{clientId}}
+post {
+  url: {{baseUrl}}/clients/sync
   body: none
   auth: inherit
 }
