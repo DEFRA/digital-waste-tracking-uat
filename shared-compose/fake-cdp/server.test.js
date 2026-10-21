@@ -1,5 +1,6 @@
 import { after, beforeEach, describe, test } from 'node:test'
 import assert from 'node:assert/strict'
+import { connect } from 'node:net'
 
 import { createFakeCdp } from './server.js'
 
@@ -105,10 +106,29 @@ describe('Fake CDP credentials API', () => {
       assert.equal(pages, 3)
     })
 
+    test("gives each secret an id ending in its creation time, and CDP's date format", async () => {
+      await rotate('Seeded Client')
+
+      const { body } = await call('fetch-details')
+
+      for (const secret of body.client_details[0].client_secrets) {
+        assert.match(
+          secret.created_at,
+          /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{6}\+00:00$/
+        )
+        assert.equal(
+          Number(secret.id.split('--')[1]),
+          Date.parse(secret.created_at)
+        )
+      }
+    })
+
     for (const [description, query] of [
       ['a page size over 60', 'page_size=61'],
       ['a page size of 0', 'page_size=0'],
-      ['an invalid token', 'next_token=not-a-token']
+      ['an invalid token', 'next_token=not-a-token'],
+      ['a page size that is not a number', 'page_size=abc'],
+      ['a page size that is not whole', 'page_size=1.5']
     ]) {
       test(`rejects ${description}`, async () => {
         const { status } = await call(`fetch-details?${query}`)
@@ -236,6 +256,23 @@ describe('Fake CDP credentials API', () => {
       const { status } = await call('create-clients', {})
 
       assert.equal(status, 400)
+    })
+
+    test('a malformed URL, without crashing', async () => {
+      const raw = await new Promise((resolve, reject) => {
+        const socket = connect(server.address().port, 'localhost', () =>
+          socket.write(
+            'GET //[ HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n'
+          )
+        )
+        let text = ''
+        socket.on('data', (chunk) => (text += chunk))
+        socket.on('end', () => resolve(text))
+        socket.on('error', reject)
+      })
+
+      assert.match(raw, /^HTTP\/1\.1 400/)
+      assert.equal((await call('fetch-details')).status, 200)
     })
 
     test('an unknown route', async () => {

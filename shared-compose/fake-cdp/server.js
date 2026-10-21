@@ -46,13 +46,23 @@ const randomId = () =>
     .map((byte) => 'abcdefghijklmnopqrstuvwxyz0123456789'[byte % 36])
     .join('')
 
-// Secret ids are the client id and creation time, as CDP's are
-let secretCount = 0
-const newSecret = (clientId) => ({
-  id: `${clientId}--${Date.now() + secretCount++}`,
-  value: randomBytes(32).toString('base64url'),
-  createdAt: new Date()
-})
+// Secret ids are the client id and the secret's creation time in
+// milliseconds, as CDP's are. Each secret gets a later millisecond than the
+// last, so ids stay unique and always match the creation time
+let lastSecretTime = 0
+const newSecret = (clientId) => {
+  lastSecretTime = Math.max(Date.now(), lastSecretTime + 1)
+
+  return {
+    id: `${clientId}--${lastSecretTime}`,
+    value: randomBytes(32).toString('base64url'),
+    createdAt: new Date(lastSecretTime)
+  }
+}
+
+// CDP's format for a creation date: microseconds and +00:00, e.g.
+// 2026-10-16T06:25:07.342000+00:00
+const toCdpDate = (date) => date.toISOString().replace('Z', '000+00:00')
 
 // The list is paginated: at most 60 clients a page, with an opaque token for
 // the next page. Here the token is the position of the next client
@@ -123,7 +133,7 @@ export function createFakeCdp(seed = seedClients) {
             ...details(client),
             client_secrets: client.secrets.map(({ id, createdAt }) => ({
               id,
-              created_at: createdAt.toISOString()
+              created_at: toCdpDate(createdAt)
             }))
           }))
         ),
@@ -206,16 +216,22 @@ export function createFakeCdp(seed = seedClients) {
     const send = (statusCode, body) => {
       // Never log bodies: they can hold client secrets. Health checks run
       // every few seconds, so they aren't logged
-      if (url.pathname !== '/health') {
+      if (!req.url.startsWith('/health')) {
         console.log(`${req.method} ${req.url} ${statusCode}`)
       }
       res.writeHead(statusCode, { 'Content-Type': 'application/json' })
       res.end(JSON.stringify(body))
     }
 
-    const url = new URL(req.url, 'http://fake-cdp')
-
     try {
+      // Inside the try, so a malformed URL is an error response, not a crash
+      let url
+      try {
+        url = new URL(req.url, 'http://fake-cdp')
+      } catch {
+        throw new CdpError(400, 'Invalid URL')
+      }
+
       if (req.method === 'GET' && url.pathname === '/health') {
         return send(200, { message: 'success' })
       }
