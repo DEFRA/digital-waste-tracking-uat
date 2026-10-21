@@ -52,19 +52,70 @@ describe('Fake CDP credentials API', () => {
   after(() => server.close())
 
   describe('fetch-details', () => {
-    test('lists the clients without their secrets', async () => {
+    test("lists the clients with their secrets' ids and dates, but not their values", async () => {
       const { status, body } = await call('fetch-details')
+      const [client] = body.client_details
 
       assert.equal(status, 200)
       assert.equal(body.tenant_service_name, service)
-      assert.deepEqual(body.client_details, [
-        {
-          client_name: 'Seeded Client',
-          client_id: 'seededclientid0000000000000',
-          client_secret: null
-        }
+      assert.equal(body.next_token, null)
+      assert.equal(client.client_name, 'Seeded Client')
+      assert.equal(client.client_id, 'seededclientid0000000000000')
+      assert.equal(client.client_secret, null)
+      assert.equal(client.client_secrets.length, 1)
+      assert.match(
+        client.client_secrets[0].id,
+        /^seededclientid0000000000000--\d+$/
+      )
+      assert.ok(!Number.isNaN(Date.parse(client.client_secrets[0].created_at)))
+      assert.deepEqual(Object.keys(client.client_secrets[0]), [
+        'id',
+        'created_at'
       ])
     })
+
+    test('lists a rotated client with both secrets', async () => {
+      await rotate('Seeded Client')
+
+      const { body } = await call('fetch-details')
+
+      assert.equal(body.client_details[0].client_secrets.length, 2)
+    })
+
+    test('pages through the clients, following next_token', async () => {
+      for (const name of ['B', 'C', 'D', 'E']) {
+        await create(name)
+      }
+
+      const names = []
+      let token = null
+      let pages = 0
+      do {
+        const query = new URLSearchParams({
+          page_size: '2',
+          ...(token && { next_token: token })
+        })
+        const { body } = await call(`fetch-details?${query}`)
+        names.push(...body.client_details.map(({ client_name: n }) => n))
+        token = body.next_token
+        pages++
+      } while (token)
+
+      assert.deepEqual(names, ['Seeded Client', 'B', 'C', 'D', 'E'])
+      assert.equal(pages, 3)
+    })
+
+    for (const [description, query] of [
+      ['a page size over 60', 'page_size=61'],
+      ['a page size of 0', 'page_size=0'],
+      ['an invalid token', 'next_token=not-a-token']
+    ]) {
+      test(`rejects ${description}`, async () => {
+        const { status } = await call(`fetch-details?${query}`)
+
+        assert.equal(status, 400)
+      })
+    }
   })
 
   describe('create-clients', () => {

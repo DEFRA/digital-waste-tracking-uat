@@ -46,10 +46,28 @@ const randomId = () =>
     .map((byte) => 'abcdefghijklmnopqrstuvwxyz0123456789'[byte % 36])
     .join('')
 
-const newSecret = () => ({
+// Secret ids are the client id and creation time, as CDP's are
+let secretCount = 0
+const newSecret = (clientId) => ({
+  id: `${clientId}--${Date.now() + secretCount++}`,
   value: randomBytes(32).toString('base64url'),
   createdAt: new Date()
 })
+
+// The list is paginated: at most 60 clients a page, with an opaque token for
+// the next page. Here the token is the position of the next client
+const maxPageSize = 60
+const toToken = (offset) => Buffer.from(`offset:${offset}`).toString('base64')
+const fromToken = (token) => {
+  const [, offset] =
+    Buffer.from(token, 'base64')
+      .toString()
+      .match(/^offset:(\d+)$/) ?? []
+  if (offset === undefined) {
+    throw new CdpError(400, 'Invalid next_token')
+  }
+  return Number(offset)
+}
 
 /**
  * @param {Object} [seed] - The clients each service starts with
@@ -61,7 +79,7 @@ export function createFakeCdp(seed = seedClients) {
   const pools = new Map(
     Object.entries(seed).map(([service, clients]) => [
       service,
-      clients.map(({ name, id }) => ({ name, id, secrets: [newSecret()] }))
+      clients.map(({ name, id }) => ({ name, id, secrets: [newSecret(id)] }))
     ])
   )
 
@@ -82,11 +100,36 @@ export function createFakeCdp(seed = seedClients) {
     pool.filter((client) => names.includes(client.name))
 
   const actions = {
-    'fetch-details': (service, pool) =>
-      response(
-        service,
-        pool.map((client) => details(client))
-      ),
+    // A page of clients, each with its secrets' ids and creation dates but
+    // never their values
+    'fetch-details': (service, pool, _body, query) => {
+      const pageSize = Number(query.get('page_size') ?? maxPageSize)
+      if (
+        !Number.isInteger(pageSize) ||
+        pageSize < 1 ||
+        pageSize > maxPageSize
+      ) {
+        throw new CdpError(400, `page_size must be from 1 to ${maxPageSize}`)
+      }
+
+      const token = query.get('next_token')
+      const offset = token ? fromToken(token) : 0
+      const end = offset + pageSize
+
+      return {
+        ...response(
+          service,
+          pool.slice(offset, end).map((client) => ({
+            ...details(client),
+            client_secrets: client.secrets.map(({ id, createdAt }) => ({
+              id,
+              created_at: createdAt.toISOString()
+            }))
+          }))
+        ),
+        next_token: end < pool.length ? toToken(end) : null
+      }
+    },
 
     // Existing names are skipped, and only new clients are returned
     'create-clients': (service, pool, { client_names: names }) => {
@@ -99,7 +142,10 @@ export function createFakeCdp(seed = seedClients) {
           (name) =>
             name !== skippedName && !pool.some((client) => client.name === name)
         )
-        .map((name) => ({ name, id: randomId(), secrets: [newSecret()] }))
+        .map((name) => {
+          const id = randomId()
+          return { name, id, secrets: [newSecret(id)] }
+        })
 
       pool.push(...created)
 
@@ -114,7 +160,7 @@ export function createFakeCdp(seed = seedClients) {
       response(
         service,
         named(pool, names).map((client) => {
-          const secret = newSecret()
+          const secret = newSecret(client.id)
           client.secrets = [...client.secrets, secret].slice(-2)
           return details(client, secret.value)
         })
@@ -160,19 +206,21 @@ export function createFakeCdp(seed = seedClients) {
     const send = (statusCode, body) => {
       // Never log bodies: they can hold client secrets. Health checks run
       // every few seconds, so they aren't logged
-      if (req.url !== '/health') {
+      if (url.pathname !== '/health') {
         console.log(`${req.method} ${req.url} ${statusCode}`)
       }
       res.writeHead(statusCode, { 'Content-Type': 'application/json' })
       res.end(JSON.stringify(body))
     }
 
+    const url = new URL(req.url, 'http://fake-cdp')
+
     try {
-      if (req.method === 'GET' && req.url === '/health') {
+      if (req.method === 'GET' && url.pathname === '/health') {
         return send(200, { message: 'success' })
       }
 
-      const [, service, action] = req.url.match(routePattern) ?? []
+      const [, service, action] = url.pathname.match(routePattern) ?? []
       const isFetch = action === 'fetch-details'
 
       if (!actions[action] || req.method !== (isFetch ? 'GET' : 'POST')) {
@@ -191,7 +239,7 @@ export function createFakeCdp(seed = seedClients) {
       }
 
       if (isFetch) {
-        return send(200, actions[action](service, pool))
+        return send(200, actions[action](service, pool, null, url.searchParams))
       }
 
       if (!req.headers['content-type']?.startsWith('application/json')) {
