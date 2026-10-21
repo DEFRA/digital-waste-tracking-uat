@@ -1,0 +1,29 @@
+meta {
+  name: Create Cognito Client - Error - Invalid Client Name
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/clients/{{tenantServiceName}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "clientName": "bad name with spaces"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+}

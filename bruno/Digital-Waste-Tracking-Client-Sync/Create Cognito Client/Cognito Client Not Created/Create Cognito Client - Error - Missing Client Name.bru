@@ -1,0 +1,27 @@
+meta {
+  name: Create Cognito Client - Error - Missing Client Name
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/clients/{{tenantServiceName}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  Content-Type: application/json
+}
+
+body:json {
+  {}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+}

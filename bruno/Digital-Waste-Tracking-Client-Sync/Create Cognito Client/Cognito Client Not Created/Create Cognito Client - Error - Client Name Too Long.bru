@@ -1,0 +1,29 @@
+meta {
+  name: Create Cognito Client - Error - Client Name Too Long
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/clients/{{tenantServiceName}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "clientName": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+}

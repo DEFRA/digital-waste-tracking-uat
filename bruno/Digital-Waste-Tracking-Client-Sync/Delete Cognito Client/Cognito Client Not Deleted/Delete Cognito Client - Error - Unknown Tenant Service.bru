@@ -1,0 +1,22 @@
+meta {
+  name: Delete Cognito Client - Error - Unknown Tenant Service
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/clients/unknown-tenant-service/{{clientId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+}

@@ -1,0 +1,29 @@
+meta {
+  name: Create Cognito Client - Error - Unknown Tenant Service
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/clients/unknown-tenant-service
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "clientName": "Cognito_Test_User_01"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+}

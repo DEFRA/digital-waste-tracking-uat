@@ -1,0 +1,29 @@
+meta {
+  name: Create Cognito Client - Error - Client Name Already Exists
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/clients/{{tenantServiceName}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "clientName": "cognito_test_user_01"
+  }
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+}
