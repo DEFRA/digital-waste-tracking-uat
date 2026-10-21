@@ -1,0 +1,23 @@
+meta {
+  name: Get All Cognito Clients
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/clients/{{tenantServiceName}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  Accept-Encoding: identity
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+}
