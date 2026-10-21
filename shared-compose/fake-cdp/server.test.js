@@ -1,5 +1,6 @@
 import { after, beforeEach, describe, test } from 'node:test'
 import assert from 'node:assert/strict'
+import { connect } from 'node:net'
 
 import { createFakeCdp } from './server.js'
 
@@ -52,19 +53,89 @@ describe('Fake CDP credentials API', () => {
   after(() => server.close())
 
   describe('fetch-details', () => {
-    test('lists the clients without their secrets', async () => {
+    test("lists the clients with their secrets' ids and dates, but not their values", async () => {
       const { status, body } = await call('fetch-details')
+      const [client] = body.client_details
 
       assert.equal(status, 200)
       assert.equal(body.tenant_service_name, service)
-      assert.deepEqual(body.client_details, [
-        {
-          client_name: 'Seeded Client',
-          client_id: 'seededclientid0000000000000',
-          client_secret: null
-        }
+      assert.equal(body.next_token, null)
+      assert.equal(client.client_name, 'Seeded Client')
+      assert.equal(client.client_id, 'seededclientid0000000000000')
+      assert.equal(client.client_secret, null)
+      assert.equal(client.client_secrets.length, 1)
+      assert.match(
+        client.client_secrets[0].id,
+        /^seededclientid0000000000000--\d+$/
+      )
+      assert.ok(!Number.isNaN(Date.parse(client.client_secrets[0].created_at)))
+      assert.deepEqual(Object.keys(client.client_secrets[0]), [
+        'id',
+        'created_at'
       ])
     })
+
+    test('lists a rotated client with both secrets', async () => {
+      await rotate('Seeded Client')
+
+      const { body } = await call('fetch-details')
+
+      assert.equal(body.client_details[0].client_secrets.length, 2)
+    })
+
+    test('pages through the clients, following next_token', async () => {
+      for (const name of ['B', 'C', 'D', 'E']) {
+        await create(name)
+      }
+
+      const names = []
+      let token = null
+      let pages = 0
+      do {
+        const query = new URLSearchParams({
+          page_size: '2',
+          ...(token && { next_token: token })
+        })
+        const { body } = await call(`fetch-details?${query}`)
+        names.push(...body.client_details.map(({ client_name: n }) => n))
+        token = body.next_token
+        pages++
+      } while (token)
+
+      assert.deepEqual(names, ['Seeded Client', 'B', 'C', 'D', 'E'])
+      assert.equal(pages, 3)
+    })
+
+    test("gives each secret an id ending in its creation time, and CDP's date format", async () => {
+      await rotate('Seeded Client')
+
+      const { body } = await call('fetch-details')
+
+      for (const secret of body.client_details[0].client_secrets) {
+        assert.match(
+          secret.created_at,
+          /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{6}\+00:00$/
+        )
+        assert.equal(
+          Number(secret.id.split('--')[1]),
+          Date.parse(secret.created_at)
+        )
+      }
+    })
+
+    for (const [description, query] of [
+      ['a page size over 60', 'page_size=61'],
+      ['a page size of 0', 'page_size=0'],
+      ['an invalid token', 'next_token=not-a-token'],
+      ['a page size that is not a number', 'page_size=abc'],
+      ['a page size that is not whole', 'page_size=1.5']
+    ]) {
+      test(`rejects ${description}`, async () => {
+        const { status } = await call(`fetch-details?${query}`)
+
+        assert.equal(status, 400)
+      })
+    }
   })
 
   describe('create-clients', () => {
@@ -185,6 +256,23 @@ describe('Fake CDP credentials API', () => {
       const { status } = await call('create-clients', {})
 
       assert.equal(status, 400)
+    })
+
+    test('a malformed URL, without crashing', async () => {
+      const raw = await new Promise((resolve, reject) => {
+        const socket = connect(server.address().port, 'localhost', () =>
+          socket.write(
+            'GET //[ HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n'
+          )
+        )
+        let text = ''
+        socket.on('data', (chunk) => (text += chunk))
+        socket.on('end', () => resolve(text))
+        socket.on('error', reject)
+      })
+
+      assert.match(raw, /^HTTP\/1\.1 400/)
+      assert.equal((await call('fetch-details')).status, 200)
     })
 
     test('an unknown route', async () => {
