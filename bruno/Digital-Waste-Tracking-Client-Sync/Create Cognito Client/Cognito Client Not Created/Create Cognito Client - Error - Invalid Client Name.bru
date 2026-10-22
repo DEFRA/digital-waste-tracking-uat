@@ -1,7 +1,7 @@
 meta {
-  name: Create Cognito Client
+  name: Create Cognito Client - Error - Invalid Client Name
   type: http
-  seq: 4
+  seq: 1
 }
 
 post {
@@ -17,12 +17,8 @@ headers {
 
 body:json {
   {
-    "clientName": "Cognito_Test_User_01"
+    "clientName": "bad name with spaces"
   }
-}
-
-vars:post-response {
-  clientId: res.body.clientId
 }
 
 settings {

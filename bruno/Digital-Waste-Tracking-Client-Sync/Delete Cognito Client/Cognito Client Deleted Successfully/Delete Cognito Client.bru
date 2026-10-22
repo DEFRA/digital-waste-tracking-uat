@@ -1,0 +1,22 @@
+meta {
+  name: Delete Cognito Client
+  type: http
+  seq: 1
+}
+
+delete {
+  url: {{baseUrl}}/clients/{{tenantServiceName}}/{{clientId}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+}

@@ -1,11 +1,11 @@
 meta {
-  name: Delete Cognito Client
+  name: Get Cognito Client - Error - Client Not Found
   type: http
-  seq: 5
+  seq: 1
 }
 
-delete {
-  url: {{baseUrl}}/clients/{{tenantServiceName}}/{{clientId}}
+get {
+  url: {{baseUrl}}/clients/{{tenantServiceName}}/unknownclientid123
   body: none
   auth: inherit
 }

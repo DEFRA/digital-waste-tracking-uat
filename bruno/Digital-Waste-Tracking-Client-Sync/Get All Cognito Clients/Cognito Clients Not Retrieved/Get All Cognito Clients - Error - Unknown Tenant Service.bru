@@ -1,0 +1,23 @@
+meta {
+  name: Get All Cognito Clients - Error - Unknown Tenant Service
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/clients/unknown-tenant-service
+  body: none
+  auth: inherit
+}
+
+headers {
+  x-api-key: {{cdp-api-key}}
+  Accept-Encoding: identity
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+}
