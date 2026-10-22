@@ -204,7 +204,7 @@ export const beta2 = {
    * @returns {Object}
    */
   generateBaseReceiptWithoutDeliveryIdData: () => ({
-    reason:
+    reasonForNoDeliveryId:
       'No delivery was recorded prior to receipt; waste received directly from the producer.',
     carrier: beta2.carrier(),
     receiver: beta2.intendedReceiver(),

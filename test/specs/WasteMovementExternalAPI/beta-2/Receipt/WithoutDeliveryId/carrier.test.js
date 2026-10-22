@@ -73,7 +73,7 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
   describe('Problem Responses', () => {
     it('should reject a receipt without a delivery ID when reason is empty @allure.label.tag:DWTC-142', async () => {
       await addAllureLink('/DWTC-142', 'DWTC-142', 'jira')
-      receiptData.reason = ''
+      receiptData.reasonForNoDeliveryId = ''
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(
@@ -85,7 +85,7 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
 
     it('should reject a receipt without a delivery ID when reason is missing @allure.label.tag:DWTC-142', async () => {
       await addAllureLink('/DWTC-142', 'DWTC-142', 'jira')
-      delete receiptData.reason
+      delete receiptData.reasonForNoDeliveryId
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(
