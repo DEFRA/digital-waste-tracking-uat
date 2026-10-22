@@ -39,41 +39,53 @@ body:json {
         "meansOfTransport": "Road",
         "vehicleRegistration": "AB12 CDE",
         "contactDetails": {
-          "emailAddress": "carrier@example.com"
+          "emailAddress": "carrier@example.com",
+          "phoneNumber": "01234567890"
+        },
+        "address": {
+          "fullAddress": "4 Carrier Lane, Test City",
+          "postcode": "TE1 4CR"
         }
       }
     ],
-    "brokerOrDealer": {
-      "isPresent": true,
-      "items": [
-        {
-          "organisationName": "Broker Demo Ltd",
-          "registrationNumber": "CBDU654321",
-          "contactDetails": {
-            "emailAddress": "broker@example.com"
+    "intendedReceivers": [
+      {
+        "siteName": "Receiver Site Ltd",
+        "authorisationNumber": "EAS/P/123456",
+        "receiptAddress": {
+          "fullAddress": "3 Receiver Road, Test City",
+          "postcode": "TE1 3RC"
+        },
+        "contactDetails": {
+          "emailAddress": "receiver@example.com",
+          "phoneNumber": "01234567890"
+        }
+      }
+    ],
+    "wasteItems": [
+      {
+        "classification": {
+          "wasteDescription": "Paper and cardboard",
+          "ewcCodes": ["200101"],
+          "pops": {
+            "isPresent": false
           },
-          "address": {
-            "fullAddress": "2 Broker Yard, Test City",
-            "postcode": "TE1 1ST"
+          "hazardous": {
+            "isPresent": false
+          }
+        },
+        "physicalDetails": {
+          "form": "SOLID",
+          "containerType": "DRU",
+          "containerCount": 4,
+          "totalWeight": {
+            "amount": 250.5,
+            "unit": "KILOGRAMS",
+            "isEstimate": false
           }
         }
-      ]
-    },
-    "supportingReferences": [
-      {
-        "label": "PO Number",
-        "reference": "PO-48213"
-      },
-      {
-        "label": "Job Number",
-        "reference": "JB-9931"
-      },
-      {
-        "label": "Weighbridge Number",
-        "reference": "WB-9931"
       }
-    ],
-    "specialHandlingRequirements": "Handle with care and keep upright."
+    ]
   }
 }
 
@@ -87,7 +99,7 @@ script:pre-request {
 script:post-response {
   const movementId = res.body.data.movementId;
   bru.setVar('movementId', movementId);
-
+  
   const movementIds = Object.assign([], bru.getVar('movementIds') || []);
   movementIds.push(movementId);
   bru.setVar('movementIds', movementIds);

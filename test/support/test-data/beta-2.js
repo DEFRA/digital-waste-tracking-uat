@@ -21,6 +21,7 @@ export const beta2 = {
   reasonForNoCarrierRegistrationNumber: 'ONE_OFF',
   otherMeansOfTransport: 'Horse and cart',
   specialHandlingRequirements: 'Handle with care and keep upright.',
+  reasonForNoConsignmentCode: 'Carrier did not provide a consignment note',
 
   /**
    * POST /beta-2/movements required fields. A Household producer needs only wasteSource.
@@ -135,10 +136,79 @@ export const beta2 = {
   }),
 
   /**
+   * Hazardous properties when none are present.
+   * @returns {Object}
+   */
+  hazardousNotPresent: () => ({
+    isPresent: false
+  }),
+
+  /**
+   * Hazardous properties with recognised HP codes.
+   * @returns {Object}
+   */
+  hazardousPresent: () => ({
+    isPresent: true,
+    codes: ['HP_4', 'HP_8']
+  }),
+
+  /**
+   * Non-hazardous waste classification. Required on a waste item.
+   * @returns {Object}
+   */
+  classification: () => ({
+    wasteDescription: 'Mixed municipal waste',
+    ewcCodes: ['200301'],
+    pops: {
+      isPresent: false
+    },
+    hazardous: beta2.hazardousNotPresent()
+  }),
+
+  /**
+   * Hazardous waste classification. Assign onto a waste item; pair with
+   * consignmentNote() or reasonForNoConsignmentCode on the movement.
+   * @returns {Object}
+   */
+  hazardousClassification: () => ({
+    wasteDescription: 'Fluorescent tubes',
+    ewcCodes: ['200121'],
+    pops: {
+      isPresent: false
+    },
+    hazardous: beta2.hazardousPresent()
+  }),
+
+  /**
+   * Movement-level consignment note with a valid EA / NRW code.
+   * @returns {Object}
+   */
+  consignmentNote: () => ({
+    code: 'CJTILE/A0001'
+  }),
+
+  /**
    * A waste item with its required fields.
    * @returns {Object}
    */
   wasteItem: () => ({
+    classification: beta2.classification(),
+    physicalDetails: beta2.physicalDetails()
+  }),
+
+  /**
+   * A second non-hazardous waste item with a different EWC code.
+   * @returns {Object}
+   */
+  secondWasteItem: () => ({
+    classification: {
+      wasteDescription: 'Soil and stones',
+      ewcCodes: ['170504'],
+      pops: {
+        isPresent: false
+      },
+      hazardous: beta2.hazardousNotPresent()
+    },
     physicalDetails: beta2.physicalDetails()
   }),
 
@@ -196,6 +266,7 @@ export const beta2 = {
     carrier: beta2.carrier(),
     receiver: beta2.intendedReceiver(),
     physicalDetails: beta2.physicalDetails(),
+    hazardous: beta2.hazardousNotPresent(),
     treatments: [beta2.treatment()]
   }),
 
