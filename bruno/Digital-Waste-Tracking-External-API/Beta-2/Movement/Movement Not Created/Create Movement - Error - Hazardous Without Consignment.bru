@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Intended Receiver Valid Details
+  name: Create Movement - Error - Hazardous Without Consignment
   type: http
-  seq: 1
+  seq: 5
 }
 
 post {
@@ -28,7 +28,12 @@ body:json {
         "meansOfTransport": "Road",
         "vehicleRegistration": "AB12 CDE",
         "contactDetails": {
-          "emailAddress": "carrier@example.com"
+          "emailAddress": "carrier@example.com",
+          "phoneNumber": "01234567890"
+        },
+        "address": {
+          "fullAddress": "4 Carrier Lane, Test City",
+          "postcode": "TE1 4CR"
         }
       }
     ],
@@ -37,15 +42,28 @@ body:json {
         "siteName": "Receiver Site Ltd",
         "authorisationNumber": "EAS/P/123456",
         "receiptAddress": {
+          "fullAddress": "3 Receiver Road, Test City",
           "postcode": "TE1 3RC"
         },
         "contactDetails": {
-          "emailAddress": "receiver@example.com"
+          "emailAddress": "receiver@example.com",
+          "phoneNumber": "01234567890"
         }
       }
     ],
     "wasteItems": [
       {
+        "classification": {
+          "wasteDescription": "Fluorescent tubes",
+          "ewcCodes": ["200121"],
+          "pops": {
+            "isPresent": false
+          },
+          "hazardous": {
+            "isPresent": true,
+            "codes": ["HP_4", "HP_8"]
+          }
+        },
         "physicalDetails": {
           "form": "SOLID",
           "containerType": "DRU",
@@ -59,4 +77,11 @@ body:json {
       }
     ]
   }
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
 }
