@@ -153,6 +153,25 @@ export const beta2 = {
   }),
 
   /**
+   * Dual / mirror EWC codes (within the permitted maximum of 5).
+   * @returns {string[]}
+   */
+  mirrorEwcCodes: () => ['170504', '191212'],
+
+  /**
+   * More than 5 EWC codes (above the permitted maximum).
+   * @returns {string[]}
+   */
+  ewcCodesBeyondMaximum: () => [
+    '170504',
+    '191212',
+    '170904',
+    '170604',
+    '200101',
+    '200301'
+  ],
+
+  /**
    * Non-hazardous waste classification. Required on a waste item.
    * @returns {Object}
    */
@@ -167,7 +186,7 @@ export const beta2 = {
 
   /**
    * Hazardous waste classification. Assign onto a waste item; pair with
-   * consignmentNote() or reasonForNoConsignmentCode on the movement.
+   * consignmentNote() or consignmentNoteWithReason() on the movement.
    * @returns {Object}
    */
   hazardousClassification: () => ({
@@ -185,6 +204,14 @@ export const beta2 = {
    */
   consignmentNote: () => ({
     code: 'CJTILE/A0001'
+  }),
+
+  /**
+   * Movement-level consignment note with a reason instead of a code.
+   * @returns {Object}
+   */
+  consignmentNoteWithReason: () => ({
+    reasonForNoCode: beta2.reasonForNoConsignmentCode
   }),
 
   /**

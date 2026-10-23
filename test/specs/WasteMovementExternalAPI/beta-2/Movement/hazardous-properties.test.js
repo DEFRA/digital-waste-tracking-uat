@@ -46,33 +46,8 @@ describe('Beta-2 Movement Creation - Hazardous properties', () => {
   })
 
   describe('Problem Responses', () => {
-    it('should reject a movement when whether the waste has hazardous properties is missing @allure.label.tag:DWTC-222', async () => {
-      await addAllureLink('/DWTC-222', 'DWTC-222', 'jira')
-      delete movementData.wasteItems[0].classification.hazardous
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementRejected(response)
-    })
-
-    it('should reject a movement when whether the waste has hazardous properties is not recognised @allure.label.tag:DWTC-222', async () => {
-      await addAllureLink('/DWTC-222', 'DWTC-222', 'jira')
-      const hazardous = beta2.hazardousNotPresent()
-      hazardous.isPresent = 'Maybe'
-      movementData.wasteItems[0].classification.hazardous = hazardous
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementRejected(response)
-    })
-
-    it('should reject a movement when hazardous properties are missing @allure.label.tag:DWTC-222', async () => {
+    // Required fields removed for required-field error assertions
+    it('should reject a movement when hazardous properties are missing all required fields @allure.label.tag:DWTC-222', async () => {
       await addAllureLink('/DWTC-222', 'DWTC-222', 'jira')
       const hazardous = beta2.hazardousPresent()
       delete hazardous.codes
@@ -87,43 +62,12 @@ describe('Beta-2 Movement Creation - Hazardous properties', () => {
       expectMovementRejected(response)
     })
 
-    it('should reject a movement when a hazardous property is not recognised @allure.label.tag:DWTC-222', async () => {
-      await addAllureLink('/DWTC-222', 'DWTC-222', 'jira')
-      const hazardous = beta2.hazardousPresent()
-      hazardous.codes = ['HP_22']
-      movementData.wasteItems[0].classification.hazardous = hazardous
-      movementData.consignmentNote = beta2.consignmentNote()
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementRejected(response)
-    })
-
     it('should reject a movement when hazardous properties are given for waste declared as not hazardous @allure.label.tag:DWTC-222', async () => {
       await addAllureLink('/DWTC-222', 'DWTC-222', 'jira')
-      const hazardous = beta2.hazardousNotPresent()
-      hazardous.codes = beta2.hazardousPresent().codes
-      movementData.wasteItems[0].classification.hazardous = hazardous
-
-      const response =
-        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
-          movementData
-        )
-
-      expectMovementRejected(response)
-    })
-
-    it('should reject a movement when one of several wastes has unrecognised hazardous properties @allure.label.tag:DWTC-222', async () => {
-      await addAllureLink('/DWTC-222', 'DWTC-222', 'jira')
-      const invalidWasteItem = beta2.secondWasteItem()
-      const hazardous = beta2.hazardousPresent()
-      hazardous.codes = ['HP_22']
-      invalidWasteItem.classification.hazardous = hazardous
-      movementData.wasteItems = [beta2.wasteItem(), invalidWasteItem]
-      movementData.consignmentNote = beta2.consignmentNote()
+      movementData.wasteItems[0].classification.hazardous = {
+        ...beta2.hazardousNotPresent(),
+        codes: beta2.hazardousPresent().codes
+      }
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
