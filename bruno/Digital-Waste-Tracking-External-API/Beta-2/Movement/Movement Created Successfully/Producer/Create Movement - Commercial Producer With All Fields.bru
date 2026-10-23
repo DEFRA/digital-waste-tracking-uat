@@ -65,8 +65,8 @@ body:json {
     "wasteItems": [
       {
         "classification": {
-          "wasteDescription": "Paper and cardboard",
-          "ewcCodes": ["200101"],
+          "wasteDescription": "Mixed municipal waste",
+          "ewcCodes": ["200301"],
           "pops": {
             "isPresent": false
           },
@@ -85,6 +85,20 @@ body:json {
           }
         }
       }
+    ],
+    "brokerOrDealer": {
+      "isPresent": false
+    },
+    "specialHandlingRequirements": "Handle with care and keep upright.",
+    "supportingReferences": [
+      {
+        "label": "PO Number",
+        "reference": "PO-48213"
+      },
+      {
+        "label": "Job Number",
+        "reference": "JB-9931"
+      }
     ]
   }
 }
@@ -99,7 +113,7 @@ script:pre-request {
 script:post-response {
   const movementId = res.body.data.movementId;
   bru.setVar('movementId', movementId);
-  
+
   const movementIds = Object.assign([], bru.getVar('movementIds') || []);
   movementIds.push(movementId);
   bru.setVar('movementIds', movementIds);
