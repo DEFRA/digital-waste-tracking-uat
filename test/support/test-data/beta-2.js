@@ -22,19 +22,37 @@ export const beta2 = {
   otherMeansOfTransport: 'Horse and cart',
   specialHandlingRequirements: 'Handle with care and keep upright.',
   reasonForNoConsignmentCode: 'Carrier did not provide a consignment note',
+  plannedCollectionDateTime: '2026-01-15T09:30:00Z',
 
   /**
    * POST /beta-2/movements required fields. A Household producer needs only wasteSource.
    * At least one intended carrier, one intended receiver, and one waste item are required.
+   * plannedCollectionDateTime and collectionSite are required (DWTC-200).
    * @returns {Object}
    */
   generateBaseMovementData: () => ({
     producer: {
       wasteSource: 'Household'
     },
+    plannedCollectionDateTime: beta2.plannedCollectionDateTime,
+    collectionSite: beta2.collectionSite(),
     intendedCarriers: [beta2.intendedCarrier()],
     intendedReceivers: [beta2.intendedReceiver()],
     wasteItems: [beta2.wasteItem()]
+  }),
+
+  /**
+   * Place the waste will be collected from. Always required on a movement.
+   * @returns {Object}
+   */
+  collectionSite: () => ({
+    address: {
+      fullAddress: '10 Industrial Way, Test City',
+      postcode: 'TE1 2PQ'
+    },
+    contactDetails: {
+      emailAddress: 'site@example.com'
+    }
   }),
 
   /**
