@@ -171,6 +171,43 @@ export const beta2 = {
   }),
 
   /**
+   * POPs when none are present.
+   * @returns {Object}
+   */
+  popsNotPresent: () => ({
+    isPresent: false
+  }),
+
+  /**
+   * A POP declared with an amount (unit required with amount).
+   * @returns {Object}
+   */
+  popComponentWithAmount: () => ({
+    code: 'PFOA',
+    unit: 'MG_PER_KG',
+    amount: 0.5
+  }),
+
+  /**
+   * A POP declared against its WM3 threshold (no amount).
+   * @returns {Object}
+   */
+  popComponentWithThreshold: () => ({
+    code: 'PFOS',
+    threshold: 'LESS_THAN'
+  }),
+
+  /**
+   * POPs present with source and at least one component (flat PopComponent shape).
+   * @returns {Object}
+   */
+  popsPresent: () => ({
+    isPresent: true,
+    componentsSource: 'OWN_TESTING',
+    components: [beta2.popComponentWithAmount()]
+  }),
+
+  /**
    * Dual / mirror EWC codes (within the permitted maximum of 5).
    * @returns {string[]}
    */
@@ -196,9 +233,7 @@ export const beta2 = {
   classification: () => ({
     wasteDescription: 'Mixed municipal waste',
     ewcCodes: ['200301'],
-    pops: {
-      isPresent: false
-    },
+    pops: beta2.popsNotPresent(),
     hazardous: beta2.hazardousNotPresent()
   }),
 
@@ -210,9 +245,7 @@ export const beta2 = {
   hazardousClassification: () => ({
     wasteDescription: 'Fluorescent tubes',
     ewcCodes: ['200121'],
-    pops: {
-      isPresent: false
-    },
+    pops: beta2.popsNotPresent(),
     hazardous: beta2.hazardousPresent()
   }),
 
