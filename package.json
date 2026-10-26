@@ -4,7 +4,7 @@
   "type": "module",
   "description": "User Acceptance Testing suite for Defra's Digital Waste Tracking service using Jest and API testing framework",
   "engines": {
-    "node": ">=22.13.1"
+    "node": ">=v22.23.4"
   },
   "author": "Defra DDTS",
   "license": "OGL-UK-3.0",
@@ -47,7 +47,7 @@
     "allure-commandline": "2.32.0",
     "esm-module-alias": "2.2.1",
     "global-agent": "3.0.0",
-    "undici": "8.10.0"
+    "undici": "8.12.3"
   },
   "devDependencies": {
     "@types/jest": "29.5.14",
