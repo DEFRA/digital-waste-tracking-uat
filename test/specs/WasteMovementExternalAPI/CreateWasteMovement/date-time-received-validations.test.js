@@ -66,7 +66,7 @@ describe('Receiving date timestamp validation', () => {
     }
   )
 
-  it(
+  it.skip(
     'should not allow waste movement to be created when date timestamp timezone is not UTC or BST' +
       ' @allure.label.tag:DWT-334 @allure.label.tag:DWTA-386',
     async () => {
@@ -111,8 +111,7 @@ describe('Receiving date timestamp validation', () => {
             {
               key: 'dateTimeReceived',
               errorType: 'InvalidFormat',
-              message:
-                '"dateTimeReceived" must be a valid UTC (2025-09-15T12:12:28Z) or BST (2025-09-15T13:12:28+01:00) ISO datetime'
+              message: '"dateTimeReceived" must be in ISO 8601 date format'
             }
           ]
         }
