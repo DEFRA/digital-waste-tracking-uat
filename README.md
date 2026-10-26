@@ -19,8 +19,10 @@ The template to create a service that runs Jest tests against an environment.
 
 #### Node.js
 
-Please install [Node.js](http://nodejs.org/) `>= v22.13.1` and [npm](https://nodejs.org/) `>= v9`. You will find it
-easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm)
+Please install [Node.js](http://nodejs.org/) `>= v22.23.4` and [npm](https://nodejs.org/) `>= v9`. You will find it
+easier to use the Node Version Manager [nvm](https://github.com/creationix/nvm).
+
+The Node.js version was bumped because of CVEs.
 
 To use the correct version of Node.js for this application, via nvm:
 
