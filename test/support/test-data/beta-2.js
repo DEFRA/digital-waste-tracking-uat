@@ -275,7 +275,8 @@ export const beta2 = {
 
   /**
    * Hazardous waste classification. Assign onto a waste item; pair with
-   * consignmentNote() or consignmentNoteWithReason() on the movement.
+   * consignmentNote() or consignmentNoteWithReason() on the movement or
+   * undocumented receipt.
    * @returns {Object}
    */
   hazardousClassification: () => ({
@@ -286,7 +287,8 @@ export const beta2 = {
   }),
 
   /**
-   * Movement-level consignment note with a valid EA / NRW code.
+   * Consignment note with a valid EA / NRW code. Used on a movement or
+   * undocumented receipt when any waste item is hazardous (optional otherwise).
    * @returns {Object}
    */
   consignmentNote: () => ({
@@ -294,7 +296,8 @@ export const beta2 = {
   }),
 
   /**
-   * Movement-level consignment note with a reason instead of a code.
+   * Consignment note with a reason instead of a code. Used on a movement or
+   * undocumented receipt.
    * @returns {Object}
    */
   consignmentNoteWithReason: () => ({
