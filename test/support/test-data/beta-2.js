@@ -388,7 +388,6 @@ export const beta2 = {
     carrier: beta2.carrier(),
     receiver: beta2.intendedReceiver(),
     physicalDetails: beta2.physicalDetails(),
-    hazardous: beta2.hazardousNotPresent(),
     treatments: [beta2.treatment()]
   }),
 
