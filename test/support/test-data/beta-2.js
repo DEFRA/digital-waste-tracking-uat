@@ -23,6 +23,7 @@ export const beta2 = {
   specialHandlingRequirements: 'Handle with care and keep upright.',
   reasonForNoConsignmentCode: 'Carrier did not provide a consignment note',
   plannedCollectionDateTime: '2026-01-15T09:30:00Z',
+  actualCollectionDateTime: '2026-01-15T09:30:00Z',
 
   /**
    * POST /beta-2/movements required fields. A Household producer needs only wasteSource.
@@ -353,11 +354,14 @@ export const beta2 = {
 
   /**
    * POST /beta-2/movements/{movementId}/collection required fields.
+   * actualCollectionDateTime and collectionSite are required (DWTC-239).
    * @returns {Object}
    */
   generateBaseCollectionData: () => ({
     carrier: beta2.carrier(),
-    dutyOfCareConfirmed: true
+    dutyOfCareConfirmed: true,
+    actualCollectionDateTime: beta2.actualCollectionDateTime,
+    collectionSite: beta2.collectionSite()
   }),
 
   /**
