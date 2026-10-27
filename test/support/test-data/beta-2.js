@@ -24,6 +24,7 @@ export const beta2 = {
   reasonForNoConsignmentCode: 'Carrier did not provide a consignment note',
   plannedCollectionDateTime: '2026-01-15T09:30:00Z',
   actualCollectionDateTime: '2026-01-15T09:30:00Z',
+  receiptDateTime: '2026-10-14T09:30:00Z',
 
   /**
    * POST /beta-2/movements required fields. A Household producer needs only wasteSource.
@@ -376,9 +377,11 @@ export const beta2 = {
 
   /**
    * POST /beta-2/deliveries/{deliveryId}/receipt required fields.
+   * receiptDateTime is required (DWTC-273).
    * @returns {Object}
    */
   generateBaseReceiptData: () => ({
+    receiptDateTime: beta2.receiptDateTime,
     carrier: beta2.carrier(),
     receiver: beta2.intendedReceiver(),
     physicalDetails: beta2.physicalDetails(),
@@ -388,11 +391,13 @@ export const beta2 = {
 
   /**
    * POST /beta-2/receipts required fields.
+   * receiptDateTime is required (DWTC-273).
    * @returns {Object}
    */
   generateBaseReceiptWithoutDeliveryIdData: () => ({
     reasonForNoDeliveryId:
       'No delivery was recorded prior to receipt; waste received directly from the producer.',
+    receiptDateTime: beta2.receiptDateTime,
     carrier: beta2.carrier(),
     receiver: beta2.intendedReceiver(),
     wasteItems: [

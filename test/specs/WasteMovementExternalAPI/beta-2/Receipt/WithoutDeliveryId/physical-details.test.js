@@ -19,8 +19,9 @@ describe('Beta-2 Receipt Without Delivery ID - Physical Details', () => {
   })
 
   describe('Successful Creation', () => {
-    it('should create a receipt without a delivery ID when a valid physical form, containers and weight are declared @allure.label.tag:DWTC-237', async () => {
+    it('should create a receipt without a delivery ID when a valid physical form, containers and weight are declared @allure.label.tag:DWTC-237 @allure.label.tag:DWTC-273', async () => {
       await addAllureLink('/DWTC-237', 'DWTC-237', 'jira')
+      await addAllureLink('/DWTC-273', 'DWTC-273', 'jira')
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createReceiptWithoutDeliveryId(
