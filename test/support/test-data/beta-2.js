@@ -162,12 +162,46 @@ export const beta2 = {
   }),
 
   /**
-   * Hazardous properties with recognised HP codes.
+   * A hazardous component declared with an amount (unit required with amount).
+   * @returns {Object}
+   */
+  hazardousComponentWithAmount: () => ({
+    name: 'Mercury',
+    unit: 'MG_PER_KG',
+    amount: 5
+  }),
+
+  /**
+   * A hazardous component declared against its WM3 threshold (no amount).
+   * Threshold is EQUAL_TO or GREATER_THAN only (no LESS_THAN).
+   * @returns {Object}
+   */
+  hazardousComponentWithThreshold: () => ({
+    name: 'Lead compounds',
+    threshold: 'GREATER_THAN'
+  }),
+
+  /**
+   * Hazardous waste with codes, source and at least one component (DWTC-247).
    * @returns {Object}
    */
   hazardousPresent: () => ({
     isPresent: true,
-    codes: ['HP_4', 'HP_8']
+    codes: ['HP_4', 'HP_8'],
+    componentsSource: 'OWN_TESTING',
+    componentsNotApplicable: false,
+    components: [beta2.hazardousComponentWithAmount()]
+  }),
+
+  /**
+   * Hazardous waste with components declared as not applicable (no components array).
+   * @returns {Object}
+   */
+  hazardousComponentsNotApplicable: () => ({
+    isPresent: true,
+    codes: ['HP_14'],
+    componentsSource: 'GUIDANCE',
+    componentsNotApplicable: true
   }),
 
   /**
