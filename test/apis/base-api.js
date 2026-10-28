@@ -8,14 +8,14 @@ import {
  * @typedef {Object} JsonResponse
  * @property {number} statusCode - HTTP status code
  * @property {Object} headers - Response headers
- * @property {any} json - Parsed JSON response
+ * @property {any} json - Parsed JSON response, or undefined when the call is made with returnsNoContent
  */
 
 /**
  * @typedef {Object} TextResponse
  * @property {number} statusCode - HTTP status code
  * @property {Object} headers - Response headers
- * @property {string} body - Raw response body
+ * @property {string|undefined} body - Raw response body, or undefined when the call is made with returnsNoContent
  */
 
 /**
@@ -65,9 +65,10 @@ export class BaseAPI {
    * Make a GET request
    * @param {string} endpoint - API endpoint
    * @param {Object} [headers={}] - Additional headers
+   * @param {boolean} [returnsNoContent=false] - When true, do not parse the body and return json as undefined
    * @returns {Promise<JsonResponse>}
    */
-  async get(endpoint, headers = {}) {
+  async get(endpoint, headers = {}, returnsNoContent = false) {
     const url = `${this.baseUrl}${endpoint}`
     const requestHeaders = { ...this.defaultHeaders, ...headers }
 
@@ -86,7 +87,10 @@ export class BaseAPI {
       dispatcher: this.agent
     })
 
-    const json = await response.body.json()
+    let json
+    if (!returnsNoContent) {
+      json = await response.body.json()
+    }
 
     // Log response to Allure
     await logAllureResponse(
@@ -108,9 +112,10 @@ export class BaseAPI {
    * Make a GET request and return the raw response body (for non-JSON endpoints).
    * @param {string} endpoint - API endpoint
    * @param {Object} [headers={}] - Additional headers
+   * @param {boolean} [returnsNoContent=false] - When true, do not read the body and return body as undefined
    * @returns {Promise<TextResponse>}
    */
-  async getText(endpoint, headers = {}) {
+  async getText(endpoint, headers = {}, returnsNoContent = false) {
     const url = `${this.baseUrl}${endpoint}`
     const requestHeaders = { ...this.defaultHeaders, ...headers }
 
@@ -128,7 +133,11 @@ export class BaseAPI {
       dispatcher: this.agent
     })
 
-    const body = await response.body.text()
+    let body
+
+    if (!returnsNoContent) {
+      body = await response.body.text()
+    }
 
     await logAllureResponse(
       'GET',
@@ -150,9 +159,10 @@ export class BaseAPI {
    * @param {string} endpoint - API endpoint
    * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
+   * @param {boolean} [returnsNoContent=false] - When true, do not parse the body and return json as undefined
    * @returns {Promise<JsonResponse>}
    */
-  async post(endpoint, data, headers = {}) {
+  async post(endpoint, data, headers = {}, returnsNoContent = false) {
     const url = `${this.baseUrl}${endpoint}`
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
 
@@ -173,7 +183,10 @@ export class BaseAPI {
       dispatcher: this.agent
     })
 
-    const json = await response.body.json()
+    let json
+    if (!returnsNoContent) {
+      json = await response.body.json()
+    }
 
     // Log response to Allure
     await logAllureResponse(
@@ -196,9 +209,10 @@ export class BaseAPI {
    * @param {string} endpoint - API endpoint
    * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
+   * @param {boolean} [returnsNoContent=false] - When true, do not parse the body and return json as undefined
    * @returns {Promise<JsonResponse>}
    */
-  async put(endpoint, data, headers = {}) {
+  async put(endpoint, data, headers = {}, returnsNoContent = false) {
     const url = `${this.baseUrl}${endpoint}`
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
     instanceHeaders['Content-Type'] = 'application/json'
@@ -220,7 +234,10 @@ export class BaseAPI {
       dispatcher: this.agent
     })
 
-    const json = await response.body.json()
+    let json
+    if (!returnsNoContent) {
+      json = await response.body.json()
+    }
 
     // Log response to Allure
     await logAllureResponse(
@@ -243,9 +260,10 @@ export class BaseAPI {
    * @param {string} endpoint - API endpoint
    * @param {string} data - Request body data
    * @param {Object} [headers={}] - Additional headers
+   * @param {boolean} [returnsNoContent=false] - When true, do not parse the body and return json as undefined
    * @returns {Promise<JsonResponse>}
    */
-  async patch(endpoint, data, headers = {}) {
+  async patch(endpoint, data, headers = {}, returnsNoContent = false) {
     const url = `${this.baseUrl}${endpoint}`
     const instanceHeaders = { ...this.defaultHeaders, ...headers }
     instanceHeaders['Content-Type'] = 'application/json'
@@ -267,7 +285,10 @@ export class BaseAPI {
       dispatcher: this.agent
     })
 
-    const json = await response.body.json()
+    let json
+    if (!returnsNoContent) {
+      json = await response.body.json()
+    }
 
     // Log response to Allure
     await logAllureResponse(
@@ -288,9 +309,10 @@ export class BaseAPI {
    * Make a DELETE request
    * @param {string} endpoint - API endpoint
    * @param {Object} [headers={}] - Additional headers
+   * @param {boolean} [returnsNoContent=false] - When true, do not parse the body and return json as undefined
    * @returns {Promise<JsonResponse>}
    */
-  async delete(endpoint, headers = {}) {
+  async delete(endpoint, headers = {}, returnsNoContent = false) {
     const url = `${this.baseUrl}${endpoint}`
     const requestHeaders = { ...this.defaultHeaders, ...headers }
 
@@ -309,10 +331,9 @@ export class BaseAPI {
       dispatcher: this.agent
     })
 
-    const bodyText = await response.body.text()
-    let json = null
-    if (bodyText) {
-      json = JSON.parse(bodyText)
+    let json
+    if (!returnsNoContent) {
+      json = await response.body.json()
     }
 
     // Log response to Allure
