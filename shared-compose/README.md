@@ -90,7 +90,9 @@ logs in as `digital-waste-tracking-admin-ui` with the password `local-admin-ui`
 calls to list, create, rotate, purge and delete Cognito clients. It follows
 [CDP's documented behaviour](https://github.com/DEFRA/cdp-documentation/blob/main/how-to/managing_cognito_credentials.md)
 and, like CDP, keeps the clients in Cognito: Floci's user pool, the one the
-external API trusts. So a secret it returns can be used to sign in.
+external API trusts. So a secret it returns can be used to sign in. Client
+sync reads the clients' names from that pool directly, as it does from
+Cognito on CDP.
 
 - It starts with five clients for `waste-movement-external-api`, seeded by
   `floci/start.d`, including the test clients `Test Client 1` and
