@@ -1,30 +1,27 @@
 // A service rather than test code, so it logs to its container's output
 /* eslint-disable no-console */
-
 // A fake of CDP's credentials API for the shared stack, so client sync's
-// create, rotate and delete can be tested locally and in GitHub Actions. It
-// keeps clients and secrets in memory, so they're reset when it restarts.
+// create, rotate, purge and delete can be tested locally and in GitHub
+// Actions. Like CDP, it's a layer over Cognito: here Floci's user pool, which
+// the external API also trusts, so a secret it returns can be used to sign in.
 //
 // It follows CDP's documented behaviour:
 // https://github.com/DEFRA/cdp-documentation/blob/main/how-to/managing_cognito_credentials.md
-// It doesn't check request signatures, and its secrets don't work with any
-// Cognito, so tests that sign in with them need a real CDP environment.
-
+// It doesn't check request signatures.
 import { createServer } from 'node:http'
 import { randomBytes } from 'node:crypto'
 
-const userPoolId = 'eu-west-2_LOCAL'
+// The user pool behind each service, created by floci/start.d
+export const userPools = {
+  'waste-movement-external-api': 'eu-west-2_LOCAL'
+}
 
-// What CDP's pool holds when the stack starts: the clients the tests and the
-// admin UI expect, including the seeded test clients Floci signs in
-export const seedClients = {
-  'waste-movement-external-api': [
-    { name: 'Acme Waste Software', id: '1a2b3c4d5e6f7g8h9i0j009988' },
-    { name: 'Beta Tracking Ltd', id: '9z8y7x6w5v4u3t2s1r0q5rt43e' },
-    { name: 'Test Client 1', id: '1234567890abcdef1234567890' },
-    { name: 'Test Client 2', id: '0987654321fedcba0987654321' },
-    { name: 'Test Client 3', id: 'abcdefghijklmnopqrstuvwxyz' }
-  ]
+// What a CDP client is allowed to do: get tokens for the service's API
+const scopeServer = 'waste-movement-external-api-resource-srv'
+const clientSettings = {
+  AllowedOAuthFlows: ['client_credentials'],
+  AllowedOAuthScopes: [`${scopeServer}/access`],
+  AllowedOAuthFlowsUserPoolClient: true
 }
 
 // Names that make CDP behave as it does in cases that are hard to set up:
@@ -46,19 +43,8 @@ const randomId = () =>
     .map((byte) => 'abcdefghijklmnopqrstuvwxyz0123456789'[byte % 36])
     .join('')
 
-// Secret ids are the client id and the secret's creation time in
-// milliseconds, as CDP's are. Each secret gets a later millisecond than the
-// last, so ids stay unique and always match the creation time
-let lastSecretTime = 0
-const newSecret = (clientId) => {
-  lastSecretTime = Math.max(Date.now(), lastSecretTime + 1)
-
-  return {
-    id: `${clientId}--${lastSecretTime}`,
-    value: randomBytes(32).toString('base64url'),
-    createdAt: new Date(lastSecretTime)
-  }
-}
+// Floci only accepts a supplied secret of 24 to 64 word characters
+const randomSecret = () => randomBytes(24).toString('hex')
 
 // CDP's format for a creation date: microseconds and +00:00, e.g.
 // 2026-10-16T06:25:07.342000+00:00
@@ -80,21 +66,89 @@ const fromToken = (token) => {
 }
 
 /**
- * @param {Object} [seed] - The clients each service starts with
+ * @param {Object} [options]
+ * @param {string} [options.flociUrl] - Floci's Cognito endpoint
+ * @param {Object} [options.pools] - The user pool behind each service
  * @returns {import('node:http').Server} The fake, not yet listening
  */
-export function createFakeCdp(seed = seedClients) {
-  // Clients by service name: { name, id, secrets: [{ value, createdAt }] },
-  // with secrets oldest first
-  const pools = new Map(
-    Object.entries(seed).map(([service, clients]) => [
-      service,
-      clients.map(({ name, id }) => ({ name, id, secrets: [newSecret(id)] }))
-    ])
-  )
+export function createFakeCdp({
+  flociUrl = process.env.FLOCI_URL ?? 'http://floci:4566',
+  pools = userPools
+} = {}) {
+  // Floci accepts unsigned requests in Cognito's JSON protocol
+  const cognito = async (action, body) => {
+    const response = await fetch(flociUrl, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-amz-json-1.1',
+        'x-amz-target': `AWSCognitoIdentityProviderService.${action}`
+      },
+      body: JSON.stringify(body)
+    })
+    const result = await response.json()
+    if (!response.ok) {
+      throw new Error(`Floci ${action} failed: ${result.message}`)
+    }
+    return result
+  }
 
-  const response = (service, clientDetails) => ({
-    cognito_user_pool_id: userPoolId,
+  const listClients = async (poolId) => {
+    const clients = []
+    let token
+    do {
+      const page = await cognito('ListUserPoolClients', {
+        UserPoolId: poolId,
+        MaxResults: 60,
+        ...(token && { NextToken: token })
+      })
+      clients.push(
+        ...page.UserPoolClients.map(({ ClientId, ClientName }) => ({
+          id: ClientId,
+          name: ClientName
+        }))
+      )
+      token = page.NextToken
+    } while (token)
+    return clients
+  }
+
+  // A secret's id ends with its creation time in milliseconds, as CDP's do.
+  // Floci's creation dates are whole seconds, which can't order two secrets
+  // made in the same second, so the id is used for both
+  const listSecrets = async (poolId, clientId) => {
+    const { ClientSecrets } = await cognito('ListUserPoolClientSecrets', {
+      UserPoolId: poolId,
+      ClientId: clientId
+    })
+    return ClientSecrets.map(({ ClientSecretId }) => ({
+      id: ClientSecretId,
+      createdAt: new Date(Number(ClientSecretId.split('--').at(-1)))
+    })).sort((a, b) => a.createdAt - b.createdAt)
+  }
+
+  const deleteSecret = (poolId, clientId, secretId) =>
+    cognito('DeleteUserPoolClientSecret', {
+      UserPoolId: poolId,
+      ClientId: clientId,
+      ClientSecretId: secretId
+    })
+
+  // Adds a secret this fake chose: Floci's pool gives every new client the
+  // secret "local", so the seeded test clients have a known one
+  const addSecret = async (poolId, clientId) => {
+    const value = randomSecret()
+    const { ClientSecretDescriptor } = await cognito(
+      'AddUserPoolClientSecret',
+      { UserPoolId: poolId, ClientId: clientId, ClientSecret: value }
+    )
+    return { id: ClientSecretDescriptor.ClientSecretId, value }
+  }
+
+  const named = (clients, names) =>
+    clients.filter((client) => names.includes(client.name))
+
+  const response = (service, poolId, clientDetails) => ({
+    cognito_user_pool_id: poolId,
     request_id: randomBytes(16).toString('hex'),
     tenant_service_name: service,
     client_details: clientDetails
@@ -106,13 +160,10 @@ export function createFakeCdp(seed = seedClients) {
     client_secret: secret
   })
 
-  const named = (pool, names) =>
-    pool.filter((client) => names.includes(client.name))
-
   const actions = {
     // A page of clients, each with its secrets' ids and creation dates but
     // never their values
-    'fetch-details': (service, pool, _body, query) => {
+    'fetch-details': async (service, poolId, _body, query) => {
       const pageSize = Number(query.get('page_size') ?? maxPageSize)
       if (
         !Number.isInteger(pageSize) ||
@@ -125,61 +176,86 @@ export function createFakeCdp(seed = seedClients) {
       const token = query.get('next_token')
       const offset = token ? fromToken(token) : 0
       const end = offset + pageSize
+      const clients = await listClients(poolId)
+
+      const page = await Promise.all(
+        clients.slice(offset, end).map(async (client) => ({
+          ...details(client),
+          client_secrets: (await listSecrets(poolId, client.id)).map(
+            ({ id, createdAt }) => ({ id, created_at: toCdpDate(createdAt) })
+          )
+        }))
+      )
 
       return {
-        ...response(
-          service,
-          pool.slice(offset, end).map((client) => ({
-            ...details(client),
-            client_secrets: client.secrets.map(({ id, createdAt }) => ({
-              id,
-              created_at: toCdpDate(createdAt)
-            }))
-          }))
-        ),
-        next_token: end < pool.length ? toToken(end) : null
+        ...response(service, poolId, page),
+        next_token: end < clients.length ? toToken(end) : null
       }
     },
 
     // Existing names are skipped, and only new clients are returned
-    'create-clients': (service, pool, { client_names: names }) => {
+    'create-clients': async (service, poolId, { client_names: names }) => {
       if (names.includes(refusedName)) {
         throw new CdpError(403, 'Forbidden')
       }
 
-      const created = names
-        .filter(
-          (name) =>
-            name !== skippedName && !pool.some((client) => client.name === name)
-        )
-        .map((name) => {
-          const id = randomId()
-          return { name, id, secrets: [newSecret(id)] }
+      const existing = new Set((await listClients(poolId)).map((c) => c.name))
+      const created = []
+      for (const name of new Set(names)) {
+        if (name === skippedName || existing.has(name)) {
+          continue
+        }
+
+        // Floci's pool uses a new client's name as its id, so it's created
+        // under a CDP-style id and then renamed. Settings are sent again, as
+        // an update resets any it omits
+        const { UserPoolClient } = await cognito('CreateUserPoolClient', {
+          UserPoolId: poolId,
+          ClientName: randomId(),
+          GenerateSecret: true,
+          ...clientSettings
+        })
+        const id = UserPoolClient.ClientId
+        await cognito('UpdateUserPoolClient', {
+          UserPoolId: poolId,
+          ClientId: id,
+          ClientName: name,
+          ...clientSettings
         })
 
-      pool.push(...created)
+        const [poolSecret] = await listSecrets(poolId, id)
+        const secret = await addSecret(poolId, id)
+        await deleteSecret(poolId, id, poolSecret.id)
 
-      return response(
-        service,
-        created.map((client) => details(client, client.secrets[0].value))
-      )
+        created.push(details({ id, name }, secret.value))
+      }
+
+      return response(service, poolId, created)
     },
 
     // The existing secret is kept, but a client holds at most two
-    'rotate-client-credentials': (service, pool, { client_names: names }) =>
-      response(
-        service,
-        named(pool, names).map((client) => {
-          const secret = newSecret(client.id)
-          client.secrets = [...client.secrets, secret].slice(-2)
-          return details(client, secret.value)
-        })
-      ),
+    'rotate-client-credentials': async (
+      service,
+      poolId,
+      { client_names: names }
+    ) => {
+      const rotated = []
+      for (const client of named(await listClients(poolId), names)) {
+        const secrets = await listSecrets(poolId, client.id)
+        if (secrets.length >= 2) {
+          await deleteSecret(poolId, client.id, secrets[0].id)
+        }
+        const secret = await addSecret(poolId, client.id)
+        rotated.push(details(client, secret.value))
+      }
+
+      return response(service, poolId, rotated)
+    },
 
     // Every secret but the newest goes, or only those older than the cutoff
-    'purge-old-client-credentials': (
+    'purge-old-client-credentials': async (
       service,
-      pool,
+      poolId,
       { client_names: names, creation_cutoff: cutoffText }
     ) => {
       const cutoff = cutoffText === undefined ? null : new Date(cutoffText)
@@ -188,27 +264,33 @@ export function createFakeCdp(seed = seedClients) {
         throw new CdpError(400, 'creation_cutoff must be an ISO 8601 date-time')
       }
 
-      const purged = named(pool, names)
+      const purged = named(await listClients(poolId), names)
       for (const client of purged) {
-        const newest = client.secrets.at(-1)
-        client.secrets = client.secrets.filter(
-          (secret) =>
-            secret === newest || (cutoff && secret.createdAt >= cutoff)
-        )
+        const secrets = await listSecrets(poolId, client.id)
+        for (const secret of secrets.slice(0, -1)) {
+          if (!cutoff || secret.createdAt < cutoff) {
+            await deleteSecret(poolId, client.id, secret.id)
+          }
+        }
       }
 
       return response(
         service,
+        poolId,
         purged.map((client) => details(client))
       )
     },
 
     // Always returns no clients, however many were deleted
-    'delete-clients': (service, pool, { client_names: names }) => {
-      const remaining = pool.filter((client) => !names.includes(client.name))
-      pool.splice(0, pool.length, ...remaining)
+    'delete-clients': async (service, poolId, { client_names: names }) => {
+      for (const client of named(await listClients(poolId), names)) {
+        await cognito('DeleteUserPoolClient', {
+          UserPoolId: poolId,
+          ClientId: client.id
+        })
+      }
 
-      return response(service, [])
+      return response(service, poolId, [])
     }
   }
 
@@ -249,13 +331,19 @@ export function createFakeCdp(seed = seedClients) {
       }
 
       // CDP doesn't validate the service name up front, so a wrong one fails
-      const pool = pools.get(decodeURIComponent(service))
-      if (!pool) {
+      const serviceName = decodeURIComponent(service)
+      const poolId = Object.hasOwn(pools, serviceName)
+        ? pools[serviceName]
+        : undefined
+      if (!poolId) {
         throw new CdpError(400, `Unknown service ${service}`)
       }
 
       if (isFetch) {
-        return send(200, actions[action](service, pool, null, url.searchParams))
+        return send(
+          200,
+          await actions[action](service, poolId, null, url.searchParams)
+        )
       }
 
       if (!req.headers['content-type']?.startsWith('application/json')) {
@@ -281,7 +369,7 @@ export function createFakeCdp(seed = seedClients) {
         throw new CdpError(400, 'client_names must be an array of strings')
       }
 
-      return send(200, actions[action](service, pool, body))
+      return send(200, await actions[action](service, poolId, body))
     } catch (err) {
       if (err instanceof CdpError) {
         return send(err.statusCode, { message: err.message })

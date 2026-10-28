@@ -145,6 +145,12 @@ services:
       - 1080:1080
     volumes:
       - ./fake-cdp:/fake-cdp:ro
+    depends_on:
+      floci:
+        condition: service_healthy
+    environment:
+      # The Cognito the fake manages clients in, as CDP does
+      FLOCI_URL: http://floci:4566
     healthcheck:
       test: ['CMD', 'wget', '-q', '-O', '-', 'http://localhost:1080/health']
       interval: 5s

@@ -1,17 +1,52 @@
-import { after, beforeEach, describe, test } from 'node:test'
+import { after, before, beforeEach, describe, test } from 'node:test'
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
 import { connect } from 'node:net'
 
 import { createFakeCdp } from './server.js'
 
+// The fake manages clients in Floci, so these tests start their own Floci
+// (which needs Docker) with a pool set up like the shared stack's
+const flociImage = 'floci/floci:2.1.0-compat'
+const flociContainer = `fake-cdp-test-floci-${process.pid}`
 const service = 'waste-movement-external-api'
-const seed = {
-  [service]: [{ name: 'Seeded Client', id: 'seededclientid0000000000000' }]
-}
+const poolId = 'eu-west-2_LOCAL'
+const scopeServer = 'waste-movement-external-api-resource-srv'
+const seededId = 'seededclientid0000000000000'
 
 describe('Fake CDP credentials API', () => {
+  let flociUrl
   let server
   let baseUrl
+
+  const cognito = async (action, body) => {
+    const response = await fetch(flociUrl, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-amz-json-1.1',
+        'x-amz-target': `AWSCognitoIdentityProviderService.${action}`
+      },
+      body: JSON.stringify(body)
+    })
+    return response.json()
+  }
+
+  // Whether a client id and secret get a token from Floci, as the external
+  // API's callers do
+  const signsIn = async (clientId, clientSecret) => {
+    const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString(
+      'base64'
+    )
+    const response = await fetch(`${flociUrl}/cognito-idp/oauth2/token`, {
+      method: 'POST',
+      headers: {
+        authorization: `Basic ${credentials}`,
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      body: `grant_type=client_credentials&scope=${scopeServer}/access`
+    })
+    return response.status === 200
+  }
 
   async function call(action, body, { headers = {}, method } = {}) {
     const response = await fetch(
@@ -31,9 +66,9 @@ describe('Fake CDP credentials API', () => {
   }
 
   const list = async () =>
-    (await call('fetch-details')).body.client_details.map(
-      ({ client_name: name }) => name
-    )
+    (await call('fetch-details')).body.client_details
+      .map(({ client_name: name }) => name)
+      .sort()
 
   const create = async (name) =>
     (await call('create-clients', { client_names: [name] })).body
@@ -43,14 +78,90 @@ describe('Fake CDP credentials API', () => {
     (await call('rotate-client-credentials', { client_names: [name] })).body
       .client_details
 
+  const purge = (name) =>
+    call('purge-old-client-credentials', { client_names: [name] })
+
+  before(async () => {
+    execFileSync('docker', [
+      'run',
+      '-d',
+      '--rm',
+      '--name',
+      flociContainer,
+      '-p',
+      '127.0.0.1::4566',
+      '-e',
+      'FLOCI_DEFAULT_REGION=eu-west-2',
+      flociImage
+    ])
+    const port = execFileSync('docker', ['port', flociContainer, '4566'])
+      .toString()
+      .trim()
+      .split(':')
+      .at(-1)
+    flociUrl = `http://127.0.0.1:${port}`
+
+    for (let attempt = 0; ; attempt++) {
+      try {
+        await fetch(flociUrl)
+        break
+      } catch (err) {
+        if (attempt > 60) throw err
+        await new Promise((resolve) => setTimeout(resolve, 500))
+      }
+    }
+
+    // As in floci/start.d: a pinned id, client names used as ids, and the
+    // secret "local" for every new client
+    await cognito('CreateUserPool', {
+      PoolName: 'fake-cdp-test',
+      UserPoolTags: {
+        'floci:override-id': poolId,
+        'floci:override-cognito-client-id': 'use-name',
+        'floci:override-cognito-client-secret': 'local'
+      }
+    })
+    await cognito('CreateResourceServer', {
+      UserPoolId: poolId,
+      Identifier: scopeServer,
+      Name: scopeServer,
+      Scopes: [{ ScopeName: 'access', ScopeDescription: 'access' }]
+    })
+  })
+
+  // Each test starts with only the seeded client, as floci/start.d seeds it
   beforeEach(async () => {
+    const { UserPoolClients } = await cognito('ListUserPoolClients', {
+      UserPoolId: poolId,
+      MaxResults: 60
+    })
+    for (const { ClientId } of UserPoolClients) {
+      await cognito('DeleteUserPoolClient', { UserPoolId: poolId, ClientId })
+    }
+    await cognito('CreateUserPoolClient', {
+      UserPoolId: poolId,
+      ClientName: seededId,
+      GenerateSecret: true
+    })
+    await cognito('UpdateUserPoolClient', {
+      UserPoolId: poolId,
+      ClientId: seededId,
+      ClientName: 'Seeded Client',
+      AllowedOAuthFlows: ['client_credentials'],
+      AllowedOAuthScopes: [`${scopeServer}/access`],
+      AllowedOAuthFlowsUserPoolClient: true
+    })
+
     server?.close()
-    server = createFakeCdp(seed)
+    server = createFakeCdp({ flociUrl })
     await new Promise((resolve) => server.listen(0, resolve))
     baseUrl = `http://localhost:${server.address().port}`
   })
 
-  after(() => server.close())
+  after(() => {
+    server?.close()
+    execFileSync('docker', ['stop', flociContainer])
+  })
 
   describe('fetch-details', () => {
     test("lists the clients with their secrets' ids and dates, but not their values", async () => {
@@ -58,17 +169,17 @@ describe('Fake CDP credentials API', () => {
       const [client] = body.client_details
 
       assert.equal(status, 200)
+      assert.equal(body.cognito_user_pool_id, poolId)
       assert.equal(body.tenant_service_name, service)
       assert.equal(body.next_token, null)
       assert.equal(client.client_name, 'Seeded Client')
-      assert.equal(client.client_id, 'seededclientid0000000000000')
+      assert.equal(client.client_id, seededId)
       assert.equal(client.client_secret, null)
       assert.equal(client.client_secrets.length, 1)
       assert.match(
         client.client_secrets[0].id,
-        /^seededclientid0000000000000--\d+$/
+        new RegExp(`^${seededId}--\\d+$`)
       )
-      assert.ok(!Number.isNaN(Date.parse(client.client_secrets[0].created_at)))
       assert.deepEqual(Object.keys(client.client_secrets[0]), [
         'id',
         'created_at'
@@ -102,7 +213,7 @@ describe('Fake CDP credentials API', () => {
         pages++
       } while (token)
 
-      assert.deepEqual(names, ['Seeded Client', 'B', 'C', 'D', 'E'])
+      assert.deepEqual(names.sort(), ['B', 'C', 'D', 'E', 'Seeded Client'])
       assert.equal(pages, 3)
     })
 
@@ -139,13 +250,24 @@ describe('Fake CDP credentials API', () => {
   })
 
   describe('create-clients', () => {
-    test('creates a client with a secret, which is then listed', async () => {
+    test('creates a client in Floci with a CDP-style id, which is then listed', async () => {
       const created = await create('New_Client')
 
       assert.equal(created.client_name, 'New_Client')
       assert.match(created.client_id, /^[a-z0-9]{26}$/)
       assert.ok(created.client_secret)
-      assert.deepEqual(await list(), ['Seeded Client', 'New_Client'])
+      assert.deepEqual(await list(), ['New_Client', 'Seeded Client'])
+    })
+
+    test('returns a secret that signs in, not the pool-wide "local"', async () => {
+      const created = await create('New_Client')
+
+      assert.notEqual(created.client_secret, 'local')
+      assert.equal(
+        await signsIn(created.client_id, created.client_secret),
+        true
+      )
+      assert.equal(await signsIn(created.client_id, 'local'), false)
     })
 
     test('skips a name that already exists', async () => {
@@ -171,14 +293,34 @@ describe('Fake CDP credentials API', () => {
   })
 
   describe('rotate-client-credentials', () => {
-    test('returns a new secret for the client', async () => {
-      const { client_secret: original } = await create('New_Client')
+    test('returns a new secret, and both secrets sign in', async () => {
+      const created = await create('New_Client')
 
       const [rotated] = await rotate('New_Client')
 
       assert.equal(rotated.client_name, 'New_Client')
-      assert.ok(rotated.client_secret)
-      assert.notEqual(rotated.client_secret, original)
+      assert.notEqual(rotated.client_secret, created.client_secret)
+      assert.equal(
+        await signsIn(created.client_id, created.client_secret),
+        true
+      )
+      assert.equal(
+        await signsIn(created.client_id, rotated.client_secret),
+        true
+      )
+    })
+
+    test('removes the oldest secret when there are already two', async () => {
+      const created = await create('New_Client')
+
+      await rotate('New_Client')
+      const [second] = await rotate('New_Client')
+
+      assert.equal(
+        await signsIn(created.client_id, created.client_secret),
+        false
+      )
+      assert.equal(await signsIn(created.client_id, second.client_secret), true)
     })
 
     test('skips a client that does not exist', async () => {
@@ -187,6 +329,33 @@ describe('Fake CDP credentials API', () => {
   })
 
   describe('purge-old-client-credentials', () => {
+    test('removes all but the newest secret', async () => {
+      const created = await create('New_Client')
+      const [rotated] = await rotate('New_Client')
+
+      await purge('New_Client')
+
+      assert.equal(
+        await signsIn(created.client_id, created.client_secret),
+        false
+      )
+      assert.equal(
+        await signsIn(created.client_id, rotated.client_secret),
+        true
+      )
+    })
+
+    test('leaves a client with only one secret as it is', async () => {
+      const created = await create('New_Client')
+
+      await purge('New_Client')
+
+      assert.equal(
+        await signsIn(created.client_id, created.client_secret),
+        true
+      )
+    })
+
     test('rejects a malformed cutoff', async () => {
       const { status } = await call('purge-old-client-credentials', {
         client_names: ['Seeded Client'],
@@ -199,14 +368,12 @@ describe('Fake CDP credentials API', () => {
     test('lists the clients processed, without secrets', async () => {
       await rotate('Seeded Client')
 
-      const { body } = await call('purge-old-client-credentials', {
-        client_names: ['Seeded Client']
-      })
+      const { body } = await purge('Seeded Client')
 
       assert.deepEqual(body.client_details, [
         {
           client_name: 'Seeded Client',
-          client_id: 'seededclientid0000000000000',
+          client_id: seededId,
           client_secret: null
         }
       ])
@@ -214,13 +381,19 @@ describe('Fake CDP credentials API', () => {
   })
 
   describe('delete-clients', () => {
-    test('deletes the client and returns no clients', async () => {
+    test('deletes the client, so its secret stops working, and returns no clients', async () => {
+      const created = await create('New_Client')
+
       const { body } = await call('delete-clients', {
-        client_names: ['Seeded Client']
+        client_names: ['New_Client']
       })
 
       assert.deepEqual(body.client_details, [])
-      assert.deepEqual(await list(), [])
+      assert.deepEqual(await list(), ['Seeded Client'])
+      assert.equal(
+        await signsIn(created.client_id, created.client_secret),
+        false
+      )
     })
   })
 
@@ -233,14 +406,16 @@ describe('Fake CDP credentials API', () => {
       assert.equal(status, 403)
     })
 
-    test('an unknown service', async () => {
-      const response = await fetch(
-        `${baseUrl}/tenants/services/unknown-service/user-pool/fetch-details`,
-        { headers: { authorization: 'signed' } }
-      )
+    for (const unknown of ['unknown-service', 'constructor']) {
+      test(`an unknown service (${unknown})`, async () => {
+        const response = await fetch(
+          `${baseUrl}/tenants/services/${unknown}/user-pool/fetch-details`,
+          { headers: { authorization: 'signed' } }
+        )
 
-      assert.equal(response.status, 400)
-    })
+        assert.equal(response.status, 400)
+      })
+    }
 
     test('a POST that is not JSON', async () => {
       const { status } = await call(
@@ -280,15 +455,5 @@ describe('Fake CDP credentials API', () => {
 
       assert.equal(status, 404)
     })
-  })
-
-  test('starts each time with only the seeded clients', async () => {
-    await create('New_Client')
-    server.close()
-    server = createFakeCdp(seed)
-    await new Promise((resolve) => server.listen(0, resolve))
-    baseUrl = `http://localhost:${server.address().port}`
-
-    assert.deepEqual(await list(), ['Seeded Client'])
   })
 })
