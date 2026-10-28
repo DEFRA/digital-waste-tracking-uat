@@ -22,19 +22,39 @@ export const beta2 = {
   otherMeansOfTransport: 'Horse and cart',
   specialHandlingRequirements: 'Handle with care and keep upright.',
   reasonForNoConsignmentCode: 'Carrier did not provide a consignment note',
+  plannedCollectionDateTime: '2026-01-15T09:30:00Z',
+  actualCollectionDateTime: '2026-01-15T09:30:00Z',
+  receiptDateTime: '2026-10-14T09:30:00Z',
 
   /**
    * POST /beta-2/movements required fields. A Household producer needs only wasteSource.
    * At least one intended carrier, one intended receiver, and one waste item are required.
+   * plannedCollectionDateTime and collectionSite are required (DWTC-200).
    * @returns {Object}
    */
   generateBaseMovementData: () => ({
     producer: {
       wasteSource: 'Household'
     },
+    plannedCollectionDateTime: beta2.plannedCollectionDateTime,
+    collectionSite: beta2.collectionSite(),
     intendedCarriers: [beta2.intendedCarrier()],
     intendedReceivers: [beta2.intendedReceiver()],
     wasteItems: [beta2.wasteItem()]
+  }),
+
+  /**
+   * Place the waste will be collected from. Always required on a movement.
+   * @returns {Object}
+   */
+  collectionSite: () => ({
+    address: {
+      fullAddress: '10 Industrial Way, Test City',
+      postcode: 'TE1 2PQ'
+    },
+    contactDetails: {
+      emailAddress: 'site@example.com'
+    }
   }),
 
   /**
@@ -144,12 +164,83 @@ export const beta2 = {
   }),
 
   /**
-   * Hazardous properties with recognised HP codes.
+   * A hazardous component declared with an amount (unit required with amount).
+   * @returns {Object}
+   */
+  hazardousComponentWithAmount: () => ({
+    name: 'Mercury',
+    unit: 'MG_PER_KG',
+    amount: 5
+  }),
+
+  /**
+   * A hazardous component declared against its WM3 threshold (no amount).
+   * Threshold is EQUAL_TO or GREATER_THAN only (no LESS_THAN).
+   * @returns {Object}
+   */
+  hazardousComponentWithThreshold: () => ({
+    name: 'Lead compounds',
+    threshold: 'GREATER_THAN'
+  }),
+
+  /**
+   * Hazardous waste with codes, source and at least one component (DWTC-247).
    * @returns {Object}
    */
   hazardousPresent: () => ({
     isPresent: true,
-    codes: ['HP_4', 'HP_8']
+    codes: ['HP_4', 'HP_8'],
+    componentsSource: 'OWN_TESTING',
+    componentsNotApplicable: false,
+    components: [beta2.hazardousComponentWithAmount()]
+  }),
+
+  /**
+   * Hazardous waste with components declared as not applicable (no components array).
+   * @returns {Object}
+   */
+  hazardousComponentsNotApplicable: () => ({
+    isPresent: true,
+    codes: ['HP_14'],
+    componentsSource: 'GUIDANCE',
+    componentsNotApplicable: true
+  }),
+
+  /**
+   * POPs when none are present.
+   * @returns {Object}
+   */
+  popsNotPresent: () => ({
+    isPresent: false
+  }),
+
+  /**
+   * A POP declared with an amount (unit required with amount).
+   * @returns {Object}
+   */
+  popComponentWithAmount: () => ({
+    code: 'PFOA',
+    unit: 'MG_PER_KG',
+    amount: 0.5
+  }),
+
+  /**
+   * A POP declared against its WM3 threshold (no amount).
+   * @returns {Object}
+   */
+  popComponentWithThreshold: () => ({
+    code: 'PFOS',
+    threshold: 'LESS_THAN'
+  }),
+
+  /**
+   * POPs present with source and at least one component (flat PopComponent shape).
+   * @returns {Object}
+   */
+  popsPresent: () => ({
+    isPresent: true,
+    componentsSource: 'OWN_TESTING',
+    components: [beta2.popComponentWithAmount()]
   }),
 
   /**
@@ -178,28 +269,26 @@ export const beta2 = {
   classification: () => ({
     wasteDescription: 'Mixed municipal waste',
     ewcCodes: ['200301'],
-    pops: {
-      isPresent: false
-    },
+    pops: beta2.popsNotPresent(),
     hazardous: beta2.hazardousNotPresent()
   }),
 
   /**
    * Hazardous waste classification. Assign onto a waste item; pair with
-   * consignmentNote() or consignmentNoteWithReason() on the movement.
+   * consignmentNote() or consignmentNoteWithReason() on the movement or
+   * undocumented receipt.
    * @returns {Object}
    */
   hazardousClassification: () => ({
     wasteDescription: 'Fluorescent tubes',
     ewcCodes: ['200121'],
-    pops: {
-      isPresent: false
-    },
+    pops: beta2.popsNotPresent(),
     hazardous: beta2.hazardousPresent()
   }),
 
   /**
-   * Movement-level consignment note with a valid EA / NRW code.
+   * Consignment note with a valid EA / NRW code. Used on a movement or
+   * undocumented receipt when any waste item is hazardous (optional otherwise).
    * @returns {Object}
    */
   consignmentNote: () => ({
@@ -207,7 +296,8 @@ export const beta2 = {
   }),
 
   /**
-   * Movement-level consignment note with a reason instead of a code.
+   * Consignment note with a reason instead of a code. Used on a movement or
+   * undocumented receipt.
    * @returns {Object}
    */
   consignmentNoteWithReason: () => ({
@@ -268,11 +358,14 @@ export const beta2 = {
 
   /**
    * POST /beta-2/movements/{movementId}/collection required fields.
+   * actualCollectionDateTime and collectionSite are required (DWTC-239).
    * @returns {Object}
    */
   generateBaseCollectionData: () => ({
     carrier: beta2.carrier(),
-    dutyOfCareConfirmed: true
+    dutyOfCareConfirmed: true,
+    actualCollectionDateTime: beta2.actualCollectionDateTime,
+    collectionSite: beta2.collectionSite()
   }),
 
   /**
@@ -287,23 +380,26 @@ export const beta2 = {
 
   /**
    * POST /beta-2/deliveries/{deliveryId}/receipt required fields.
+   * receiptDateTime is required (DWTC-273).
    * @returns {Object}
    */
   generateBaseReceiptData: () => ({
+    receiptDateTime: beta2.receiptDateTime,
     carrier: beta2.carrier(),
     receiver: beta2.intendedReceiver(),
     physicalDetails: beta2.physicalDetails(),
-    hazardous: beta2.hazardousNotPresent(),
     treatments: [beta2.treatment()]
   }),
 
   /**
    * POST /beta-2/receipts required fields.
+   * receiptDateTime is required (DWTC-273).
    * @returns {Object}
    */
   generateBaseReceiptWithoutDeliveryIdData: () => ({
     reasonForNoDeliveryId:
       'No delivery was recorded prior to receipt; waste received directly from the producer.',
+    receiptDateTime: beta2.receiptDateTime,
     carrier: beta2.carrier(),
     receiver: beta2.intendedReceiver(),
     wasteItems: [

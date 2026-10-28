@@ -45,8 +45,9 @@ describe('Beta-2 Receipt Creation - Physical Details', () => {
   }
 
   describe('Successful Creation', () => {
-    it('should create a receipt when a valid physical form, containers and weight are declared @allure.label.tag:DWTC-237', async () => {
+    it('should create a receipt when a valid physical form, containers and weight are declared @allure.label.tag:DWTC-237 @allure.label.tag:DWTC-273', async () => {
       await addAllureLink('/DWTC-237', 'DWTC-237', 'jira')
+      await addAllureLink('/DWTC-273', 'DWTC-273', 'jira')
       const deliveryId = await createDeliveryForReceipt()
 
       const response =
