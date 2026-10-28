@@ -122,13 +122,12 @@ services:
       - ./floci/start.d:/etc/floci/init/start.d:ro,Z
       - floci-data:/app/data
     healthcheck:
-      # The pool's JWKS only exists once the start hook has created it
+      # Healthy once the start hook has created the pool (so its JWKS exists)
+      # and finished seeding its clients
       test:
         [
-          'CMD',
-          'curl',
-          '-fs',
-          'http://localhost:4566/eu-west-2_LOCAL/.well-known/jwks.json'
+          'CMD-SHELL',
+          'test -f /tmp/cognito-seeded && curl -fs http://localhost:4566/eu-west-2_LOCAL/.well-known/jwks.json'
         ]
       interval: 5s
       timeout: 5s
@@ -136,8 +135,8 @@ services:
     networks:
       - cdp-tenant
 
-  # A fake of CDP's credentials API, which keeps clients and secrets in memory
-  # (see fake-cdp/server.js)
+  # A fake of CDP's credentials API, which keeps its clients in Floci's user
+  # pool, as CDP does in Cognito (see fake-cdp/server.js)
   fake-cdp:
     image: node:22-alpine
     command: ['node', '/fake-cdp/server.js']
@@ -145,6 +144,12 @@ services:
       - 1080:1080
     volumes:
       - ./fake-cdp:/fake-cdp:ro
+    depends_on:
+      floci:
+        condition: service_healthy
+    environment:
+      # The Cognito the fake manages clients in, as CDP does
+      FLOCI_URL: http://floci:4566
     healthcheck:
       test: ['CMD', 'wget', '-q', '-O', '-', 'http://localhost:1080/health']
       interval: 5s
