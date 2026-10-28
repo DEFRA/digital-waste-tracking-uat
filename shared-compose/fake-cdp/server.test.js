@@ -138,6 +138,75 @@ describe('Fake CDP credentials API', () => {
     }
   })
 
+  describe('fetch-client-details', () => {
+    const lookUp = (name) =>
+      call(
+        `fetch-client-details${name === undefined ? '' : `?client_name=${encodeURIComponent(name)}`}`
+      )
+
+    test("returns the client with its secrets' ids and dates, but not their values", async () => {
+      const created = await create('Looked_Up')
+      await rotate('Looked_Up')
+
+      const { status, body } = await lookUp('Looked_Up')
+
+      assert.equal(status, 200)
+      assert.equal(body.tenant_service_name, service)
+      assert.equal(body.next_token, undefined)
+      assert.equal(body.client_details.length, 1)
+      const [client] = body.client_details
+      assert.equal(client.client_id, created.client_id)
+      assert.equal(client.client_secret, null)
+      assert.equal(client.client_secrets.length, 2)
+      for (const secret of client.client_secrets) {
+        assert.deepEqual(Object.keys(secret), ['id', 'created_at'])
+        assert.match(secret.created_at, /\.\d{6}\+00:00$/)
+      }
+    })
+
+    test('returns every client with exactly that name', async () => {
+      server.close()
+      server = createFakeCdp({
+        [service]: [
+          { name: 'Shared', id: 'firstclientid00000000000000' },
+          { name: 'Shared', id: 'secondclientid0000000000000' },
+          { name: 'shared', id: 'lowercaseclientid0000000000' }
+        ]
+      })
+      await new Promise((resolve) => server.listen(0, resolve))
+      baseUrl = `http://localhost:${server.address().port}`
+
+      const { body } = await lookUp('Shared')
+
+      assert.deepEqual(
+        body.client_details.map(({ client_id: id }) => id),
+        ['firstclientid00000000000000', 'secondclientid0000000000000']
+      )
+    })
+
+    test('returns no clients for a name that does not exist', async () => {
+      const { status, body } = await lookUp('No_Such_Client')
+
+      assert.equal(status, 200)
+      assert.deepEqual(body.client_details, [])
+    })
+
+    test('refuses a request without a client name', async () => {
+      const { status } = await lookUp()
+
+      assert.equal(status, 400)
+    })
+
+    test('only accepts GET', async () => {
+      const { status } = await call(
+        'fetch-client-details?client_name=Seeded%20Client',
+        { client_names: [] }
+      )
+
+      assert.equal(status, 404)
+    })
+  })
+
   describe('create-clients', () => {
     test('creates a client with a secret, which is then listed', async () => {
       const created = await create('New_Client')

@@ -109,6 +109,15 @@ export function createFakeCdp(seed = seedClients) {
   const named = (pool, names) =>
     pool.filter((client) => names.includes(client.name))
 
+  // A client with its secrets' ids and creation dates, but never their values
+  const withSecrets = (client) => ({
+    ...details(client),
+    client_secrets: client.secrets.map(({ id, createdAt }) => ({
+      id,
+      created_at: toCdpDate(createdAt)
+    }))
+  })
+
   const actions = {
     // A page of clients, each with its secrets' ids and creation dates but
     // never their values
@@ -127,18 +136,24 @@ export function createFakeCdp(seed = seedClients) {
       const end = offset + pageSize
 
       return {
-        ...response(
-          service,
-          pool.slice(offset, end).map((client) => ({
-            ...details(client),
-            client_secrets: client.secrets.map(({ id, createdAt }) => ({
-              id,
-              created_at: toCdpDate(createdAt)
-            }))
-          }))
-        ),
+        ...response(service, pool.slice(offset, end).map(withSecrets)),
         next_token: end < pool.length ? toToken(end) : null
       }
+    },
+
+    // Every client with exactly this name, with its secrets. Not in CDP yet:
+    // it's proposed to CDP so client sync can look up one client without
+    // listing them all, which takes seconds a page
+    'fetch-client-details': (service, pool, _body, query) => {
+      const name = query.get('client_name')
+      if (!name) {
+        throw new CdpError(400, 'client_name is required')
+      }
+
+      return response(
+        service,
+        pool.filter((client) => client.name === name).map(withSecrets)
+      )
     },
 
     // Existing names are skipped, and only new clients are returned
@@ -237,7 +252,7 @@ export function createFakeCdp(seed = seedClients) {
       }
 
       const [, service, action] = url.pathname.match(routePattern) ?? []
-      const isFetch = action === 'fetch-details'
+      const isFetch = ['fetch-details', 'fetch-client-details'].includes(action)
 
       if (!actions[action] || req.method !== (isFetch ? 'GET' : 'POST')) {
         throw new CdpError(404, 'Not Found')

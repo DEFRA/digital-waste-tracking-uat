@@ -96,6 +96,10 @@ until it's deleted, and everything resets when the stack restarts.
   seeded test clients `Test Client 1` and `Test Client 2`.
 - `Skipped_By_Cdp` is skipped on create as if it already exists, and
   `Refused_By_Cdp` is refused with a 403.
+- `GET …/user-pool/fetch-client-details?client_name=<name>` returns every
+  client with exactly that name, with its secrets' ids and dates. **CDP doesn't
+  have this yet**: it's proposed to CDP, so client sync can look up one client
+  without listing them all. Until CDP has it, it only works locally and in CI.
 - It doesn't check request signatures, and its secrets don't work with any
   Cognito (including Floci's), so tests that sign in with a returned secret
   need a real CDP environment.
