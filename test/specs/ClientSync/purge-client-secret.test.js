@@ -13,7 +13,8 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
   afterEach(async () => {
     if (createdClientId) {
       await globalThis.apis.wasteMovementClientSyncAPI.deleteClient(
-        createdClientId
+        createdClientId,
+        true
       )
     }
   })
@@ -43,11 +44,12 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
 
         const { statusCode: purgeStatus, json: purgeBody } =
           await globalThis.apis.wasteMovementClientSyncAPI.purgeClientSecret(
-            createdClientId
+            createdClientId,
+            true
           )
 
         expect(purgeStatus).toBe(204)
-        expect(purgeBody).toBeNull()
+        expect(purgeBody).toBeUndefined()
 
         const { statusCode: newAuthStatus } =
           await globalThis.apis.cognitoOAuthApi.authenticate(
@@ -79,11 +81,12 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
 
         const { statusCode: purgeStatus, json: purgeBody } =
           await globalThis.apis.wasteMovementClientSyncAPI.purgeClientSecret(
-            createdClientId
+            createdClientId,
+            true
           )
 
         expect(purgeStatus).toBe(204)
-        expect(purgeBody).toBeNull()
+        expect(purgeBody).toBeUndefined()
 
         const { statusCode: authStatus } =
           await globalThis.apis.cognitoOAuthApi.authenticate(
@@ -122,6 +125,7 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
         const { statusCode, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.purgeClientSecret(
             'my_client_id',
+            false,
             'Not_A_Service'
           )
 
@@ -155,6 +159,7 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
         const { statusCode, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.purgeClientSecret(
             createdClientId,
+            false,
             unknownTenantServiceName
           )
 

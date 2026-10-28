@@ -14,7 +14,8 @@ describe('Delete a client from DWT Client Sync Service', () => {
   afterEach(async () => {
     if (createdClientId) {
       await globalThis.apis.wasteMovementClientSyncAPI.deleteClient(
-        createdClientId
+        createdClientId,
+        true
       )
     }
   })
@@ -38,11 +39,12 @@ describe('Delete a client from DWT Client Sync Service', () => {
 
         const { statusCode: deleteStatus, json: deleteBody } =
           await globalThis.apis.wasteMovementClientSyncAPI.deleteClient(
-            clientId
+            clientId,
+            true
           )
 
         expect(deleteStatus).toBe(204)
-        expect(deleteBody).toBeNull()
+        expect(deleteBody).toBeUndefined()
 
         const { statusCode: getStatus, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.getClient(clientId)
@@ -79,7 +81,8 @@ describe('Delete a client from DWT Client Sync Service', () => {
 
         const { statusCode: deleteStatus } =
           await globalThis.apis.wasteMovementClientSyncAPI.deleteClient(
-            clientId
+            clientId,
+            true
           )
         expect(deleteStatus).toBe(204)
 
@@ -129,6 +132,7 @@ describe('Delete a client from DWT Client Sync Service', () => {
         const { statusCode, json } =
           await globalThis.apis.wasteMovementClientSyncAPI.deleteClient(
             createdClientId,
+            false,
             unknownTenantServiceName
           )
 

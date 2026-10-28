@@ -14,7 +14,8 @@ describe('Create a client in DWT Client Sync Service', () => {
   afterEach(async () => {
     if (createdClientId) {
       await globalThis.apis.wasteMovementClientSyncAPI.deleteClient(
-        createdClientId
+        createdClientId,
+        true
       )
     }
   })

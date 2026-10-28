@@ -115,12 +115,16 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
 
   /**
    * DELETE /clients/{tenantServiceName}/{clientId} — delete Cognito client and local cache entry.
+   * A successful delete is 204 with no body. Pass returnsNoContent so json is undefined.
+   * Error responses are JSON, so leave returnsNoContent false for those calls.
    * @param {string} clientId - Cognito / software-provider client ID
+   * @param {boolean} [returnsNoContent=false] - When true, do not parse the body and return json as undefined
    * @param {string} [tenantServiceName=DEFAULT_TENANT_SERVICE_NAME] - Tenant service name
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async deleteClient(
     clientId,
+    returnsNoContent = false,
     tenantServiceName = DEFAULT_TENANT_SERVICE_NAME
   ) {
     const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
@@ -134,7 +138,8 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
     }
     const { statusCode, headers, json } = await this.delete(
       `/clients/${encodeURIComponent(tenantServiceName)}/${encodeURIComponent(clientId)}`,
-      requestHeaders
+      requestHeaders,
+      returnsNoContent
     )
     return { statusCode, headers, json }
   }
@@ -169,12 +174,16 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
 
   /**
    * POST /clients/{tenantServiceName}/{clientId}/purge — remove the oldest secret when two exist.
+   * A successful purge is 204 with no body. Pass returnsNoContent so json is undefined.
+   * Error responses are JSON, so leave returnsNoContent false for those calls.
    * @param {string} clientId - Cognito / software-provider client ID
+   * @param {boolean} [returnsNoContent=false] - When true, do not parse the body and return json as undefined
    * @param {string} [tenantServiceName=DEFAULT_TENANT_SERVICE_NAME] - Tenant service name
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async purgeClientSecret(
     clientId,
+    returnsNoContent = false,
     tenantServiceName = DEFAULT_TENANT_SERVICE_NAME
   ) {
     const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
@@ -190,7 +199,8 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
     const { statusCode, headers, json } = await this.post(
       `/clients/${encodeURIComponent(tenantServiceName)}/${encodeURIComponent(clientId)}/purge`,
       undefined,
-      requestHeaders
+      requestHeaders,
+      returnsNoContent
     )
     return { statusCode, headers, json }
   }
