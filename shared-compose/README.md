@@ -88,8 +88,8 @@ logs in as `digital-waste-tracking-admin-ui` with the password `local-admin-ui`
 
 `fake-cdp/server.js` stands in for CDP's credentials API, which client sync
 calls to list, create, rotate and delete Cognito clients. It follows
-[CDP's documented behaviour](https://github.com/DEFRA/cdp-documentation/blob/main/how-to/managing_cognito_credentials.md)
-and keeps clients and secrets in memory, so a client a test creates is listed
+[CDP's documented behaviour](https://github.com/DEFRA/cdp-documentation/blob/main/how-to/managing_cognito_credentials.md),
+plus one route proposed to CDP (below), and keeps clients and secrets in memory, so a client a test creates is listed
 until it's deleted, and everything resets when the stack restarts.
 
 - It starts with five clients for `waste-movement-external-api`, including the

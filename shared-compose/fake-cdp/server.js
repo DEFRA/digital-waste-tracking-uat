@@ -5,7 +5,8 @@
 // create, rotate and delete can be tested locally and in GitHub Actions. It
 // keeps clients and secrets in memory, so they're reset when it restarts.
 //
-// It follows CDP's documented behaviour:
+// It follows CDP's documented behaviour, plus one route proposed to CDP
+// (fetch-client-details, below):
 // https://github.com/DEFRA/cdp-documentation/blob/main/how-to/managing_cognito_credentials.md
 // It doesn't check request signatures, and its secrets don't work with any
 // Cognito, so tests that sign in with them need a real CDP environment.
