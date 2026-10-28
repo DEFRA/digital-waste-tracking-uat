@@ -1,6 +1,7 @@
 import { after, before, beforeEach, describe, test } from 'node:test'
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
+import { createServer } from 'node:http'
 import { connect } from 'node:net'
 
 import { createFakeCdp } from './server.js'
@@ -160,7 +161,11 @@ describe('Fake CDP credentials API', () => {
 
   after(() => {
     server?.close()
-    execFileSync('docker', ['stop', flociContainer])
+    try {
+      execFileSync('docker', ['stop', flociContainer], { stdio: 'ignore' })
+    } catch {
+      // It never started, or has already gone
+    }
   })
 
   describe('fetch-details', () => {
@@ -281,6 +286,60 @@ describe('Fake CDP credentials API', () => {
 
     test('skips Skipped_By_Cdp as if it already exists', async () => {
       assert.equal(await create('Skipped_By_Cdp'), undefined)
+    })
+
+    test('creates a name requested twice at once only once', async () => {
+      await Promise.all([create('New_Client'), create('New_Client')])
+
+      assert.deepEqual(await list(), ['New_Client', 'Seeded Client'])
+    })
+
+    test("removes a client it couldn't finish creating", async () => {
+      // A proxy in front of Floci that rejects the rename, as Cognito would
+      // a name it doesn't allow
+      const proxy = createServer(async (req, res) => {
+        let body = ''
+        for await (const chunk of req) body += chunk
+        if (req.headers['x-amz-target']?.endsWith('.UpdateUserPoolClient')) {
+          res.writeHead(400, { 'content-type': 'application/json' })
+          return res.end(
+            JSON.stringify({
+              __type: 'InvalidParameterException',
+              message: 'Invalid client name'
+            })
+          )
+        }
+        const forwarded = await fetch(flociUrl, {
+          method: 'POST',
+          headers: {
+            'content-type': req.headers['content-type'],
+            'x-amz-target': req.headers['x-amz-target']
+          },
+          body
+        })
+        res.writeHead(forwarded.status, {
+          'content-type': 'application/json'
+        })
+        res.end(await forwarded.text())
+      })
+      await new Promise((resolve) => proxy.listen(0, resolve))
+      server.close()
+      server = createFakeCdp({
+        flociUrl: `http://localhost:${proxy.address().port}`
+      })
+      await new Promise((resolve) => server.listen(0, resolve))
+      baseUrl = `http://localhost:${server.address().port}`
+
+      try {
+        const { status } = await call('create-clients', {
+          client_names: ['New_Client']
+        })
+
+        assert.equal(status, 500)
+        assert.deepEqual(await list(), ['Seeded Client'])
+      } finally {
+        proxy.close()
+      }
     })
 
     test('refuses Refused_By_Cdp', async () => {

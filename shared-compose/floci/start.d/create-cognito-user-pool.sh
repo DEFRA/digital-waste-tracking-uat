@@ -29,28 +29,35 @@ else
   echo "Created Cognito user pool $POOL_ID"
 fi
 
+# What each client may do: get tokens for the external API
+oauth_settings() {
+  aws cognito-idp "$@" \
+    --allowed-o-auth-flows client_credentials \
+    --allowed-o-auth-scopes "$SCOPE_SERVER/access" \
+    --allowed-o-auth-flows-user-pool-client >/dev/null
+}
+
 # Each client is created under its id (the pool uses a new client's name as
 # its id) and then given its real name. The settings are sent with the
-# rename too, as an update resets any it omits
+# rename too, as an update resets any it omits. A client that a local run
+# rotated or purged keeps its secrets: `docker compose down -v` restores
+# "local"
 seed_client() {
   client_id=$1
   client_name=$2
 
   if ! aws cognito-idp describe-user-pool-client \
     --user-pool-id "$POOL_ID" --client-id "$client_id" >/dev/null 2>&1; then
-    aws cognito-idp create-user-pool-client \
+    oauth_settings create-user-pool-client \
       --user-pool-id "$POOL_ID" \
       --client-name "$client_id" \
-      --generate-secret >/dev/null
+      --generate-secret
   fi
 
-  aws cognito-idp update-user-pool-client \
+  oauth_settings update-user-pool-client \
     --user-pool-id "$POOL_ID" \
     --client-id "$client_id" \
-    --client-name "$client_name" \
-    --allowed-o-auth-flows client_credentials \
-    --allowed-o-auth-scopes "$SCOPE_SERVER/access" \
-    --allowed-o-auth-flows-user-pool-client >/dev/null
+    --client-name "$client_name"
 }
 
 seed_client 1a2b3c4d5e6f7g8h9i0j009988 'Acme Waste Software'
@@ -59,4 +66,6 @@ seed_client 1234567890abcdef1234567890 'Test Client 1'
 seed_client 0987654321fedcba0987654321 'Test Client 2'
 seed_client abcdefghijklmnopqrstuvwxyz 'Test Client 3'
 
+# Floci's health check waits for this
+touch /tmp/cognito-seeded
 echo "Seeded the Cognito user pool's clients"

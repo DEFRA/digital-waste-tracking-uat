@@ -87,7 +87,9 @@ export function createFakeCdp({
     })
     const result = await response.json()
     if (!response.ok) {
-      throw new Error(`Floci ${action} failed: ${result.message}`)
+      throw new Error(
+        `Floci ${action} failed: ${result.__type ?? response.status} ${result.message ?? result.Message ?? ''}`
+      )
     }
     return result
   }
@@ -133,8 +135,9 @@ export function createFakeCdp({
       ClientSecretId: secretId
     })
 
-  // Adds a secret this fake chose: Floci's pool gives every new client the
-  // secret "local", so the seeded test clients have a known one
+  // Adds a random secret. The fake chooses its own, as Floci's pool gives
+  // every new client the secret "local" (so the seeded clients have a known
+  // one), and Floci would otherwise generate one we couldn't return
   const addSecret = async (poolId, clientId) => {
     const value = randomSecret()
     const { ClientSecretDescriptor } = await cognito(
@@ -142,6 +145,19 @@ export function createFakeCdp({
       { UserPoolId: poolId, ClientId: clientId, ClientSecret: value }
     )
     return { id: ClientSecretDescriptor.ClientSecretId, value }
+  }
+
+  // Requests run one at a time per pool, as each is several calls to Floci:
+  // two creates of one name would otherwise both pass the check, and a list
+  // could see a new client before it's renamed
+  const queues = new Map()
+  const oneAtATime = (poolId, work) => {
+    const result = (queues.get(poolId) ?? Promise.resolve()).then(work)
+    queues.set(
+      poolId,
+      result.catch(() => {})
+    )
+    return result
   }
 
   const named = (clients, names) =>
@@ -216,16 +232,28 @@ export function createFakeCdp({
           ...clientSettings
         })
         const id = UserPoolClient.ClientId
-        await cognito('UpdateUserPoolClient', {
-          UserPoolId: poolId,
-          ClientId: id,
-          ClientName: name,
-          ...clientSettings
-        })
 
-        const [poolSecret] = await listSecrets(poolId, id)
-        const secret = await addSecret(poolId, id)
-        await deleteSecret(poolId, id, poolSecret.id)
+        // Removes the client if a later step fails, so a half-made client,
+        // still named by its id or with the secret "local", isn't left behind
+        let secret
+        try {
+          await cognito('UpdateUserPoolClient', {
+            UserPoolId: poolId,
+            ClientId: id,
+            ClientName: name,
+            ...clientSettings
+          })
+
+          const [poolSecret] = await listSecrets(poolId, id)
+          secret = await addSecret(poolId, id)
+          await deleteSecret(poolId, id, poolSecret.id)
+        } catch (err) {
+          await cognito('DeleteUserPoolClient', {
+            UserPoolId: poolId,
+            ClientId: id
+          }).catch(() => {})
+          throw err
+        }
 
         created.push(details({ id, name }, secret.value))
       }
@@ -342,7 +370,9 @@ export function createFakeCdp({
       if (isFetch) {
         return send(
           200,
-          await actions[action](service, poolId, null, url.searchParams)
+          await oneAtATime(poolId, () =>
+            actions[action](service, poolId, null, url.searchParams)
+          )
         )
       }
 
@@ -369,7 +399,10 @@ export function createFakeCdp({
         throw new CdpError(400, 'client_names must be an array of strings')
       }
 
-      return send(200, await actions[action](service, poolId, body))
+      return send(
+        200,
+        await oneAtATime(poolId, () => actions[action](service, poolId, body))
+      )
     } catch (err) {
       if (err instanceof CdpError) {
         return send(err.statusCode, { message: err.message })
