@@ -1,7 +1,7 @@
 meta {
   name: Create Movement - Error - Hazardous Without Consignment
   type: http
-  seq: 5
+  seq: 4
 }
 
 post {
@@ -19,13 +19,24 @@ headers {
 body:json {
   {
     "producer": {
-      "wasteSource": "Household"
+      "wasteSource": "HOUSEHOLD"
+    },
+    "collectionDateTime": "2026-01-15T09:30:00Z",
+    "collectionSite": {
+      "address": {
+        "fullAddress": "10 Industrial Way, Test City",
+        "postcode": "TE1 2PQ"
+      },
+      "contactDetails": {
+        "emailAddress": "site@example.com",
+        "phoneNumber": "01234567890"
+      }
     },
     "intendedCarriers": [
       {
         "organisationName": "Carrier Demo Ltd",
         "registrationNumber": "CBDU123456",
-        "meansOfTransport": "Road",
+        "meansOfTransport": "ROAD",
         "vehicleRegistration": "AB12 CDE",
         "contactDetails": {
           "emailAddress": "carrier@example.com",
@@ -61,7 +72,16 @@ body:json {
           },
           "hazardous": {
             "isPresent": true,
-            "codes": ["HP_4", "HP_8"]
+            "codes": ["HP_4", "HP_8"],
+            "componentsSource": "OWN_TESTING",
+            "isComponentsNotApplicable": false,
+            "components": [
+              {
+                "name": "Mercury",
+                "unit": "MG_PER_KG",
+                "amount": 5
+              }
+            ]
           }
         },
         "physicalDetails": {

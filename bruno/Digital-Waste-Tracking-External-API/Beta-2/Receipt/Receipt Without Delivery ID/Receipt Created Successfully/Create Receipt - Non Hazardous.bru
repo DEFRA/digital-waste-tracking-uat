@@ -1,0 +1,91 @@
+meta {
+  name: Create Receipt - Non Hazardous
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/beta-2/receipts
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-code: {{apiCode}}
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "reasonForNoDeliveryId": "No delivery was recorded prior to receipt; waste received directly from the producer.",
+    "receiptDateTime": "2026-10-14T09:30:00Z",
+    "carrier": {
+      "organisationName": "Carrier Demo Ltd",
+      "registrationNumber": "CBDU123456",
+      "meansOfTransport": "ROAD",
+      "vehicleRegistration": "AB12 CDE",
+      "contactDetails": {
+        "emailAddress": "carrier@example.com",
+        "phoneNumber": "01234567890"
+      }
+    },
+    "receiver": {
+      "siteName": "Receiver Site Ltd",
+      "authorisationNumber": "EAS/P/123456",
+      "receiptAddress": {
+        "fullAddress": "3 Receiver Road, Test City",
+        "postcode": "TE1 3RC"
+      },
+      "contactDetails": {
+        "emailAddress": "receiver@example.com",
+        "phoneNumber": "01234567890"
+      }
+    },
+    "wasteItems": [
+      {
+        "classification": {
+          "wasteDescription": "Mixed municipal waste",
+          "ewcCodes": ["200301"],
+          "pops": {
+            "isPresent": false
+          },
+          "hazardous": {
+            "isPresent": false
+          }
+        },
+        "physicalDetails": {
+          "form": "SOLID",
+          "containerType": "DRU",
+          "containerCount": 4,
+          "totalWeight": {
+            "amount": 250.5,
+            "unit": "KILOGRAMS",
+            "isEstimate": false
+          }
+        },
+        "treatments": [
+          {
+            "disposalOrRecoveryCode": "R3",
+            "weight": {
+              "amount": 250.5,
+              "unit": "KILOGRAMS",
+              "isEstimate": false
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+
+vars:post-response {
+  deliveryId: res.body.data.deliveryId
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}

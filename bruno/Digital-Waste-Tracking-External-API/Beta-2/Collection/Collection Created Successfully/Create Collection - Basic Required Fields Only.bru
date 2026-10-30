@@ -1,0 +1,51 @@
+meta {
+  name: Create Collection - Basic Required Fields Only
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/beta-2/movements/{{movementId}}/collection
+  body: json
+  auth: inherit
+}
+
+headers {
+  x-api-code: {{apiCode}}
+  ~x-cdp-request-id: {{$randomUUID}}
+  ~Authorization: {{ManuallyObtainedAccessToken}}
+}
+
+body:json {
+  {
+    "carrier": {
+      "organisationName": "Carrier Demo Ltd",
+      "registrationNumber": "CBDU123456",
+      "meansOfTransport": "ROAD",
+      "vehicleRegistration": "AB12 CDE",
+      "contactDetails": {
+        "emailAddress": "carrier@example.com",
+        "phoneNumber": "01234567890"
+      }
+    },
+    "isDutyOfCareConfirmed": true,
+    "collectionDateTime": "2026-01-15T09:30:00Z",
+    "collectionSite": {
+      "address": {
+        "fullAddress": "10 Industrial Way, Test City",
+        "postcode": "TE1 2PQ"
+      },
+      "contactDetails": {
+        "emailAddress": "site@example.com",
+        "phoneNumber": "01234567890"
+      }
+    }
+  }
+}
+
+script:pre-request {
+  const now = new Date();
+  // now.setFullYear(now.getFullYear() + 1); // Adds one year to the current date
+  // now.setFullYear(now.getFullYear() - 1); // Removes one year from the current date
+  bru.setVar('timestamp', now.toISOString());
+}
