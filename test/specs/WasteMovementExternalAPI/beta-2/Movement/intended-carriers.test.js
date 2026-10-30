@@ -60,9 +60,11 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
 
     it('should create a movement when an intended carrier transports by other means with a description @allure.label.tag:DWTC-199', async () => {
       await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
-      movementData.intendedCarriers[0].meansOfTransport = 'Other'
+      movementData.intendedCarriers[0].meansOfTransport =
+        beta2.meansOfTransportOther
       delete movementData.intendedCarriers[0].vehicleRegistration
-      movementData.intendedCarriers[0].otherMeansOfTransport = 'Horse and cart'
+      movementData.intendedCarriers[0].otherMeansOfTransport =
+        beta2.otherMeansOfTransport
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
@@ -150,7 +152,8 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
 
     it('should reject an intended carrier transporting by other means without a description @allure.label.tag:DWTC-199', async () => {
       await addAllureLink('/DWTC-199', 'DWTC-199', 'jira')
-      movementData.intendedCarriers[0].meansOfTransport = 'Other'
+      movementData.intendedCarriers[0].meansOfTransport =
+        beta2.meansOfTransportOther
       delete movementData.intendedCarriers[0].vehicleRegistration
 
       const response =

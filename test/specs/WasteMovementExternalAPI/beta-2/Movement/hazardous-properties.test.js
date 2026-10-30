@@ -87,7 +87,7 @@ describe('Beta-2 Movement Creation - Hazardous properties', () => {
       const hazardous = beta2.hazardousPresent()
       delete hazardous.codes
       delete hazardous.componentsSource
-      delete hazardous.componentsNotApplicable
+      delete hazardous.isComponentsNotApplicable
       delete hazardous.components
       movementData.wasteItems[0].classification.hazardous = hazardous
       movementData.consignmentNote = beta2.consignmentNote()
@@ -108,7 +108,7 @@ describe('Beta-2 Movement Creation - Hazardous properties', () => {
         ...beta2.hazardousNotPresent(),
         codes: present.codes,
         componentsSource: present.componentsSource,
-        componentsNotApplicable: present.componentsNotApplicable,
+        isComponentsNotApplicable: present.isComponentsNotApplicable,
         components: present.components
       }
 

@@ -71,7 +71,7 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
       await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
       const movementId = await createMovementWithCollection()
       deliveryData = beta2.generateBaseDeliveryData([movementId])
-      deliveryData.carrier.meansOfTransport = 'Other'
+      deliveryData.carrier.meansOfTransport = beta2.meansOfTransportOther
       delete deliveryData.carrier.vehicleRegistration
       deliveryData.carrier.otherMeansOfTransport = beta2.otherMeansOfTransport
 
@@ -189,7 +189,7 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
       await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
       const movementId = await createMovementWithCollection()
       deliveryData = beta2.generateBaseDeliveryData([movementId])
-      deliveryData.carrier.meansOfTransport = 'Other'
+      deliveryData.carrier.meansOfTransport = beta2.meansOfTransportOther
       delete deliveryData.carrier.vehicleRegistration
 
       const response =

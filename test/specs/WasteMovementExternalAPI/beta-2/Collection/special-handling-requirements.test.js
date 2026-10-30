@@ -48,9 +48,9 @@ describe('Beta-2 Collection Creation - Special handling requirements', () => {
   })
 
   describe('Problem Responses', () => {
-    it('should reject a collection when special handling requirements are longer than 500 characters @allure.label.tag:DWTC-212', async () => {
+    it('should reject a collection when special handling requirements are longer than 5000 characters @allure.label.tag:DWTC-212', async () => {
       await addAllureLink('/DWTC-212', 'DWTC-212', 'jira')
-      collectionData.specialHandlingRequirements = 'A'.repeat(501)
+      collectionData.specialHandlingRequirements = 'A'.repeat(5001)
 
       const movementId = await createMovement()
 

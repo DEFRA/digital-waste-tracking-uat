@@ -62,7 +62,7 @@ describe('Beta-2 Collection Creation - Carrier', () => {
 
     it('should create a collection when a carrier transports by other means with a description @allure.label.tag:DWTC-158', async () => {
       await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      collectionData.carrier.meansOfTransport = 'Other'
+      collectionData.carrier.meansOfTransport = beta2.meansOfTransportOther
       delete collectionData.carrier.vehicleRegistration
       collectionData.carrier.otherMeansOfTransport = beta2.otherMeansOfTransport
 
@@ -188,7 +188,7 @@ describe('Beta-2 Collection Creation - Carrier', () => {
 
     it('should reject a carrier transporting by other means without a description @allure.label.tag:DWTC-158', async () => {
       await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      collectionData.carrier.meansOfTransport = 'Other'
+      collectionData.carrier.meansOfTransport = beta2.meansOfTransportOther
       delete collectionData.carrier.vehicleRegistration
 
       const movementId = await createMovement()

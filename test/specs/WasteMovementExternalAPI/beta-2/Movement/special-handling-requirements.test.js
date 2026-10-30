@@ -34,9 +34,9 @@ describe('Beta-2 Movement Creation - Special handling requirements', () => {
   })
 
   describe('Problem Responses', () => {
-    it('should reject a movement when special handling requirements are longer than 500 characters @allure.label.tag:DWTC-157', async () => {
+    it('should reject a movement when special handling requirements are longer than 5000 characters @allure.label.tag:DWTC-157', async () => {
       await addAllureLink('/DWTC-157', 'DWTC-157', 'jira')
-      movementData.specialHandlingRequirements = 'A'.repeat(501)
+      movementData.specialHandlingRequirements = 'A'.repeat(5001)
 
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(

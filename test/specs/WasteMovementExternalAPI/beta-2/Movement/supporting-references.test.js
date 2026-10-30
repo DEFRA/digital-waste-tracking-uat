@@ -30,6 +30,18 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
 
       expectMovementCreated(response)
     })
+
+    it('should create a movement when a supporting reference uses OTHER with otherLabel @allure.label.tag:DWTC-312', async () => {
+      await addAllureLink('/DWTC-312', 'DWTC-312', 'jira')
+      movementData.supportingReferences = [beta2.supportingReferenceOther()]
+
+      const response =
+        await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(
+          movementData
+        )
+
+      expectMovementCreated(response)
+    })
   })
 
   describe('Problem Responses', () => {
@@ -47,10 +59,10 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
       expectMovementRejected(response)
     })
 
-    it('should reject a supporting reference when the reference is longer than 50 characters @allure.label.tag:DWTC-156', async () => {
+    it('should reject a supporting reference when the reference is longer than 255 characters @allure.label.tag:DWTC-156', async () => {
       await addAllureLink('/DWTC-156', 'DWTC-156', 'jira')
       const supportingReference = beta2.supportingReference()
-      supportingReference.reference = 'A'.repeat(51)
+      supportingReference.reference = 'A'.repeat(256)
       movementData.supportingReferences = [supportingReference]
 
       const response =

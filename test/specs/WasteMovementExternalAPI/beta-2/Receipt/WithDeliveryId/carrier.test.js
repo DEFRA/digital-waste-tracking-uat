@@ -76,7 +76,7 @@ describe('Beta-2 Receipt Creation - Carrier', () => {
 
     it('should create a receipt when a carrier transports by other means with a description @allure.label.tag:DWTC-158', async () => {
       await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      receiptData.carrier.meansOfTransport = 'Other'
+      receiptData.carrier.meansOfTransport = beta2.meansOfTransportOther
       delete receiptData.carrier.vehicleRegistration
       receiptData.carrier.otherMeansOfTransport = beta2.otherMeansOfTransport
       const deliveryId = await createDeliveryForReceipt()
@@ -194,7 +194,7 @@ describe('Beta-2 Receipt Creation - Carrier', () => {
 
     it('should reject a carrier transporting by other means without a description @allure.label.tag:DWTC-158', async () => {
       await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
-      receiptData.carrier.meansOfTransport = 'Other'
+      receiptData.carrier.meansOfTransport = beta2.meansOfTransportOther
       delete receiptData.carrier.vehicleRegistration
       const deliveryId = await createDeliveryForReceipt()
 
