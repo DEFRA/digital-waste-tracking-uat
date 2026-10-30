@@ -20,6 +20,16 @@ module.exports = {
   plugins: ['prettier'],
   rules: {
     'prettier/prettier': 'error',
-    'no-console': 'error'
+    'no-console': 'error',
+    'no-unused-vars': [
+      'error',
+      {
+        vars: 'all',
+        args: 'none',
+        ignoreRestSiblings: true,
+        caughtErrors: 'none',
+        destructuredArrayIgnorePattern: '^_'
+      }
+    ]
   }
 }
