@@ -19,7 +19,7 @@ describe('Beta-2 Movement Creation - Producer', () => {
   })
 
   describe('Successful Creation', () => {
-    it('should create a movement when a Household producer declares only the waste source @allure.label.tag:DWTC-192', async () => {
+    it('should create a movement when a Household producer declares only the waste source @smoke @allure.label.tag:DWTC-192', async () => {
       await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
       const response =
         await globalThis.apis.wasteMovementExternalAPI.beta2.createMovement(

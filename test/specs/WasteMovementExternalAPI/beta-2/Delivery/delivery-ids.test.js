@@ -100,7 +100,7 @@ describe('Beta-2 Delivery Creation - Delivery IDs', () => {
       ])
     })
 
-    it('should create one aggregated delivery ID for non-hazardous movements and one delivery ID per hazardous movement @allure.label.tag:DWTC-248', async () => {
+    it('should create one aggregated delivery ID for non-hazardous movements and one delivery ID per hazardous movement @smoke @allure.label.tag:DWTC-248', async () => {
       await addAllureLink('/DWTC-248', 'DWTC-248', 'jira')
       const nonHazardousMovementId = await createCollectedMovement()
       const hazardousMovementId = await createCollectedHazardousMovement()

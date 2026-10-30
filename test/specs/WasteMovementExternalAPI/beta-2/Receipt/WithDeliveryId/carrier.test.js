@@ -45,7 +45,7 @@ describe('Beta-2 Receipt Creation - Carrier', () => {
   }
 
   describe('Successful Creation', () => {
-    it('should create a receipt when a carrier with valid details is declared @allure.label.tag:DWTC-158', async () => {
+    it('should create a receipt when a carrier with valid details is declared @smoke @allure.label.tag:DWTC-158', async () => {
       await addAllureLink('/DWTC-158', 'DWTC-158', 'jira')
       const deliveryId = await createDeliveryForReceipt()
 
