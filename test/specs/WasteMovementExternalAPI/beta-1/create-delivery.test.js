@@ -33,6 +33,7 @@ describe('Beta-1 Delivery Creation', () => {
   describe('Successful Creation', () => {
     it(
       'should successfully record a delivery for a collected movement and return a delivery ID' +
+        ' @smoke' +
         ' @allure.label.tag:DWTC-119',
       async () => {
         await addAllureLink('/DWTC-119', 'DWTC-119', 'jira')
