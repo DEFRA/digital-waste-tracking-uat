@@ -29,7 +29,25 @@ const clientSettings = {
 const skippedName = 'Skipped_By_Cdp'
 const refusedName = 'Refused_By_Cdp'
 
-const routePattern = /^\/tenants\/services\/([^/]+)\/user-pool\/([a-z-]+)$/
+// The route is /tenants/services/{service}/user-pool/{action}, with the
+// single-client fetch-details having an extra clients/{client_id} segment
+const routePattern = (pathname) => {
+  const segments = pathname.split('/')
+  // ["", "tenants", "services", service, "user-pool", ...action segments]
+  if (
+    segments[1] !== 'tenants' ||
+    segments[2] !== 'services' ||
+    segments[4] !== 'user-pool'
+  ) {
+    return undefined
+  }
+  const [_a, _b, _c, service, _d, ...actionSegments] = segments
+  const action = actionSegments.at(-1)
+  // ["fetch-details"] or ["clients", client_id, "fetch-details"]
+  const clientId =
+    actionSegments[0] === 'clients' ? actionSegments.at(-2) : null
+  return [service, action, clientId]
+}
 
 class CdpError extends Error {
   constructor(statusCode, message) {
@@ -176,10 +194,57 @@ export function createFakeCdp({
     client_secret: secret
   })
 
+  // The details of a single client, as CDP returns them on
+  // .../user-pool/clients/{client_id}/fetch-details: the OAuth settings and
+  // the ids and dates of its secrets, but never their values
+  const describeClient = async (service, poolId, clientId) => {
+    const { UserPoolClient } = await cognito('DescribeUserPoolClient', {
+      UserPoolId: poolId,
+      ClientId: clientId
+    })
+
+    const {
+      ClientId,
+      ClientName,
+      // Floci gives creation dates in seconds
+      CreationDate,
+      LastModifiedDate,
+      AllowedOAuthFlows,
+      AllowedOAuthScopes,
+      AllowedOAuthFlowsUserPoolClient,
+      ExplicitAuthFlows
+    } = UserPoolClient
+
+    const clientDetails = {
+      client_name: ClientName,
+      client_id: ClientId,
+      created_at: toCdpDate(new Date(CreationDate * 1000)),
+      last_modified_at: toCdpDate(new Date(LastModifiedDate * 1000)),
+      allowed_oauth_flows: AllowedOAuthFlows,
+      allowed_oauth_scopes: AllowedOAuthScopes,
+      allowed_oauth_flows_user_pool_client: AllowedOAuthFlowsUserPoolClient,
+      explicit_auth_flows: ExplicitAuthFlows,
+      // Floci doesn't return them, so CDP's defaults are used
+      access_token_validity: 60,
+      id_token_validity: 60,
+      refresh_token_validity: 30,
+      token_validity_units: 'hours',
+      client_secrets: (await listSecrets(poolId, ClientId)).map(
+        ({ id, createdAt }) => ({ id, created_at: toCdpDate(createdAt) })
+      )
+    }
+
+    return response(service, poolId, clientDetails)
+  }
+
   const actions = {
     // A page of clients, each with its secrets' ids and creation dates but
     // never their values
-    'fetch-details': async (service, poolId, _body, query) => {
+    'fetch-details': async (service, poolId, _body, query, clientId) => {
+      if (clientId) {
+        return describeClient(service, poolId, clientId)
+      }
+
       const pageSize = Number(query.get('page_size') ?? maxPageSize)
       if (
         !Number.isInteger(pageSize) ||
@@ -346,7 +411,8 @@ export function createFakeCdp({
         return send(200, { message: 'success' })
       }
 
-      const [, service, action] = url.pathname.match(routePattern) ?? []
+      const match = routePattern(url.pathname)
+      const [service, action, clientId] = match ?? []
       const isFetch = action === 'fetch-details'
 
       if (!actions[action] || req.method !== (isFetch ? 'GET' : 'POST')) {
@@ -371,7 +437,7 @@ export function createFakeCdp({
         return send(
           200,
           await oneAtATime(poolId, () =>
-            actions[action](service, poolId, null, url.searchParams)
+            actions[action](service, poolId, null, url.searchParams, clientId)
           )
         )
       }
@@ -391,18 +457,16 @@ export function createFakeCdp({
         throw new CdpError(400, 'Invalid JSON')
       }
 
-      const names = body?.client_names
-      if (
-        !Array.isArray(names) ||
-        !names.every((name) => typeof name === 'string')
-      ) {
-        throw new CdpError(400, 'client_names must be an array of strings')
+      if (body?.client_names) {
+        return send(
+          200,
+          await oneAtATime(poolId, () =>
+            actions[action](service, poolId, body, url.searchParams, clientId)
+          )
+        )
       }
 
-      return send(
-        200,
-        await oneAtATime(poolId, () => actions[action](service, poolId, body))
-      )
+      throw new CdpError(400, 'client_names must be an array of strings')
     } catch (err) {
       if (err instanceof CdpError) {
         return send(err.statusCode, { message: err.message })
