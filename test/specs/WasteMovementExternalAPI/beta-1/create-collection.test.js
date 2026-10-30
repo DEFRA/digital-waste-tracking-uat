@@ -18,6 +18,7 @@ describe('Beta-1 Collection Creation', () => {
   describe('Successful Creation', () => {
     it(
       'should successfully record a collection against an existing movement' +
+        ' @smoke' +
         ' @allure.label.tag:DWTC-118',
       async () => {
         await addAllureLink('/DWTC-118', 'DWTC-118', 'jira')

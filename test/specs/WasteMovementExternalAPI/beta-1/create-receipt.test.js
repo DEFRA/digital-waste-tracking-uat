@@ -39,6 +39,7 @@ describe('Beta-1 Receipt Creation', () => {
   describe('Successful Creation', () => {
     it(
       'should successfully record a receipt against an existing delivery' +
+        ' @smoke' +
         ' @allure.label.tag:DWTC-140',
       async () => {
         await addAllureLink('/DWTC-140', 'DWTC-140', 'jira')
@@ -65,6 +66,7 @@ describe('Beta-1 Receipt Creation', () => {
 
     it(
       'should successfully record a receipt without a delivery ID when a reason is provided' +
+        ' @smoke' +
         ' @allure.label.tag:DWTC-142',
       async () => {
         await addAllureLink('/DWTC-142', 'DWTC-142', 'jira')
