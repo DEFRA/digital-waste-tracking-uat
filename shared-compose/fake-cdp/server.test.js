@@ -69,11 +69,7 @@ describe('Fake CDP credentials API', () => {
   // The single-client fetch-details differs from the all-clients one in URL
   // (a `clients/${client_id}` segment), so it has its own helper
   const callSingleClientFetchDetails = async (clientId) =>
-    call(
-      `clients/${clientId}/fetch-details`,
-      undefined,
-      { method: 'GET' }
-    )
+    call(`clients/${clientId}/fetch-details`, undefined, { method: 'GET' })
 
   const list = async () =>
     (await call('fetch-details')).body.client_details
