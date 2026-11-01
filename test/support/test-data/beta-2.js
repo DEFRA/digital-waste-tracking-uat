@@ -385,6 +385,7 @@ export const beta2 = {
 
   /**
    * Place the waste was delivered to. organisationName and address are required.
+   * fullAddress and rpsNumbers are optional.
    * @returns {Object}
    */
   deliverySite: () => ({
@@ -394,6 +395,13 @@ export const beta2 = {
       postcode: 'TE1 3RC'
     }
   }),
+
+  /**
+   * Regulatory position statement numbers for a delivery site. Each is a whole
+   * number greater than 0.
+   * @returns {number[]}
+   */
+  rpsNumbers: () => [231],
 
   /**
    * POST /beta-2/deliveries/{deliveryId}/receipt required fields.
