@@ -52,5 +52,15 @@ mongosh --quiet --eval "
   );
 "
 
+# Load the waste organisations the admin tool's report tests expect, once the
+# replica set can take writes. A failure only warns, so the stack still starts
+for attempt in $(seq 1 30); do
+  mongosh --quiet --eval "quit(rs.status().members[0].stateStr === 'PRIMARY' ? 0 : 1)" && break
+  sleep 1
+done
+mongosh --quiet "mongodb://localhost:27017/waste-organisation-backend?directConnection=true" \
+  /compose/load-test-organisations.js ||
+  echo "Couldn't load the test organisations, carrying on without them"
+
 # Keep the script running
 wait $MONGO_PID

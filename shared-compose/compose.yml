@@ -185,7 +185,7 @@ services:
       - cdp-tenant
 
   mongodb:
-    image: mongo:6.0.13
+    image: mongo:7.0.45
     entrypoint: ['bash', '/compose/mongo_setup.sh']
     networks:
       - cdp-tenant
@@ -194,6 +194,7 @@ services:
     volumes:
       - mongodb-data:/data/db
       - ./mongo_setup.sh:/compose/mongo_setup.sh:Z
+      - ./load-test-organisations.js:/compose/load-test-organisations.js:Z
     healthcheck:
       test: mongosh --quiet --eval "try { var status = rs.status(); if (status.members[0].stateStr === 'PRIMARY') { quit(0); } else { quit(1); } } catch(e) { quit(1); }"
       interval: 5s

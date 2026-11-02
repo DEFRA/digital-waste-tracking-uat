@@ -107,6 +107,10 @@ Cognito on CDP.
 
 Its tests run with `npm run test:fake-cdp`. They start their own Floci, so they need Docker.
 
+## Test organisations
+
+Whenever the Mongo container starts, it loads the 13 waste organisations ("DWT admin test - 1" to "13", registered in 2024) that the admin tool's report tests expect. `load-test-organisations.js` downloads QA's seed script from [digital-waste-tracking-fe-uat](https://github.com/DEFRA/digital-waste-tracking-fe-uat/blob/main/test/utils/test-data-organisations.js) and runs it, so there's only one copy. It replaces any organisation named "DWT admin test…". If the script can't be downloaded or fails, Mongo logs a warning and the stack starts without them, or with only some of them. GitHub caches the file for a few minutes, so a change to it can take that long to show.
+
 ## Trying out a change
 
 PRs that change this folder or the shared workflow run the full suite against
