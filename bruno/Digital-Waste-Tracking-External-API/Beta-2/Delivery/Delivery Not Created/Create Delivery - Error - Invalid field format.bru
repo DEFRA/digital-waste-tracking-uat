@@ -18,7 +18,25 @@ headers {
 
 body:json {
   {
-    "movementIds": ["not-an-id"]
+    "movementIds": ["not-an-id"],
+    "carrier": {
+      "organisationName": "Carrier Demo Ltd",
+      "registrationNumber": "CBDU123456",
+      "meansOfTransport": "ROAD",
+      "vehicleRegistration": "AB12 CDE",
+      "contactDetails": {
+        "emailAddress": "carrier@example.com",
+        "phoneNumber": "01234567890"
+      }
+    },
+    "deliveryDateTime": "2026-10-14T11:00:00Z",
+    "deliverySite": {
+      "organisationName": "Receiver Site Ltd",
+      "address": {
+        "fullAddress": "3 Receiver Road, Test City",
+        "postcode": "TE1 3RC"
+      }
+    }
   }
 }
 

@@ -1,7 +1,7 @@
 meta {
-  name: Create Movement - Municipal Producer
+  name: Create Movement - Municipal Hazardous
   type: http
-  seq: 3
+  seq: 6
 }
 
 post {
@@ -76,13 +76,31 @@ body:json {
     "wasteItems": [
       {
         "classification": {
-          "wasteDescription": "Mixed municipal waste",
-          "ewcCodes": ["200301"],
+          "wasteDescription": "Fluorescent tubes",
+          "ewcCodes": ["200121"],
           "pops": {
-            "isPresent": false
+            "isPresent": true,
+            "componentsSource": "OWN_TESTING",
+            "components": [
+              {
+                "code": "PFOA",
+                "unit": "MG_PER_KG",
+                "amount": 0.5
+              }
+            ]
           },
           "hazardous": {
-            "isPresent": false
+            "isPresent": true,
+            "codes": ["HP_4", "HP_8"],
+            "componentsSource": "OWN_TESTING",
+            "isComponentsNotApplicable": false,
+            "components": [
+              {
+                "name": "Mercury",
+                "unit": "MG_PER_KG",
+                "amount": 5
+              }
+            ]
           }
         },
         "physicalDetails": {
@@ -96,7 +114,10 @@ body:json {
           }
         }
       }
-    ]
+    ],
+    "consignmentNote": {
+      "code": "CJTILE/A0001"
+    }
   }
 }
 
