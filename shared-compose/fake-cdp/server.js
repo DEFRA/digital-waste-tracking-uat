@@ -198,10 +198,20 @@ export function createFakeCdp({
   // .../user-pool/clients/{client_id}/fetch-details: the OAuth settings and
   // the ids and dates of its secrets, but never their values
   const describeClient = async (service, poolId, clientId) => {
-    const { UserPoolClient } = await cognito('DescribeUserPoolClient', {
-      UserPoolId: poolId,
-      ClientId: clientId
-    })
+    let UserPoolClient
+    try {
+      // eslint-disable-next-line no-extra-semi
+      ;({ UserPoolClient } = await cognito('DescribeUserPoolClient', {
+        UserPoolId: poolId,
+        ClientId: clientId
+      }))
+    } catch (err) {
+      // Floci reports a missing client as a Cognito ResourceNotFoundException
+      if (/ResourceNotFoundException/.test(err.message)) {
+        throw new CdpError(404, 'Not Found')
+      }
+      throw err
+    }
 
     const {
       ClientId,

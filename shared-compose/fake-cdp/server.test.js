@@ -234,6 +234,14 @@ describe('Fake CDP credentials API', () => {
         )
       }
     })
+
+    test("returns 404 error if the client doesn't exist", async () => {
+      const { status } = await callSingleClientFetchDetails(
+        'nonexistentclientid0000000000000'
+      )
+
+      assert.equal(status, 404)
+    })
   })
 
   describe('fetch-details (all clients)', () => {
