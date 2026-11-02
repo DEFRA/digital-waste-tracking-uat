@@ -185,7 +185,7 @@ services:
       - cdp-tenant
 
   mongodb:
-    image: mongo:6.0.13
+    image: mongo:7.0.45
     entrypoint: ['bash', '/compose/mongo_setup.sh']
     networks:
       - cdp-tenant
