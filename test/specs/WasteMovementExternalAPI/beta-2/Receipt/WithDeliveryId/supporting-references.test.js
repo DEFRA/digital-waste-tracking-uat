@@ -90,10 +90,10 @@ describe('Beta-2 Receipt Creation - Supporting references', () => {
       expectReceiptRejected(response, deliveryId)
     })
 
-    it('should reject a supporting reference when the reference is longer than 50 characters @allure.label.tag:DWTC-216', async () => {
+    it('should reject a supporting reference when the reference is longer than 255 characters @allure.label.tag:DWTC-216', async () => {
       await addAllureLink('/DWTC-216', 'DWTC-216', 'jira')
       const supportingReference = beta2.supportingReference()
-      supportingReference.reference = 'A'.repeat(51)
+      supportingReference.reference = 'A'.repeat(256)
       receiptData.supportingReferences = [supportingReference]
       const deliveryId = await createDeliveryForReceipt()
 

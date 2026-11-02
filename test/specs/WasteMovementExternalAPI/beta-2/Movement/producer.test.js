@@ -152,7 +152,7 @@ describe('Beta-2 Movement Creation - Producer', () => {
     it('should reject a Household producer when organisation, address, SIC code, authorisation number or contact details are supplied @allure.label.tag:DWTC-192', async () => {
       await addAllureLink('/DWTC-192', 'DWTC-192', 'jira')
       movementData.producer = beta2.commercialProducerWithOptionalValues()
-      movementData.producer.wasteSource = 'Household'
+      movementData.producer.wasteSource = 'HOUSEHOLD'
       delete movementData.producer.contactDetails.phoneNumber
 
       const response =

@@ -48,7 +48,7 @@ describe('Beta-2 Collection Creation - Collection site', () => {
     // Required fields removed for required-field error assertions
     it('should reject a collection when collection details are missing all required fields @allure.label.tag:DWTC-239', async () => {
       await addAllureLink('/DWTC-239', 'DWTC-239', 'jira')
-      delete collectionData.actualCollectionDateTime
+      delete collectionData.collectionDateTime
       const collectionSite = beta2.collectionSite()
       delete collectionSite.address
       delete collectionSite.contactDetails

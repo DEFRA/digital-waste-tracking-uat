@@ -19,24 +19,26 @@ export const beta2 = {
   reasonForNoAuthorisationNumber: 'Exemption pending renewal',
   reasonForNoRegistrationNumber: 'One-off arrangement',
   reasonForNoCarrierRegistrationNumber: 'ONE_OFF',
+  meansOfTransportOther: 'OTHER',
   otherMeansOfTransport: 'Horse and cart',
+  otherLabel: 'Site ticket',
   specialHandlingRequirements: 'Handle with care and keep upright.',
   reasonForNoConsignmentCode: 'Carrier did not provide a consignment note',
-  plannedCollectionDateTime: '2026-01-15T09:30:00Z',
-  actualCollectionDateTime: '2026-01-15T09:30:00Z',
+  collectionDateTime: '2026-01-15T09:30:00Z',
+  deliveryDateTime: '2026-10-14T11:00:00Z',
   receiptDateTime: '2026-10-14T09:30:00Z',
 
   /**
    * POST /beta-2/movements required fields. A Household producer needs only wasteSource.
    * At least one intended carrier, one intended receiver, and one waste item are required.
-   * plannedCollectionDateTime and collectionSite are required (DWTC-200).
+   * collectionDateTime and collectionSite are required (DWTC-200).
    * @returns {Object}
    */
   generateBaseMovementData: () => ({
     producer: {
-      wasteSource: 'Household'
+      wasteSource: 'HOUSEHOLD'
     },
-    plannedCollectionDateTime: beta2.plannedCollectionDateTime,
+    collectionDateTime: beta2.collectionDateTime,
     collectionSite: beta2.collectionSite(),
     intendedCarriers: [beta2.intendedCarrier()],
     intendedReceivers: [beta2.intendedReceiver()],
@@ -64,7 +66,7 @@ export const beta2 = {
   intendedCarrier: () => ({
     organisationName: 'Carrier Demo Ltd',
     registrationNumber: 'CBDU123456',
-    meansOfTransport: 'Road',
+    meansOfTransport: 'ROAD',
     vehicleRegistration: 'AB12 CDE',
     contactDetails: {
       emailAddress: 'carrier@example.com'
@@ -78,7 +80,7 @@ export const beta2 = {
   secondIntendedCarrier: () => ({
     organisationName: 'Second Carrier Ltd',
     registrationNumber: 'ROC UT 9999',
-    meansOfTransport: 'Rail',
+    meansOfTransport: 'RAIL',
     contactDetails: {
       phoneNumber: '01112223333'
     }
@@ -191,7 +193,7 @@ export const beta2 = {
     isPresent: true,
     codes: ['HP_4', 'HP_8'],
     componentsSource: 'OWN_TESTING',
-    componentsNotApplicable: false,
+    isComponentsNotApplicable: false,
     components: [beta2.hazardousComponentWithAmount()]
   }),
 
@@ -203,7 +205,7 @@ export const beta2 = {
     isPresent: true,
     codes: ['HP_14'],
     componentsSource: 'GUIDANCE',
-    componentsNotApplicable: true
+    isComponentsNotApplicable: true
   }),
 
   /**
@@ -358,25 +360,48 @@ export const beta2 = {
 
   /**
    * POST /beta-2/movements/{movementId}/collection required fields.
-   * actualCollectionDateTime and collectionSite are required (DWTC-239).
+   * collectionDateTime and collectionSite are required (DWTC-239).
    * @returns {Object}
    */
   generateBaseCollectionData: () => ({
     carrier: beta2.carrier(),
-    dutyOfCareConfirmed: true,
-    actualCollectionDateTime: beta2.actualCollectionDateTime,
+    isDutyOfCareConfirmed: true,
+    collectionDateTime: beta2.collectionDateTime,
     collectionSite: beta2.collectionSite()
   }),
 
   /**
    * POST /beta-2/deliveries required fields.
+   * deliveryDateTime and deliverySite are required.
    * @param {string[]} movementIds - Movement IDs from prior create submissions
    * @returns {Object}
    */
   generateBaseDeliveryData: (movementIds) => ({
     movementIds,
-    carrier: beta2.carrier()
+    carrier: beta2.carrier(),
+    deliveryDateTime: beta2.deliveryDateTime,
+    deliverySite: beta2.deliverySite()
   }),
+
+  /**
+   * Place the waste was delivered to. organisationName and address are required.
+   * fullAddress and rpsNumbers are optional.
+   * @returns {Object}
+   */
+  deliverySite: () => ({
+    organisationName: 'Receiver Site Ltd',
+    address: {
+      fullAddress: '3 Receiver Road, Test City',
+      postcode: 'TE1 3RC'
+    }
+  }),
+
+  /**
+   * Regulatory position statement numbers for a delivery site. Each is a whole
+   * number greater than 0.
+   * @returns {number[]}
+   */
+  rpsNumbers: () => [231],
 
   /**
    * POST /beta-2/deliveries/{deliveryId}/receipt required fields.
@@ -415,7 +440,7 @@ export const beta2 = {
    * @returns {Object}
    */
   commercialProducer: () => ({
-    wasteSource: 'Commercial',
+    wasteSource: 'COMMERCIAL',
     organisationName: 'ACME Waste Producers Ltd',
     authorisationNumber: 'EAS/P/123456',
     sicCode: '38110',
@@ -445,7 +470,7 @@ export const beta2 = {
    * @returns {Object}
    */
   municipalProducer: () => ({
-    wasteSource: 'Municipal',
+    wasteSource: 'MUNICIPAL',
     organisationName: 'Test Council',
     authorisationNumber: 'EAS/P/123456',
     address: {
@@ -494,8 +519,19 @@ export const beta2 = {
    * @returns {Object}
    */
   supportingReference: () => ({
-    label: 'PO Number',
+    label: 'PO_NUMBER',
     reference: 'PO-48213'
+  }),
+
+  /**
+   * A supporting reference whose label is not one of the named values.
+   * otherLabel is required when label is OTHER.
+   * @returns {Object}
+   */
+  supportingReferenceOther: () => ({
+    label: 'OTHER',
+    otherLabel: beta2.otherLabel,
+    reference: 'ST-100'
   }),
 
   /**
@@ -504,7 +540,7 @@ export const beta2 = {
    */
   supportingReferences: () => [
     beta2.supportingReference(),
-    { label: 'Job Number', reference: 'JB-9931' },
-    { label: 'Weighbridge Number', reference: 'WB-9931' }
+    { label: 'JOB_NUMBER', reference: 'JB-9931' },
+    { label: 'WEIGHBRIDGE_NUMBER', reference: 'WB-9931' }
   ]
 }

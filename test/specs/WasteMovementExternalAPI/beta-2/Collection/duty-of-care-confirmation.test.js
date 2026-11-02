@@ -45,7 +45,7 @@ describe('Beta-2 Collection Creation - Duty of care confirmation', () => {
 
     it('should create a collection when duty of care is declared as false @allure.label.tag:DWTC-232', async () => {
       await addAllureLink('/DWTC-232', 'DWTC-232', 'jira')
-      collectionData.dutyOfCareConfirmed = false
+      collectionData.isDutyOfCareConfirmed = false
 
       const movementId = await createMovement()
 
@@ -62,7 +62,7 @@ describe('Beta-2 Collection Creation - Duty of care confirmation', () => {
   describe('Problem Responses', () => {
     it('should reject a collection when duty of care confirmation is missing @allure.label.tag:DWTC-232', async () => {
       await addAllureLink('/DWTC-232', 'DWTC-232', 'jira')
-      delete collectionData.dutyOfCareConfirmed
+      delete collectionData.isDutyOfCareConfirmed
 
       const movementId = await createMovement()
 

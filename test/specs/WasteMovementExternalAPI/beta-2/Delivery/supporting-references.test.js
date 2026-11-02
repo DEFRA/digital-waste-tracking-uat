@@ -83,12 +83,12 @@ describe('Beta-2 Delivery Creation - Supporting references', () => {
       expectDeliveryRejected(response)
     })
 
-    it('should reject a supporting reference when the reference is longer than 50 characters @allure.label.tag:DWTC-215', async () => {
+    it('should reject a supporting reference when the reference is longer than 255 characters @allure.label.tag:DWTC-215', async () => {
       await addAllureLink('/DWTC-215', 'DWTC-215', 'jira')
       const movementId = await createMovementWithCollection()
       deliveryData = beta2.generateBaseDeliveryData([movementId])
       const supportingReference = beta2.supportingReference()
-      supportingReference.reference = 'A'.repeat(51)
+      supportingReference.reference = 'A'.repeat(256)
       deliveryData.supportingReferences = [supportingReference]
 
       const response =
