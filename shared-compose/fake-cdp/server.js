@@ -228,7 +228,11 @@ export function createFakeCdp({
       access_token_validity: 60,
       id_token_validity: 60,
       refresh_token_validity: 30,
-      token_validity_units: 'hours',
+      token_validity_units: {
+        AccessToken: 'hours',
+        IdToken: 'hours',
+        RefreshToken: 'days'
+      },
       client_secrets: (await listSecrets(poolId, ClientId)).map(
         ({ id, createdAt }) => ({ id, created_at: toCdpDate(createdAt) })
       )
@@ -457,16 +461,20 @@ export function createFakeCdp({
         throw new CdpError(400, 'Invalid JSON')
       }
 
-      if (body?.client_names) {
-        return send(
-          200,
-          await oneAtATime(poolId, () =>
-            actions[action](service, poolId, body, url.searchParams, clientId)
-          )
-        )
+      const names = body?.client_names
+      if (
+        !Array.isArray(names) ||
+        !names.every((name) => typeof name === 'string')
+      ) {
+        throw new CdpError(400, 'client_names must be an array of strings')
       }
 
-      throw new CdpError(400, 'client_names must be an array of strings')
+      return send(
+        200,
+        await oneAtATime(poolId, () =>
+          actions[action](service, poolId, body, url.searchParams, clientId)
+        )
+      )
     } catch (err) {
       if (err instanceof CdpError) {
         return send(err.statusCode, { message: err.message })
