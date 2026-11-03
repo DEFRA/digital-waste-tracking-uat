@@ -26,7 +26,7 @@
     "test:uat:client-sync": "jest --runInBand --testPathPattern \"ClientSync\"",
     "test:integration:client-sync": "jest --runInBand --testPathPattern \"ClientSync\" --testNamePattern \"^(?!.*@Authentication)\"",
     "test:uat:beta-1": "jest --testPathPattern \"beta-1\"",
-    "test:uat:beta-2": "jest --testPathPattern \"beta-2\"",
+    "test:uat:beta-2": "jest --testPathPattern \"beta-2\" --runInBand",
     "test:zap-gate": "PROXY_MODE=off API_CODE=skipGlobalSetup ORGANISATION_ID=skipGlobalSetup jest --testPathPattern zap-gate",
     "test:smoke": "jest --testNamePattern \"@smoke\"",
     "test:prod-smoke": "REDACT_SENSITIVE_ALLURE_HEADERS=true jest --testNamePattern \"@prod-smoke\"",
