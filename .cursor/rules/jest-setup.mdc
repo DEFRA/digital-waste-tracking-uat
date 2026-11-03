@@ -32,6 +32,6 @@ When `API_CODE` or `ORGANISATION_ID` is unset, `global-setup.js` creates an orga
 
 ## API rate limits and test concurrency
 
-- Keep `maxWorkers: 2`: four workers continued to cause HTTP 429s. Check request rates before increasing concurrency.
+- `maxWorkers` is `testConfig.maxWorkers`. `MAX_WORKERS` sets it. A missing or non-numeric value uses 3. Four workers continued to cause HTTP 429s. Check request rates before increasing concurrency.
 - Private APIs in `dev` and `test` default to 25 requests/second with a burst limit of 25. See [CDP throttling limits](https://portal.cdp-int.defra.cloud/documentation/faq/api-gateway.md#what-are-the-default-api-throttling-limits).
 - Worker limits do not enforce request rates. Avoid overlapping runs; use `--runInBand` if 429s persist. Keep the README guidance aligned.

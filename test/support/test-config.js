@@ -180,6 +180,15 @@ export class TestConfig {
     return process.env.ENVIRONMENT
   }
 
+  /**
+   * Jest worker count for this run.
+   * A missing or non-numeric MAX_WORKERS uses 3. Fewer workers keep API calls under the dev and test gateway limit.
+   * @returns {number}
+   */
+  get maxWorkers() {
+    return Number(process.env.MAX_WORKERS) || 3
+  }
+
   /** */
   get wasteMovementExternalApiBaseUrl() {
     return process.env.WASTE_MOVEMENT_EXTERNAL_API_BASE_URL
