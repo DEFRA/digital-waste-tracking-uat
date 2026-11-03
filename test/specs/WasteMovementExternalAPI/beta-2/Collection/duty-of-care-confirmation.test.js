@@ -29,7 +29,7 @@ describe('Beta-2 Collection Creation - Duty of care confirmation', () => {
   }
 
   describe('Successful Creation', () => {
-    it('should create a collection when a carrier confirms duty of care @allure.label.tag:DWTC-232', async () => {
+    it('should create a collection when a carrier confirms duty of care @smoke @allure.label.tag:DWTC-232', async () => {
       await addAllureLink('/DWTC-232', 'DWTC-232', 'jira')
 
       const movementId = await createMovement()

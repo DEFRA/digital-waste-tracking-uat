@@ -19,7 +19,7 @@ describe('Beta-2 Receipt Without Delivery ID - Receiver', () => {
   })
 
   describe('Successful Creation', () => {
-    it('should create a receipt without a delivery ID when a receiver with valid details is declared @allure.label.tag:DWTC-233', async () => {
+    it('should create a receipt without a delivery ID when a receiver with valid details is declared @smoke @allure.label.tag:DWTC-233', async () => {
       await addAllureLink('/DWTC-233', 'DWTC-233', 'jira')
 
       const response =

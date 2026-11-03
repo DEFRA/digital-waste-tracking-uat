@@ -1,7 +1,7 @@
 meta {
   name: Create Collection - Error - Movement Not Found
   type: http
-  seq: 5
+  seq: 4
 }
 
 post {
@@ -21,10 +21,23 @@ body:json {
     "carrier": {
       "organisationName": "Carrier Demo Ltd",
       "registrationNumber": "CBDU123456",
-      "meansOfTransport": "Road",
+      "meansOfTransport": "ROAD",
       "vehicleRegistration": "AB12 CDE",
       "contactDetails": {
-        "emailAddress": "carrier@example.com"
+        "emailAddress": "carrier@example.com",
+        "phoneNumber": "01234567890"
+      }
+    },
+    "isDutyOfCareConfirmed": true,
+    "collectionDateTime": "2026-01-15T09:30:00Z",
+    "collectionSite": {
+      "address": {
+        "fullAddress": "10 Industrial Way, Test City",
+        "postcode": "TE1 2PQ"
+      },
+      "contactDetails": {
+        "emailAddress": "site@example.com",
+        "phoneNumber": "01234567890"
       }
     }
   }
