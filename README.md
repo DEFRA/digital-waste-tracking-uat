@@ -65,6 +65,18 @@ npm test
 
 **Note:** The default `npm test` command runs all tests with Allure reporting. To run tests without reporting, use `jest` directly.
 
+### API rate limits and test workers
+
+Private APIs in `dev` and `test` default to **25 requests/second**, with a **burst limit of 25**. See [CDP's default API throttling limits](https://portal.cdp-int.defra.cloud/documentation/faq/api-gateway.md#what-are-the-default-api-throttling-limits).
+
+We reduced `maxWorkers` from 4 to **2** because parallel API calls continued to cause HTTP 429s. This reduces request bursts but does not enforce a request rate. Avoid overlapping runs and check the environment's limits before increasing workers.
+
+If 429s persist, run sequentially:
+
+```bash
+npm run test:integration -- --runInBand
+```
+
 ### Available NPM Scripts
 
 ```bash
