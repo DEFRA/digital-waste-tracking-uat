@@ -30,23 +30,15 @@ const skippedName = 'Skipped_By_Cdp'
 const refusedName = 'Refused_By_Cdp'
 
 // The route is /tenants/services/{service}/user-pool/{action}, with the
-// single-client fetch-details having an extra clients/{client_id} segment
-const routePattern = (pathname) => {
-  const segments = pathname.split('/')
-  // ["", "tenants", "services", service, "user-pool", ...action segments]
-  if (
-    segments[1] !== 'tenants' ||
-    segments[2] !== 'services' ||
-    segments[4] !== 'user-pool'
-  ) {
-    return undefined
-  }
-  const [_a, _b, _c, service, _d, ...actionSegments] = segments
-  const action = actionSegments.at(-1)
-  // ["fetch-details"] or ["clients", client_id, "fetch-details"]
-  const clientId =
-    actionSegments[0] === 'clients' ? actionSegments.at(-2) : null
-  return [service, action, clientId]
+// single-client fetch-details having an extra clients/{client_id} segment.
+// A regex, not a split, so the parser only accepts shapes CDP has: lowercase
+// letters and hyphens in the action, and a client_id on fetch-details alone
+const routePattern =
+  /^\/tenants\/services\/([^/]+)\/user-pool\/(?:clients\/([^/]+)\/(?=fetch-details$))?([a-z-]+)$/
+const routeMatch = (pathname) => {
+  const match = pathname.match(routePattern)
+  if (!match) return undefined
+  return [match[1], match[3], match[2]]
 }
 
 class CdpError extends Error {
@@ -425,7 +417,7 @@ export function createFakeCdp({
         return send(200, { message: 'success' })
       }
 
-      const match = routePattern(url.pathname)
+      const match = routeMatch(url.pathname)
       const [service, action, clientId] = match ?? []
       const isFetch = action === 'fetch-details'
 

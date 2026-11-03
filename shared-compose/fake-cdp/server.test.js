@@ -590,5 +590,39 @@ describe('Fake CDP credentials API', () => {
 
       assert.equal(status, 404)
     })
+
+    test("a client_id on an action CDP doesn't have", async () => {
+      const response = await fetch(
+        `${baseUrl}/tenants/services/${service}/user-pool/clients/${seededId}/create-clients`,
+        {
+          method: 'POST',
+          headers: {
+            authorization: 'signed',
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({ client_names: ['New_Client'] })
+        }
+      )
+
+      assert.equal(response.status, 404)
+    })
+
+    test("an action CDP doesn't have, with a client_id segment", async () => {
+      const response = await fetch(
+        `${baseUrl}/tenants/services/${service}/user-pool/clients/${seededId}/anything`,
+        { headers: { authorization: 'signed' } }
+      )
+
+      assert.equal(response.status, 404)
+    })
+
+    test("an action CDP doesn't have, with a fetch-details client_id", async () => {
+      const response = await fetch(
+        `${baseUrl}/tenants/services/${service}/user-pool/anything/fetch-details`,
+        { headers: { authorization: 'signed' } }
+      )
+
+      assert.equal(response.status, 404)
+    })
   })
 })
