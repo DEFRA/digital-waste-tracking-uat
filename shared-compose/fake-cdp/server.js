@@ -226,7 +226,7 @@ export function createFakeCdp({
       allowed_oauth_scopes: AllowedOAuthScopes,
       allowed_oauth_flows_user_pool_client: AllowedOAuthFlowsUserPoolClient,
       explicit_auth_flows: ExplicitAuthFlows,
-      // Floci doesn't return them, so CDP's defaults are used
+      // Floci doesn't return these, uses arbitrary values
       access_token_validity: 60,
       id_token_validity: 60,
       refresh_token_validity: 30,
@@ -479,11 +479,11 @@ export function createFakeCdp({
       )
     } catch (err) {
       if (err instanceof CdpError) {
-        return send(err.statusCode, { message: err.message })
+        return send(err.statusCode, err.message)
       }
 
       console.error(err)
-      return send(500, { message: 'Internal Server Error' })
+      return send(500, 'Internal Server Error')
     }
   })
 }
