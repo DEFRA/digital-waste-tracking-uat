@@ -213,7 +213,7 @@ source ../env.sh
 npm test
 ```
 
-See `CONFIGURATION.md` for detailed setup instructions.
+`MAX_WORKERS` sets how many Jest workers run in parallel. A missing or non-numeric value uses 3. See `CONFIGURATION.md` for detailed setup instructions.
 
 ## Test Organization
 

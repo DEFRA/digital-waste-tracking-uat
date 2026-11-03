@@ -1,3 +1,5 @@
+import { testConfig } from './test/support/test-config.js'
+
 export default {
   testEnvironment: 'allure-jest/node',
   setupFilesAfterEnv: ['<rootDir>/test/support/jest/setup.js'],
@@ -16,7 +18,7 @@ export default {
   testMatch: ['**/test/specs/**/*.js'],
   verbose: true,
   transformIgnorePatterns: [],
-  maxWorkers: 4, // Limited to 4 to avoid 429s in dev/test (single instance). Reduced from 5 to avoid CDP rate limiting. If it happens again, raise with CDP team.
+  maxWorkers: testConfig.maxWorkers, // MAX_WORKERS, default 3. See README.md#api-rate-limits-and-test-workers.
   testTimeout: 60000, // Longer timeout for individual tests
   forceExit: false, // Let Jest handle cleanup properly
   detectOpenHandles: false // Disable to avoid interference with undici

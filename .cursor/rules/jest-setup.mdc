@@ -29,3 +29,9 @@ Create a new API client set for each test so request state, including the bearer
 ## Organisation and API code
 
 When `API_CODE` or `ORGANISATION_ID` is unset, `global-setup.js` creates an organisation, reads its API code, and stores both on `process.env`. Production must already have both set; setup throws if either is missing. Tests use `globalThis.testConfig.apiCode` and `globalThis.testConfig.organisationId`.
+
+## API rate limits and test concurrency
+
+- `maxWorkers` is `testConfig.maxWorkers`. `MAX_WORKERS` sets it. A missing or non-numeric value uses 3. Four workers continued to cause HTTP 429s. Check request rates before increasing concurrency.
+- Private APIs in `dev` and `test` default to 25 requests/second with a burst limit of 25. See [CDP throttling limits](https://portal.cdp-int.defra.cloud/documentation/faq/api-gateway.md#what-are-the-default-api-throttling-limits).
+- Worker limits do not enforce request rates. Avoid overlapping runs; use `--runInBand` if 429s persist. Keep the README guidance aligned.

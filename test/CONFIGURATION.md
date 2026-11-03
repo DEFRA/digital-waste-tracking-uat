@@ -16,6 +16,7 @@ This test suite requires certain environment variables to be set for authenticat
 ### Optional Environment Variables
 
 - `ENVIRONMENT`: The environment name (defaults to 'test')
+- `MAX_WORKERS`: Jest worker count, read from `testConfig.maxWorkers` when Jest loads its config. A missing or non-numeric value uses 3. Set it in `env.sh` before Jest starts, for example `export MAX_WORKERS=2`
 - `RESULTS_OUTPUT_S3_PATH`: S3 path for publishing test results (used in CI/CD)
 - `API_CODE`: Organisation API code for movement payloads
 - `ORGANISATION_ID`: Defra customer organisation ID for bulk upload payloads
