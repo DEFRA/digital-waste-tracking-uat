@@ -42,9 +42,10 @@ const routeMatch = (pathname) => {
 }
 
 class CdpError extends Error {
-  constructor(statusCode, message) {
+  constructor(statusCode, message, fromLambda = false) {
     super(message)
     this.statusCode = statusCode
+    this.fromLambda = fromLambda
   }
 }
 
@@ -190,20 +191,19 @@ export function createFakeCdp({
   // .../user-pool/clients/{client_id}/fetch-details: the OAuth settings and
   // the ids and dates of its secrets, but never their values
   const describeClient = async (service, poolId, clientId) => {
-    let UserPoolClient
-    try {
-      // eslint-disable-next-line no-extra-semi
-      ;({ UserPoolClient } = await cognito('DescribeUserPoolClient', {
-        UserPoolId: poolId,
-        ClientId: clientId
-      }))
-    } catch (err) {
+    const { UserPoolClient } = await cognito('DescribeUserPoolClient', {
+      UserPoolId: poolId,
+      ClientId: clientId
+    }).catch((err) => {
       // Floci reports a missing client as a Cognito ResourceNotFoundException
       if (/ResourceNotFoundException/.test(err.message)) {
-        throw new CdpError(404, 'Not Found')
+        throw new CdpError(
+          404,
+          `Client ${clientId} does not exist in user pool ${service}.`
+        )
       }
       throw err
-    }
+    })
 
     const {
       ClientId,
@@ -479,7 +479,10 @@ export function createFakeCdp({
       )
     } catch (err) {
       if (err instanceof CdpError) {
-        return send(err.statusCode, err.message)
+        const errorMessage = err.fromLambda
+          ? err.message
+          : { message: err.message }
+        return send(err.statusCode, errorMessage)
       }
 
       console.error(err)
