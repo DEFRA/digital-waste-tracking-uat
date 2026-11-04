@@ -29,17 +29,17 @@ mongosh --quiet --eval "
   // index dwt-client-sync creates on tenantServiceName and clientId
   [
   {
-    clientName: 'Test Client 1',
+    clientName: 'Test_Client_1',
     clientId: '1234567890abcdef1234567890',
     tenantServiceName: 'waste-movement-external-api'
   },
   {
-    clientName: 'Test Client 2',
+    clientName: 'Test_Client_2',
     clientId: '0987654321fedcba0987654321',
     tenantServiceName: 'waste-movement-external-api'
   },
   {
-    clientName: 'Test Client 3',
+    clientName: 'Test_Client_3',
     clientId: 'abcdefghijklmnopqrstuvwxyz',
     tenantServiceName: 'waste-movement-external-api'
   }

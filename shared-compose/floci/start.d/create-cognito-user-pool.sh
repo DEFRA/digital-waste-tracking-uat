@@ -1,6 +1,6 @@
 #!/bin/sh
 # Creates the local Cognito user pool that the external API trusts, and the
-# clients the stack starts with: the seeded "Test Client"s from
+# clients the stack starts with: the seeded "Test_Client"s from
 # mongo_setup.sh and the fake CDP's other sample clients. The fake CDP
 # (fake-cdp/server.js) manages clients in this pool, as CDP does in Cognito.
 # Floci keeps the pool (and its signing key) on the floci-data volume, so the
@@ -60,11 +60,11 @@ seed_client() {
     --client-name "$client_name"
 }
 
-seed_client 1a2b3c4d5e6f7g8h9i0j009988 'Acme Waste Software'
-seed_client 9z8y7x6w5v4u3t2s1r0q5rt43e 'Beta Tracking Ltd'
-seed_client 1234567890abcdef1234567890 'Test Client 1'
-seed_client 0987654321fedcba0987654321 'Test Client 2'
-seed_client abcdefghijklmnopqrstuvwxyz 'Test Client 3'
+seed_client 1a2b3c4d5e6f7g8h9i0j009988 'Acme_Waste_Software'
+seed_client 9z8y7x6w5v4u3t2s1r0q5rt43e 'Beta_Tracking_Ltd'
+seed_client 1234567890abcdef1234567890 'Test_Client_1'
+seed_client 0987654321fedcba0987654321 'Test_Client_2'
+seed_client abcdefghijklmnopqrstuvwxyz 'Test_Client_3'
 
 # Floci's health check waits for this
 touch /tmp/cognito-seeded

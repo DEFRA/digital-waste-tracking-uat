@@ -70,10 +70,10 @@ jobs:
           AUTH_DISABLED: false
           # The Floci user pool in shared-compose; these are the seeded local test clients
           COGNITO_CLIENT_ID: '1234567890abcdef1234567890'
-          COGNITO_CLIENT_NAME: 'Test Client 1'
+          COGNITO_CLIENT_NAME: 'Test_Client_1'
           COGNITO_CLIENT_SECRET: local
           COGNITO_CLIENT_ID_2: '0987654321fedcba0987654321'
-          COGNITO_CLIENT_NAME_2: 'Test Client 2'
+          COGNITO_CLIENT_NAME_2: 'Test_Client_2'
           COGNITO_CLIENT_SECRET_2: local
           COGNITO_OAUTH_BASE_URL: http://floci:4566/cognito-idp
           ENVIRONMENT: dev

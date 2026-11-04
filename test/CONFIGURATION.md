@@ -8,10 +8,10 @@ This test suite requires certain environment variables to be set for authenticat
 
 - `COGNITO_CLIENT_ID`: Your Cognito client ID for OAuth2 client credentials flow
 - `COGNITO_CLIENT_SECRET`: Your Cognito client secret for OAuth2 client credentials flow
-- `COGNITO_CLIENT_NAME`: Display name for the primary Cognito client (default: `Test Client 1`; set per environment in `env.sh`)
+- `COGNITO_CLIENT_NAME`: Display name for the primary Cognito client (default: `Test_Client_1`; set per environment in `env.sh`)
 - `COGNITO_CLIENT_ID_2`: Second Cognito client ID for cross-client ownership tests (e.g. PAT)
 - `COGNITO_CLIENT_SECRET_2`: Second Cognito client secret for cross-client ownership tests
-- `COGNITO_CLIENT_NAME_2`: Display name for the second Cognito client (default: `Test Client 2`; set per environment in `env.sh`)
+- `COGNITO_CLIENT_NAME_2`: Display name for the second Cognito client (default: `Test_Client_2`; set per environment in `env.sh`)
 
 ### Optional Environment Variables
 
