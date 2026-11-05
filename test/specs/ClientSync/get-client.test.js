@@ -22,7 +22,19 @@ describe('Get a single client from DWT Client Sync Service', () => {
         expect(client).toEqual({
           clientName: globalThis.testConfig.cognitoClientName,
           clientId: globalThis.testConfig.cognitoClientId,
-          tenantServiceName: DEFAULT_TENANT_SERVICE_NAME
+          tenantServiceName: DEFAULT_TENANT_SERVICE_NAME,
+          secrets: [
+            {
+              createdAt: expect.stringMatching(
+                /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00$/
+              ),
+              id: expect.stringMatching(
+                new RegExp(
+                  `^${globalThis.testConfig.cognitoClientId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}--\\d+$`
+                )
+              )
+            }
+          ]
         })
       }
     )

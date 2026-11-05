@@ -46,7 +46,17 @@ describe('Create a client in DWT Client Sync Service', () => {
         const expectedClient = {
           clientName,
           clientId: createdClientId,
-          tenantServiceName: DEFAULT_TENANT_SERVICE_NAME
+          tenantServiceName: DEFAULT_TENANT_SERVICE_NAME,
+          secrets: [
+            {
+              createdAt: expect.stringMatching(
+                /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00$/
+              ),
+              id: expect.stringMatching(
+                new RegExp(`^${createdClientId}--\\d+$`)
+              )
+            }
+          ]
         }
 
         const { statusCode: getStatusBeforeSync, json: clientBeforeSync } =

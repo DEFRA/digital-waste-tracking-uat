@@ -31,7 +31,19 @@ describe('Get all clients from DWT Client Sync Service', () => {
         ).toEqual({
           clientName: globalThis.testConfig.cognitoClientName,
           clientId: globalThis.testConfig.cognitoClientId,
-          tenantServiceName: DEFAULT_TENANT_SERVICE_NAME
+          tenantServiceName: DEFAULT_TENANT_SERVICE_NAME,
+          secrets: [
+            {
+              createdAt: expect.stringMatching(
+                /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00$/
+              ),
+              id: expect.stringMatching(
+                new RegExp(
+                  `^${globalThis.testConfig.cognitoClientId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}--\\d+$`
+                )
+              )
+            }
+          ]
         })
 
         expect(
@@ -42,7 +54,19 @@ describe('Get all clients from DWT Client Sync Service', () => {
         ).toEqual({
           clientName: globalThis.testConfig.cognitoClientName2,
           clientId: globalThis.testConfig.cognitoClientId2,
-          tenantServiceName: DEFAULT_TENANT_SERVICE_NAME
+          tenantServiceName: DEFAULT_TENANT_SERVICE_NAME,
+          secrets: [
+            {
+              createdAt: expect.stringMatching(
+                /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00$/
+              ),
+              id: expect.stringMatching(
+                new RegExp(
+                  `^${globalThis.testConfig.cognitoClientId2.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}--\\d+$`
+                )
+              )
+            }
+          ]
         })
       }
     )

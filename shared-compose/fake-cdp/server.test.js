@@ -66,6 +66,11 @@ describe('Fake CDP credentials API', () => {
     return { status: response.status, body: await response.json() }
   }
 
+  // The single-client fetch-details differs from the all-clients one in URL
+  // (a `clients/${client_id}` segment), so it has its own helper
+  const callSingleClientFetchDetails = async (clientId) =>
+    call(`clients/${clientId}/fetch-details`, undefined, { method: 'GET' })
+
   const list = async () =>
     (await call('fetch-details')).body.client_details
       .map(({ client_name: name }) => name)
@@ -168,7 +173,78 @@ describe('Fake CDP credentials API', () => {
     }
   })
 
-  describe('fetch-details', () => {
+  describe('fetch-details (single client)', () => {
+    // Fetches from `${baseUrl}/tenants/services/${service}/user-pool/clients/${client_id}/fetch-details`,
+    test("lists a single client with secrets' ids and dates, but not their values", async () => {
+      const { status, body } = await callSingleClientFetchDetails(seededId)
+
+      assert.equal(status, 200)
+      assert.equal(body.cognito_user_pool_id, poolId)
+      assert.equal(body.tenant_service_name, service)
+      assert.deepEqual(Object.keys(body.client_details), [
+        'client_name',
+        'client_id',
+        'created_at',
+        'last_modified_at',
+        'allowed_oauth_flows',
+        'allowed_oauth_scopes',
+        'allowed_oauth_flows_user_pool_client',
+        'explicit_auth_flows',
+        'access_token_validity',
+        'id_token_validity',
+        'refresh_token_validity',
+        'token_validity_units',
+        'client_secrets'
+      ])
+      assert.equal(body.client_details.client_name, 'Seeded Client')
+      assert.equal(body.client_details.client_id, seededId)
+      assert.equal(body.client_details.client_secret, undefined)
+      assert.equal(body.client_details.client_secrets.length, 1)
+      assert.match(
+        body.client_details.client_secrets[0].id,
+        new RegExp(`^${seededId}--\\d+$`)
+      )
+      assert.deepEqual(Object.keys(body.client_details.client_secrets[0]), [
+        'id',
+        'created_at'
+      ])
+    })
+
+    test('lists a rotated client with both secrets', async () => {
+      await rotate('Seeded Client')
+
+      const { body } = await callSingleClientFetchDetails(seededId)
+
+      assert.equal(body.client_details.client_secrets.length, 2)
+    })
+
+    test("gives each secret an id ending in its creation time, and CDP's date format", async () => {
+      await rotate('Seeded Client')
+
+      const { body } = await callSingleClientFetchDetails(seededId)
+
+      for (const secret of body.client_details.client_secrets) {
+        assert.match(
+          secret.created_at,
+          /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{6}\+00:00$/
+        )
+        assert.equal(
+          Number(secret.id.split('--')[1]),
+          Date.parse(secret.created_at)
+        )
+      }
+    })
+
+    test("returns 404 error if the client doesn't exist", async () => {
+      const { status } = await callSingleClientFetchDetails(
+        'nonexistentclientid0000000000000'
+      )
+
+      assert.equal(status, 404)
+    })
+  })
+
+  describe('fetch-details (all clients)', () => {
     test("lists the clients with their secrets' ids and dates, but not their values", async () => {
       const { status, body } = await call('fetch-details')
       const [client] = body.client_details
@@ -513,6 +589,40 @@ describe('Fake CDP credentials API', () => {
       const { status } = await call('nope', undefined)
 
       assert.equal(status, 404)
+    })
+
+    test("a client_id on an action CDP doesn't have", async () => {
+      const response = await fetch(
+        `${baseUrl}/tenants/services/${service}/user-pool/clients/${seededId}/create-clients`,
+        {
+          method: 'POST',
+          headers: {
+            authorization: 'signed',
+            'content-type': 'application/json'
+          },
+          body: JSON.stringify({ client_names: ['New_Client'] })
+        }
+      )
+
+      assert.equal(response.status, 404)
+    })
+
+    test("an action CDP doesn't have, with a client_id segment", async () => {
+      const response = await fetch(
+        `${baseUrl}/tenants/services/${service}/user-pool/clients/${seededId}/anything`,
+        { headers: { authorization: 'signed' } }
+      )
+
+      assert.equal(response.status, 404)
+    })
+
+    test("an action CDP doesn't have, with a fetch-details client_id", async () => {
+      const response = await fetch(
+        `${baseUrl}/tenants/services/${service}/user-pool/anything/fetch-details`,
+        { headers: { authorization: 'signed' } }
+      )
+
+      assert.equal(response.status, 404)
     })
   })
 })

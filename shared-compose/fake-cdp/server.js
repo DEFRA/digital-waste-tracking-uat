@@ -29,12 +29,23 @@ const clientSettings = {
 const skippedName = 'Skipped_By_Cdp'
 const refusedName = 'Refused_By_Cdp'
 
-const routePattern = /^\/tenants\/services\/([^/]+)\/user-pool\/([a-z-]+)$/
+// The route is /tenants/services/{service}/user-pool/{action}, with the
+// single-client fetch-details having an extra clients/{client_id} segment.
+// A regex, not a split, so the parser only accepts shapes CDP has: lowercase
+// letters and hyphens in the action, and a client_id on fetch-details alone
+const routePattern =
+  /^\/tenants\/services\/([^/]+)\/user-pool\/(?:clients\/([^/]+)\/(?=fetch-details$))?([a-z-]+)$/
+const routeMatch = (pathname) => {
+  const match = pathname.match(routePattern)
+  if (!match) return undefined
+  return [match[1], match[3], match[2]]
+}
 
 class CdpError extends Error {
-  constructor(statusCode, message) {
+  constructor(statusCode, message, fromLambda = false) {
     super(message)
     this.statusCode = statusCode
+    this.fromLambda = fromLambda
   }
 }
 
@@ -176,10 +187,70 @@ export function createFakeCdp({
     client_secret: secret
   })
 
+  // The details of a single client, as CDP returns them on
+  // .../user-pool/clients/{client_id}/fetch-details: the OAuth settings and
+  // the ids and dates of its secrets, but never their values
+  const describeClient = async (service, poolId, clientId) => {
+    const { UserPoolClient } = await cognito('DescribeUserPoolClient', {
+      UserPoolId: poolId,
+      ClientId: clientId
+    }).catch((err) => {
+      // Floci reports a missing client as a Cognito ResourceNotFoundException
+      if (/ResourceNotFoundException/.test(err.message)) {
+        throw new CdpError(
+          404,
+          `Client ${clientId} does not exist in user pool ${service}.`
+        )
+      }
+      throw err
+    })
+
+    const {
+      ClientId,
+      ClientName,
+      // Floci gives creation dates in seconds
+      CreationDate,
+      LastModifiedDate,
+      AllowedOAuthFlows,
+      AllowedOAuthScopes,
+      AllowedOAuthFlowsUserPoolClient,
+      ExplicitAuthFlows
+    } = UserPoolClient
+
+    const clientDetails = {
+      client_name: ClientName,
+      client_id: ClientId,
+      created_at: toCdpDate(new Date(CreationDate * 1000)),
+      last_modified_at: toCdpDate(new Date(LastModifiedDate * 1000)),
+      allowed_oauth_flows: AllowedOAuthFlows,
+      allowed_oauth_scopes: AllowedOAuthScopes,
+      allowed_oauth_flows_user_pool_client: AllowedOAuthFlowsUserPoolClient,
+      explicit_auth_flows: ExplicitAuthFlows,
+      // Floci doesn't return these, uses arbitrary values
+      access_token_validity: 60,
+      id_token_validity: 60,
+      refresh_token_validity: 30,
+      token_validity_units: {
+        AccessToken: 'hours',
+        IdToken: 'hours',
+        RefreshToken: 'days'
+      },
+      client_secrets: (await listSecrets(poolId, ClientId)).map(
+        ({ id, createdAt }) => ({ id, created_at: toCdpDate(createdAt) })
+      )
+    }
+
+    return response(service, poolId, clientDetails)
+  }
+
   const actions = {
     // A page of clients, each with its secrets' ids and creation dates but
     // never their values
-    'fetch-details': async (service, poolId, _body, query) => {
+    'fetch-details': async (service, poolId, _body, query, clientId) => {
+      if (clientId) {
+        return describeClient(service, poolId, clientId)
+      }
+
       const pageSize = Number(query.get('page_size') ?? maxPageSize)
       if (
         !Number.isInteger(pageSize) ||
@@ -346,7 +417,8 @@ export function createFakeCdp({
         return send(200, { message: 'success' })
       }
 
-      const [, service, action] = url.pathname.match(routePattern) ?? []
+      const match = routeMatch(url.pathname)
+      const [service, action, clientId] = match ?? []
       const isFetch = action === 'fetch-details'
 
       if (!actions[action] || req.method !== (isFetch ? 'GET' : 'POST')) {
@@ -371,7 +443,7 @@ export function createFakeCdp({
         return send(
           200,
           await oneAtATime(poolId, () =>
-            actions[action](service, poolId, null, url.searchParams)
+            actions[action](service, poolId, null, url.searchParams, clientId)
           )
         )
       }
@@ -401,15 +473,20 @@ export function createFakeCdp({
 
       return send(
         200,
-        await oneAtATime(poolId, () => actions[action](service, poolId, body))
+        await oneAtATime(poolId, () =>
+          actions[action](service, poolId, body, url.searchParams, clientId)
+        )
       )
     } catch (err) {
       if (err instanceof CdpError) {
-        return send(err.statusCode, { message: err.message })
+        const errorMessage = err.fromLambda
+          ? err.message
+          : { message: err.message }
+        return send(err.statusCode, errorMessage)
       }
 
       console.error(err)
-      return send(500, { message: 'Internal Server Error' })
+      return send(500, 'Internal Server Error')
     }
   })
 }
