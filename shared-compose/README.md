@@ -97,7 +97,8 @@ Cognito on CDP.
 - It starts with five clients for `waste-movement-external-api`, seeded by
   `floci/start.d`, including the test clients `Test_Client_1` and
   `Test_Client_2` (secret `local`). Clients it creates get their own ids and
-  secrets.
+  secrets. Client sync syncs once when it starts, so it stores the seeded
+  clients' secret ids and dates too.
 - Floci keeps the pool on the `floci-data` volume, so clients a test creates
   survive a restart until they're deleted. `docker compose down -v` starts
   afresh.
