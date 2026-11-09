@@ -117,6 +117,9 @@ services:
       # Keep the pool and its signing key across restarts: the API caches the JWKS
       FLOCI_STORAGE_MODE: persistent
       FLOCI_STORAGE_PERSISTENT_PATH: /app/data
+      # The start script makes ~20 AWS CLI calls, which can take longer than
+      # Floci's 30-second default on a slow machine
+      FLOCI_INIT_HOOKS_TIMEOUT_SECONDS: 90
     volumes:
       # Floci runs these scripts once it has started
       - ./floci/start.d:/etc/floci/init/start.d:ro,Z
