@@ -19,22 +19,27 @@ describe('Get a single client from DWT Client Sync Service', () => {
 
         expect(statusCode).toBe(200)
         expect(Array.isArray(client)).toBe(false)
+        // Cognito may retain a second secret after rotation on shared clients
+        expect(client.secrets.length).toBeGreaterThanOrEqual(1)
+        expect(client.secrets.length).toBeLessThanOrEqual(2)
+        const secretMatcher = {
+          createdAt: expect.stringMatching(
+            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00$/
+          ),
+          id: expect.stringMatching(
+            new RegExp(
+              `^${globalThis.testConfig.cognitoClientId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}--\\d+$`
+            )
+          )
+        }
         expect(client).toEqual({
           clientName: globalThis.testConfig.cognitoClientName,
           clientId: globalThis.testConfig.cognitoClientId,
           tenantServiceName: DEFAULT_TENANT_SERVICE_NAME,
-          secrets: [
-            {
-              createdAt: expect.stringMatching(
-                /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00$/
-              ),
-              id: expect.stringMatching(
-                new RegExp(
-                  `^${globalThis.testConfig.cognitoClientId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}--\\d+$`
-                )
-              )
-            }
-          ]
+          secrets: Array.from(
+            { length: client.secrets.length },
+            () => secretMatcher
+          )
         })
       }
     )

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { expectedClientWithSecrets } from '~/test/support/helpers/client-sync.js'
 import { DEFAULT_TENANT_SERVICE_NAME } from '~/test/apis/wasteMovementClientSyncApi.js'
 
 describe('Purge the oldest client secret in DWT Client Sync Service', () => {
@@ -7,6 +8,7 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
 
   beforeEach(async () => {
     await addAllureLink('/DWTSPI-453', 'DWTSPI-453', 'jira')
+    await addAllureLink('/DWTSPI-498', 'DWTSPI-498', 'jira')
     createdClientId = undefined
   })
 
@@ -21,8 +23,8 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
 
   describe('Valid secret purge', () => {
     it(
-      'should remove the oldest secret and keep the newest one usable' +
-        ' @allure.label.tag:DWTSPI-453 @Authentication',
+      'should remove the oldest secret metadata and keep the newest one usable' +
+        ' @allure.label.tag:DWTSPI-453 @allure.label.tag:DWTSPI-498',
       async () => {
         const clientName = `UAT_Purge_${Date.now()}`
         const { statusCode: createStatus, json: created } =
@@ -42,6 +44,15 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
         expect(rotateStatus).toBe(200)
         expect(rotated.clientSecret).not.toBe(originalSecret)
 
+        const { statusCode: beforePurgeGetStatus, json: beforePurge } =
+          await globalThis.apis.wasteMovementClientSyncAPI.getClient(
+            createdClientId
+          )
+        expect(beforePurgeGetStatus).toBe(200)
+        expect(beforePurge).toEqual(
+          expectedClientWithSecrets(clientName, createdClientId, 2)
+        )
+
         const { statusCode: purgeStatus, json: purgeBody } =
           await globalThis.apis.wasteMovementClientSyncAPI.purgeClientSecret(
             createdClientId,
@@ -50,6 +61,30 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
 
         expect(purgeStatus).toBe(204)
         expect(purgeBody).toBeUndefined()
+
+        const expectedAfterPurge = expectedClientWithSecrets(
+          clientName,
+          createdClientId,
+          1
+        )
+
+        const { statusCode: afterPurgeGetStatus, json: afterPurge } =
+          await globalThis.apis.wasteMovementClientSyncAPI.getClient(
+            createdClientId
+          )
+        expect(afterPurgeGetStatus).toBe(200)
+        expect(afterPurge).toEqual(expectedAfterPurge)
+
+        const { statusCode: syncStatus } =
+          await globalThis.apis.wasteMovementClientSyncAPI.syncClients()
+        expect(syncStatus).toBe(200)
+
+        const { statusCode: getAfterSyncStatus, json: clientAfterSync } =
+          await globalThis.apis.wasteMovementClientSyncAPI.getClient(
+            createdClientId
+          )
+        expect(getAfterSyncStatus).toBe(200)
+        expect(clientAfterSync).toEqual(expectedAfterPurge)
 
         const { statusCode: newAuthStatus } =
           await globalThis.apis.cognitoOAuthApi.authenticate(
@@ -68,12 +103,13 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
     )
 
     it(
-      'should return 204 when the client has only one secret and leave that secret usable' +
-        ' @allure.label.tag:DWTSPI-453 @Authentication',
+      'should return 204 when the client has only one secret, leave that secret usable, and keep one secret metadata entry' +
+        ' @allure.label.tag:DWTSPI-453 @allure.label.tag:DWTSPI-498',
       async () => {
+        const clientName = `UAT_Purge_OneSecret_${Date.now()}`
         const { statusCode: createStatus, json: created } =
           await globalThis.apis.wasteMovementClientSyncAPI.createClient(
-            `UAT_Purge_OneSecret_${Date.now()}`
+            clientName
           )
 
         expect(createStatus).toBe(200)
@@ -87,6 +123,15 @@ describe('Purge the oldest client secret in DWT Client Sync Service', () => {
 
         expect(purgeStatus).toBe(204)
         expect(purgeBody).toBeUndefined()
+
+        const { statusCode: getStatus, json: client } =
+          await globalThis.apis.wasteMovementClientSyncAPI.getClient(
+            createdClientId
+          )
+        expect(getStatus).toBe(200)
+        expect(client).toEqual(
+          expectedClientWithSecrets(clientName, createdClientId, 1)
+        )
 
         const { statusCode: authStatus } =
           await globalThis.apis.cognitoOAuthApi.authenticate(

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals'
 import { addAllureLink } from '~/test/support/helpers/allure-api-logger.js'
+import { expectedClientWithSecrets } from '~/test/support/helpers/client-sync.js'
 import { DEFAULT_TENANT_SERVICE_NAME } from '~/test/apis/wasteMovementClientSyncApi.js'
 
 describe('Rotate a client secret in DWT Client Sync Service', () => {
@@ -7,6 +8,7 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
 
   beforeEach(async () => {
     await addAllureLink('/DWTA-445', 'DWTA-445', 'jira')
+    await addAllureLink('/DWTSPI-498', 'DWTSPI-498', 'jira')
     createdClientId = undefined
   })
 
@@ -21,8 +23,8 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
 
   describe('Valid secret rotation', () => {
     it(
-      'should rotate the client secret and allow authentication with the new secret' +
-        ' @allure.label.tag:DWTA-445 @Authentication',
+      'should rotate the client secret, expose two secret metadata entries, and allow authentication with the new secret' +
+        ' @allure.label.tag:DWTA-445 @allure.label.tag:DWTSPI-498',
       async () => {
         const clientName = `UAT_Rotate_${Date.now()}`
         const { statusCode: createStatus, json: created } =
@@ -33,6 +35,16 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
         expect(createStatus).toBe(200)
         createdClientId = created.clientId
         const originalSecret = created.clientSecret
+
+        const { statusCode: beforeRotateGetStatus, json: beforeRotate } =
+          await globalThis.apis.wasteMovementClientSyncAPI.getClient(
+            createdClientId
+          )
+        expect(beforeRotateGetStatus).toBe(200)
+        expect(beforeRotate).toEqual(
+          expectedClientWithSecrets(clientName, createdClientId, 1)
+        )
+        const previousNewestCreatedAt = beforeRotate.secrets[0].createdAt
 
         const {
           statusCode,
@@ -48,8 +60,48 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
           clientId: createdClientId,
           clientSecret: expect.any(String)
         })
+        expect(rotated).not.toHaveProperty('secrets')
         expect(rotated.clientSecret).not.toBe(originalSecret)
         expect(headers['cache-control']).toBe('no-store')
+
+        const expectedClient = expectedClientWithSecrets(
+          clientName,
+          createdClientId,
+          2
+        )
+
+        const { statusCode: getStatus, json: client } =
+          await globalThis.apis.wasteMovementClientSyncAPI.getClient(
+            createdClientId
+          )
+        expect(getStatus).toBe(200)
+        expect(client).toEqual(expectedClient)
+
+        const newestCreatedAt = client.secrets
+          .map((secret) => secret.createdAt)
+          .sort()
+          .at(-1)
+        expect(Date.parse(newestCreatedAt)).toBeGreaterThanOrEqual(
+          Date.parse(previousNewestCreatedAt)
+        )
+
+        const { statusCode: listStatus, json: clients } =
+          await globalThis.apis.wasteMovementClientSyncAPI.getClients()
+        expect(listStatus).toBe(200)
+        expect(
+          clients.find((listed) => listed.clientId === createdClientId)
+        ).toEqual(expectedClient)
+
+        const { statusCode: syncStatus } =
+          await globalThis.apis.wasteMovementClientSyncAPI.syncClients()
+        expect(syncStatus).toBe(200)
+
+        const { statusCode: getAfterSyncStatus, json: clientAfterSync } =
+          await globalThis.apis.wasteMovementClientSyncAPI.getClient(
+            createdClientId
+          )
+        expect(getAfterSyncStatus).toBe(200)
+        expect(clientAfterSync).toEqual(expectedClient)
 
         const { statusCode: newAuthStatus } =
           await globalThis.apis.cognitoOAuthApi.authenticate(
@@ -68,8 +120,8 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
     )
 
     it(
-      'should invalidate the original secret after rotating twice' +
-        ' @allure.label.tag:DWTA-445 @Authentication',
+      'should invalidate the original secret after rotating twice and keep two secret metadata entries' +
+        ' @allure.label.tag:DWTA-445 @allure.label.tag:DWTSPI-498',
       async () => {
         const clientName = `UAT_RotateTwice_${Date.now()}`
         const { statusCode: createStatus, json: created } =
@@ -87,7 +139,20 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
           )
 
         expect(firstRotateStatus).toBe(200)
+        expect(firstRotated).not.toHaveProperty('secrets')
         expect(firstRotated.clientSecret).not.toBe(originalSecret)
+
+        const { statusCode: afterFirstGetStatus, json: afterFirstRotate } =
+          await globalThis.apis.wasteMovementClientSyncAPI.getClient(
+            createdClientId
+          )
+        expect(afterFirstGetStatus).toBe(200)
+        expect(afterFirstRotate).toEqual(
+          expectedClientWithSecrets(clientName, createdClientId, 2)
+        )
+        const secretIdsAfterFirstRotate = afterFirstRotate.secrets.map(
+          (secret) => secret.id
+        )
 
         const { statusCode: secondRotateStatus, json: secondRotated } =
           await globalThis.apis.wasteMovementClientSyncAPI.rotateClientSecret(
@@ -95,8 +160,21 @@ describe('Rotate a client secret in DWT Client Sync Service', () => {
           )
 
         expect(secondRotateStatus).toBe(200)
+        expect(secondRotated).not.toHaveProperty('secrets')
         expect(secondRotated.clientSecret).not.toBe(originalSecret)
         expect(secondRotated.clientSecret).not.toBe(firstRotated.clientSecret)
+
+        const { statusCode: afterSecondGetStatus, json: afterSecondRotate } =
+          await globalThis.apis.wasteMovementClientSyncAPI.getClient(
+            createdClientId
+          )
+        expect(afterSecondGetStatus).toBe(200)
+        expect(afterSecondRotate).toEqual(
+          expectedClientWithSecrets(clientName, createdClientId, 2)
+        )
+        expect(
+          afterSecondRotate.secrets.map((secret) => secret.id)
+        ).not.toEqual(secretIdsAfterFirstRotate)
 
         const { statusCode: originalAuthStatus } =
           await globalThis.apis.cognitoOAuthApi.authenticate(

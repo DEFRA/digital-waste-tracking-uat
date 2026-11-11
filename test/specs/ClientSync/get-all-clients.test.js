@@ -23,50 +23,55 @@ describe('Get all clients from DWT Client Sync Service', () => {
         )
         expect(unexpectedTenant).toBeUndefined()
 
-        expect(
-          clients.find(
-            (client) =>
-              client.clientId === globalThis.testConfig.cognitoClientId
+        const primaryClient = clients.find(
+          (client) => client.clientId === globalThis.testConfig.cognitoClientId
+        )
+        // Cognito may retain a second secret after rotation on shared clients
+        expect(primaryClient.secrets.length).toBeGreaterThanOrEqual(1)
+        expect(primaryClient.secrets.length).toBeLessThanOrEqual(2)
+        const primarySecretMatcher = {
+          createdAt: expect.stringMatching(
+            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00$/
+          ),
+          id: expect.stringMatching(
+            new RegExp(
+              `^${globalThis.testConfig.cognitoClientId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}--\\d+$`
+            )
           )
-        ).toEqual({
+        }
+        expect(primaryClient).toEqual({
           clientName: globalThis.testConfig.cognitoClientName,
           clientId: globalThis.testConfig.cognitoClientId,
           tenantServiceName: DEFAULT_TENANT_SERVICE_NAME,
-          secrets: [
-            {
-              createdAt: expect.stringMatching(
-                /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00$/
-              ),
-              id: expect.stringMatching(
-                new RegExp(
-                  `^${globalThis.testConfig.cognitoClientId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}--\\d+$`
-                )
-              )
-            }
-          ]
+          secrets: Array.from(
+            { length: primaryClient.secrets.length },
+            () => primarySecretMatcher
+          )
         })
 
-        expect(
-          clients.find(
-            (client) =>
-              client.clientId === globalThis.testConfig.cognitoClientId2
+        const secondaryClient = clients.find(
+          (client) => client.clientId === globalThis.testConfig.cognitoClientId2
+        )
+        expect(secondaryClient.secrets.length).toBeGreaterThanOrEqual(1)
+        expect(secondaryClient.secrets.length).toBeLessThanOrEqual(2)
+        const secondarySecretMatcher = {
+          createdAt: expect.stringMatching(
+            /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00$/
+          ),
+          id: expect.stringMatching(
+            new RegExp(
+              `^${globalThis.testConfig.cognitoClientId2.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}--\\d+$`
+            )
           )
-        ).toEqual({
+        }
+        expect(secondaryClient).toEqual({
           clientName: globalThis.testConfig.cognitoClientName2,
           clientId: globalThis.testConfig.cognitoClientId2,
           tenantServiceName: DEFAULT_TENANT_SERVICE_NAME,
-          secrets: [
-            {
-              createdAt: expect.stringMatching(
-                /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}\+00:00$/
-              ),
-              id: expect.stringMatching(
-                new RegExp(
-                  `^${globalThis.testConfig.cognitoClientId2.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}--\\d+$`
-                )
-              )
-            }
-          ]
+          secrets: Array.from(
+            { length: secondaryClient.secrets.length },
+            () => secondarySecretMatcher
+          )
         })
       }
     )
