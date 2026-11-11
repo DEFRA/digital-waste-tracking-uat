@@ -75,7 +75,18 @@ describe('Beta-2 Receipt Without Delivery ID - Persistent organic pollutants', (
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Required when 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/pops/componentsSource',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "Required when 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/pops/components',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when POP details are given for waste declared as not containing POPs @allure.label.tag:DWTC-242', async () => {
@@ -91,7 +102,18 @@ describe('Beta-2 Receipt Without Delivery ID - Persistent organic pollutants', (
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/pops/componentsSource',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/pops/components',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
   })
 })

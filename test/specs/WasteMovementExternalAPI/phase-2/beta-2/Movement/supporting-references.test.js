@@ -56,7 +56,13 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "'label' is required",
+          pointer: '/supportingReferences/0/label',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a supporting reference when the reference is longer than 255 characters @allure.label.tag:DWTC-156', async () => {
@@ -70,7 +76,13 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: 'must NOT have more than 255 characters',
+          pointer: '/supportingReferences/0/reference',
+          errorType: 'OutOfRange'
+        }
+      ])
     })
 
     it('should reject a movement when supporting references are an empty list @allure.label.tag:DWTC-156', async () => {
@@ -82,7 +94,13 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: 'must NOT have fewer than 1 items',
+          pointer: '/supportingReferences',
+          errorType: 'OutOfRange'
+        }
+      ])
     })
 
     it('should reject a supporting reference when the label is not recognised @allure.label.tag:DWTC-156', async () => {
@@ -96,7 +114,14 @@ describe('Beta-2 Movement Creation - Supporting references', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message:
+            "must be one of: 'WEIGHBRIDGE_NUMBER', 'PO_NUMBER', 'JOB_NUMBER', 'INVOICE_NUMBER', 'WASTE_TICKET_NUMBER', 'OTHER'",
+          pointer: '/supportingReferences/0/label',
+          errorType: 'InvalidValue'
+        }
+      ])
     })
   })
 })

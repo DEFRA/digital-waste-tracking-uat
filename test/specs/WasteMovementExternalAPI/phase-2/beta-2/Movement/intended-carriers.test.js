@@ -85,7 +85,13 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "'intendedCarriers' is required",
+          pointer: '/intendedCarriers',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject an intended carrier when the organisation name is missing @allure.label.tag:DWTC-199', async () => {
@@ -97,7 +103,13 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "'organisationName' is required",
+          pointer: '/intendedCarriers/0/organisationName',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject an intended carrier when the means of transport is missing @allure.label.tag:DWTC-199', async () => {
@@ -110,7 +122,13 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "'meansOfTransport' is required",
+          pointer: '/intendedCarriers/0/meansOfTransport',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject an intended carrier when neither a registration number nor a reason is given @allure.label.tag:DWTC-199', async () => {
@@ -122,7 +140,13 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "Required when 'registrationNumber' is not provided",
+          pointer: '/intendedCarriers/0/reasonForNoRegistrationNumber',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject an intended carrier when both a registration number and a reason are given @allure.label.tag:DWTC-199', async () => {
@@ -135,7 +159,13 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "Not allowed when 'registrationNumber' is provided",
+          pointer: '/intendedCarriers/0/reasonForNoRegistrationNumber',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
 
     it('should reject an intended carrier transporting by road without a vehicle registration @allure.label.tag:DWTC-199', async () => {
@@ -147,7 +177,13 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "Required when 'meansOfTransport' is 'ROAD'",
+          pointer: '/intendedCarriers/0/vehicleRegistration',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject an intended carrier transporting by other means without a description @allure.label.tag:DWTC-199', async () => {
@@ -161,7 +197,13 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "Required when 'meansOfTransport' is 'OTHER'",
+          pointer: '/intendedCarriers/0/otherMeansOfTransport',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject an intended carrier when neither an email address nor a phone number is given @allure.label.tag:DWTC-199', async () => {
@@ -173,7 +215,13 @@ describe('Beta-2 Movement Creation - Intended carriers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "Required when 'emailAddress' is not provided",
+          pointer: '/intendedCarriers/0/contactDetails/phoneNumber',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })
