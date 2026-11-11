@@ -60,7 +60,13 @@ describe('Beta-2 Collection Creation - Special handling requirements', () => {
           collectionData
         )
 
-      expectCollectionRejected(response, movementId)
+      expectCollectionRejected(response, movementId, [
+        {
+          message: 'must NOT have more than 5000 characters',
+          pointer: '/specialHandlingRequirements',
+          errorType: 'OutOfRange'
+        }
+      ])
     })
   })
 })

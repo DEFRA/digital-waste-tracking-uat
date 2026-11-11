@@ -82,7 +82,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: 'must NOT have fewer than 1 characters',
+          pointer: '/reasonForNoDeliveryId',
+          errorType: 'OutOfRange'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when reason is missing @allure.label.tag:DWTC-142 @allure.label.tag:DWTC-272', async () => {
@@ -95,7 +101,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'reasonForNoDeliveryId' is required",
+          pointer: '/reasonForNoDeliveryId',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when more than one carrier is declared @allure.label.tag:DWTC-158', async () => {
@@ -107,7 +119,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: 'must be object',
+          pointer: '/carrier',
+          errorType: 'InvalidType'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when no carrier is declared @allure.label.tag:DWTC-158', async () => {
@@ -119,7 +137,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'carrier' is required",
+          pointer: '/carrier',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier without a delivery ID when the organisation name is missing @allure.label.tag:DWTC-158', async () => {
@@ -131,7 +155,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'organisationName' is required",
+          pointer: '/carrier/organisationName',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier without a delivery ID when the means of transport is missing @allure.label.tag:DWTC-158', async () => {
@@ -144,7 +174,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'meansOfTransport' is required",
+          pointer: '/carrier/meansOfTransport',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier without a delivery ID when neither a registration number nor a reason is given @allure.label.tag:DWTC-158', async () => {
@@ -156,7 +192,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Required when 'registrationNumber' is not provided",
+          pointer: '/carrier/reasonForNoRegistrationNumber',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier without a delivery ID when both a registration number and a reason are given @allure.label.tag:DWTC-158', async () => {
@@ -169,7 +211,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Not allowed when 'registrationNumber' is provided",
+          pointer: '/carrier/reasonForNoRegistrationNumber',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
 
     it('should reject a carrier without a delivery ID transporting by road without a vehicle registration @allure.label.tag:DWTC-158', async () => {
@@ -181,7 +229,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Required when 'meansOfTransport' is 'ROAD'",
+          pointer: '/carrier/vehicleRegistration',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier without a delivery ID transporting by other means without a description @allure.label.tag:DWTC-158', async () => {
@@ -194,7 +248,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Required when 'meansOfTransport' is 'OTHER'",
+          pointer: '/carrier/otherMeansOfTransport',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier without a delivery ID when neither an email address nor a phone number is given @allure.label.tag:DWTC-158', async () => {
@@ -206,7 +266,13 @@ describe('Beta-2 Receipt Without Delivery ID - Carrier', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Required when 'emailAddress' is not provided",
+          pointer: '/carrier/contactDetails/phoneNumber',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })

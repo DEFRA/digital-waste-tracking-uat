@@ -75,7 +75,18 @@ describe('Beta-2 Movement Creation - Persistent organic pollutants', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "Required when 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/pops/componentsSource',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "Required when 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/pops/components',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a movement when POP details are given for waste declared as not containing POPs @allure.label.tag:DWTC-223', async () => {
@@ -91,7 +102,18 @@ describe('Beta-2 Movement Creation - Persistent organic pollutants', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/pops/componentsSource',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/pops/components',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
   })
 })

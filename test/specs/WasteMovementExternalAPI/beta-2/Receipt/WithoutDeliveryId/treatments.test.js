@@ -56,7 +56,13 @@ describe('Beta-2 Receipt Without Delivery ID - Treatments', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'treatments' is required",
+          pointer: '/wasteItems/0/treatments',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when treatments are an empty list @allure.label.tag:DWTC-238', async () => {
@@ -68,7 +74,13 @@ describe('Beta-2 Receipt Without Delivery ID - Treatments', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: 'must NOT have fewer than 1 items',
+          pointer: '/wasteItems/0/treatments',
+          errorType: 'OutOfRange'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when any one of several treatments has missing details @allure.label.tag:DWTC-238', async () => {
@@ -85,7 +97,13 @@ describe('Beta-2 Receipt Without Delivery ID - Treatments', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'weight' is required",
+          pointer: '/wasteItems/0/treatments/1/weight',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     // Required fields removed for required-field error assertions
@@ -101,7 +119,28 @@ describe('Beta-2 Receipt Without Delivery ID - Treatments', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'disposalOrRecoveryCode' is required",
+          pointer: '/wasteItems/0/treatments/0/disposalOrRecoveryCode',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'amount' is required",
+          pointer: '/wasteItems/0/treatments/0/weight/amount',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'unit' is required",
+          pointer: '/wasteItems/0/treatments/0/weight/unit',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'isEstimate' is required",
+          pointer: '/wasteItems/0/treatments/0/weight/isEstimate',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })

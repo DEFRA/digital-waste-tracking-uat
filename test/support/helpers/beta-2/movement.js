@@ -20,19 +20,27 @@ export function expectMovementCreated(response) {
 /**
  * Asserts that POST /beta-2/movements rejected the payload.
  * @param {Object} response - API response
+ * @param {Array<{message: string, pointer: string, errorType: string}>} errors - Expected problem errors, in response order
  */
-export function expectMovementRejected(response) {
+export function expectMovementRejected(response, errors) {
   expect(response.statusCode).toBe(400)
   expect(response.headers['content-type']).toContain('application/problem+json')
   expect(response.headers['x-request-id']).toEqual(expect.any(String))
   expect(response.json).toEqual({
     type: beta2.badRequestType,
     title: 'Bad Request',
-    // TODO: Expect a 'detail' value once this is completed: https://eaflood.atlassian.net/browse/DWTC-221
-    detail: expect.stringMatching(/^\d+ validation errors? occurred$/),
+    detail: validationErrorDetail(errors),
     instance: '/beta-2/movements',
     requestId: response.headers['x-request-id'],
-    // TODO: Expect a specic set of 'errors' once this is completed: https://eaflood.atlassian.net/browse/DWTC-221
-    errors: expect.any(Array)
+    errors
   })
+}
+
+/**
+ * @param {Array} errors
+ * @returns {string}
+ */
+function validationErrorDetail(errors) {
+  const count = errors.length
+  return `${count} validation error${count === 1 ? '' : 's'} occurred`
 }

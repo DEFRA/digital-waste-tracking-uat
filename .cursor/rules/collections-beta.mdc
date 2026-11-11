@@ -42,4 +42,4 @@ Same shape on every collections beta version. Assert the status code first. Asse
 
 Receipt validation errors (`key`, `errorType`, `message`) do not apply to these endpoints.
 
-Beta-2 create-movement rejections leave `detail` and `errors` unchecked until DWTC-221.
+Beta-2 validation rejections also assert `errors`: each item is `{ message, pointer, errorType }`, in response order. `detail` is `1 validation error occurred` or `N validation errors occurred`, matching that array's length. Pass the array to `expectMovementRejected`, `expectCollectionRejected`, `expectDeliveryRejected`, or `expectReceiptRejected`. For a receipt with a delivery ID, pass the delivery ID and then the array. For a receipt without one, pass the array as the second argument.

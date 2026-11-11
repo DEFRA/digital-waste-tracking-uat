@@ -81,7 +81,23 @@ describe('Beta-2 Delivery Creation - Delivery site', () => {
           deliveryData
         )
 
-      expectDeliveryRejected(response)
+      expectDeliveryRejected(response, [
+        {
+          message: "'deliveryDateTime' is required",
+          pointer: '/deliveryDateTime',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'organisationName' is required",
+          pointer: '/deliverySite/organisationName',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'postcode' is required",
+          pointer: '/deliverySite/address/postcode',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })

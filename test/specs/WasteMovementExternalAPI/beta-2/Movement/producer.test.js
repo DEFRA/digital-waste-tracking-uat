@@ -80,7 +80,28 @@ describe('Beta-2 Movement Creation - Producer', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: 'must be equal to constant',
+          pointer: '/producer/wasteSource',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: "must be one of: 'wasteSource'",
+          pointer: '/producer',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: 'property name must be valid',
+          pointer: '/producer',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "'organisationName' is required",
+          pointer: '/producer/organisationName',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a Commercial producer when the SIC code is missing @allure.label.tag:DWTC-192', async () => {
@@ -93,7 +114,28 @@ describe('Beta-2 Movement Creation - Producer', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: 'must be equal to constant',
+          pointer: '/producer/wasteSource',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: "must be one of: 'wasteSource'",
+          pointer: '/producer',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: 'property name must be valid',
+          pointer: '/producer',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "'sicCode' is required",
+          pointer: '/producer/sicCode',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a Commercial producer when the address is missing @allure.label.tag:DWTC-192', async () => {
@@ -106,7 +148,28 @@ describe('Beta-2 Movement Creation - Producer', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: 'must be equal to constant',
+          pointer: '/producer/wasteSource',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: "must be one of: 'wasteSource'",
+          pointer: '/producer',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: 'property name must be valid',
+          pointer: '/producer',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "'address' is required",
+          pointer: '/producer/address',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a Commercial producer when neither an authorisation number nor a reason is given @allure.label.tag:DWTC-192', async () => {
@@ -119,7 +182,28 @@ describe('Beta-2 Movement Creation - Producer', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: 'must be equal to constant',
+          pointer: '/producer/wasteSource',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: "must be one of: 'wasteSource'",
+          pointer: '/producer',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: 'property name must be valid',
+          pointer: '/producer',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Required when 'authorisationNumber' is not provided",
+          pointer: '/producer/reasonForNoAuthorisationNumber',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a Commercial producer when both an authorisation number and a reason are given @allure.label.tag:DWTC-192', async () => {
@@ -133,7 +217,28 @@ describe('Beta-2 Movement Creation - Producer', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: 'must be equal to constant',
+          pointer: '/producer/wasteSource',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: "must be one of: 'wasteSource'",
+          pointer: '/producer',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: 'property name must be valid',
+          pointer: '/producer',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Not allowed when 'authorisationNumber' is provided",
+          pointer: '/producer/reasonForNoAuthorisationNumber',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
 
     it('should reject a Commercial producer when neither an email address nor a phone number is given @allure.label.tag:DWTC-192', async () => {
@@ -146,7 +251,28 @@ describe('Beta-2 Movement Creation - Producer', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: 'must be equal to constant',
+          pointer: '/producer/wasteSource',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: "must be one of: 'wasteSource'",
+          pointer: '/producer',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: 'property name must be valid',
+          pointer: '/producer',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Required when 'emailAddress' is not provided",
+          pointer: '/producer/contactDetails/phoneNumber',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a Household producer when organisation, address, SIC code, authorisation number or contact details are supplied @allure.label.tag:DWTC-192', async () => {
@@ -160,7 +286,23 @@ describe('Beta-2 Movement Creation - Producer', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "must be one of: 'wasteSource'",
+          pointer: '/producer',
+          errorType: 'InvalidValue'
+        },
+        {
+          message: 'property name must be valid',
+          pointer: '/producer',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: 'must be equal to constant',
+          pointer: '/producer/wasteSource',
+          errorType: 'InvalidValue'
+        }
+      ])
     })
   })
 })
