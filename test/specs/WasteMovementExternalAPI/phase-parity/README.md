@@ -6,7 +6,7 @@ The checks would sit most naturally beside the schema in each service. This pack
 
 ## What these tests are
 
-They are integration tests against the external API. Each case builds a phase 1 payload and a phase 2 payload with that phase's generators and helpers, sends the same value to both, and expects the same accept or reject.
+They are integration tests against the external API. Each case builds a phase 1 payload and a phase 2 payload with that phase's generators and helpers, sends the same value to both, and checks the status code. An accepted receipt is 201. A rejected receipt is 400.
 
 `npm run test:uat` leaves this folder out. Run it on its own:
 
@@ -24,7 +24,7 @@ When a parity gap is found, raise a ticket and add a row here, then tag the test
 
 ## Findings
 
-`create-receipt-regex.test.js` compares `POST /movements/receive` with `POST /beta-2/receipts`. The values come from the phase 1 parity lists in `waste-movement-backend`.
+One file per field compares `POST /movements/receive` with `POST /beta-2/receipts`. The values come from the phase 1 parity lists in `waste-movement-backend`.
 
 Both phases agree on these patterns:
 
@@ -34,7 +34,7 @@ Both phases agree on these patterns:
 - Consignment code
 - EWC code format (`^\d{6}$`, using codes from the official list)
 
-The same registration pattern is also used for a broker or dealer, and the same postcode pattern is used on a carrier or broker address. Those fields are not set in this file.
+The same registration pattern is also used for a broker or dealer, and the same postcode pattern is used on a carrier or broker address. Those fields are not set in these tests.
 
 These are not shared rules, so they are not in the comparison:
 
@@ -47,5 +47,3 @@ These are real differences. The tests do not send them, because the phases do no
 - An Irish Eircode is rejected on a phase 1 receipt address and accepted on a phase 2 address.
 - A carrier registration number with surrounding whitespace is rejected by phase 1 and accepted by phase 2.
 - A lower-case UK postcode, and a postcode with surrounding whitespace, are still unchecked. The phase 2 postcode pattern allows both.
-
-A phase 2 rejection is asserted as a 400 problem response. The error list is not matched exactly yet ([DWTC-221](https://eaflood.atlassian.net/browse/DWTC-221)).
