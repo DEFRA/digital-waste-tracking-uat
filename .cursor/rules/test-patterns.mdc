@@ -6,7 +6,8 @@ alwaysApply: true
 
 # Test Implementation Patterns
 
-- **No Parameterized Tests**: Avoid using `it.each` for multiple test runs with different data
+- **No Parameterized Tests**: Write a separate `it` for each UAT case. Do not use `it.each`
+- **Phase parity exception**: Specs in `test/specs/WasteMovementExternalAPI/phase-parity/` may use `it.each`. Those specs are integration checks for the services, kept in this pack so one run can send the same value to phase 1 and phase 2. Each row asserts the status code. A UAT spec stays one `it` per case
 - **No For Loops**: Avoid using for loops in test code
 - **No Getters/Setters**: Do not use getters and setters in the test data manager
 - **Exact Error Verification**: For error case tests, verify the exact return body structure

@@ -95,7 +95,7 @@ Ask: **"Implement these tests?"** Stop here unless mode is `implement` or the us
 
 ### 6. Implement (when approved)
 
-- Follow all `.cursor/rules/` test rules (no parameterized tests, no for-loops in tests, exact error bodies, fresh data in `beforeEach`, `authenticateAndSetToken()` in `beforeEach`)
+- Follow all `.cursor/rules/` test rules (no parameterized tests, except `it.each` in `test/specs/WasteMovementExternalAPI/phase-parity/`; no for-loops in tests, exact error bodies, fresh data in `beforeEach`, `authenticateAndSetToken()` in `beforeEach`)
 - Run `npm run format` on changed files
 - Run targeted tests: `source ./env.sh && NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest <path>`
 
