@@ -37,12 +37,12 @@ Match file placement, naming, assertions, auth patterns, and test data helpers a
 
 Use the four-level hierarchy:
 
-| Level       | Where                 | Example                             |
-| ----------- | --------------------- | ----------------------------------- |
-| API         | Folder                | `WasteMovementExternalAPI/`         |
-| Feature     | Subfolder             | `CreateWasteMovement/` or `beta-1/` |
-| Behavior    | describe block + file | `pops-source-of-components.test.js` |
-| Expectation | it block              | `should reject ... when ...`        |
+| Level       | Where                 | Example                                             |
+| ----------- | --------------------- | --------------------------------------------------- |
+| API         | Folder                | `WasteMovementExternalAPI/`                         |
+| Feature     | Subfolder             | `phase-1/CreateWasteMovement/` or `phase-2/beta-1/` |
+| Behavior    | describe block + file | `pops-source-of-components.test.js`                 |
+| Expectation | it block              | `should reject ... when ...`                        |
 
 Prefer extending an existing test file when the behaviour belongs to the same validation area.
 
@@ -110,7 +110,7 @@ Ask: **"Implement these tests?"** Stop here unless mode is `implement` or the us
 ## Additional resources
 
 - Atlassian setup: [atlassian-credentials.md](../../../docs/ai/atlassian-credentials.md)
-- Example tagged test: `test/specs/WasteMovementExternalAPI/CreateWasteMovement/pops-source-of-components.test.js`
+- Example tagged test: `test/specs/WasteMovementExternalAPI/phase-1/CreateWasteMovement/pops-source-of-components.test.js`
 
 ## Related skills
 

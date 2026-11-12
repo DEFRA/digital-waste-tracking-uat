@@ -10,9 +10,9 @@ The collections API (National Waste Movements) is versioned `beta-1`, `beta-2`, 
 
 ## Layout
 
-- Tests live in `test/specs/WasteMovementExternalAPI/beta-<n>/`. The version folder is kebab-case.
-- A feature folder under the version is PascalCase (`beta-2/Movement/producer.test.js`).
-- A version with no feature folders keeps behavior files directly in the version folder (`beta-1/create-collection.test.js`).
+- Tests live in `test/specs/WasteMovementExternalAPI/phase-2/beta-<n>/`. The version folder is kebab-case.
+- A feature folder under the version is PascalCase (`phase-2/beta-2/Movement/producer.test.js`).
+- A version with no feature folders keeps behavior files directly in the version folder (`phase-2/beta-1/create-collection.test.js`).
 
 ## Client and data
 
