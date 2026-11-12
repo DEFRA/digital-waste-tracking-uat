@@ -121,6 +121,37 @@ describe('Receiver Authorisation Number Validation', () => {
         expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
+
+    it(
+      'should accept waste movement when receiver authorisation is a SEPA EAS/P permit with 7 digits' +
+        ' @allure.label.tag:DWTC-279',
+      async () => {
+        await addAllureLink('/DWTC-279', 'DWTC-279', 'jira')
+        wasteReceiptData.receiver.authorisationNumber = 'EAS/P/1172829'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toHaveProperty('wasteTrackingId')
+      }
+    )
+
+    // 6 digits is not a format SEPA issues: accepted until DWTC-346 removes it
+    it(
+      'should still accept waste movement when receiver authorisation is a SEPA EAS/P permit with 6 digits' +
+        ' @allure.label.tag:DWTC-279',
+      async () => {
+        await addAllureLink('/DWTC-279', 'DWTC-279', 'jira')
+        wasteReceiptData.receiver.authorisationNumber = 'EAS/P/123456'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toHaveProperty('wasteTrackingId')
+      }
+    )
   })
 
   describe('Invalid Receiver Authorisation Number Scenarios', () => {
