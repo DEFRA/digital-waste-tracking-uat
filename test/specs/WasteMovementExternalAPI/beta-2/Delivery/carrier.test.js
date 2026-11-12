@@ -96,7 +96,13 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
           deliveryData
         )
 
-      expectDeliveryRejected(response)
+      expectDeliveryRejected(response, [
+        {
+          message: 'must be object',
+          pointer: '/carrier',
+          errorType: 'InvalidType'
+        }
+      ])
     })
 
     it('should reject a delivery when no carrier is declared @allure.label.tag:DWTC-158', async () => {
@@ -110,7 +116,13 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
           deliveryData
         )
 
-      expectDeliveryRejected(response)
+      expectDeliveryRejected(response, [
+        {
+          message: "'carrier' is required",
+          pointer: '/carrier',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier when the organisation name is missing @allure.label.tag:DWTC-158', async () => {
@@ -124,7 +136,13 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
           deliveryData
         )
 
-      expectDeliveryRejected(response)
+      expectDeliveryRejected(response, [
+        {
+          message: "'organisationName' is required",
+          pointer: '/carrier/organisationName',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier when the means of transport is missing @allure.label.tag:DWTC-158', async () => {
@@ -139,7 +157,13 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
           deliveryData
         )
 
-      expectDeliveryRejected(response)
+      expectDeliveryRejected(response, [
+        {
+          message: "'meansOfTransport' is required",
+          pointer: '/carrier/meansOfTransport',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier when neither a registration number nor a reason is given @allure.label.tag:DWTC-158', async () => {
@@ -153,7 +177,13 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
           deliveryData
         )
 
-      expectDeliveryRejected(response)
+      expectDeliveryRejected(response, [
+        {
+          message: "Required when 'registrationNumber' is not provided",
+          pointer: '/carrier/reasonForNoRegistrationNumber',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier when both a registration number and a reason are given @allure.label.tag:DWTC-158', async () => {
@@ -168,7 +198,13 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
           deliveryData
         )
 
-      expectDeliveryRejected(response)
+      expectDeliveryRejected(response, [
+        {
+          message: "Not allowed when 'registrationNumber' is provided",
+          pointer: '/carrier/reasonForNoRegistrationNumber',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
 
     it('should reject a carrier transporting by road without a vehicle registration @allure.label.tag:DWTC-158', async () => {
@@ -182,7 +218,13 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
           deliveryData
         )
 
-      expectDeliveryRejected(response)
+      expectDeliveryRejected(response, [
+        {
+          message: "Required when 'meansOfTransport' is 'ROAD'",
+          pointer: '/carrier/vehicleRegistration',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier transporting by other means without a description @allure.label.tag:DWTC-158', async () => {
@@ -197,7 +239,13 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
           deliveryData
         )
 
-      expectDeliveryRejected(response)
+      expectDeliveryRejected(response, [
+        {
+          message: "Required when 'meansOfTransport' is 'OTHER'",
+          pointer: '/carrier/otherMeansOfTransport',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a carrier when neither an email address nor a phone number is given @allure.label.tag:DWTC-158', async () => {
@@ -211,7 +259,13 @@ describe('Beta-2 Delivery Creation - Carrier', () => {
           deliveryData
         )
 
-      expectDeliveryRejected(response)
+      expectDeliveryRejected(response, [
+        {
+          message: "Required when 'emailAddress' is not provided",
+          pointer: '/carrier/contactDetails/phoneNumber',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })

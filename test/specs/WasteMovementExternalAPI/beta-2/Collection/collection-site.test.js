@@ -62,7 +62,23 @@ describe('Beta-2 Collection Creation - Collection site', () => {
           collectionData
         )
 
-      expectCollectionRejected(response, movementId)
+      expectCollectionRejected(response, movementId, [
+        {
+          message: "'collectionDateTime' is required",
+          pointer: '/collectionDateTime',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'address' is required",
+          pointer: '/collectionSite/address',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'contactDetails' is required",
+          pointer: '/collectionSite/contactDetails',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })

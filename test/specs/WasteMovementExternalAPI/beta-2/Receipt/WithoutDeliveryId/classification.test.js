@@ -97,7 +97,28 @@ describe('Beta-2 Receipt Without Delivery ID - Classification', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'wasteDescription' is required",
+          pointer: '/wasteItems/0/classification/wasteDescription',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'ewcCodes' is required",
+          pointer: '/wasteItems/0/classification/ewcCodes',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'pops' is required",
+          pointer: '/wasteItems/0/classification/pops',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'hazardous' is required",
+          pointer: '/wasteItems/0/classification/hazardous',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when an EWC code is not recognised @allure.label.tag:DWTC-241', async () => {
@@ -109,7 +130,13 @@ describe('Beta-2 Receipt Without Delivery ID - Classification', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: 'must be a recognised EWC code',
+          pointer: '/wasteItems/0/classification/ewcCodes/0',
+          errorType: 'InvalidValue'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when more than 5 EWC codes are declared @allure.label.tag:DWTC-241', async () => {
@@ -122,7 +149,13 @@ describe('Beta-2 Receipt Without Delivery ID - Classification', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: 'must NOT have more than 5 items',
+          pointer: '/wasteItems/0/classification/ewcCodes',
+          errorType: 'OutOfRange'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when hazardous waste has neither a consignment code nor a reason @allure.label.tag:DWTC-241', async () => {
@@ -134,7 +167,14 @@ describe('Beta-2 Receipt Without Delivery ID - Classification', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message:
+            "Required when a waste item declares hazardous properties, with a 'code' or a 'reasonForNoCode'",
+          pointer: '/consignmentNote',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when both a consignment code and a reason are given @allure.label.tag:DWTC-241', async () => {
@@ -150,7 +190,13 @@ describe('Beta-2 Receipt Without Delivery ID - Classification', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Not allowed when 'code' is provided",
+          pointer: '/consignmentNote/reasonForNoCode',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
   })
 })

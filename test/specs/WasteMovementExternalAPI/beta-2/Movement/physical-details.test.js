@@ -55,7 +55,13 @@ describe('Beta-2 Movement Creation - Physical Details', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: 'must be equal to constant',
+          pointer: '/wasteItems/0/physicalDetails/containerCount',
+          errorType: 'InvalidValue'
+        }
+      ])
     })
 
     // Required fields removed for required-field error assertions
@@ -73,7 +79,28 @@ describe('Beta-2 Movement Creation - Physical Details', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "'form' is required",
+          pointer: '/wasteItems/0/physicalDetails/form',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'containerType' is required",
+          pointer: '/wasteItems/0/physicalDetails/containerType',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'containerCount' is required",
+          pointer: '/wasteItems/0/physicalDetails/containerCount',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'totalWeight' is required",
+          pointer: '/wasteItems/0/physicalDetails/totalWeight',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })

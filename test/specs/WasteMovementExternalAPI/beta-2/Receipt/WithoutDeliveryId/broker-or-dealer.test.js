@@ -87,7 +87,13 @@ describe('Beta-2 Receipt Without Delivery ID - Broker or dealer', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'organisationName' is required",
+          pointer: '/brokerOrDealer/items/0/organisationName',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a broker or dealer without a delivery ID when neither a registration number nor a reason is given @allure.label.tag:DWTC-159', async () => {
@@ -101,7 +107,13 @@ describe('Beta-2 Receipt Without Delivery ID - Broker or dealer', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Required when 'registrationNumber' is not provided",
+          pointer: '/brokerOrDealer/items/0/reasonForNoRegistrationNumber',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a broker or dealer without a delivery ID when both a registration number and a reason are given @allure.label.tag:DWTC-159', async () => {
@@ -115,7 +127,13 @@ describe('Beta-2 Receipt Without Delivery ID - Broker or dealer', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Not allowed when 'registrationNumber' is provided",
+          pointer: '/brokerOrDealer/items/0/reasonForNoRegistrationNumber',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
 
     it('should reject a broker or dealer without a delivery ID when neither an email address nor a phone number is given @allure.label.tag:DWTC-159', async () => {
@@ -129,7 +147,13 @@ describe('Beta-2 Receipt Without Delivery ID - Broker or dealer', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Required when 'emailAddress' is not provided",
+          pointer: '/brokerOrDealer/items/0/contactDetails/phoneNumber',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when a broker or dealer is declared as involved but no details are given @allure.label.tag:DWTC-159', async () => {
@@ -141,7 +165,13 @@ describe('Beta-2 Receipt Without Delivery ID - Broker or dealer', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Required when 'isPresent' is true",
+          pointer: '/brokerOrDealer/items',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when broker or dealer details are given but involvement is false @allure.label.tag:DWTC-159', async () => {
@@ -156,7 +186,13 @@ describe('Beta-2 Receipt Without Delivery ID - Broker or dealer', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Not allowed when 'isPresent' is false or absent",
+          pointer: '/brokerOrDealer/items',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
   })
 })

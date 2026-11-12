@@ -97,7 +97,24 @@ describe('Beta-2 Movement Creation - Hazardous properties', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "Required when 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/hazardous/codes',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "Required when 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/hazardous/componentsSource',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "Required when 'isPresent' is true",
+          pointer:
+            '/wasteItems/0/classification/hazardous/isComponentsNotApplicable',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a movement when hazardous details are given for waste declared as not hazardous @allure.label.tag:DWTC-222', async () => {
@@ -117,7 +134,29 @@ describe('Beta-2 Movement Creation - Hazardous properties', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/hazardous/codes',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/hazardous/componentsSource',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer:
+            '/wasteItems/0/classification/hazardous/isComponentsNotApplicable',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/hazardous/components',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
 
     it('should reject a movement when hazardous components are given although declared not applicable @allure.label.tag:DWTC-247', async () => {
@@ -133,7 +172,13 @@ describe('Beta-2 Movement Creation - Hazardous properties', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "Not allowed when 'isComponentsNotApplicable' is true",
+          pointer: '/wasteItems/0/classification/hazardous/components',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
   })
 })
