@@ -295,7 +295,7 @@ describe('Hazardous Component Concentration Validation', () => {
                 key: 'wasteItems.0.hazardous.components.0.concentrationOperator',
                 errorType: 'InvalidValue',
                 message:
-                  '"wasteItems[0].hazardous.components[0].concentrationOperator" must be [>]'
+                  '"wasteItems[0].hazardous.components[0].concentrationOperator" must be one of [null, >]'
               }
             ]
           }
@@ -338,7 +338,7 @@ describe('Hazardous Component Concentration Validation', () => {
                 key: 'wasteItems.0.hazardous.components.1.concentrationOperator',
                 errorType: 'InvalidValue',
                 message:
-                  '"wasteItems[0].hazardous.components[1].concentrationOperator" must be [>]'
+                  '"wasteItems[0].hazardous.components[1].concentrationOperator" must be one of [null, >]'
               },
               {
                 key: 'wasteItems.0.hazardous.components.1.concentrationOperator',
