@@ -283,6 +283,34 @@ describe('Reason for No Consignment Code Validation', () => {
         }
       })
     })
+
+    it(
+      'should require reason when a hazardous EWC code the EU added from 9 December 2026 is present but no consignment code provided' +
+        ' @allure.label.tag:DWTC-264',
+      async () => {
+        await addAllureLink('/DWTC-264', 'DWTC-264', 'jira')
+        wasteReceiptData.wasteItems[0].ewcCodes = ['190212']
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(400)
+        expect(response.json).toEqual({
+          validation: {
+            errors: [
+              {
+                key: 'reasonForNoConsignmentCode',
+                errorType: 'BusinessRuleViolation',
+                message:
+                  '"reasonForNoConsignmentCode" is required when wasteItems[*].ewcCodes contains a hazardous code and hazardousWasteConsignmentCode is not provided'
+              }
+            ]
+          }
+        })
+      }
+    )
   })
 
   describe('Reason required when consignment code is provided', () => {

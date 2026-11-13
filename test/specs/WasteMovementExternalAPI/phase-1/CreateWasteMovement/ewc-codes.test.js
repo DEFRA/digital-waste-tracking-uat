@@ -51,6 +51,45 @@ describe('EWC Codes Validation', () => {
         wasteTrackingId: expect.any(String)
       })
     })
+
+    it.each(['100822', '160612', '200144'])(
+      'should accept %s, a non-hazardous EWC code the EU added from 9 December 2026' +
+        ' @allure.label.tag:DWTC-264',
+      async (ewcCode) => {
+        await addAllureLink('/DWTC-264', 'DWTC-264', 'jira')
+        wasteReceiptData.wasteItems[0].ewcCodes = [ewcCode]
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toEqual({
+          wasteTrackingId: expect.any(String)
+        })
+      }
+    )
+
+    it.each(['190212', '191401'])(
+      'should accept %s, a hazardous EWC code the EU added from 9 December 2026, with a reason for no consignment code' +
+        ' @allure.label.tag:DWTC-264',
+      async (ewcCode) => {
+        await addAllureLink('/DWTC-264', 'DWTC-264', 'jira')
+        wasteReceiptData.wasteItems[0].ewcCodes = [ewcCode]
+        wasteReceiptData.reasonForNoConsignmentCode = 'NO_DOC_WITH_WASTE'
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toEqual({
+          wasteTrackingId: expect.any(String)
+        })
+      }
+    )
   })
 
   describe('Invalid EWC Codes', () => {
