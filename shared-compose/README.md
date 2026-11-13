@@ -1,8 +1,9 @@
 # Shared compose stack
 
 The full stack the waste movement services' integration tests run against: the
-external API, backend, tracking ID backend, organisation backend and client sync,
-plus Mongo, Floci (Cognito), a fake of CDP's credentials API, LocalStack and ZAP.
+external API, backend, movement API, tracking ID backend, organisation backend
+and client sync, plus Mongo, Floci (Cognito), a fake of CDP's credentials API,
+LocalStack and ZAP.
 
 It lives here so the service repos don't each keep a copy of it. A change to the
 shared parts (another service's config, the Mongo seeding, the Floci user pool)

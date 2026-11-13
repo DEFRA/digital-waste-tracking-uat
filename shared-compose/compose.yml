@@ -72,6 +72,26 @@ services:
       MONGO_URI: mongodb://mongodb:27017/?replicaSet=rs0&directConnection=true
       ACCESS_CRED_WASTE_MOVEMENT_EXTERNAL_API: d2FzdGUtbW92ZW1lbnQtZXh0ZXJuYWwtYXBpPWxvY2FsLWV4dGVybmFsLWFwaQ==
       ACCESS_CRED_WASTE_MOVEMENT_BACKEND: d2FzdGUtbW92ZW1lbnQtYmFja2VuZD1sb2NhbC1tb3ZlbWVudC1iYWNrZW5k
+      ACCESS_CRED_WASTE_MOVEMENT_API: d2FzdGUtbW92ZW1lbnQtYXBpPWxvY2FsLW1vdmVtZW50LWFwaQ==
+    networks:
+      - cdp-tenant
+
+  waste-movement-api:
+    image: defradigital/waste-movement-api:${WASTE_MOVEMENT_API_VERSION:-latest}
+    ports:
+      - '3007:3001'
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      PORT: 3001
+      NODE_ENV: development
+      ENVIRONMENT: local
+      MONGO_URI: mongodb://mongodb:27017/?replicaSet=rs0&directConnection=true
+      MONGO_READ_PREFERENCE: primary
+      ACCESS_CRED_WASTE_MOVEMENT_EXTERNAL_API: d2FzdGUtbW92ZW1lbnQtZXh0ZXJuYWwtYXBpPWxvY2FsLWV4dGVybmFsLWFwaQ==
+      WASTE_TRACKING_URL: http://waste-tracking-id-backend:3001
+      SERVICE_AUTH_PASSWORD_WASTE_MOVEMENT_API: local-movement-api
     networks:
       - cdp-tenant
 
