@@ -37,12 +37,12 @@ Match file placement, naming, assertions, auth patterns, and test data helpers a
 
 Use the four-level hierarchy:
 
-| Level       | Where                 | Example                             |
-| ----------- | --------------------- | ----------------------------------- |
-| API         | Folder                | `WasteMovementExternalAPI/`         |
-| Feature     | Subfolder             | `CreateWasteMovement/` or `beta-1/` |
-| Behavior    | describe block + file | `pops-source-of-components.test.js` |
-| Expectation | it block              | `should reject ... when ...`        |
+| Level       | Where                 | Example                                             |
+| ----------- | --------------------- | --------------------------------------------------- |
+| API         | Folder                | `WasteMovementExternalAPI/`                         |
+| Feature     | Subfolder             | `phase-1/CreateWasteMovement/` or `phase-2/beta-1/` |
+| Behavior    | describe block + file | `pops-source-of-components.test.js`                 |
+| Expectation | it block              | `should reject ... when ...`                        |
 
 Prefer extending an existing test file when the behaviour belongs to the same validation area.
 
@@ -95,7 +95,7 @@ Ask: **"Implement these tests?"** Stop here unless mode is `implement` or the us
 
 ### 6. Implement (when approved)
 
-- Follow all `.cursor/rules/` test rules (no parameterized tests, no for-loops in tests, exact error bodies, fresh data in `beforeEach`, `authenticateAndSetToken()` in `beforeEach`)
+- Follow all `.cursor/rules/` test rules (no parameterized tests, except `it.each` in `test/specs/WasteMovementExternalAPI/phase-parity/`; no for-loops in tests, exact error bodies, fresh data in `beforeEach`, `authenticateAndSetToken()` in `beforeEach`)
 - Run `npm run format` on changed files
 - Run targeted tests: `source ./env.sh && NODE_OPTIONS='--experimental-vm-modules --no-warnings' npx jest <path>`
 
@@ -110,7 +110,7 @@ Ask: **"Implement these tests?"** Stop here unless mode is `implement` or the us
 ## Additional resources
 
 - Atlassian setup: [atlassian-credentials.md](../../../docs/ai/atlassian-credentials.md)
-- Example tagged test: `test/specs/WasteMovementExternalAPI/CreateWasteMovement/pops-source-of-components.test.js`
+- Example tagged test: `test/specs/WasteMovementExternalAPI/phase-1/CreateWasteMovement/pops-source-of-components.test.js`
 
 ## Related skills
 

@@ -221,8 +221,9 @@ The test suite is organized by feature and functionality:
 
 - `test/specs/Authentication/` - OAuth2 authentication tests
 - `test/specs/Security/ZapGate/` - ZAP passive scan gate (second Jest run after scan)
-- `test/specs/WasteRecievingAPI/CreateWasteMovement/` - Waste movement creation tests
-- `test/specs/WasteRecievingAPI/UpdateWasteMovement/` - Waste movement update tests
+- `test/specs/WasteMovementExternalAPI/phase-1/CreateWasteMovement/` - Waste movement creation tests
+- `test/specs/WasteMovementExternalAPI/phase-1/UpdateWasteMovement/` - Waste movement update tests
+- `test/specs/WasteMovementExternalAPI/phase-parity/` - Integration tests that send the same value to phase 1 and phase 2. See the README in that folder.
 
 ### Test Categories
 
@@ -241,6 +242,7 @@ Tests are organized into logical groups:
 - `npm test` - Run UAT profile tests (`test:uat` by default)
 - `npm run test:integration` - Integration API tests (excludes `@Authentication`)
 - `npm run test:uat` - UAT profile including bulk upload and authentication
+- `npm run test:uat:phase-parity` - Phase parity tests (left out of `test:uat`)
 - `npm run test:smoke` - Tests tagged `@smoke`
 - `npm run test:prod-smoke` - Tests tagged `@prod-smoke` (A small subset of tests to run after production releases)
 - `npm run test:zap-gate` - ZAP gate only (`PROXY_MODE=off`, with `API_CODE` and `ORGANISATION_ID` set so setup skips organisation creation; requires scan artefacts)
