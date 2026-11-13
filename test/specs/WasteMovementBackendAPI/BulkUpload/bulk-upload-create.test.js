@@ -34,6 +34,29 @@ describe('Bulk Upload Create', () => {
       })
     })
 
+    it(
+      'should accept bulk upload of a movement with an EWC code the EU added from 9 December 2026' +
+        ' @allure.label.tag:DWTC-264',
+      async () => {
+        await addAllureLink('/DWTC-264', 'DWTC-264', 'jira')
+        const singleMovement = [generateBaseBulkUploadMovement()]
+        singleMovement[0].wasteItems[0].ewcCodes = ['160612']
+        const bulkUploadId = randomUUID()
+
+        const response =
+          await globalThis.apis.wasteMovementBackendAPI.bulkUploadCreate(
+            bulkUploadId,
+            singleMovement
+          )
+
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toEqual({
+          status: 'MOVEMENTS_CREATED',
+          movements: [{ wasteTrackingId: expect.any(String) }]
+        })
+      }
+    )
+
     it('should return validation warnings on bulk create when a movement omits Disposal or Recovery Codes @allure.label.tag:DWTA-162', async () => {
       await addAllureLink('/DWTA-162', 'DWTA-162', 'jira')
 
