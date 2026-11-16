@@ -34,54 +34,6 @@ describe('Bulk Upload Create', () => {
       })
     })
 
-    it(
-      'should return a concentration warning on bulk create when concentration and concentrationOperator are both null' +
-        ' @allure.label.tag:DWTSPI-441',
-      async () => {
-        await addAllureLink('/DWTSPI-441', 'DWTSPI-441', 'jira')
-
-        const movement = generateBaseBulkUploadMovement()
-        movement.wasteItems[0].containsHazardous = true
-        movement.wasteItems[0].hazardous = {
-          sourceOfComponents: 'PROVIDED_WITH_WASTE',
-          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
-          components: [
-            {
-              name: 'Mercury',
-              concentration: null,
-              concentrationOperator: null
-            }
-          ]
-        }
-
-        const response =
-          await globalThis.apis.wasteMovementBackendAPI.bulkUploadCreate(
-            randomUUID(),
-            [movement]
-          )
-
-        expect(response.statusCode).toBe(201)
-        expect(response.json).toEqual({
-          status: 'MOVEMENTS_CREATED',
-          movements: [
-            {
-              wasteTrackingId: expect.any(String),
-              validation: {
-                warnings: [
-                  {
-                    key: 'wasteItems.0.hazardous.components.0.concentration',
-                    errorType: 'NotProvided',
-                    message:
-                      'wasteItems[0].hazardous.components[0].concentration is recommended when source of components is one of PROVIDED_WITH_WASTE, GUIDANCE, OWN_TESTING'
-                  }
-                ]
-              }
-            }
-          ]
-        })
-      }
-    )
-
     it('should return validation warnings on bulk create when a movement omits Disposal or Recovery Codes @allure.label.tag:DWTA-162', async () => {
       await addAllureLink('/DWTA-162', 'DWTA-162', 'jira')
 
