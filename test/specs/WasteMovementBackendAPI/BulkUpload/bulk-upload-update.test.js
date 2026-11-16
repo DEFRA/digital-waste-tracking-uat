@@ -112,6 +112,63 @@ describe('Bulk Upload Update', () => {
       )
     })
 
+    it(
+      'should return a concentration warning on bulk update when concentration and concentrationOperator are both null' +
+        ' @allure.label.tag:DWTSPI-441',
+      async () => {
+        await addAllureLink('/DWTSPI-441', 'DWTSPI-441', 'jira')
+
+        const movement = generateBaseBulkUploadMovement()
+        const bulkUploadId = randomUUID()
+        const createResponse =
+          await globalThis.apis.wasteMovementBackendAPI.bulkUploadCreate(
+            bulkUploadId,
+            [movement]
+          )
+        expect(createResponse.statusCode).toBe(201)
+
+        movement.wasteTrackingId =
+          createResponse.json.movements[0].wasteTrackingId
+        movement.wasteItems[0].containsHazardous = true
+        movement.wasteItems[0].hazardous = {
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
+          components: [
+            {
+              name: 'Mercury',
+              concentration: null,
+              concentrationOperator: null
+            }
+          ]
+        }
+
+        const response =
+          await globalThis.apis.wasteMovementBackendAPI.bulkUploadUpdate(
+            bulkUploadId,
+            [movement]
+          )
+
+        expect(response.statusCode).toBe(200)
+        expect(response.json).toEqual({
+          status: 'MOVEMENTS_UPDATED',
+          movements: [
+            {
+              validation: {
+                warnings: [
+                  {
+                    key: 'wasteItems.0.hazardous.components.0.concentration',
+                    errorType: 'NotProvided',
+                    message:
+                      'wasteItems[0].hazardous.components[0].concentration is recommended when source of components is one of PROVIDED_WITH_WASTE, GUIDANCE, OWN_TESTING'
+                  }
+                ]
+              }
+            }
+          ]
+        })
+      }
+    )
+
     it('should return validation warnings on bulk update when a movement omits Disposal or Recovery Codes @allure.label.tag:DWTA-162', async () => {
       await addAllureLink('/DWTA-162', 'DWTA-162', 'jira')
 

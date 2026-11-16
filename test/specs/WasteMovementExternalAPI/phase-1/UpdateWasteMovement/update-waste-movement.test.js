@@ -51,6 +51,55 @@ describe('@smoke - Waste Movement Update', () => {
       expect(updateResponse.statusCode).toBe(200)
       expect(updateResponse.json).toEqual({})
     })
+
+    it(
+      'should accept an update when concentration and concentrationOperator are both null and show the concentration warning' +
+        ' @allure.label.tag:DWTSPI-441',
+      async () => {
+        await addAllureLink('/DWTSPI-441', 'DWTSPI-441', 'jira')
+
+        const createResponse =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(createResponse.statusCode).toBe(201)
+
+        const updatedData = generateBaseWasteReceiptData()
+        updatedData.wasteItems[0].containsHazardous = true
+        updatedData.wasteItems[0].hazardous = {
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
+          hazCodes: ['HP_1', 'HP_3', 'HP_5'],
+          components: [
+            {
+              name: 'Mercury',
+              concentration: null,
+              concentrationOperator: null
+            }
+          ]
+        }
+
+        const updateResponse =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovementWithId(
+            createResponse.json.wasteTrackingId,
+            updatedData
+          )
+
+        expect(updateResponse.statusCode).toBe(200)
+        expect(updateResponse.json).toEqual({
+          validation: {
+            warnings: [
+              {
+                key: 'wasteItems.0.hazardous.components.0.concentration',
+                errorType: 'NotProvided',
+                message:
+                  'wasteItems[0].hazardous.components[0].concentration is recommended when source of components is one of PROVIDED_WITH_WASTE, GUIDANCE, OWN_TESTING'
+              }
+            ]
+          }
+        })
+      }
+    )
+
     it(
       'should successfully update an existing waste movement with a different apiCode if it corresponds to the same orgId' +
         ' @allure.label.tag:DWT-823',

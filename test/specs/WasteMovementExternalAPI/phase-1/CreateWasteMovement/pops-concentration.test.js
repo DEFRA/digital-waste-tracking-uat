@@ -293,5 +293,44 @@ describe('POPs Component Concentration Validation', () => {
         })
       }
     )
+
+    it(
+      'should accept a POPs component when concentration and concentrationOperator are both null and show the concentration warning' +
+        ' @allure.label.tag:DWTSPI-441',
+      async () => {
+        await addAllureLink('/DWTSPI-441', 'DWTSPI-441', 'jira')
+        wasteReceiptData.wasteItems[0].containsPops = true
+        wasteReceiptData.wasteItems[0].pops = {
+          sourceOfComponents: 'PROVIDED_WITH_WASTE',
+          components: [
+            {
+              code: 'ALD',
+              concentration: null,
+              concentrationOperator: null
+            }
+          ]
+        }
+
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toEqual({
+          wasteTrackingId: expect.any(String),
+          validation: {
+            warnings: [
+              {
+                key: 'wasteItems.0.pops.components.0.concentration',
+                errorType: 'NotProvided',
+                message:
+                  'wasteItems[0].pops.components[0].concentration is recommended when source of components is one of PROVIDED_WITH_WASTE, GUIDANCE, OWN_TESTING'
+              }
+            ]
+          }
+        })
+      }
+    )
   })
 })
