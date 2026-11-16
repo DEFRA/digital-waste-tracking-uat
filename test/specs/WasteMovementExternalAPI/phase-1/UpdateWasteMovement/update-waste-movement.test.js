@@ -51,7 +51,6 @@ describe('@smoke - Waste Movement Update', () => {
       expect(updateResponse.statusCode).toBe(200)
       expect(updateResponse.json).toEqual({})
     })
-
     it(
       'should successfully update an existing waste movement with a different apiCode if it corresponds to the same orgId' +
         ' @allure.label.tag:DWT-823',
