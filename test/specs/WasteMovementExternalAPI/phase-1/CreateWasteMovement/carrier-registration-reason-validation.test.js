@@ -32,6 +32,25 @@ describe('Carrier Registration Reason Validation', () => {
         expect(response.json).toHaveProperty('wasteTrackingId')
       }
     )
+
+    it(
+      'should accept piped waste movement with null registration number and reason FIXED_CONVEYANCE' +
+        ' @allure.label.tag:DWTC-259',
+      async () => {
+        await addAllureLink('/DWTC-259', 'DWTC-259', 'jira')
+        wasteReceiptData.carrier.registrationNumber = null
+        wasteReceiptData.carrier.reasonForNoRegistrationNumber =
+          'FIXED_CONVEYANCE'
+        wasteReceiptData.carrier.meansOfTransport = 'Piped'
+        delete wasteReceiptData.carrier.vehicleRegistration
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toHaveProperty('wasteTrackingId')
+      }
+    )
   })
 
   describe('Warning must be returned wheh reasonForNoRegistrationNumber is null or blank', () => {
@@ -54,7 +73,7 @@ describe('Carrier Registration Reason Validation', () => {
                 key: 'carrier.reasonForNoRegistrationNumber',
                 errorType: 'NotProvided',
                 message:
-                  'carrier.reasonForNoRegistrationNumber must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE'
+                  'carrier.reasonForNoRegistrationNumber must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE, FIXED_CONVEYANCE'
               }
             ]
           }
@@ -81,7 +100,7 @@ describe('Carrier Registration Reason Validation', () => {
                 key: 'carrier.reasonForNoRegistrationNumber',
                 errorType: 'NotProvided',
                 message:
-                  'carrier.reasonForNoRegistrationNumber must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE'
+                  'carrier.reasonForNoRegistrationNumber must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE, FIXED_CONVEYANCE'
               }
             ]
           }
@@ -109,7 +128,7 @@ describe('Carrier Registration Reason Validation', () => {
                 key: 'carrier.reasonForNoRegistrationNumber',
                 errorType: 'InvalidValue',
                 message:
-                  '"carrier.reasonForNoRegistrationNumber" must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE'
+                  '"carrier.reasonForNoRegistrationNumber" must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE, FIXED_CONVEYANCE'
               }
             ]
           }
