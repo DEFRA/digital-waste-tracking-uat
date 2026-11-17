@@ -5,7 +5,7 @@ import { randomUUID } from 'crypto'
 export const DEFAULT_TENANT_SERVICE_NAME = 'waste-movement-external-api'
 
 /**
- * Client for the DWT client-sync service (list/get/create/delete/rotate/purge clients and refresh cache).
+ * Client for the DWT client-sync service (list/get/create/delete/rotate/purge/replace clients and refresh cache).
  */
 export class WasteMovementClientSyncAPI extends BaseAPI {
   /**
@@ -201,6 +201,35 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
       undefined,
       requestHeaders,
       returnsNoContent
+    )
+    return { statusCode, headers, json }
+  }
+
+  /**
+   * POST /clients/{tenantServiceName}/{clientId}/replace — rotate the secret, then purge the old one.
+   * A successful replace returns the new credentials once. The response must not be cached.
+   * @param {string} clientId - Cognito / software-provider client ID
+   * @param {string} [tenantServiceName=DEFAULT_TENANT_SERVICE_NAME] - Tenant service name
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
+  async replaceClientSecret(
+    clientId,
+    tenantServiceName = DEFAULT_TENANT_SERVICE_NAME
+  ) {
+    const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
+    const base64Credentials = Buffer.from(credentials).toString('base64')
+    const requestHeaders = {
+      Authorization: `Basic ${base64Credentials}`,
+      'Content-Type': 'application/json',
+      'x-cdp-request-id': randomUUID()
+    }
+    if (globalThis.testConfig.cdpDevApiKey != null) {
+      requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
+    }
+    const { statusCode, headers, json } = await this.post(
+      `/clients/${encodeURIComponent(tenantServiceName)}/${encodeURIComponent(clientId)}/replace`,
+      undefined,
+      requestHeaders
     )
     return { statusCode, headers, json }
   }
