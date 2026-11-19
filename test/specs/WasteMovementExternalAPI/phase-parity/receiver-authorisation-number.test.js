@@ -33,6 +33,8 @@ const authorisationNumbers = {
     ['Scotland WML/E with suffix', 'WML/E/7654321/78'],
     ['Scotland SEPA', 'PPC/A/SEPA1234-5678'],
     ['Scotland EAS', 'EAS/P/123456'],
+    ['Scotland EAS with 7 digits', 'EAS/P/9999999'],
+    ['Scotland EAS with 7 digits in lower case', 'eas/p/1172829'],
     ['Wales XX9999XX', 'NW1234CD'],
     ['Wales EPR', 'EPR/NW1234CD'],
     ['Northern Ireland P format', 'P1234/56A'],
