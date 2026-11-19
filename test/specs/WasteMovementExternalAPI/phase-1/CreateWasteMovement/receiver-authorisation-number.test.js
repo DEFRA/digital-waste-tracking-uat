@@ -137,6 +137,21 @@ describe('Receiver Authorisation Number Validation', () => {
       }
     )
 
+    it(
+      'should accept waste movement when receiver authorisation is a SEPA EAS/P permit with 7 digits in lower case' +
+        ' @allure.label.tag:DWTC-279',
+      async () => {
+        await addAllureLink('/DWTC-279', 'DWTC-279', 'jira')
+        wasteReceiptData.receiver.authorisationNumber = 'eas/p/1172829'
+        const response =
+          await globalThis.apis.wasteMovementExternalAPI.receiveMovement(
+            wasteReceiptData
+          )
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toHaveProperty('wasteTrackingId')
+      }
+    )
+
     // 6 digits is not a format SEPA issues: accepted until DWTC-346 removes it
     it(
       'should still accept waste movement when receiver authorisation is a SEPA EAS/P permit with 6 digits' +
