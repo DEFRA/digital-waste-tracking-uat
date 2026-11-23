@@ -57,6 +57,33 @@ describe('Bulk Upload Create', () => {
       }
     )
 
+    it(
+      'should accept bulk upload of a piped movement with no carrier registration number and reason FIXED_CONVEYANCE' +
+        ' @allure.label.tag:DWTC-259',
+      async () => {
+        await addAllureLink('/DWTC-259', 'DWTC-259', 'jira')
+        const singleMovement = [generateBaseBulkUploadMovement()]
+        singleMovement[0].carrier.registrationNumber = null
+        singleMovement[0].carrier.reasonForNoRegistrationNumber =
+          'FIXED_CONVEYANCE'
+        singleMovement[0].carrier.meansOfTransport = 'Piped'
+        delete singleMovement[0].carrier.vehicleRegistration
+        const bulkUploadId = randomUUID()
+
+        const response =
+          await globalThis.apis.wasteMovementBackendAPI.bulkUploadCreate(
+            bulkUploadId,
+            singleMovement
+          )
+
+        expect(response.statusCode).toBe(201)
+        expect(response.json).toEqual({
+          status: 'MOVEMENTS_CREATED',
+          movements: [{ wasteTrackingId: expect.any(String) }]
+        })
+      }
+    )
+
     it('should return validation warnings on bulk create when a movement omits Disposal or Recovery Codes @allure.label.tag:DWTA-162', async () => {
       await addAllureLink('/DWTA-162', 'DWTA-162', 'jira')
 
