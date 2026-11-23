@@ -54,7 +54,7 @@ describe('Carrier Registration Reason Validation', () => {
                 key: 'carrier.reasonForNoRegistrationNumber',
                 errorType: 'NotProvided',
                 message:
-                  'carrier.reasonForNoRegistrationNumber must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE'
+                  'carrier.reasonForNoRegistrationNumber must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE, FIXED_CONVEYANCE'
               }
             ]
           }
@@ -81,7 +81,7 @@ describe('Carrier Registration Reason Validation', () => {
                 key: 'carrier.reasonForNoRegistrationNumber',
                 errorType: 'NotProvided',
                 message:
-                  'carrier.reasonForNoRegistrationNumber must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE'
+                  'carrier.reasonForNoRegistrationNumber must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE, FIXED_CONVEYANCE'
               }
             ]
           }
@@ -109,7 +109,7 @@ describe('Carrier Registration Reason Validation', () => {
                 key: 'carrier.reasonForNoRegistrationNumber',
                 errorType: 'InvalidValue',
                 message:
-                  '"carrier.reasonForNoRegistrationNumber" must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE'
+                  '"carrier.reasonForNoRegistrationNumber" must be one of: ON_SITE, HOUSEHOLD, ONE_OFF, MARINE, FIXED_CONVEYANCE'
               }
             ]
           }
