@@ -79,10 +79,16 @@ docs {
 
   ## 📁 Collection Structure
 
-  The collection is organized using a logical pattern that groups related functionality:
+  Requests follow the same phase split as the test pack.
+
+  ### **Phase 1 — Receipt of Waste**
+  `phase-1` holds receive movement, update movement, reference data, and production approval tests.
+
+  ### **Phase 2 — National Waste Movements**
+  `phase-2` holds `beta-1` and `beta-2`. Each version is grouped by movement, collection, delivery, and receipt. Receipt requests are split into `WithDeliveryId` and `WithoutDeliveryId`.
 
   ### **Action-Based Organization**
-  Each major action (like creating or updating waste movements) has its own top-level folder containing all related test scenarios.
+  Inside each phase, each action has its own folder containing the related requests.
 
   ### **Expectation-Based Grouping**
   Within each action folder, requests are organized by expected outcomes:
