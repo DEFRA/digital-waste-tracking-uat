@@ -50,6 +50,7 @@
     "undici": "8.12.3"
   },
   "devDependencies": {
+    "@aws-sdk/client-sts": "3.1178.0",
     "@types/jest": "29.5.14",
     "allure-jest": "3.3.2",
     "eslint": "^8.57.0",
