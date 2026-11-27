@@ -44,7 +44,13 @@ describe('Beta-2 Receipt Without Delivery ID - Receiver', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: 'must be object',
+          pointer: '/receiver',
+          errorType: 'InvalidType'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when no receiver is declared @allure.label.tag:DWTC-233', async () => {
@@ -56,7 +62,13 @@ describe('Beta-2 Receipt Without Delivery ID - Receiver', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'receiver' is required",
+          pointer: '/receiver',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     // Optional-only payload so required-field error assertions can be rewritten.
@@ -73,7 +85,28 @@ describe('Beta-2 Receipt Without Delivery ID - Receiver', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "'siteName' is required",
+          pointer: '/receiver/siteName',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'authorisationNumber' is required",
+          pointer: '/receiver/authorisationNumber',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'contactDetails' is required",
+          pointer: '/receiver/contactDetails',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'postcode' is required",
+          pointer: '/receiver/receiptAddress/postcode',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })

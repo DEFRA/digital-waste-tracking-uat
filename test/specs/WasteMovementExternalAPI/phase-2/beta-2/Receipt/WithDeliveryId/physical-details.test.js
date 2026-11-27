@@ -88,7 +88,13 @@ describe('Beta-2 Receipt Creation - Physical Details', () => {
           receiptData
         )
 
-      expectReceiptRejected(response, deliveryId)
+      expectReceiptRejected(response, deliveryId, [
+        {
+          message: 'must be equal to constant',
+          pointer: '/physicalDetails/containerCount',
+          errorType: 'InvalidValue'
+        }
+      ])
     })
 
     // Required fields removed for required-field error assertions
@@ -108,7 +114,28 @@ describe('Beta-2 Receipt Creation - Physical Details', () => {
           receiptData
         )
 
-      expectReceiptRejected(response, deliveryId)
+      expectReceiptRejected(response, deliveryId, [
+        {
+          message: "'form' is required",
+          pointer: '/physicalDetails/form',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'containerType' is required",
+          pointer: '/physicalDetails/containerType',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'containerCount' is required",
+          pointer: '/physicalDetails/containerCount',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'totalWeight' is required",
+          pointer: '/physicalDetails/totalWeight',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })

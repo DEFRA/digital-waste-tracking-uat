@@ -72,7 +72,13 @@ describe('Beta-2 Collection Creation - Duty of care confirmation', () => {
           collectionData
         )
 
-      expectCollectionRejected(response, movementId)
+      expectCollectionRejected(response, movementId, [
+        {
+          message: "'isDutyOfCareConfirmed' is required",
+          pointer: '/isDutyOfCareConfirmed',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })

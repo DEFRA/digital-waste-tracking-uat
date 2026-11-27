@@ -58,7 +58,13 @@ describe('Beta-2 Movement Creation - Intended receivers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "'intendedReceivers' is required",
+          pointer: '/intendedReceivers',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a movement when any one of several intended receivers has missing details @allure.label.tag:DWTC-198', async () => {
@@ -75,7 +81,13 @@ describe('Beta-2 Movement Creation - Intended receivers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "'siteName' is required",
+          pointer: '/intendedReceivers/1/siteName',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     // Optional-only payload so required-field error assertions can be rewritten.
@@ -94,7 +106,28 @@ describe('Beta-2 Movement Creation - Intended receivers', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: "'siteName' is required",
+          pointer: '/intendedReceivers/0/siteName',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'authorisationNumber' is required",
+          pointer: '/intendedReceivers/0/authorisationNumber',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'contactDetails' is required",
+          pointer: '/intendedReceivers/0/contactDetails',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "'postcode' is required",
+          pointer: '/intendedReceivers/0/receiptAddress/postcode',
+          errorType: 'NotProvided'
+        }
+      ])
     })
   })
 })

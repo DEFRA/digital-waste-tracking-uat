@@ -43,7 +43,13 @@ describe('Beta-2 Movement Creation - Special handling requirements', () => {
           movementData
         )
 
-      expectMovementRejected(response)
+      expectMovementRejected(response, [
+        {
+          message: 'must NOT have more than 5000 characters',
+          pointer: '/specialHandlingRequirements',
+          errorType: 'OutOfRange'
+        }
+      ])
     })
   })
 })

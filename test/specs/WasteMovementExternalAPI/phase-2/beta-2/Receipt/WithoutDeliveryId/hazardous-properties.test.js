@@ -96,7 +96,24 @@ describe('Beta-2 Receipt Without Delivery ID - Hazardous properties', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Required when 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/hazardous/codes',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "Required when 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/hazardous/componentsSource',
+          errorType: 'NotProvided'
+        },
+        {
+          message: "Required when 'isPresent' is true",
+          pointer:
+            '/wasteItems/0/classification/hazardous/isComponentsNotApplicable',
+          errorType: 'NotProvided'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when hazardous details are given for waste declared as not hazardous @allure.label.tag:DWTC-243 @allure.label.tag:DWTC-266', async () => {
@@ -116,7 +133,29 @@ describe('Beta-2 Receipt Without Delivery ID - Hazardous properties', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/hazardous/codes',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/hazardous/componentsSource',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer:
+            '/wasteItems/0/classification/hazardous/isComponentsNotApplicable',
+          errorType: 'NotAllowed'
+        },
+        {
+          message: "Not allowed unless 'isPresent' is true",
+          pointer: '/wasteItems/0/classification/hazardous/components',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
 
     it('should reject a receipt without a delivery ID when hazardous components are given although declared not applicable @allure.label.tag:DWTC-266', async () => {
@@ -132,7 +171,13 @@ describe('Beta-2 Receipt Without Delivery ID - Hazardous properties', () => {
           receiptData
         )
 
-      expectReceiptRejected(response)
+      expectReceiptRejected(response, [
+        {
+          message: "Not allowed when 'isComponentsNotApplicable' is true",
+          pointer: '/wasteItems/0/classification/hazardous/components',
+          errorType: 'NotAllowed'
+        }
+      ])
     })
   })
 })
