@@ -212,6 +212,15 @@ export class TestConfig {
   }
 
   /**
+   * The audience to call client-sync with an AWS STS token for, instead of
+   * basic auth. Unset uses basic auth.
+   * @returns {string|undefined}
+   */
+  get clientSyncStsAudience() {
+    return process.env.CLIENT_SYNC_STS_AUDIENCE
+  }
+
+  /**
    * Check if additional logging is available
    * @returns {boolean} Whether additional logging is available
    */

@@ -23,13 +23,18 @@ function isSensitiveHeaderName(headerName) {
  * @returns {Object}
  */
 function sanitizeHeadersForAllure(headers) {
-  if (!globalThis.testConfig.redactSensitiveAllureHeaders) {
-    return headers
-  }
+  const redactAll = globalThis.testConfig.redactSensitiveAllureHeaders
 
   const sanitized = {}
   for (const [key, value] of Object.entries(headers ?? {})) {
-    sanitized[key] = isSensitiveHeaderName(key) ? REDACTED : value
+    // Bearer tokens are always redacted: they're live credentials
+    const isBearerToken =
+      key.toLowerCase() === 'authorization' &&
+      String(value).startsWith('Bearer ')
+    sanitized[key] =
+      isBearerToken || (redactAll && isSensitiveHeaderName(key))
+        ? REDACTED
+        : value
   }
   return sanitized
 }

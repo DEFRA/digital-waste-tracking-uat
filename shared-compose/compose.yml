@@ -186,6 +186,8 @@ services:
     ports:
       - '3005:3001'
     depends_on:
+      aws-sts-stub:
+        condition: service_healthy
       mongodb:
         condition: service_healthy
       fake-cdp:
@@ -204,9 +206,32 @@ services:
       COGNITO_USER_POOL_ID: eu-west-2_LOCAL
       COGNITO_USER_POOL_ENDPOINT: http://floci:4566
       MONGO_URI: mongodb://mongodb:27017/?replicaSet=rs0&directConnection=true
+      # Accept AWS STS tokens as well as basic auth, from aws-sts-stub, as CDP
+      # does with real ones. The stub names each caller after its access key
+      STS_AUDIENCE: dwt-client-sync
+      CDP_JWT_ISSUER: https://local.tokens.sts.global.api.aws
+      CDP_JWT_JWKS_URI: http://aws-sts-stub:4571/.well-known/jwks.json
+      AWS_ACCOUNT: '000000000000'
+      STS_ALLOWED_CALLERS: digital-waste-tracking-admin-ui,waste-movement-external-api,digital-waste-tracking-uat
       ACCESS_CRED_WASTE_MOVEMENT_EXTERNAL_API: d2FzdGUtbW92ZW1lbnQtZXh0ZXJuYWwtYXBpPWxvY2FsLWV4dGVybmFsLWFwaQ==
       # For the admin UI's Software providers page
       ACCESS_CRED_DIGITAL_WASTE_TRACKING_ADMIN_UI: ZGlnaXRhbC13YXN0ZS10cmFja2luZy1hZG1pbi11aT1sb2NhbC1hZG1pbi11aQ==
+    networks:
+      - cdp-tenant
+
+  # A stand-in for AWS STS's GetWebIdentityToken, for local stacks only: its
+  # signing keys are public, so anyone can mint a token
+  aws-sts-stub:
+    image: defradigital/aws-sts-stub:0.2.0
+    ports:
+      - '4571:4571'
+    environment:
+      AWS_ACCOUNT_ID: '000000000000'
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:4571/health']
+      interval: 2s
+      timeout: 2s
+      retries: 15
     networks:
       - cdp-tenant
 
