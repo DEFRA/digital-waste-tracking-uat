@@ -1,6 +1,8 @@
 import { BaseAPI } from './base-api.js'
 import { randomUUID } from 'crypto'
 
+import { stsToken } from '../support/helpers/sts-token.js'
+
 /** Default tenant service used by client-sync UAT flows. */
 export const DEFAULT_TENANT_SERVICE_NAME = 'waste-movement-external-api'
 
@@ -19,20 +21,34 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
   }
 
   /**
-   * GET /clients/{tenantServiceName} — list all clients for a tenant service.
-   * @param {string} [tenantServiceName=DEFAULT_TENANT_SERVICE_NAME] - Tenant service name
-   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   * Headers for a call to client-sync: an STS token when
+   * CLIENT_SYNC_STS_AUDIENCE is set, basic auth otherwise.
+   * @param {Record<string, string>} [extraHeaders={}] - Headers this call also needs
+   * @returns {Promise<Record<string, string>>}
    */
-  async getClients(tenantServiceName = DEFAULT_TENANT_SERVICE_NAME) {
+  async #requestHeaders(extraHeaders = {}) {
+    const audience = globalThis.testConfig.clientSyncStsAudience
     const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
-    const base64Credentials = Buffer.from(credentials).toString('base64')
     const requestHeaders = {
-      Authorization: `Basic ${base64Credentials}`,
+      Authorization: audience
+        ? `Bearer ${await stsToken(audience)}`
+        : `Basic ${Buffer.from(credentials).toString('base64')}`,
+      ...extraHeaders,
       'x-cdp-request-id': randomUUID()
     }
     if (globalThis.testConfig.cdpDevApiKey != null) {
       requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
     }
+    return requestHeaders
+  }
+
+  /**
+   * GET /clients/{tenantServiceName} — list all clients for a tenant service.
+   * @param {string} [tenantServiceName=DEFAULT_TENANT_SERVICE_NAME] - Tenant service name
+   * @returns {Promise<import('./base-api.js').JsonResponse>}
+   */
+  async getClients(tenantServiceName = DEFAULT_TENANT_SERVICE_NAME) {
+    const requestHeaders = await this.#requestHeaders()
     const { statusCode, headers, json } = await this.get(
       `/clients/${encodeURIComponent(tenantServiceName)}`,
       requestHeaders
@@ -47,15 +63,7 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async getClient(clientId, tenantServiceName = DEFAULT_TENANT_SERVICE_NAME) {
-    const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
-    const base64Credentials = Buffer.from(credentials).toString('base64')
-    const requestHeaders = {
-      Authorization: `Basic ${base64Credentials}`,
-      'x-cdp-request-id': randomUUID()
-    }
-    if (globalThis.testConfig.cdpDevApiKey != null) {
-      requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
-    }
+    const requestHeaders = await this.#requestHeaders()
     const { statusCode, headers, json } = await this.get(
       `/clients/${encodeURIComponent(tenantServiceName)}/${encodeURIComponent(clientId)}`,
       requestHeaders
@@ -68,15 +76,7 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
    * @returns {Promise<import('./base-api.js').JsonResponse>}
    */
   async syncClients() {
-    const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
-    const base64Credentials = Buffer.from(credentials).toString('base64')
-    const requestHeaders = {
-      Authorization: `Basic ${base64Credentials}`,
-      'x-cdp-request-id': randomUUID()
-    }
-    if (globalThis.testConfig.cdpDevApiKey != null) {
-      requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
-    }
+    const requestHeaders = await this.#requestHeaders()
     const { statusCode, headers, json } = await this.post(
       '/clients/sync',
       undefined,
@@ -95,16 +95,9 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
     clientName,
     tenantServiceName = DEFAULT_TENANT_SERVICE_NAME
   ) {
-    const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
-    const base64Credentials = Buffer.from(credentials).toString('base64')
-    const requestHeaders = {
-      Authorization: `Basic ${base64Credentials}`,
-      'Content-Type': 'application/json',
-      'x-cdp-request-id': randomUUID()
-    }
-    if (globalThis.testConfig.cdpDevApiKey != null) {
-      requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
-    }
+    const requestHeaders = await this.#requestHeaders({
+      'Content-Type': 'application/json'
+    })
     const { statusCode, headers, json } = await this.post(
       `/clients/${encodeURIComponent(tenantServiceName)}`,
       JSON.stringify({ clientName }),
@@ -127,15 +120,7 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
     returnsNoContent = false,
     tenantServiceName = DEFAULT_TENANT_SERVICE_NAME
   ) {
-    const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
-    const base64Credentials = Buffer.from(credentials).toString('base64')
-    const requestHeaders = {
-      Authorization: `Basic ${base64Credentials}`,
-      'x-cdp-request-id': randomUUID()
-    }
-    if (globalThis.testConfig.cdpDevApiKey != null) {
-      requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
-    }
+    const requestHeaders = await this.#requestHeaders()
     const { statusCode, headers, json } = await this.delete(
       `/clients/${encodeURIComponent(tenantServiceName)}/${encodeURIComponent(clientId)}`,
       requestHeaders,
@@ -154,16 +139,9 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
     clientId,
     tenantServiceName = DEFAULT_TENANT_SERVICE_NAME
   ) {
-    const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
-    const base64Credentials = Buffer.from(credentials).toString('base64')
-    const requestHeaders = {
-      Authorization: `Basic ${base64Credentials}`,
-      'Content-Type': 'application/json',
-      'x-cdp-request-id': randomUUID()
-    }
-    if (globalThis.testConfig.cdpDevApiKey != null) {
-      requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
-    }
+    const requestHeaders = await this.#requestHeaders({
+      'Content-Type': 'application/json'
+    })
     const { statusCode, headers, json } = await this.post(
       `/clients/${encodeURIComponent(tenantServiceName)}/${encodeURIComponent(clientId)}/rotate`,
       undefined,
@@ -186,16 +164,9 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
     returnsNoContent = false,
     tenantServiceName = DEFAULT_TENANT_SERVICE_NAME
   ) {
-    const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
-    const base64Credentials = Buffer.from(credentials).toString('base64')
-    const requestHeaders = {
-      Authorization: `Basic ${base64Credentials}`,
-      'Content-Type': 'application/json',
-      'x-cdp-request-id': randomUUID()
-    }
-    if (globalThis.testConfig.cdpDevApiKey != null) {
-      requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
-    }
+    const requestHeaders = await this.#requestHeaders({
+      'Content-Type': 'application/json'
+    })
     const { statusCode, headers, json } = await this.post(
       `/clients/${encodeURIComponent(tenantServiceName)}/${encodeURIComponent(clientId)}/purge`,
       undefined,
@@ -216,16 +187,9 @@ export class WasteMovementClientSyncAPI extends BaseAPI {
     clientId,
     tenantServiceName = DEFAULT_TENANT_SERVICE_NAME
   ) {
-    const credentials = `${DEFAULT_TENANT_SERVICE_NAME}:${globalThis.testConfig.serviceAuthPassword}`
-    const base64Credentials = Buffer.from(credentials).toString('base64')
-    const requestHeaders = {
-      Authorization: `Basic ${base64Credentials}`,
-      'Content-Type': 'application/json',
-      'x-cdp-request-id': randomUUID()
-    }
-    if (globalThis.testConfig.cdpDevApiKey != null) {
-      requestHeaders['x-api-key'] = globalThis.testConfig.cdpDevApiKey
-    }
+    const requestHeaders = await this.#requestHeaders({
+      'Content-Type': 'application/json'
+    })
     const { statusCode, headers, json } = await this.post(
       `/clients/${encodeURIComponent(tenantServiceName)}/${encodeURIComponent(clientId)}/replace`,
       undefined,
